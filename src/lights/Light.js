@@ -24,10 +24,6 @@ export default {
       default: 1,
     },
     position: Object,
-    // position: {
-    //   type: Object,
-    //   default: new Vector3(0, 0, 0),
-    // },
   },
   mounted() {
     setFromProp(this.light.position, this.position);
