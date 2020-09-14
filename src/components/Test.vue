@@ -1,5 +1,5 @@
 <template>
-  <Renderer ref="renderer" :animate="anim">
+  <Renderer ref="renderer">
     <PerspectiveCamera :position="{ z: 100 }"></PerspectiveCamera>
 
     <PhongMaterial name="mat1" color="#ff0000"></PhongMaterial>
@@ -21,39 +21,12 @@ import {
   LambertMaterial, PhongMaterial,
 } from '../index.js';
 
-import { useAnimate } from '../core/Renderer.vue';
-
 export default {
   components: {
     Renderer, PerspectiveCamera, Scene,
     PointLight,
     Box, Sphere,
     LambertMaterial, PhongMaterial,
-  },
-  data() {
-    return {
-      anim: null,
-    };
-  },
-  mounted() {
-    console.log('Test mounted');
-    // useAnimate(() => {
-    //   this.$refs.box.mesh.rotation.x += 0.01;
-    // });
-    // useAnimate(this.animate);
-  },
-  beforeUnmount() {
-    console.log('Test beforeUnmount');
-  },
-  methods: {
-    animate() {
-      this.$refs.box.mesh.rotation.x += 0.01;
-      // if (this.$refs.box) {
-      //   this.$refs.box.mesh.rotation.x += 0.01;
-      //   this.$refs.box.mesh.rotation.y += 0.013;
-      //   this.$refs.box.mesh.rotation.z += 0.007;
-      // }
-    },
   },
 };
 </script>
