@@ -1,12 +1,14 @@
 import { Scene } from 'three';
 
 export default {
-  emits: ['scene-ready'],
-  inject: ['three'],
-  setup (props) {
+  props: {
+    id: String,
+  },
+  setup () {
     const scene = new Scene();
     return { scene };
   },
+  inject: ['three'],
   provide() {
     return {
       scene: this.scene,
@@ -14,7 +16,6 @@ export default {
   },
   mounted() {
     this.three.scene = this.scene;
-    this.$emit('scene-ready');
   },
   render() {
     return this.$slots.default();

@@ -1,14 +1,14 @@
 export default {
   inject: ['three'],
   props: {
-    name: String,
+    id: String,
     color: {
       type: String,
       default: '#ffffff',
     },
   },
   mounted() {
-    this.three.materials[this.name] = this.material;
+    this.three.materials[this.id] = this.material;
   },
   render() {
     return [];

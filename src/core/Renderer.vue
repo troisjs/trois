@@ -7,30 +7,25 @@
 <script>
 import useThree from './useThree';
 
-const animateCallbacks = [];
-
-export function useAnimate(callback) {
-  animateCallbacks.push(callback);
-};
-
 export default {
   props: {
+    antialias: {
+      type: Boolean,
+      default: true,
+    },
     alpha: {
       type: Boolean,
       default: false,
     },
-    animate: {
-      type: Function,
+    orbitCtrl: {
+      default: false,
     },
-  },
-  data() {
-    return {
-      raf: true,
-    };
   },
   setup(props) {
     return {
       three: useThree(),
+      beforeRender: [],
+      raf: true,
     };
   },
   provide() {
@@ -39,25 +34,30 @@ export default {
     };
   },
   mounted() {
-    // console.log('Renderer mounted');
-    this.three.init({
+    const params = {
       canvas: this.$refs.canvas,
-    });
+      antialias: this.antialias,
+      alpha: this.alpha,
+      orbit_ctrl: this.orbitCtrl,
+    };
 
-    this._animate();
+    if (this.three.init(params)) {
+      this.animate();
+    };
   },
   beforeUnmount() {
-    // console.log('Renderer beforeUnmount');
-    // animateCallbacks.splice(0);
     this.raf = false;
+    this.beforeRender.splice(0);
     this.three.dispose();
   },
   methods: {
-    _animate() {
-      if (this.raf) requestAnimationFrame(this._animate);
-      // if (this.animate) this.animate();
-      animateCallbacks.forEach(c => c());
-      if (this.three.scene) this.three.render(this.three.scene);
+    onBeforeRender(callback) {
+      this.beforeRender.push(callback);
+    },
+    animate() {
+      if (this.raf) requestAnimationFrame(this.animate);
+      this.beforeRender.forEach(c => c());
+      this.three.render();
     },
   },
 };

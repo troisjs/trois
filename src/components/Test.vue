@@ -1,14 +1,14 @@
 <template>
-  <Renderer ref="renderer">
+  <Renderer ref="renderer" :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }">
     <PerspectiveCamera :position="{ z: 100 }"></PerspectiveCamera>
 
-    <PhongMaterial name="mat1" color="#ff0000"></PhongMaterial>
-    <LambertMaterial name="mat2" color="#0000ff"></LambertMaterial>
+    <PhongMaterial id="material1" color="#ff0000"></PhongMaterial>
+    <LambertMaterial id="material2" color="#0000ff"></LambertMaterial>
 
-    <Scene>
+    <Scene id="scene1">
       <PointLight :position="{ x: 0, y: 50, z: 50 }"></PointLight>
-      <Box ref="box" :size="10" :rotation="{ x: 0.5, y: 0.25 }" material="mat1"></Box>
-      <Sphere ref="sphere" :radius="10" :position="{ x: 50 }" material="mat2"></Sphere>
+      <Box ref="box" :size="10" :rotation="{ y: Math.PI / 4 }" material="material1"></Box>
+      <Sphere ref="sphere" :radius="10" :position="{ x: 50 }" material="material2"></Sphere>
     </Scene>
   </Renderer>
 </template>
@@ -27,6 +27,14 @@ export default {
     PointLight,
     Box, Sphere,
     LambertMaterial, PhongMaterial,
+  },
+  mounted() {
+    const renderer = this.$refs.renderer;
+    const box = this.$refs.box.mesh;
+
+    renderer.onBeforeRender(() => {
+      box.rotation.x += 0.01;
+    });
   },
 };
 </script>

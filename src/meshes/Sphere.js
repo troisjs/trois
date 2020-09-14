@@ -8,8 +8,16 @@ export default {
   extends: Mesh,
   props: {
     radius: Number,
+    widthSegments: {
+      type: Number,
+      default: 12,
+    },
+    heightSegments: {
+      type: Number,
+      default: 12,
+    },
   },
   created() {
-    this.geometry = new SphereBufferGeometry(this.radius, 32, 32);
+    this.geometry = new SphereBufferGeometry(this.radius, this.widthSegments, this.heightSegments);
   },
 };

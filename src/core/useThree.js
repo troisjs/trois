@@ -18,9 +18,7 @@ export default function useThree() {
     canvas: null,
     antialias: true,
     alpha: false,
-    camera_fov: 50,
-    camera_pos: new Vector3(0, 0, 100),
-    camera_ctrl: false,
+    orbit_ctrl: false,
     mouse_move: false,
     mouse_raycast: false,
     window_resize: true,
@@ -46,6 +44,7 @@ export default function useThree() {
     camera: null,
     cameraCtrl: null,
     materials: {},
+    scene: null,
     size,
     mouse, mouseV3,
     init,
@@ -66,17 +65,24 @@ export default function useThree() {
 
     obj.renderer = new WebGLRenderer({ canvas: conf.canvas, antialias: conf.antialias, alpha: conf.alpha });
 
-    // obj.camera = new PerspectiveCamera(conf.camera_fov);
-    // obj.camera.position.copy(conf.camera_pos);
+    if (!obj.scene) {
+      console.error('Missing Scene');
+      return;
+    }
 
-    // if (conf.camera_ctrl) {
-    //   obj.cameraCtrl = new OrbitControls(obj.camera, obj.renderer.domElement);
-    //   if (conf.camera_ctrl instanceof Object) {
-    //     for (const [key, value] of Object.entries(conf.camera_ctrl)) {
-    //       obj.cameraCtrl[key] = value;
-    //     }
-    //   }
-    // }
+    if (!obj.camera) {
+      console.error('Missing Camera');
+      return;
+    }
+
+    if (conf.orbit_ctrl) {
+      obj.orbitCtrl = new OrbitControls(obj.camera, obj.renderer.domElement);
+      if (conf.orbit_ctrl instanceof Object) {
+        for (const [key, value] of Object.entries(conf.orbit_ctrl)) {
+          obj.orbitCtrl[key] = value;
+        }
+      }
+    }
 
     if (conf.window_resize) {
       onResize();
@@ -94,9 +100,9 @@ export default function useThree() {
   /**
    * default render
    */
-  function render(scene) {
-    if (obj.cameraCtrl) obj.cameraCtrl.update();
-    obj.renderer.render(scene, obj.camera);
+  function render() {
+    if (obj.orbitCtrl) obj.orbitCtrl.update();
+    obj.renderer.render(obj.scene, obj.camera);
   }
 
   /**
