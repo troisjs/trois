@@ -11,15 +11,16 @@
 import Test1 from './components/Test1.vue';
 import Test2 from './components/Test2.vue';
 import Test3 from './components/Test3.vue';
+import TestGLTF from './components/TestGLTF.vue';
 
 export default {
   name: 'App',
   components: {
-    Test1, Test2, Test3,
+    Test1, Test2, Test3, TestGLTF,
   },
   data() {
     return {
-      tests: ['Test1', 'Test2', 'Test3'],
+      tests: ['Test1', 'Test2', 'Test3', 'TestGLTF'],
       test: 'Test1',
     };
   },

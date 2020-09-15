@@ -5,7 +5,7 @@
     <PhongMaterial id="material" color="#ff0000"></PhongMaterial>
 
     <Scene id="scene1">
-      <PointLight :position="{ x: 0, y: 150, z: 150 }" :cast-shadow="true" :shadow-map-size="{ width: 1024, height: 1024 }"></PointLight>
+      <PointLight ref="light" :position="{ x: 0, y: 150, z: 150 }" :cast-shadow="true" :shadow-map-size="{ width: 1024, height: 1024 }"></PointLight>
       <InstancedMesh ref="imesh" material="material" :count="1000" :cast-shadow="true" :receive-shadow="true">
         <BoxGeometry :size="5"></BoxGeometry>
       </InstancedMesh>
@@ -31,8 +31,6 @@ export default {
     InstancedMesh, BoxGeometry,
   },
   mounted() {
-    const renderer = this.$refs.renderer;
-
     const { randFloat: rnd, randFloatSpread: rndFS } = MathUtils;
     const imesh = this.$refs.imesh.mesh;
     const dummy = new Object3D();
@@ -46,7 +44,12 @@ export default {
     }
     imesh.instanceMatrix.needsUpdate = true;
 
+    const renderer = this.$refs.renderer;
+    const light = this.$refs.light.light;
     renderer.onBeforeRender(() => {
+      const t = Date.now() * 0.0001;
+      const c1 = Math.cos(t), c2 = c1 * Math.sin(t * 1.4), c3 = c2 * Math.cos(t * 0.3);
+      light.position.set(c1 * 100, c2 * 100, c3 * 100);
     });
   },
 };

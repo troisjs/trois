@@ -18,6 +18,9 @@ export default {
     this.three.scene = this.scene;
   },
   render() {
-    return this.$slots.default();
+    if (this.$slots.default) {
+      return this.$slots.default();
+    }
+    return [];
   },
 };
