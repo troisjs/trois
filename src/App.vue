@@ -1,14 +1,46 @@
 <template>
-  <Test></Test>
+  <div class="app">
+    <ul class="navbar">
+      <li v-for="t in tests" :key="t" @click="test=t">{{ t }}</li>
+    </ul>
+    <component :is="test" />
+  </div>
 </template>
 
 <script>
-import Test from './components/Test.vue';
+import Test1 from './components/Test1.vue';
+import Test2 from './components/Test2.vue';
 
 export default {
   name: 'App',
   components: {
-    Test,
+    Test1, Test2,
+  },
+  data() {
+    return {
+      tests: ['Test1', 'Test2'],
+      test: 'Test1',
+    };
   },
 };
 </script>
+
+<style lang="scss">
+.app {
+  .navbar {
+    position: fixed;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+
+    li {
+      display: inline-block;
+      margin: 1em;
+      cursor: pointer;
+    }
+  }
+}
+</style>
