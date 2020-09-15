@@ -61,7 +61,7 @@ for (let i = 0; i < 1000; i++) {
 imesh.instanceMatrix.needsUpdate = true;
 ```
 
-## GTLF
+## GLTF
 
 Take a look at [TestGLTF.vue](/src/components/TestGLTF.vue).
 
