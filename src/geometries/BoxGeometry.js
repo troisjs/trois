@@ -3,7 +3,6 @@ import Geometry from './Geometry.js';
 
 export default {
   extends: Geometry,
-  inject: ['parent'],
   props: {
     size: {
       type: Number,

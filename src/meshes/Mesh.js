@@ -26,6 +26,9 @@ export default {
     this.mesh.receiveShadow = this.receiveShadow;
     this.scene.add(this.mesh);
   },
+  unmounted() {
+    this.geometry.dispose();
+  },
   render() {
     return [];
   },

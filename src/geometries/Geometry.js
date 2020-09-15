@@ -5,6 +5,9 @@ export default {
       console.error('Missing parent Mesh');
     }
   },
+  unmounted() {
+    this.parent.geometry.dispose();
+  },
   render() {
     return [];
   },

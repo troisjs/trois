@@ -22,8 +22,23 @@ export default {
       default: false,
     },
     orbitCtrl: {
+      type: [Boolean, Object],
       default: false,
     },
+    mouseMove: {
+      type: Boolean,
+      default: false,
+    },
+    mouseRaycast: {
+      type: Boolean,
+      default: false,
+    },
+    resize: {
+      type: [Boolean, String, Element],
+      default: 'window',
+    },
+    width: String,
+    height: String,
   },
   setup(props) {
     return {
@@ -43,6 +58,11 @@ export default {
       antialias: this.antialias,
       alpha: this.alpha,
       orbit_ctrl: this.orbitCtrl,
+      mouse_move: this.mouseMove,
+      mouse_raycast: this.mouseRaycast,
+      resize: this.resize,
+      width: this.width,
+      height: this.height,
     };
 
     if (this.three.init(params)) {
@@ -59,6 +79,7 @@ export default {
     onBeforeRender(callback) {
       this.beforeRender.push(callback);
     },
+    onAfterResize() {},
     animate() {
       if (this.raf) requestAnimationFrame(this.animate);
       this.beforeRender.forEach(c => c());

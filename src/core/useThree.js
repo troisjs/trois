@@ -1,5 +1,4 @@
 import {
-  PerspectiveCamera,
   Plane,
   Raycaster,
   Vector2,
@@ -21,7 +20,9 @@ export default function useThree() {
     orbit_ctrl: false,
     mouse_move: false,
     mouse_raycast: false,
-    window_resize: true,
+    resize: 'window',
+    width: 0,
+    height: 0,
   };
 
   // size
@@ -84,7 +85,9 @@ export default function useThree() {
       }
     }
 
-    if (conf.window_resize) {
+    if (conf.width && conf.height) {
+      setSize(conf.width, conf.height);
+    } else if (conf.resize) {
       onResize();
       window.addEventListener('resize', onResize);
     }
@@ -148,7 +151,11 @@ export default function useThree() {
    * resize listener
    */
   function onResize() {
-    setSize(window.innerWidth, window.innerHeight);
+    if (conf.resize === 'window') {
+      setSize(window.innerWidth, window.innerHeight);
+    } else {
+      setSize(conf.resize.clientWidth, conf.resize.clientHeight);
+    }
   }
 
   /**
