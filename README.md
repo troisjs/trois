@@ -2,9 +2,11 @@
 
 I wanted to try to write a lib similar to [react-three-fiber](https://github.com/react-spring/react-three-fiber) but for VueJS.
 
+Demos : https://troisjs.github.io/trois/
+
 I started from scratch... I don't know if I will have time to maintain this, but feel free to participate :)
 
-Demos : https://troisjs.github.io/trois/
+*Trois* is a french word, it means *Three*.
 
 ## PoC
 
