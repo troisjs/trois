@@ -1,7 +1,4 @@
-import {
-  SphereBufferGeometry,
-} from 'three';
-
+import { SphereBufferGeometry } from 'three';
 import Mesh from './Mesh.js';
 
 export default {

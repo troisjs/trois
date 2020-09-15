@@ -1,7 +1,4 @@
-import {
-  BoxBufferGeometry,
-} from 'three';
-
+import { BoxBufferGeometry } from 'three';
 import Mesh from './Mesh.js';
 
 export default {
