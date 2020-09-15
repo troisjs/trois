@@ -32,6 +32,10 @@ export default function useThree() {
     ratio: 0,
   };
 
+  // handlers
+  const afterResizeHandlers = [];
+  const beforeRenderHandlers = [];
+
   // mouse tracking
   const mouse = new Vector2();
   const mouseV3 = new Vector3();
@@ -52,6 +56,8 @@ export default function useThree() {
     dispose,
     render,
     setSize,
+    onAfterResize,
+    onBeforeRender,
   };
 
   /**
@@ -64,8 +70,6 @@ export default function useThree() {
       }
     }
 
-    obj.renderer = new WebGLRenderer({ canvas: conf.canvas, antialias: conf.antialias, alpha: conf.alpha });
-
     if (!obj.scene) {
       console.error('Missing Scene');
       return;
@@ -75,6 +79,8 @@ export default function useThree() {
       console.error('Missing Camera');
       return;
     }
+
+    obj.renderer = new WebGLRenderer({ canvas: conf.canvas, antialias: conf.antialias, alpha: conf.alpha });
 
     if (conf.orbit_ctrl) {
       obj.orbitCtrl = new OrbitControls(obj.camera, obj.renderer.domElement);
@@ -93,8 +99,13 @@ export default function useThree() {
     }
 
     if (conf.mouse_move) {
-      obj.renderer.domElement.addEventListener('mousemove', onMousemove);
-      obj.renderer.domElement.addEventListener('mouseleave', onMouseleave);
+      if (conf.mouse_move === 'body') {
+        obj.mouse_move_element = document.body;
+      } else {
+        obj.mouse_move_element = obj.renderer.domElement;
+      }
+      obj.mouse_move_element.addEventListener('mousemove', onMousemove);
+      obj.mouse_move_element.addEventListener('mouseleave', onMouseleave);
     }
 
     return obj;
@@ -105,7 +116,15 @@ export default function useThree() {
    */
   function render() {
     if (obj.orbitCtrl) obj.orbitCtrl.update();
+    beforeRenderHandlers.forEach(c => c());
     obj.renderer.render(obj.scene, obj.camera);
+  }
+
+  /**
+   * add before render handler
+   */
+  function onBeforeRender(callback) {
+    beforeRenderHandlers.push(callback);
   }
 
   /**
@@ -113,8 +132,10 @@ export default function useThree() {
    */
   function dispose() {
     window.removeEventListener('resize', onResize);
-    obj.renderer.domElement.removeEventListener('mousemove', onMousemove);
-    obj.renderer.domElement.removeEventListener('mouseleave', onMouseleave);
+    if (obj.mouse_move_element) {
+      obj.mouse_move_element.removeEventListener('mousemove', onMousemove);
+      obj.mouse_move_element.removeEventListener('mouseleave', onMouseleave); 
+    }
   }
 
   /**
@@ -156,6 +177,14 @@ export default function useThree() {
     } else {
       setSize(conf.resize.clientWidth, conf.resize.clientHeight);
     }
+    afterResizeHandlers.forEach(c => c());
+  }
+
+  /**
+   * add after resize handler
+   */
+  function onAfterResize(callback) {
+    afterResizeHandlers.push(callback);
   }
 
   /**

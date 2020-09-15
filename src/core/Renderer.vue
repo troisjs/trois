@@ -26,7 +26,7 @@ export default {
       default: false,
     },
     mouseMove: {
-      type: Boolean,
+      type: [Boolean, String],
       default: false,
     },
     mouseRaycast: {
@@ -43,7 +43,6 @@ export default {
   setup(props) {
     return {
       three: useThree(),
-      beforeRender: [],
       raf: true,
     };
   },
@@ -72,17 +71,17 @@ export default {
   },
   beforeUnmount() {
     this.raf = false;
-    this.beforeRender.splice(0);
     this.three.dispose();
   },
   methods: {
     onBeforeRender(callback) {
-      this.beforeRender.push(callback);
+      this.three.onBeforeRender(callback);
     },
-    onAfterResize() {},
+    onAfterResize(callback) {
+      this.three.onAfterResize(callback);
+    },
     animate() {
       if (this.raf) requestAnimationFrame(this.animate);
-      this.beforeRender.forEach(c => c());
       this.three.render();
     },
   },
