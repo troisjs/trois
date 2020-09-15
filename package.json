@@ -1,6 +1,6 @@
 {
   "name": "trois",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite",
     "build": "vite build"
@@ -22,5 +22,21 @@
     "eslint-plugin-vue": "^6.2.2",
     "sass": "^1.26.10",
     "vite": "^1.0.0-rc.4"
-  }
+  },
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/troisjs/trois.git"
+  },
+  "keywords": [
+    "vuejs",
+    "vitejs",
+    "threejs"
+  ],
+  "author": "Kevin Levron",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/troisjs/trois/issues"
+  },
+  "homepage": "https://github.com/troisjs/trois"
 }
