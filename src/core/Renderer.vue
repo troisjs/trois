@@ -17,6 +17,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    shadow: {
+      type: Boolean,
+      default: false,
+    },
     orbitCtrl: {
       default: false,
     },
@@ -42,6 +46,7 @@ export default {
     };
 
     if (this.three.init(params)) {
+      this.three.renderer.shadowMap.enabled = this.shadow;
       this.animate();
     };
   },

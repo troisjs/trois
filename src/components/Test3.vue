@@ -1,16 +1,12 @@
 <template>
   <Renderer ref="renderer" :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }">
     <Camera :position="{ z: 100 }"></Camera>
-
     <PhongMaterial id="material" color="#ffffff"></PhongMaterial>
-
     <Scene id="scene1">
       <!-- <SpotLight color="#ffffff" :intensity="0.5" :position="{ y: 20, z: 50 }"></SpotLight> -->
       <!-- <SpotLight color="#ff0000" :intensity="0.5" :position="{ y: -20, z: 50 }"></SpotLight> -->
-
       <PointLight color="#ffffff" :intensity="0.5" :position="{ y: 50, z: 50 }"></PointLight>
       <PointLight color="#ff0000" :intensity="0.5" :position="{ y: -50, z: 50 }"></PointLight>
-
       <InstancedMesh ref="imesh" material="material" :count="1000">
         <SphereGeometry :radius="2"></SphereGeometry>
       </InstancedMesh>

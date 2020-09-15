@@ -5,6 +5,14 @@ export default {
   props: {
     material: String,
     count: Number,
+    castShadow: {
+      type: Boolean,
+      default: false,
+    },
+    receiveShadow: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup() {
     return {
@@ -23,6 +31,8 @@ export default {
   },
   mounted() {
     this.mesh = new InstancedMesh(this.conf.geometry, this.three.materials[this.material], this.count);
+    this.mesh.castShadow = this.castShadow;
+    this.mesh.receiveShadow = this.receiveShadow;
     this.scene.add(this.mesh);
   },
   render() {
