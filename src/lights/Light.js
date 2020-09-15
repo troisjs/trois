@@ -15,11 +15,15 @@ export default {
       type: Boolean,
       default: false,
     },
+    shadowMapSize: Object,
     position: Object,
   },
   mounted() {
     setFromProp(this.light.position, this.position);
+
     this.light.castShadow = this.castShadow;
+    setFromProp(this.light.shadow.mapSize, this.shadowMapSize);
+
     this.scene.add(this.light);
     if (this.light.target) this.scene.add(this.light.target);
   },

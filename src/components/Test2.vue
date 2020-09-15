@@ -5,8 +5,8 @@
     <PhongMaterial id="material" color="#ff0000"></PhongMaterial>
 
     <Scene id="scene1">
-      <PointLight :position="{ x: 0, y: 150, z: 150 }" :castShadow="true"></PointLight>
-      <InstancedMesh ref="imesh" material="material" :count="1000" :castShadow="true" :receiveShadow="true">
+      <PointLight :position="{ x: 0, y: 150, z: 150 }" :cast-shadow="true" :shadow-map-size="{ width: 1024, height: 1024 }"></PointLight>
+      <InstancedMesh ref="imesh" material="material" :count="1000" :cast-shadow="true" :receive-shadow="true">
         <BoxGeometry :size="5"></BoxGeometry>
       </InstancedMesh>
     </Scene>
