@@ -17,7 +17,6 @@ export default {
     };
   },
   beforeMount() {
-    console.log(this.conf);
     if (!this.$slots.default) {
       console.error('Missing Geometry');
     }

@@ -4,7 +4,7 @@ I wanted to try to write a lib similar to [react-three-fiber](https://github.com
 
 ## PoC
 
-I first made a simple *Proof of Concept*, take a look at [Test.vue](/src/components/Test.vue) :
+I first made a simple *Proof of Concept*, take a look at [Test1.vue](/src/components/Test1.vue) :
 
 ```html
   <Renderer>

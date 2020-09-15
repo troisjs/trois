@@ -1,6 +1,6 @@
 export default {
   inject: ['parent'],
-  created() {
+  beforeMounted() {
     if (!this.parent) {
       console.error('Missing parent Mesh');
     }

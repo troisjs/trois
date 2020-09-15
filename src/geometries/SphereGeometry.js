@@ -3,7 +3,6 @@ import Geometry from './Geometry.js';
 
 export default {
   extends: Geometry,
-  inject: ['parent'],
   props: {
     radius: Number,
     widthSegments: {
@@ -16,6 +15,6 @@ export default {
     },
   },
   mounted() {
-    this.geometry = new SphereBufferGeometry(this.radius, this.widthSegments, this.heightSegments);
+    this.parent.geometry = new SphereBufferGeometry(this.radius, this.widthSegments, this.heightSegments);
   },
 };
