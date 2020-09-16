@@ -7,9 +7,11 @@
     "rollup": "rollup -c"
   },
   "dependencies": {
-    "three": "^0.119"
+    "three": "^0.120"
   },
   "devDependencies": {
+    "@rollup/plugin-buble": "^0.21.3",
+    "@vue/compiler-sfc": "^3.0.0-rc.11",
     "eslint": "^7.7.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-config-standard": "^14.1.1",
@@ -18,12 +20,13 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.2.2",
+    "rollup-plugin-vue": "^6.0.0-beta.10",
     "sass": "^1.26.10",
     "vite": "^1.0.0-rc.4",
-    "vue": "^3.0.0-rc.10"
+    "vue": "^3.0.0-rc.11"
   },
-  "main": "dist/trois.js",
-  "module": "dist/trois.module.js",
+  "main": "build/trois.js",
+  "module": "build/trois.module.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/troisjs/trois.git"
