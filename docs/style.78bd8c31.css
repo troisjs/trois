@@ -1,0 +1,1 @@
+.app .navbar{position:fixed;margin:0;padding:0;width:100%;color:#fff;text-align:center;font-size:14px}.app .navbar li{display:inline-block;margin:1em;padding:5px;background:rgba(255,255,255,.5);color:#000;border-radius:5px;cursor:pointer;transition:background-color .4s}.app .navbar li:hover{background:#fff}.app canvas{display:block}body{margin:0;font-family:Montserrat,sans-serif}
