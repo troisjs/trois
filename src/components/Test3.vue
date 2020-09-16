@@ -3,8 +3,8 @@
     <Camera :position="{ z: 100 }"></Camera>
     <PhongMaterial id="material" color="#ffffff"></PhongMaterial>
     <Scene id="scene1" background="#ffffff">
-      <!-- <SpotLight color="#ffffff" :intensity="0.5" :position="{ y: 20, z: 50 }"></SpotLight> -->
-      <!-- <SpotLight color="#ff0000" :intensity="0.5" :position="{ y: -20, z: 50 }"></SpotLight> -->
+      <!-- <SpotLight color="#ffffff" :intensity="0.5" :position="{ y: 50, z: 50 }"></SpotLight> -->
+      <!-- <SpotLight color="#ff0000" :intensity="0.5" :position="{ y: -50, z: 50 }"></SpotLight> -->
       <PointLight color="#ffffff" :intensity="0.5" :position="{ y: 50, z: 50 }"></PointLight>
       <PointLight color="#ff0000" :intensity="0.5" :position="{ y: -50, z: 50 }"></PointLight>
       <InstancedMesh ref="imesh" material="material" :count="1000">
@@ -32,11 +32,10 @@ export default {
     InstancedMesh, SphereGeometry,
   },
   mounted() {
-    // const renderer = this.$refs.renderer;
-
-    const { randFloat: rnd, randFloatSpread: rndFS } = MathUtils;
+    // init instanced mesh matrix
     const imesh = this.$refs.imesh.mesh;
     const dummy = new Object3D();
+    const { randFloat: rnd, randFloatSpread: rndFS } = MathUtils;
     for (let i = 0; i < 1000; i++) {
       dummy.position.set(rndFS(100), rndFS(100), rndFS(100));
       const scale = rnd(0.2, 1);
@@ -45,9 +44,6 @@ export default {
       imesh.setMatrixAt(i, dummy.matrix);
     }
     imesh.instanceMatrix.needsUpdate = true;
-
-    // renderer.onBeforeRender(() => {
-    // });
   },
 };
 </script>
