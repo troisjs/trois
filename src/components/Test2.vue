@@ -10,6 +10,10 @@
         <BoxGeometry :width="2" :height="2" :depth="10"></BoxGeometry>
       </InstancedMesh>
     </Scene>
+    <EffectComposer>
+      <RenderPass></RenderPass>
+      <UnrealBloomPass :strength="1"></UnrealBloomPass>
+    </EffectComposer>
   </Renderer>
 </template>
 
@@ -19,6 +23,7 @@ import { Object3D, MathUtils, Vector3 } from 'three';
 import {
   Renderer, Camera, Scene, AmbientLight, PointLight,
   StandardMaterial, InstancedMesh, BoxGeometry,
+  EffectComposer, RenderPass, UnrealBloomPass,
 } from '../index.js';
 
 const {
@@ -30,6 +35,7 @@ export default {
   components: {
     Renderer, Camera, Scene, AmbientLight, PointLight,
     StandardMaterial, InstancedMesh, BoxGeometry,
+    EffectComposer, RenderPass, UnrealBloomPass,
   },
   setup() {
     const NUM_INSTANCES = 2500;
