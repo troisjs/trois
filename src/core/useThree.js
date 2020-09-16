@@ -33,6 +33,7 @@ export default function useThree() {
   };
 
   // handlers
+  const afterInitHandlers = [];
   const afterResizeHandlers = [];
   const beforeRenderHandlers = [];
 
@@ -55,7 +56,9 @@ export default function useThree() {
     init,
     dispose,
     render,
+    renderC,
     setSize,
+    onAfterInit,
     onAfterResize,
     onBeforeRender,
   };
@@ -108,8 +111,31 @@ export default function useThree() {
       obj.mouse_move_element.addEventListener('mouseleave', onMouseleave);
     }
 
-    return obj;
+    afterInitHandlers.forEach(c => c());
+
+    return true;
   };
+
+  /**
+   * add after init handler
+   */
+  function onAfterInit(callback) {
+    afterInitHandlers.push(callback);
+  }
+
+  /**
+   * add after resize handler
+   */
+  function onAfterResize(callback) {
+    afterResizeHandlers.push(callback);
+  }
+
+  /**
+   * add before render handler
+   */
+  function onBeforeRender(callback) {
+    beforeRenderHandlers.push(callback);
+  }
 
   /**
    * default render
@@ -121,10 +147,12 @@ export default function useThree() {
   }
 
   /**
-   * add before render handler
+   * composer render
    */
-  function onBeforeRender(callback) {
-    beforeRenderHandlers.push(callback);
+  function renderC() {
+    if (obj.orbitCtrl) obj.orbitCtrl.update();
+    beforeRenderHandlers.forEach(c => c());
+    obj.composer.render();
   }
 
   /**
@@ -181,13 +209,6 @@ export default function useThree() {
   }
 
   /**
-   * add after resize handler
-   */
-  function onAfterResize(callback) {
-    afterResizeHandlers.push(callback);
-  }
-
-  /**
    * update renderer size and camera
    */
   function setSize(width, height) {
@@ -198,6 +219,10 @@ export default function useThree() {
     obj.renderer.setSize(width, height, false);
     obj.camera.aspect = size.ratio;
     obj.camera.updateProjectionMatrix();
+
+    if (obj.composer) {
+      obj.composer.setSize(width, height);
+    }
 
     const wsize = getCameraSize();
     size.wWidth = wsize[0]; size.wHeight = wsize[1];

@@ -60,7 +60,8 @@ export default {
 
     if (this.three.init(params)) {
       this.three.renderer.shadowMap.enabled = this.shadow;
-      this.animate();
+      if (this.three.composer) this.animateC();
+      else this.animate();
     };
   },
   beforeUnmount() {
@@ -77,6 +78,10 @@ export default {
     animate() {
       if (this.raf) requestAnimationFrame(this.animate);
       this.three.render();
+    },
+    animateC() {
+      if (this.raf) requestAnimationFrame(this.animateC);
+      this.three.renderC();
     },
   },
   render() {

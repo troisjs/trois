@@ -4,3 +4,5 @@ export * from './lights/index.js';
 export * from './materials/index.js';
 export * from './meshes/index.js';
 export * from './tools.js';
+
+export * from './effects/index.js';
