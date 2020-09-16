@@ -4,7 +4,15 @@ import buble from '@rollup/plugin-buble';
 import { terser } from "rollup-plugin-terser";
 
 const input = 'src/index.js';
-const external = ['three', 'three/examples/jsm/controls/OrbitControls.js', 'vue'];
+const external = [
+  'three',
+  'three/examples/jsm/controls/OrbitControls.js',
+  'three/examples/jsm/postprocessing/EffectComposer.js',
+  'three/examples/jsm/postprocessing/BokehPass.js',
+  'three/examples/jsm/postprocessing/RenderPass.js',
+  'three/examples/jsm/postprocessing/UnrealBloomPass.js',
+  'vue',
+];
 const plugins = [
   commonjs(),
   vue(),

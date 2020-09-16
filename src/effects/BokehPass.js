@@ -35,7 +35,13 @@ export default {
     if (!this.three.camera) {
       console.error('Missing Camera');
     }
-    const params = { ...this.$props, width: this.three.size.width, height: this.three.size.height };
+    const params = {
+      focus: this.focus,
+      aperture: this.aperture,
+      maxblur: this.maxblur,
+      width: this.three.size.width,
+      height: this.three.size.height,
+    };
     const pass = new BokehPass(this.three.scene, this.three.camera, params);
     this.passes.push(pass);
     this.pass = pass;
