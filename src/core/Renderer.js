@@ -1,10 +1,4 @@
-<template>
-  <canvas ref="canvas">
-    <slot></slot>
-  </canvas>
-</template>
-
-<script>
+import { h } from 'vue';
 import useThree from './useThree';
 
 export default {
@@ -85,11 +79,11 @@ export default {
       this.three.render();
     },
   },
+  render() {
+    return h(
+      'canvas',
+      { ref: 'canvas' },
+      this.$slots.default()
+    );
+  },
 };
-</script>
-
-<style>
-canvas {
-  display: block;
-}
-</style>

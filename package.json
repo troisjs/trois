@@ -1,17 +1,15 @@
 {
-  "name": "trois",
-  "version": "0.0.1",
+  "name": "troisjs",
+  "version": "0.0.5",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "rollup": "rollup -c"
   },
   "dependencies": {
-    "three": "^0.119",
-    "vue": "^3.0.0-rc.10",
-    "vuex": "^4.0.0-beta.4"
+    "three": "^0.119"
   },
   "devDependencies": {
-    "@vue/compiler-sfc": "^3.0.0-rc.10",
     "eslint": "^7.7.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-config-standard": "^14.1.1",
@@ -21,9 +19,11 @@
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.2.2",
     "sass": "^1.26.10",
-    "vite": "^1.0.0-rc.4"
+    "vite": "^1.0.0-rc.4",
+    "vue": "^3.0.0-rc.10"
   },
-  "main": "src/index.js",
+  "main": "dist/trois.js",
+  "module": "dist/trois.module.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/troisjs/trois.git"

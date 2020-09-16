@@ -17,7 +17,9 @@ export default {
     };
   },
   mounted() {
-    this.three.scene = this.scene;
+    if (!this.three.scene) {
+      this.three.scene = this.scene;
+    }
   },
   render() {
     if (this.$slots.default) {
