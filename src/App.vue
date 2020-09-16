@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       tests: ['Test1', 'Test2', 'Test3', 'TestGLTF'],
-      test: 'Test1',
+      test: 'Test2',
     };
   },
 };
