@@ -41,8 +41,20 @@ export default {
     li {
       display: inline-block;
       margin: 1em;
+      padding: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      color: #000;
+      border-radius: 5px;;
       cursor: pointer;
+      transition: background-color 0.4s;
+      &:hover {
+        background: rgba(255, 255, 255, 1);
+      }
     }
+  }
+
+  canvas {
+    display: block;
   }
 }
 </style>

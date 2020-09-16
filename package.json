@@ -23,7 +23,7 @@
     "rollup-plugin-vue": "^6.0.0-beta.10",
     "sass": "^1.26.10",
     "vite": "^1.0.0-rc.4",
-    "vue": "^3.0.0-rc.11"
+    "vue": "^3.0.0-rc.10"
   },
   "main": "build/trois.js",
   "module": "build/trois.module.js",

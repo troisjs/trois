@@ -2,7 +2,7 @@
   <Renderer ref="renderer" :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }">
     <Camera :position="{ z: 100 }"></Camera>
     <PhongMaterial id="material" color="#ffffff"></PhongMaterial>
-    <Scene id="scene1">
+    <Scene id="scene1" background="#ffffff">
       <!-- <SpotLight color="#ffffff" :intensity="0.5" :position="{ y: 20, z: 50 }"></SpotLight> -->
       <!-- <SpotLight color="#ff0000" :intensity="0.5" :position="{ y: -20, z: 50 }"></SpotLight> -->
       <PointLight color="#ffffff" :intensity="0.5" :position="{ y: 50, z: 50 }"></PointLight>
@@ -32,7 +32,7 @@ export default {
     InstancedMesh, SphereGeometry,
   },
   mounted() {
-    const renderer = this.$refs.renderer;
+    // const renderer = this.$refs.renderer;
 
     const { randFloat: rnd, randFloatSpread: rndFS } = MathUtils;
     const imesh = this.$refs.imesh.mesh;
