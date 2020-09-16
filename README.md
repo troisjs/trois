@@ -17,52 +17,35 @@ I started from scratch... I don't know if I will have time to maintain this, but
 I first made a simple *Proof of Concept*, take a look at [Test1.vue](/src/components/Test1.vue) :
 
 ```html
-  <Renderer>
-    <PerspectiveCamera :position="{ z: 100 }"></PerspectiveCamera>
-    <PhongMaterial id="material1" color="#ff0000"></PhongMaterial>
-    <LambertMaterial id="material2" color="#0000ff"></LambertMaterial>
-    <Scene>
-      <PointLight :position="{ y: 50, z: 50 }"></PointLight>
-      <Box ref="box" :size="10" material="material1"></Box>
-      <Sphere ref="sphere" :radius="10" :position="{ x: 50 }" material="material2"></Sphere>
-    </Scene>
-  </Renderer>
-```
-
-## InstancedMesh
-
-Take a look at [Test3.vue](/src/components/Test3.vue).
-
-### Template
-
-```html
-<Renderer ref="renderer" :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }">
+<Renderer ref="renderer">
   <Camera :position="{ z: 100 }"></Camera>
-  <PhongMaterial id="material" color="#ffffff"></PhongMaterial>
-  <Scene id="scene1">
-    <PointLight color="#ffffff" :intensity="0.5" :position="{ y: 50, z: 50 }"></PointLight>
-    <PointLight color="#ff0000" :intensity="0.5" :position="{ y: -50, z: 50 }"></PointLight>
-    <InstancedMesh ref="imesh" material="material" :count="1000">
-      <SphereGeometry :radius="2"></SphereGeometry>
-    </InstancedMesh>
+  <LambertMaterial id="material"></LambertMaterial>
+  <Scene>
+    <PointLight :position="{ x: 0, y: 50, z: 50 }"></PointLight>
+    <Box ref="box" :size="10" :rotation="{ y: Math.PI / 4, z: Math.PI / 4 }" material="material"></Box>
   </Scene>
 </Renderer>
 ```
 
-### Script : init instanceMatrix
+## InstancedMesh
 
-```js
-const { randFloat: rnd, randFloatSpread: rndFS } = MathUtils;
-const imesh = this.$refs.imesh.mesh;
-const dummy = new Object3D();
-for (let i = 0; i < 1000; i++) {
-  dummy.position.set(rndFS(100), rndFS(100), rndFS(100));
-  const scale = rnd(0.2, 1);
-  dummy.scale.set(scale, scale, scale);
-  dummy.updateMatrix();
-  imesh.setMatrixAt(i, dummy.matrix);
-}
-imesh.instanceMatrix.needsUpdate = true;
+Take a look at [Test2.vue](/src/components/Test2.vue).
+
+### Template
+
+```html
+<Renderer ref="renderer" :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }" mouse-move="body" :mouse-raycast="true">
+  <Camera :position="{ z: 200 }"></Camera>
+  <StandardMaterial id="material" :transparent="true" :opacity="0.9" :metalness="0.8" :roughness="0.5"></StandardMaterial>
+  <Scene id="scene1" background="#000000">
+    <AmbientLight color="#808080"></AmbientLight>
+    <PointLight ref="light" color="#ff6000"></PointLight>
+    <PointLight ref="light" color="#0060ff" :intensity="0.5" :position="{ z: 200 }"></PointLight>
+    <InstancedMesh ref="imesh" material="material" :count="NUM_INSTANCES">
+      <BoxGeometry :width="2" :height="2" :depth="10"></BoxGeometry>
+    </InstancedMesh>
+  </Scene>
+</Renderer>
 ```
 
 ## GLTF
@@ -75,7 +58,7 @@ Take a look at [TestGLTF.vue](/src/components/TestGLTF.vue).
 </GLTFViewer>
 ```
 
-## Test
+## Dev
 
     git clone https://github.com/troisjs/trois
     cd trois
