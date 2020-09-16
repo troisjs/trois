@@ -8,6 +8,10 @@ I started from scratch... I don't know if I will have time to maintain this, but
 
 *Trois* is a french word, it means *Three*.
 
+## Installation
+
+    yarn add troisjs
+
 ## PoC
 
 I first made a simple *Proof of Concept*, take a look at [Test1.vue](/src/components/Test1.vue) :
