@@ -34,8 +34,13 @@ I started from scratch... I don't know if I will have time to maintain this, but
 - [ ] Meshes
   - [x] Box
   - [x] Sphere
+  - [x] InstancedMesh
   - [ ] ...
-- [x] InstancedMesh
+- [ ] Post Processing
+  - [x] EffectComposer
+  - [x] Renderpass
+  - [x] UnrealBloomPass
+  - [ ] ...
 
 ## Installation
 
