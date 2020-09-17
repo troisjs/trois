@@ -41,6 +41,7 @@ I started from scratch... I don't know if I will have time to maintain this, but
   - [x] Renderpass
   - [x] UnrealBloomPass
   - [ ] ...
+- [ ] Improve HMR
 
 ## Installation
 
