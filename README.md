@@ -13,6 +13,30 @@ I started from scratch... I don't know if I will have time to maintain this, but
 
 *Trois* is a french word, it means *Three*.
 
+## Features
+
+- [ ] Lights
+  - [x] AmbientLight
+  - [x] PointLight
+  - [x] SpotLight
+  - [ ] ...
+- [ ] Materials
+  - [x] Basic
+  - [x] Phong
+  - [x] Lambert
+  - [x] Standard
+  - [x] Sub Surface Scattering
+  - [ ] ...
+- [ ] Geometries
+  - [x] Box
+  - [x] Sphere
+  - [ ] ...
+- [ ] Meshes
+  - [x] Box
+  - [x] Sphere
+  - [ ] ...
+- [x] InstancedMesh
+
 ## Installation
 
     yarn add troisjs
