@@ -1,3 +1,11 @@
+/**
+ * ------------------------------------------------------------------------------------------
+ * Subsurface Scattering shader
+ * Based on three/examples/jsm/shaders/SubsurfaceScatteringShader.js
+ * Based on GDC 2011 – Approximating Translucency for a Fast, Cheap and Convincing Subsurface Scattering Look
+ * https://colinbarrebrisebois.com/2011/03/07/gdc-2011-approximating-translucency-for-a-fast-cheap-and-convincing-subsurface-scattering-look/
+ *------------------------------------------------------------------------------------------
+ */
 import {
   Color,
   ShaderChunk,
@@ -45,7 +53,11 @@ const SubsurfaceScatteringShader = {
     uniform vec3 thicknessColor;
 
     void RE_Direct_Scattering(const in IncidentLight directLight, const in vec2 uv, const in GeometricContext geometry, inout ReflectedLight reflectedLight) {
-      vec3 thickness = thicknessColor;
+      #ifdef USE_COLOR
+        vec3 thickness = vColor * thicknessColor;
+      #else
+        vec3 thickness = thicknessColor;
+      #endif
       vec3 scatteringHalf = normalize(directLight.direction + (geometry.normal * thicknessDistortion));
       float scatteringDot = pow(saturate(dot(geometry.viewDir, -scatteringHalf)), thicknessPower) * thicknessScale;
       vec3 scatteringIllu = (scatteringDot + thicknessAmbient) * thickness;

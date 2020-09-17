@@ -33,6 +33,18 @@ export default {
       type: Number,
       default: 4,
     },
+    transparent: {
+      type: Boolean,
+      default: false,
+    },
+    opacity: {
+      type: Number,
+      default: 1,
+    },
+    vertexColors: {
+      type: Boolean,
+      default: false,
+    },
   },
   created() {
     const params = SubsurfaceScatteringShader;
@@ -41,14 +53,17 @@ export default {
       if (key === 'diffuse' || key === 'thicknessColor') {
         value = new Color(value);
       }
-      if (key !== 'id') uniforms[key].value = value;
+      if (key !== 'id' && key !== 'transparent' && key !== 'vertexColors') {
+        uniforms[key].value = value;
+      }
     });
 
     this.material = new TShaderMaterial({
       ...params,
       uniforms,
       lights: true,
-      transparent: true,
+      transparent: this.transparent,
+      vertexColors: this.vertexColors,
     });
   },
 };
