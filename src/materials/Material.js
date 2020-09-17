@@ -46,9 +46,9 @@ export default {
   methods: {
     propsValues() {
       const props = {};
-      for (const [key, value] of Object.entries(this.$props)) {
+      Object.entries(this.$props).forEach(([key, value]) => {
         if (key !== 'id') props[key] = value;
-      }
+      });
       return props;
     },
   },
