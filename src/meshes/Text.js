@@ -15,6 +15,7 @@ export default {
     bevelSize: { type: Number, default: 8 },
     bevelOffset: { type: Number, default: 0 },
     bevelSegments: { type: Number, default: 5 },
+    align: { type: [Boolean, String], default: false },
   },
   created() {
     const loader = new FontLoader();
@@ -32,6 +33,11 @@ export default {
         bevelOffset: this.bevelOffset,
         bevelSegments: this.bevelSegments,
       });
+
+      if (this.align === 'center') {
+        this.geometry.center();
+      }
+
       this.initMesh();
     });
   },
