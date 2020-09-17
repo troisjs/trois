@@ -11,6 +11,8 @@ Demos : https://troisjs.github.io/trois/
 
 I started from scratch... I don't know if I will have time to maintain this, but feel free to participate :)
 
+I will try to rewrite some of my  [WebGL demos](https://codepen.io/collection/AGZywR) to see if this little toy can do the job.
+
 *Trois* is a french word, it means *Three*.
 
 ## Features
@@ -77,7 +79,7 @@ Take a look at [Test2.vue](/src/components/Test2.vue).
   <StandardMaterial id="material" :transparent="true" :opacity="0.9" :metalness="0.8" :roughness="0.5"></StandardMaterial>
   <Scene id="scene1" background="#000000">
     <AmbientLight color="#808080"></AmbientLight>
-    <PointLight ref="light" color="#ff6000"></PointLight>
+    <PointLight color="#ff6000"></PointLight>
     <PointLight ref="light" color="#0060ff" :intensity="0.5" :position="{ z: 200 }"></PointLight>
     <InstancedMesh ref="imesh" material="material" :count="NUM_INSTANCES">
       <BoxGeometry :width="2" :height="2" :depth="10"></BoxGeometry>
