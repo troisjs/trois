@@ -2,6 +2,11 @@
 
 I wanted to try to write a lib similar to [react-three-fiber](https://github.com/react-spring/react-three-fiber) but for VueJS.
 
+<p>
+  <img src="/screenshots/troisjs1.jpg" width="40%" />
+  <img src="/screenshots/troisjs2.jpg" width="40%" />
+</p>
+
 Demos : https://troisjs.github.io/trois/
 
 I started from scratch... I don't know if I will have time to maintain this, but feel free to participate :)
