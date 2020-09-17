@@ -1,8 +1,8 @@
 export function setFromProp(o, prop) {
   if (prop instanceof Object) {
-    for (const [key, value] of Object.entries(prop)) {
+    Object.entries(prop).forEach(([key, value]) => {
       o[key] = value;
-    }
+    });
   }
 };
 

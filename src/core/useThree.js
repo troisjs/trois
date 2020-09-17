@@ -68,9 +68,9 @@ export default function useThree() {
    */
   function init(params) {
     if (params) {
-      for (const [key, value] of Object.entries(params)) {
+      Object.entries(params).forEach(([key, value]) => {
         conf[key] = value;
-      }
+      });
     }
 
     if (!obj.scene) {
@@ -88,9 +88,9 @@ export default function useThree() {
     if (conf.orbit_ctrl) {
       obj.orbitCtrl = new OrbitControls(obj.camera, obj.renderer.domElement);
       if (conf.orbit_ctrl instanceof Object) {
-        for (const [key, value] of Object.entries(conf.orbit_ctrl)) {
+        Object.entries(conf.orbit_ctrl).forEach(([key, value]) => {
           obj.orbitCtrl[key] = value;
-        }
+        });
       }
     }
 

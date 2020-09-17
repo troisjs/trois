@@ -1,6 +1,6 @@
 import { Color, ShaderMaterial as TShaderMaterial, UniformsUtils } from 'three';
-import ShaderMaterial from './ShaderMaterial.js';
 import SubsurfaceScatteringShader from './SubsurfaceScatteringShader.js';
+import ShaderMaterial from './ShaderMaterial.js';
 
 export default {
   extends: ShaderMaterial,

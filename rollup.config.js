@@ -17,7 +17,8 @@ const plugins = [
   commonjs(),
   vue(),
   buble({
-    transforms: { forOf: false },
+    // transforms: { forOf: false },
+    objectAssign: 'Object.assign',
   }),
 ];
 
