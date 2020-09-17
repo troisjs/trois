@@ -18,16 +18,21 @@ export default {
     },
   },
   mounted() {
-    this.mesh = new Mesh(this.geometry, this.three.materials[this.material]);
-    setFromProp(this.mesh.position, this.position);
-    setFromProp(this.mesh.rotation, this.rotation);
-    setFromProp(this.mesh.scale, this.scale);
-    this.mesh.castShadow = this.castShadow;
-    this.mesh.receiveShadow = this.receiveShadow;
-    this.scene.add(this.mesh);
+    if (this.geometry) this.initMesh();
   },
   unmounted() {
-    this.geometry.dispose();
+    if (this.geometry) this.geometry.dispose();
+  },
+  methods: {
+    initMesh() {
+      this.mesh = new Mesh(this.geometry, this.three.materials[this.material]);
+      setFromProp(this.mesh.position, this.position);
+      setFromProp(this.mesh.rotation, this.rotation);
+      setFromProp(this.mesh.scale, this.scale);
+      this.mesh.castShadow = this.castShadow;
+      this.mesh.receiveShadow = this.receiveShadow;
+      this.scene.add(this.mesh);
+    },
   },
   render() {
     return [];
