@@ -4,8 +4,8 @@
     <StandardMaterial id="material" :transparent="true" :opacity="0.9" :metalness="0.8" :roughness="0.5"></StandardMaterial>
     <Scene id="scene1" background="#000000">
       <AmbientLight color="#808080"></AmbientLight>
-      <PointLight ref="light" color="#ff6000"></PointLight>
-      <PointLight ref="light" color="#0060ff" :intensity="0.5" :position="{ z: 200 }"></PointLight>
+      <PointLight color="#ff6000"></PointLight>
+      <PointLight ref="light" color="#0060ff" :intensity="0.5"></PointLight>
       <InstancedMesh ref="imesh" material="material" :count="NUM_INSTANCES">
         <BoxGeometry :width="2" :height="2" :depth="10"></BoxGeometry>
       </InstancedMesh>
@@ -38,10 +38,11 @@ export default {
     EffectComposer, RenderPass, UnrealBloomPass,
   },
   setup() {
-    const NUM_INSTANCES = 2500;
+    const NUM_INSTANCES = 2000;
     const instances = [];
     const target = new Vector3();
-    const dummy = new Object3D();
+    const dummyO = new Object3D();
+    const dummyV = new Vector3();
 
     for (let i = 0; i < NUM_INSTANCES; i++) {
       instances.push({
@@ -58,7 +59,8 @@ export default {
       NUM_INSTANCES,
       instances,
       target,
-      dummy,
+      dummyO,
+      dummyV,
     };
   },
   mounted() {
@@ -71,11 +73,11 @@ export default {
     init() {
       // init instanced mesh matrix
       for (let i = 0; i < this.NUM_INSTANCES; i++) {
-        const { position, scale } = this.instances[i];
-        this.dummy.position.copy(position);
-        this.dummy.scale.set(scale, scale, scale);
-        this.dummy.updateMatrix();
-        this.imesh.setMatrixAt(i, this.dummy.matrix);
+        const { position, scale, scaleZ } = this.instances[i];
+        this.dummyO.position.copy(position);
+        this.dummyO.scale.set(scale, scale, scaleZ);
+        this.dummyO.updateMatrix();
+        this.imesh.setMatrixAt(i, this.dummyO.matrix);
       }
       this.imesh.instanceMatrix.needsUpdate = true;
 
@@ -86,19 +88,18 @@ export default {
       this.target.copy(this.renderer.three.mouseV3);
       this.light.position.copy(this.target);
 
-      const v = new Vector3();
       for (let i = 0; i < this.NUM_INSTANCES; i++) {
         const { position, scale, scaleZ, velocity, attraction, vlimit } = this.instances[i];
 
-        v.copy(this.target).sub(position).normalize().multiplyScalar(attraction);
-        velocity.add(v).clampScalar(-vlimit, vlimit);
+        this.dummyV.copy(this.target).sub(position).normalize().multiplyScalar(attraction);
+        velocity.add(this.dummyV).clampScalar(-vlimit, vlimit);
         position.add(velocity);
 
-        this.dummy.position.copy(position);
-        this.dummy.scale.set(scale, scale, scaleZ);
-        this.dummy.lookAt(v.copy(position).add(velocity));
-        this.dummy.updateMatrix();
-        this.imesh.setMatrixAt(i, this.dummy.matrix);
+        this.dummyO.position.copy(position);
+        this.dummyO.scale.set(scale, scale, scaleZ);
+        this.dummyO.lookAt(this.dummyV.copy(position).add(velocity));
+        this.dummyO.updateMatrix();
+        this.imesh.setMatrixAt(i, this.dummyO.matrix);
       }
       this.imesh.instanceMatrix.needsUpdate = true;
     },
