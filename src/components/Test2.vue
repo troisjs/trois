@@ -2,7 +2,7 @@
   <Renderer ref="renderer" :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }" mouse-move="body" :mouse-raycast="true">
     <Camera :position="{ z: 200 }"></Camera>
     <StandardMaterial id="material" :transparent="true" :opacity="0.9" :metalness="0.8" :roughness="0.5"></StandardMaterial>
-    <Scene id="scene1" background="#000000">
+    <Scene>
       <AmbientLight color="#808080"></AmbientLight>
       <PointLight color="#ff6000"></PointLight>
       <PointLight ref="light" color="#0060ff" :intensity="0.5"></PointLight>
@@ -20,23 +20,12 @@
 <script>
 import { Object3D, MathUtils, Vector3 } from 'three';
 
-import {
-  Renderer, Camera, Scene, AmbientLight, PointLight,
-  StandardMaterial, InstancedMesh, BoxGeometry,
-  EffectComposer, RenderPass, UnrealBloomPass,
-} from '../index.js';
-
 const {
   randFloat: rnd,
   randFloatSpread: rndFS,
 } = MathUtils;
 
 export default {
-  components: {
-    Renderer, Camera, Scene, AmbientLight, PointLight,
-    StandardMaterial, InstancedMesh, BoxGeometry,
-    EffectComposer, RenderPass, UnrealBloomPass,
-  },
   setup() {
     const NUM_INSTANCES = 2000;
     const instances = [];
