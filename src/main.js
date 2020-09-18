@@ -1,8 +1,8 @@
 import { createApp } from 'vue';
+import { TroisJSVuePlugin } from './plugin.js';
 import App from './App.vue';
-import TroisJSPlugin from './plugin.js';
 import './index.css';
 
 const app = createApp(App);
-app.use(TroisJSPlugin);
+app.use(TroisJSVuePlugin);
 app.mount('#app');

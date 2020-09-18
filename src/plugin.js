@@ -1,6 +1,6 @@
 import * as TROIS from './index.js';
 
-export default {
+export const TroisJSVuePlugin = {
   install: (app) => {
     const comps = [
       'Camera',

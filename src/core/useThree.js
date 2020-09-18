@@ -159,11 +159,13 @@ export default function useThree() {
    * remove listeners
    */
   function dispose() {
+    beforeRenderHandlers.splice(0);
     window.removeEventListener('resize', onResize);
     if (obj.mouse_move_element) {
       obj.mouse_move_element.removeEventListener('mousemove', onMousemove);
-      obj.mouse_move_element.removeEventListener('mouseleave', onMouseleave); 
+      obj.mouse_move_element.removeEventListener('mouseleave', onMouseleave);
     }
+    if (obj.orbitCtrl) obj.orbitCtrl.dispose();
   }
 
   /**

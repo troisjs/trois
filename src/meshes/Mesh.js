@@ -3,6 +3,7 @@ import { setFromProp } from '../tools.js';
 
 export default {
   inject: ['three', 'scene'],
+  emits: ['ready'],
   props: {
     material: String,
     position: Object,
@@ -32,6 +33,7 @@ export default {
       this.mesh.castShadow = this.castShadow;
       this.mesh.receiveShadow = this.receiveShadow;
       this.scene.add(this.mesh);
+      this.$emit('ready');
     },
   },
   render() {
