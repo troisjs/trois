@@ -1,4 +1,4 @@
-import { PerspectiveCamera } from 'three';
+import { PerspectiveCamera, Vector3 } from 'three';
 import { setFromProp } from '../tools.js';
 
 export default {
@@ -8,12 +8,26 @@ export default {
       type: Number,
       default: 50,
     },
-    position: Object,
+    position: {
+      type: [Object, Vector3],
+      default: { x: 0, y: 0, z: 0 },
+    },
+  },
+  watch: {
+    fov() {
+      this.camera.fov = this.fov;
+    },
+    position: {
+      deep: true,
+      handler() {
+        setFromProp(this.camera.position, this.position);
+      },
+    },
   },
   created() {
-    const camera = new PerspectiveCamera(this.fov);
-    setFromProp(camera.position, this.position);
-    this.three.camera = camera;
+    this.camera = new PerspectiveCamera(this.fov);
+    setFromProp(this.camera.position, this.position);
+    this.three.camera = this.camera;
   },
   render() {
     return [];
