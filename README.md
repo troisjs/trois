@@ -3,8 +3,9 @@
 I wanted to try to write a lib similar to [react-three-fiber](https://github.com/react-spring/react-three-fiber) but for VueJS.
 
 <p>
-  <img src="/screenshots/troisjs1.jpg" width="40%" />
-  <img src="/screenshots/troisjs2.jpg" width="40%" />
+  <img src="/screenshots/troisjs1.jpg" width="45%" />
+  <img src="/screenshots/troisjs2.jpg" width="45%" />
+  <img src="/screenshots/troisjs3.jpg" width="45%" />
 </p>
 
 Demos : https://troisjs.github.io/trois/
