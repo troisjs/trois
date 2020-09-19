@@ -21,10 +21,10 @@ I will try to rewrite some of my [WebGL demos](https://codepen.io/collection/AGZ
 Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects when you update a template**. This means the result in your browser will be automatically updated without reloading all the stuff. **This is really helpful when you are creating a TroisJS Scene**.
 
 - [ ] HMR
-  - [x] Camera : position
+  - [x] PerspectiveCamera : aspect, far, fov, near, position
   - [x] Light : position
-  - [x] Material : color
-  - [x] Mesh : position, rotation ,scale
+  - [x] Material : color, depthTest, depthWrite, fog, opacity, transparent
+  - [x] Mesh : position, rotation, scale
   - [ ] ...
 
 ## Features

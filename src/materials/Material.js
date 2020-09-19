@@ -19,7 +19,7 @@ export default {
     },
     fog: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     opacity: {
       type: Number,
@@ -40,8 +40,15 @@ export default {
   },
   mounted() {
     this.three.materials[this.id] = this.material;
-    watch(() => this.color, () => {
-      this.material.color = new Color(this.color);
+
+    ['color', 'depthTest', 'depthWrite', 'fog', 'opacity', 'transparent'].forEach(p => {
+      watch(() => this[p], () => {
+        if (p === 'color') {
+          this.material.color = new Color(this.color);
+        } else {
+          this.material[p] = this[p];
+        }
+      });
     });
   },
   unmounted() {
