@@ -1,5 +1,6 @@
 import { InstancedMesh } from 'three';
-import { setFromProp } from '../tools.js';
+import { watch } from 'vue';
+import useBindProp from '../use/useBindProp.js';
 
 export default {
   inject: ['three', 'scene'],
@@ -33,9 +34,17 @@ export default {
   },
   mounted() {
     this.mesh = new InstancedMesh(this.conf.geometry, this.three.materials[this.materialId], this.count);
-    setFromProp(this.mesh.position, this.position);
+
+    useBindProp(this, 'position', this.mesh.position);
+    useBindProp(this, 'rotation', this.mesh.rotation);
+    useBindProp(this, 'scale', this.mesh.scale);
+
     this.mesh.castShadow = this.castShadow;
     this.mesh.receiveShadow = this.receiveShadow;
+    ['castShadow', 'receiveShadow'].forEach(p => {
+      watch(() => this[p], () => { this.mesh[p] = this[p]; });
+    });
+
     this.scene.add(this.mesh);
   },
   unmounted() {

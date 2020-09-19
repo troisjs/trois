@@ -11,6 +11,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    autoClear: {
+      type: Boolean,
+      default: true,
+    },
     shadow: {
       type: Boolean,
       default: false,
@@ -50,6 +54,7 @@ export default {
       canvas: this.$refs.canvas,
       antialias: this.antialias,
       alpha: this.alpha,
+      autoClear: this.autoClear,
       orbit_ctrl: this.orbitCtrl,
       mouse_move: this.mouseMove,
       mouse_raycast: this.mouseRaycast,

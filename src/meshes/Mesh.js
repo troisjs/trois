@@ -1,4 +1,5 @@
 import { Mesh } from 'three';
+import { watch } from 'vue';
 import useBindProp from '../use/useBindProp.js';
 
 export default {
@@ -38,6 +39,9 @@ export default {
 
       this.mesh.castShadow = this.castShadow;
       this.mesh.receiveShadow = this.receiveShadow;
+      ['castShadow', 'receiveShadow'].forEach(p => {
+        watch(() => this[p], () => { this.mesh[p] = this[p]; });
+      });
 
       this.scene.add(this.mesh);
       this.$emit('ready');

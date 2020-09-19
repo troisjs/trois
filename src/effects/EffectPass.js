@@ -8,4 +8,5 @@ export default {
   render() {
     return [];
   },
+  __hmrId: 'EffectPass',
 };

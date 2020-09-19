@@ -17,6 +17,7 @@ export default function useThree() {
     canvas: null,
     antialias: true,
     alpha: false,
+    autoClear: true,
     orbit_ctrl: false,
     mouse_move: false,
     mouse_raycast: false,
@@ -84,6 +85,7 @@ export default function useThree() {
     }
 
     obj.renderer = new WebGLRenderer({ canvas: conf.canvas, antialias: conf.antialias, alpha: conf.alpha });
+    obj.renderer.autoClear = conf.autoClear;
 
     if (conf.orbit_ctrl) {
       obj.orbitCtrl = new OrbitControls(obj.camera, obj.renderer.domElement);

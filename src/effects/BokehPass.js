@@ -46,4 +46,5 @@ export default {
     this.passes.push(pass);
     this.pass = pass;
   },
+  __hmrId: 'BokehPass',
 };

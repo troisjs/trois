@@ -33,8 +33,10 @@ export const TroisJSVuePlugin = {
       'InstancedMesh',
       'Sprite',
 
+      // 'BloomPass',
       'BokehPass',
       'EffectComposer',
+      'FilmPass',
       'RenderPass',
       'UnrealBloomPass',
 
