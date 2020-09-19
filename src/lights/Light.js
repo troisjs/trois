@@ -33,4 +33,5 @@ export default {
   render() {
     return [];
   },
+  __hmrId: 'Light',
 };

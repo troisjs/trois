@@ -17,4 +17,5 @@ export default {
   created() {
     this.geometry = new SphereBufferGeometry(this.radius, this.widthSegments, this.heightSegments);
   },
+  __hmrId: 'Sphere',
 };

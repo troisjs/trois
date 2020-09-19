@@ -45,4 +45,5 @@ export default {
   render() {
     return [];
   },
+  __hmrId: 'Mesh',
 };

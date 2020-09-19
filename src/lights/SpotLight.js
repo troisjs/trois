@@ -24,4 +24,5 @@ export default {
   created() {
     this.light = new SpotLight(this.color, this.intensity, this.distance, this.angle, this.penumbra, this.decay);
   },
+  __hmrId: 'SpotLight',
 };

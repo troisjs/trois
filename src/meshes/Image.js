@@ -22,4 +22,5 @@ export default {
     // this material is not mounted, it won't be auto dispose
     this.material.dispose();
   },
+  __hmrId: 'Image',
 };

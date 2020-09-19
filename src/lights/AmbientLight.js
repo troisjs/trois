@@ -6,4 +6,5 @@ export default {
   created() {
     this.light = new AmbientLight(this.color, this.intensity);
   },
+  __hmrId: 'AmbientLight',
 };

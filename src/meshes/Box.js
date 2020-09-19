@@ -27,4 +27,5 @@ export default {
       this.geometry = new BoxBufferGeometry(this.width, this.height, this.depth);
     }
   },
+  __hmrId: 'Box',
 };

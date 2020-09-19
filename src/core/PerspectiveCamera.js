@@ -32,4 +32,5 @@ export default {
   render() {
     return [];
   },
+  __hmrId: 'PerspectiveCamera',
 };

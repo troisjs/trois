@@ -41,4 +41,5 @@ export default {
   render() {
     return this.$slots.default();
   },
+  __hmrId: 'InstancedMesh',
 };

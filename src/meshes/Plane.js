@@ -24,4 +24,5 @@ export default {
   created() {
     this.geometry = new PlaneBufferGeometry(this.width, this.height, this.widthSegments, this.heightSegments);
   },
+  __hmrId: 'Plane',
 };

@@ -6,4 +6,5 @@ export default {
   created() {
     this.light = new DirectionalLight(this.color, this.intensity);
   },
+  __hmrId: 'DirectionalLight',
 };
