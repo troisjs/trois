@@ -12,23 +12,36 @@ Demos : https://troisjs.github.io/trois/
 
 I started from scratch... I don't know if I will have time to maintain this, but feel free to participate :)
 
-I will try to rewrite some of my  [WebGL demos](https://codepen.io/collection/AGZywR) to see if this little toy can do the job.
+I will try to rewrite some of my [WebGL demos](https://codepen.io/collection/AGZywR) to see if this little toy can do the job.
 
 *Trois* is a french word, it means *Three*.
+
+## HMR
+
+Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects when you update a template**. This means the result in your browser will be automatically updated without reloading all the stuff. **This is really helpful when you are creating a TroisJS Scene**.
+
+- [ ] HMR
+  - [x] Camera : position
+  - [x] Light : position
+  - [x] Material : color
+  - [x] Mesh : position, rotation ,scale
+  - [ ] ...
 
 ## Features
 
 - [ ] Lights
   - [x] AmbientLight
+  - [x] DirectionalLight
   - [x] PointLight
   - [x] SpotLight
   - [ ] ...
 - [ ] Materials
   - [x] Basic
-  - [x] Phong
   - [x] Lambert
+  - [x] Phong
   - [x] Standard
-  - [x] Sub Surface Scattering
+  - [x] Physical
+  - [x] SubSurface
   - [ ] ...
 - [ ] Geometries
   - [x] Box
@@ -36,22 +49,29 @@ I will try to rewrite some of my  [WebGL demos](https://codepen.io/collection/AG
   - [ ] ...
 - [ ] Meshes
   - [x] Box
+  - [ ] Image (wip)
+  - [x] InstancedMesh
   - [x] Plane
   - [x] Sphere
+  - [x] Sprite
   - [x] Text
-  - [x] InstancedMesh
   - [ ] ...
 - [ ] Post Processing
   - [x] EffectComposer
   - [x] Renderpass
   - [x] UnrealBloomPass
   - [ ] ...
-- [ ] Watch props
-- [ ] Improve HMR
 
 ## Installation
 
     yarn add troisjs
+
+## Vue plugin
+
+```js
+import { TroisJSVuePlugin } from 'troisjs';
+app.use(TroisJSVuePlugin);
+```
 
 ## PoC
 
