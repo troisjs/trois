@@ -12,6 +12,7 @@ export const TroisJSVuePlugin = {
       'SphereGeometry',
 
       'AmbientLight',
+      'DirectionalLight',
       'PointLight',
       'SpotLight',
 
@@ -24,10 +25,12 @@ export const TroisJSVuePlugin = {
       'SubSurfaceMaterial',
 
       'Box',
-      'InstancedMesh',
+      'Image',
       'Plane',
       'Sphere',
       'Text',
+
+      'InstancedMesh',
 
       'BokehPass',
       'EffectComposer',

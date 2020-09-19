@@ -4,7 +4,7 @@ import { setFromProp } from '../tools.js';
 export default {
   inject: ['three', 'scene'],
   props: {
-    material: String,
+    materialId: String,
     count: Number,
     position: Object,
     castShadow: {
@@ -32,7 +32,7 @@ export default {
     }
   },
   mounted() {
-    this.mesh = new InstancedMesh(this.conf.geometry, this.three.materials[this.material], this.count);
+    this.mesh = new InstancedMesh(this.conf.geometry, this.three.materials[this.materialId], this.count);
     setFromProp(this.mesh.position, this.position);
     this.mesh.castShadow = this.castShadow;
     this.mesh.receiveShadow = this.receiveShadow;

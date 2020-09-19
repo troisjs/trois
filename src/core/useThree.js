@@ -166,6 +166,7 @@ export default function useThree() {
       obj.mouse_move_element.removeEventListener('mouseleave', onMouseleave);
     }
     if (obj.orbitCtrl) obj.orbitCtrl.dispose();
+    this.renderer.dispose();
   }
 
   /**
