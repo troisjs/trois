@@ -55,7 +55,7 @@ I will try to rewrite some of my  [WebGL demos](https://codepen.io/collection/AG
 
 ## PoC
 
-I first made a simple *Proof of Concept*, take a look at [Test1.vue](/src/components/Test1.vue) :
+I first made a simple *Proof of Concept*, take a look at [Demo1.vue](/src/components/demos/Demo1.vue) :
 
 ```html
 <template>
@@ -85,7 +85,7 @@ export default {
 
 ## InstancedMesh
 
-Take a look at [Test2.vue](/src/components/Test2.vue).
+Take a look at [Demo2.vue](/src/components/demos/Demo2.vue).
 
 ### Template
 
@@ -106,7 +106,7 @@ Take a look at [Test2.vue](/src/components/Test2.vue).
 
 ## GLTF
 
-Take a look at [TestGLTF.vue](/src/components/TestGLTF.vue).
+Take a look at [DemoGLTF.vue](/src/components/demos/DemoGLTF.vue).
 
 ```html
 <GLTFViewer src="test.glb" :camera-position="{ z: 1 }">
