@@ -6,7 +6,7 @@
       <AmbientLight color="#808080"></AmbientLight>
       <PointLight color="#ff6000"></PointLight>
       <PointLight ref="light" color="#0060ff" :intensity="0.5"></PointLight>
-      <InstancedMesh ref="imesh" material="material" :count="NUM_INSTANCES">
+      <InstancedMesh ref="imesh" material-id="material" :count="NUM_INSTANCES">
         <BoxGeometry :width="2" :height="2" :depth="10"></BoxGeometry>
       </InstancedMesh>
     </Scene>

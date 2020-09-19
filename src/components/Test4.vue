@@ -7,7 +7,7 @@
         ref="text"
         text="TroisJS"
         font-src="helvetiker_regular.typeface.json"
-        material="material"
+        material-id="material"
         align="center"
         @ready="anim"
       ></Text>
@@ -19,7 +19,6 @@
 export default {
   methods: {
     anim() {
-      console.log('anim');
       this.$refs.renderer.onBeforeRender(() => {
         this.$refs.text.mesh.rotation.x += 0.01;
       });
