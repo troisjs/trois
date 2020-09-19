@@ -22,8 +22,10 @@ Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects
 
 - [ ] HMR
   - [x] PerspectiveCamera : aspect, far, fov, near, position
-  - [x] Light : position
+  - [x] Light : castShadow, color, intensity, position, target
+    - [x] SpotLight : angle, decay, distance, penumbra
   - [x] Material : color, depthTest, depthWrite, fog, opacity, transparent
+    - [x] StandardMaterial : emissive, emissiveIntensity, metalness, roughness
   - [x] Mesh : position, rotation, scale
   - [ ] ...
 

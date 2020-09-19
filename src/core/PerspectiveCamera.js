@@ -1,5 +1,5 @@
 import { PerspectiveCamera, Vector3 } from 'three';
-import { toRef, watch } from 'vue';
+import { watch } from 'vue';
 import useBindProp from '../use/useBindProp.js';
 
 export default {

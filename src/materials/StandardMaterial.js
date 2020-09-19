@@ -1,4 +1,5 @@
-import { MeshStandardMaterial } from 'three';
+import { Color, MeshStandardMaterial } from 'three';
+import { watch } from 'vue';
 import Material from './Material';
 
 export default {
@@ -23,6 +24,15 @@ export default {
   },
   created() {
     this.material = new MeshStandardMaterial(this.propsValues());
+    ['emissive', 'emissiveIntensity', 'metalness', 'roughness'].forEach(p => {
+      watch(() => this[p], () => {
+        if (p === 'emissive') {
+          this.material.emissive = new Color(this.emissive);
+        } else {
+          this.material[p] = this[p];
+        }
+      });
+    });
   },
   __hmrId: 'StandardMaterial',
 };
