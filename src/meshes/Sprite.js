@@ -23,6 +23,7 @@ export default {
   unmounted() {
     this.texture.dispose();
     this.material.dispose();
+    this.scene.remove(this.sprite);
   },
   methods: {
     onLoaded() {

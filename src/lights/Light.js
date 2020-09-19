@@ -46,6 +46,9 @@ export default {
     this.scene.add(this.light);
     if (this.light.target) this.scene.add(this.light.target);
   },
+  unmounted() {
+    this.scene.remove(this.light);
+  },
   render() {
     return [];
   },

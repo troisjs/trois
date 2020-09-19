@@ -23,6 +23,7 @@ export default {
   },
   unmounted() {
     if (this.geometry) this.geometry.dispose();
+    if (this.mesh) this.scene.remove(this.mesh);
   },
   methods: {
     initMesh() {

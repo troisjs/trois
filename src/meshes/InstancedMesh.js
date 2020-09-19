@@ -38,6 +38,9 @@ export default {
     this.mesh.receiveShadow = this.receiveShadow;
     this.scene.add(this.mesh);
   },
+  unmounted() {
+    this.scene.remove(this.mesh);
+  },
   render() {
     return this.$slots.default();
   },
