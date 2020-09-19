@@ -5,3 +5,4 @@ export { default as Sphere } from './Sphere.js';
 export { default as Text } from './Text.js';
 
 export { default as InstancedMesh } from './InstancedMesh.js';
+export { default as Sprite } from './Sprite.js';

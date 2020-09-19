@@ -31,6 +31,7 @@ export const TroisJSVuePlugin = {
       'Text',
 
       'InstancedMesh',
+      'Sprite',
 
       'BokehPass',
       'EffectComposer',

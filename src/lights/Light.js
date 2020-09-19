@@ -1,4 +1,5 @@
 import { setFromProp } from '../tools.js';
+import useBindProp from '../use/useBindProp.js';
 
 export default {
   inject: ['scene'],
@@ -19,7 +20,7 @@ export default {
     position: Object,
   },
   mounted() {
-    setFromProp(this.light.position, this.position);
+    useBindProp(this, 'position', this.light.position);
 
     if (this.light.shadow) {
       this.light.castShadow = this.castShadow;

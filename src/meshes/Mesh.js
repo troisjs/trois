@@ -1,6 +1,5 @@
-import { watch } from 'vue';
 import { Mesh } from 'three';
-import { setFromProp } from '../tools.js';
+import useBindProp from '../use/useBindProp.js';
 
 export default {
   inject: ['three', 'scene'],
@@ -31,25 +30,16 @@ export default {
         this.material = this.three.materials[this.materialId];
       }
       this.mesh = new Mesh(this.geometry, this.material);
-      this.updateMesh();
-      this.scene.add(this.mesh);
 
-      this.addWatchers();
-      this.$emit('ready');
-    },
-    addWatchers() {
-      ['position', 'rotation', 'scale'].forEach(p => {
-        watch(() => this[p], () => {
-          setFromProp(this.mesh[p], this[p]);
-        }, { deep: true });
-      });
-    },
-    updateMesh() {
-      setFromProp(this.mesh.position, this.position);
-      setFromProp(this.mesh.rotation, this.rotation);
-      setFromProp(this.mesh.scale, this.scale);
+      useBindProp(this, 'position', this.mesh.position);
+      useBindProp(this, 'rotation', this.mesh.rotation);
+      useBindProp(this, 'scale', this.mesh.scale);
+
       this.mesh.castShadow = this.castShadow;
       this.mesh.receiveShadow = this.receiveShadow;
+
+      this.scene.add(this.mesh);
+      this.$emit('ready');
     },
   },
   render() {
