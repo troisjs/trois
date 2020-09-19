@@ -31,7 +31,6 @@ export default {
       this.$emit('loaded');
     },
     updateUV() {
-      // console.log(this.texture);
       this.iWidth = this.texture.image.width;
       this.iHeight = this.texture.image.height;
       this.iRatio = this.iWidth / this.iHeight;

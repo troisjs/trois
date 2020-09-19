@@ -14,8 +14,18 @@ export default {
       default: 12,
     },
   },
+  watch: {
+    radius() { this.refreshGeometry(); },
+    widthSegments() { this.refreshGeometry(); },
+    heightSegments() { this.refreshGeometry(); },
+  },
   created() {
-    this.geometry = new SphereBufferGeometry(this.radius, this.widthSegments, this.heightSegments);
+    this.createGeometry();
+  },
+  methods: {
+    createGeometry() {
+      this.geometry = new SphereBufferGeometry(this.radius, this.widthSegments, this.heightSegments);
+    },
   },
   __hmrId: 'Sphere',
 };

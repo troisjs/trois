@@ -28,6 +28,10 @@ Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects
   - [x] Material : color, depthTest, depthWrite, fog, opacity, transparent
     - [x] StandardMaterial : emissive, emissiveIntensity, metalness, roughness
   - [x] Mesh : position, rotation, scale, castShadow, receiveShadow
+    - [x] Box (geometry replace) : size, width, height, depth
+    - [x] Plane (geometry replace) : width, height, widthSegments, heightSegments
+    - [x] Sphere (geometry replace) : radius, widthSegments, heightSegments
+    - [x] Text (geometry replace) : all props except fontSrc (wip)
   - [ ] ...
 
 ## Features

@@ -46,6 +46,12 @@ export default {
       this.scene.add(this.mesh);
       this.$emit('ready');
     },
+    refreshGeometry() {
+      const oldGeo = this.geometry;
+      this.createGeometry();
+      this.mesh.geometry = this.geometry;
+      oldGeo.dispose();
+    },
   },
   render() {
     return [];

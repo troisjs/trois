@@ -1,5 +1,6 @@
 import { FontLoader, TextBufferGeometry } from 'three';
 import Mesh from './Mesh.js';
+import { watch } from 'vue';
 
 export default {
   extends: Mesh,
@@ -18,11 +19,29 @@ export default {
     align: { type: [Boolean, String], default: false },
   },
   created() {
+    // add watchers
+    const watchProps = [
+      'text', 'size', 'height', 'curveSegments',
+      'bevelEnabled', 'bevelThickness', 'bevelSize', 'bevelOffset', 'bevelSegments',
+      'align',
+    ];
+    watchProps.forEach(p => {
+      watch(() => this[p], () => {
+        if (this.font) this.refreshGeometry();
+      });
+    });
+
     const loader = new FontLoader();
     loader.load(this.fontSrc, (font) => {
       this.font = font;
+      this.createGeometry();
+      this.initMesh();
+    });
+  },
+  methods: {
+    createGeometry() {
       this.geometry = new TextBufferGeometry(this.text, {
-        font,
+        font: this.font,
         size: this.size,
         height: this.height,
         depth: this.depth,
@@ -37,8 +56,6 @@ export default {
       if (this.align === 'center') {
         this.geometry.center();
       }
-
-      this.initMesh();
-    });
+    },
   },
 };

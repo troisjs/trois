@@ -20,12 +20,23 @@ export default {
       default: 1,
     },
   },
+  watch: {
+    size() { this.refreshGeometry(); },
+    width() { this.refreshGeometry(); },
+    height() { this.refreshGeometry(); },
+    depth() { this.refreshGeometry(); },
+  },
   created() {
-    if (this.size) {
-      this.geometry = new BoxBufferGeometry(this.size, this.size, this.size);
-    } else {
-      this.geometry = new BoxBufferGeometry(this.width, this.height, this.depth);
-    }
+    this.createGeometry();
+  },
+  methods: {
+    createGeometry() {
+      if (this.size) {
+        this.geometry = new BoxBufferGeometry(this.size, this.size, this.size);
+      } else {
+        this.geometry = new BoxBufferGeometry(this.width, this.height, this.depth);
+      }
+    },
   },
   __hmrId: 'Box',
 };
