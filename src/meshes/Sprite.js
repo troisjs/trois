@@ -7,19 +7,51 @@ export default {
   props: {
     src: String,
     position: Object,
+    scale: Object,
   },
   mounted() {
-    this.texture = new TextureLoader().load(this.src, () => { this.$emit('loaded'); });
+    this.texture = new TextureLoader().load(this.src, this.onLoaded);
     this.material = new SpriteMaterial({ map: this.texture });
     this.sprite = new Sprite(this.material);
+    this.geometry = this.sprite.geometry;
     useBindProp(this, 'position', this.sprite.position);
+    useBindProp(this, 'scale', this.sprite.scale);
+
     this.scene.add(this.sprite);
     this.$emit('ready');
   },
   unmounted() {
     this.texture.dispose();
+    this.material.dispose();
+  },
+  methods: {
+    onLoaded() {
+      this.updateUV();
+      this.$emit('loaded');
+    },
+    updateUV() {
+      // console.log(this.texture);
+      this.iWidth = this.texture.image.width;
+      this.iHeight = this.texture.image.height;
+      this.iRatio = this.iWidth / this.iHeight;
+
+      let x = 0.5, y = 0.5;
+      if (this.iRatio > 1) {
+        y = 0.5 / this.iRatio;
+      } else {
+        x = 0.5 / this.iRatio;
+      }
+
+      const positions = this.geometry.attributes.position.array;
+      positions[0] = -x; positions[1] = -y;
+      positions[5] = x; positions[6] = -y;
+      positions[10] = x; positions[11] = y;
+      positions[15] = -x; positions[16] = y;
+      this.geometry.attributes.position.needsUpdate = true;
+    },
   },
   render() {
     return [];
   },
+  __hmrId: 'Sprite',
 };
