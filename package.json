@@ -1,17 +1,18 @@
 {
   "name": "troisjs",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "rollup": "rollup -c"
   },
   "dependencies": {
+    "chroma-js": "^2.1.0",
     "three": "^0.120"
   },
   "devDependencies": {
     "@rollup/plugin-buble": "^0.21.3",
-    "@vue/compiler-sfc": "^3.0.0-rc.11",
+    "@vue/compiler-sfc": "^3.0.0",
     "eslint": "^7.7.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-config-standard": "^14.1.1",
@@ -23,7 +24,7 @@
     "rollup-plugin-vue": "^6.0.0-beta.10",
     "sass": "^1.26.10",
     "vite": "^1.0.0-rc.4",
-    "vue": "^3.0.0-rc.10"
+    "vue": "^3.0.0"
   },
   "main": "build/trois.js",
   "module": "build/trois.module.js",
