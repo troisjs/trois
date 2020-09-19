@@ -37,6 +37,8 @@ export const TroisJSVuePlugin = {
       'EffectComposer',
       'RenderPass',
       'UnrealBloomPass',
+
+      'GLTFViewer',
     ];
 
     comps.forEach(comp => {

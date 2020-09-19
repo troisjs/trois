@@ -8,21 +8,21 @@
 </template>
 
 <script>
-import Test1 from './components/Test1.vue';
-import Test2 from './components/Test2.vue';
-import Test3 from './components/Test3.vue';
-import Test4 from './components/Test4.vue';
-import TestGLTF from './components/TestGLTF.vue';
+import Demo1 from './components/demos/Demo1.vue';
+import Demo2 from './components/demos/Demo2.vue';
+import Demo3 from './components/demos/Demo3.vue';
+import Demo4 from './components/demos/Demo4.vue';
+import DemoGLTF from './components/demos/DemoGLTF.vue';
 
 export default {
   name: 'App',
   components: {
-    Test1, Test2, Test3, Test4, TestGLTF,
+    Demo1, Demo2, Demo3, Demo4, DemoGLTF,
   },
   data() {
     return {
-      tests: ['Test1', 'Test2', 'Test3', 'Test4', 'TestGLTF'],
-      test: 'Test1',
+      tests: ['Demo1', 'Demo2', 'Demo3', 'Demo4', 'DemoGLTF'],
+      test: 'Demo1',
     };
   },
 };
