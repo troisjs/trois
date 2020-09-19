@@ -22,4 +22,5 @@ export default {
   render() {
     return [];
   },
+  __hmrId: 'ShaderMaterial',
 };

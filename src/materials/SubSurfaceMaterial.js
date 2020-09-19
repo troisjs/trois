@@ -66,4 +66,5 @@ export default {
       vertexColors: this.vertexColors,
     });
   },
+  __hmrId: 'SubSurfaceMaterial',
 };

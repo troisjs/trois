@@ -1,4 +1,5 @@
-import { FrontSide } from 'three';
+import { watch } from 'vue';
+import { Color, FrontSide } from 'three';
 
 export default {
   inject: ['three'],
@@ -39,6 +40,9 @@ export default {
   },
   mounted() {
     this.three.materials[this.id] = this.material;
+    watch(() => this.color, () => {
+      this.material.color = new Color(this.color);
+    });
   },
   unmounted() {
     this.material.dispose();
@@ -55,4 +59,5 @@ export default {
   render() {
     return [];
   },
+  __hmrId: 'Material',
 };

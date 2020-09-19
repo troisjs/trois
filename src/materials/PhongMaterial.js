@@ -8,4 +8,5 @@ export default {
       color: this.color,
     });
   },
+  __hmrId: 'PhongMaterial',
 };

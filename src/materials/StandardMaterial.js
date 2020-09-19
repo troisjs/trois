@@ -24,4 +24,5 @@ export default {
   created() {
     this.material = new MeshStandardMaterial(this.propsValues());
   },
+  __hmrId: 'StandardMaterial',
 };
