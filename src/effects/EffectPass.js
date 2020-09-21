@@ -5,6 +5,9 @@ export default {
       console.error('Missing parent EffectComposer');
     }
   },
+  unmounted() {
+    if (this.pass.dispose) this.pass.dispose();
+  },
   render() {
     return [];
   },

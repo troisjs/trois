@@ -37,10 +37,13 @@ export default {
       useBindProp(this, 'rotation', this.mesh.rotation);
       useBindProp(this, 'scale', this.mesh.scale);
 
-      this.mesh.castShadow = this.castShadow;
-      this.mesh.receiveShadow = this.receiveShadow;
       ['castShadow', 'receiveShadow'].forEach(p => {
+        this.mesh[p] = this[p];
         watch(() => this[p], () => { this.mesh[p] = this[p]; });
+      });
+
+      watch(() => this.materialId, () => {
+        this.mesh.material = this.three.materials[this.materialId];
       });
 
       this.scene.add(this.mesh);

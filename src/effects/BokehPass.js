@@ -17,17 +17,11 @@ export default {
       default: 0.01,
     },
   },
-  // watch: {
-  //   focus() {
-  //     this.pass.focus = this.focus;
-  //   },
-  //   aperture() {
-  //     this.pass.aperture = this.aperture;
-  //   },
-  //   maxblur() {
-  //     this.pass.maxblur = this.maxblur;
-  //   },
-  // },
+  watch: {
+    focus() { this.pass.uniforms.focus.value = this.focus; },
+    aperture() { this.pass.uniforms.aperture.value = this.aperture; },
+    maxblur() { this.pass.uniforms.maxblur.value = this.maxblur; },
+  },
   mounted() {
     if (!this.three.scene) {
       console.error('Missing Scene');

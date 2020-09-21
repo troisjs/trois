@@ -15,6 +15,7 @@ export default {
   mounted() {
     this.three.onAfterInit(() => {
       this.composer = new EffectComposer(this.three.renderer);
+      this.three.renderer.autoClear = false;
       this.passes.forEach(pass => {
         this.composer.addPass(pass);
       });

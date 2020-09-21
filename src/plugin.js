@@ -37,7 +37,9 @@ export const TroisJSVuePlugin = {
       'BokehPass',
       'EffectComposer',
       'FilmPass',
+      'HalftonePass',
       'RenderPass',
+      'SAOPass',
       'UnrealBloomPass',
 
       'GLTFViewer',
