@@ -1,7 +1,7 @@
 <template>
   <Renderer ref="renderer" :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }">
-    <Camera :position="{ z: 250 }"></Camera>
-    <BasicMaterial id="material"></BasicMaterial>
+    <Camera :position="{ z: 250 }" />
+    <BasicMaterial id="material" />
     <Scene>
       <Text
         ref="text"

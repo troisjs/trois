@@ -74,9 +74,13 @@ Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects
   - [ ] ...
 - [ ] Post Processing
   - [x] EffectComposer
-  - [x] Renderpass
-  - [x] UnrealBloomPass
-  - [ ] ...
+    - [x] BokehPass
+    - [x] FilmPass
+    - [x] HalftonePass
+    - [x] Renderpass
+    - [x] UnrealBloomPass
+    - [ ] ...
+- [ ] ...
 
 ## Installation
 
