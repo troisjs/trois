@@ -17,3 +17,7 @@ export function lerpv3(v1, v2, amount) {
   v1.y = lerp(v1.y, v2.y, amount);
   v1.z = lerp(v1.z, v2.z, amount);
 };
+
+export function limit(val, min, max) {
+  return val < min ? min : (val > max ? max : val);
+};
