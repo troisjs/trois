@@ -5,16 +5,10 @@ export default {
   extends: Geometry,
   props: {
     radius: Number,
-    widthSegments: {
-      type: Number,
-      default: 12,
-    },
-    heightSegments: {
-      type: Number,
-      default: 12,
-    },
+    widthSegments: { type: Number, default: 12 },
+    heightSegments: { type: Number, default: 12 },
   },
-  mounted() {
+  created() {
     this.parent.geometry = new SphereBufferGeometry(this.radius, this.widthSegments, this.heightSegments);
   },
 };
