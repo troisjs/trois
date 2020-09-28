@@ -9,7 +9,6 @@ export default {
     segments: { type: Number, default: 12 },
     phiStart: { type: Number, default: 0 },
     phiLength: { type: Number, default: Math.PI * 2 },
-
   },
   created() {
     this.createGeometry();

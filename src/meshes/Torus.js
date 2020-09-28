@@ -10,7 +10,6 @@ export default {
     radialSegments: { type: Number, default: 8 },
     tubularSegments: { type: Number, default: 6 },
     arc: { type: Number, default: Math.PI * 2 },
-
   },
   created() {
     this.createGeometry();

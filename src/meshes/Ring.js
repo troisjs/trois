@@ -11,7 +11,6 @@ export default {
     phiSegments: { type: Number, default: 1 },
     thetaStart: { type: Number, default: 0 },
     thetaLength: { type: Number, default: Math.PI * 2 },
-
   },
   created() {
     this.createGeometry();

@@ -5,14 +5,8 @@ export default {
   extends: Mesh,
   props: {
     radius: Number,
-    widthSegments: {
-      type: Number,
-      default: 12,
-    },
-    heightSegments: {
-      type: Number,
-      default: 12,
-    },
+    widthSegments: { type: Number, default: 12 },
+    heightSegments: { type: Number, default: 12 },
   },
   watch: {
     radius() { this.refreshGeometry(); },

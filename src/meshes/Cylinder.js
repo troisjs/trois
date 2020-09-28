@@ -13,7 +13,6 @@ export default {
     openEnded: { type: Boolean, default: false },
     thetaStart: { type: Number, default: 0 },
     thetaLength: { type: Number, default: Math.PI * 2 },
-
   },
   created() {
     this.createGeometry();

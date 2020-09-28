@@ -10,7 +10,6 @@ export default {
     radius: { type: Number, default: 1 },
     radialSegments: { type: Number, default: 8 },
     closed: { type: Boolean, default: false },
-
   },
   created() {
     this.createGeometry();

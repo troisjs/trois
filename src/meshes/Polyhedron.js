@@ -7,7 +7,6 @@ export default {
   props: {
     radius: { type: Number, default: 1 },
     detail: { type: Number, default: 0 },
-
   },
   created() {
     this.createGeometry();

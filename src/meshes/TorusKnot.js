@@ -11,7 +11,6 @@ export default {
     tubularSegments: { type: Number, default: 8 },
     p: { type: Number, default: 2 },
     q: { type: Number, default: 3 },
-
   },
   created() {
     this.createGeometry();

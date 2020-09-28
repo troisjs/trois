@@ -1,34 +1,24 @@
 import { PlaneBufferGeometry } from 'three';
+import { watch } from 'vue';
 import Mesh from './Mesh.js';
 
 export default {
   extends: Mesh,
   props: {
-    width: {
-      type: Number,
-      default: 1,
-    },
-    height: {
-      type: Number,
-      default: 1,
-    },
-    widthSegments: {
-      type: Number,
-      default: 1,
-    },
-    heightSegments: {
-      type: Number,
-      default: 1,
-    },
-  },
-  watch: {
-    width() { this.refreshGeometry(); },
-    height() { this.refreshGeometry(); },
-    widthSegments() { this.refreshGeometry(); },
-    heightSegments() { this.refreshGeometry(); },
+    width: { type: Number, default: 1 },
+    height: { type: Number, default: 1 },
+    widthSegments: { type: Number, default: 1 },
+    heightSegments: { type: Number, default: 1 },
   },
   created() {
     this.createGeometry();
+
+    const watchProps = ['width', 'height', 'widthSegments', 'heightSegments'];
+    watchProps.forEach(prop => {
+      watch(() => this[prop], () => {
+        this.refreshGeometry();
+      });
+    });
   },
   methods: {
     createGeometry() {
