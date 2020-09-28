@@ -61,16 +61,42 @@ Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects
   - [ ] ...
 - [ ] Geometries
   - [x] Box
+  - [x] Circle
+  - [x] Cone
+  - [x] Cylinder
+  - [x] Dodecahedron
+  - [x] Icosahedron
+  - [x] Lathe
+  - [x] Octahedron
+  - [x] Polyhedron
+  - [x] Ring
   - [x] Sphere
+  - [x] Tetrahedron
+  - [x] Torus
+  - [x] TorusKnot
+  - [x] Tube
   - [ ] ...
 - [ ] Meshes
   - [x] Box
+  - [x] Circle
+  - [x] Cone
+  - [x] Cylinder
+  - [x] Dodecahedron
+  - [x] Icosahedron
   - [ ] Image (wip)
   - [x] InstancedMesh
+  - [x] Lathe
+  - [x] Octahedron
   - [x] Plane
+  - [x] Polyhedron
+  - [x] Ring
   - [x] Sphere
   - [x] Sprite
+  - [x] Tetrahedron
   - [x] Text
+  - [x] Torus
+  - [x] TorusKnot
+  - [x] Tube
   - [ ] ...
 - [ ] Post Processing
   - [x] EffectComposer
