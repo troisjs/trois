@@ -4,7 +4,6 @@ I wanted to try to write a lib similar to [react-three-fiber](https://github.com
 
 <p>
   <img src="/screenshots/troisjs1.jpg" width="45%" />
-  <img src="/screenshots/troisjs2.jpg" width="45%" />
   <img src="/screenshots/troisjs3.jpg" width="45%" />
 </p>
 
@@ -20,29 +19,6 @@ I will try to rewrite some of my [WebGL demos](https://codepen.io/collection/AGZ
 
 Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects when you update a template**. This means the result in your browser will be automatically updated without reloading all the stuff. **This is really helpful when you are creating a TroisJS Scene**.
 
-- [ ] HMR
-  - [x] Scene : add or remove objects (lights, meshes)
-  - [x] PerspectiveCamera : aspect, far, fov, near, position
-  - [x] Light : castShadow, color, intensity, position, target
-    - [x] SpotLight : angle, decay, distance, penumbra
-    - [ ] ...
-  - [x] Material : color, depthTest, depthWrite, fog, opacity, transparent
-    - [x] StandardMaterial : emissive, emissiveIntensity, metalness, roughness
-    - [ ] ...
-  - [x] Mesh : materialId, position, rotation, scale, castShadow, receiveShadow
-    - [x] Box (geometry replace) : size, width, height, depth
-    - [x] Plane (geometry replace) : width, height, widthSegments, heightSegments
-    - [x] Sphere (geometry replace) : radius, widthSegments, heightSegments
-    - [x] Text (geometry replace) : all props except fontSrc (wip)
-    - [ ] ...
-  - [ ] PostProcessing
-    - [x] BokehPass : focus, aperture, maxblur
-    - [x] FilmPass : noiseIntensity, scanlinesIntensity, scanlinesCount, grayscale
-    - [x] HalftonePass : shape, radius, rotateR, rotateG, rotateB, scatter
-    - [x] UnrealBloomPass : strength, radius, threshold
-    - [ ] ...
-  - [ ] ...
-
 ## Features
 
 - [ ] Lights
@@ -57,7 +33,6 @@ Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects
   - [x] Phong
   - [x] Standard
   - [x] Physical
-  - [x] SubSurface
   - [ ] ...
 - [ ] Geometries
   - [x] Box
@@ -130,7 +105,7 @@ I first made a simple *Proof of Concept*, take a look at [Demo1.vue](/src/compon
     <LambertMaterial id="material" />
     <Scene>
       <PointLight :position="{ y: 50, z: 50 }" />
-      <Box ref="box" :size="10" :rotation="{ y: Math.PI / 4, z: Math.PI / 4 }" material="material" />
+      <Box ref="box" :size="10" :rotation="{ y: Math.PI / 4, z: Math.PI / 4 }" material-id="material" />
     </Scene>
   </Renderer>
 </template>
