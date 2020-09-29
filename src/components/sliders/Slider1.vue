@@ -11,7 +11,7 @@ import { Object3D } from 'three';
 import { gsap, Power4 } from 'gsap';
 import { lerp, limit } from '../../tools.js';
 import AnimatedPlane from './AnimatedPlane.js';
-import useTextures from './useTextures';
+import useTextures from '../../use/useTextures';
 
 export default {
   props: {

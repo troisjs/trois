@@ -18,9 +18,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    // mass: Number,
   },
   mounted() {
-    if (this.geometry) this.initMesh();
+    if (this.geometry && !this.mesh) this.initMesh();
   },
   unmounted() {
     if (this.geometry) this.geometry.dispose();
@@ -47,6 +48,12 @@ export default {
       });
 
       this.scene.add(this.mesh);
+
+      // if (this.three.cannon) {
+      //   this.mesh.mass = this.mass;
+      //   this.three.cannon.addMesh(this.mesh);
+      // }
+
       this.$emit('ready');
     },
     refreshGeometry() {
