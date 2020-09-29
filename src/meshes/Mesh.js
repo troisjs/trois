@@ -24,8 +24,9 @@ export default {
     if (this.geometry && !this.mesh) this.initMesh();
   },
   unmounted() {
-    if (this.geometry) this.geometry.dispose();
     if (this.mesh) this.scene.remove(this.mesh);
+    if (this.geometry) this.geometry.dispose();
+    if (this.material && !this.materialId) this.material.dispose();
   },
   methods: {
     initMesh() {

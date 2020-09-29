@@ -8,10 +8,10 @@ export default {
   extends: Mesh,
   props: {
     ...TextProps,
-    color: {
-      type: [String, Number],
-      default: 0xffffff,
-    },
+    color: { type: [String, Number], default: 0xffffff },
+    timeCoef: { type: Number, default: 0.001 },
+    noiseCoef: { type: Number, default: 0.015 },
+    zCoef: { type: Number, default: 10 },
   },
   created() {
     // add watchers
@@ -26,8 +26,14 @@ export default {
       });
     });
 
-    // uniform
-    this.time = { value: 0 };
+    // uniforms
+    this.uTime = { value: 0 };
+
+    this.uNoiseCoef = { value: this.noiseCoef };
+    watch(() => this.noiseCoef, () => { this.uNoiseCoef.value = this.noiseCoef; });
+
+    this.uZCoef = { value: this.zCoef };
+    watch(() => this.zCoef, () => { this.uZCoef.value = this.zCoef; });
 
     const loader = new FontLoader();
     loader.load(this.fontSrc, (font) => {
@@ -38,28 +44,32 @@ export default {
 
       const startTime = Date.now();
       this.three.onBeforeRender(() => {
-        this.time.value = (Date.now() - startTime) / 1000;
+        this.uTime.value = (Date.now() - startTime) * this.timeCoef;
       });
     });
   },
   methods: {
     createMaterial() {
-      this.material = new MeshStandardMaterial({ color: this.color });
+      this.material = new MeshStandardMaterial({ color: this.color, metalness: 0.8, roughness: 0.5 });
       this.material.onBeforeCompile = (shader) => {
-        shader.uniforms.time = this.time;
+        shader.uniforms.uTime = this.uTime;
+        shader.uniforms.uNoiseCoef = this.uNoiseCoef;
+        shader.uniforms.uZCoef = this.uZCoef;
         shader.vertexShader = `
-          uniform float time;
+          uniform float uTime;
+          uniform float uNoiseCoef;
+          uniform float uZCoef;
           ${snoise2}
         ` + shader.vertexShader;
 
         shader.vertexShader = shader.vertexShader.replace(
           '#include <begin_vertex>',
-          `
-            vec3 p = vec3(position * 0.01);
-            p.x += time;
+          `         
+            vec3 p = vec3(position * uNoiseCoef);
+            p.x += uTime;
             float noise = snoise(p.xy);
             vec3 transformed = vec3(position);
-            transformed.z += noise * 10.0;
+            transformed.z += noise * uZCoef;
           `
         );
         this.materialShader = shader;
