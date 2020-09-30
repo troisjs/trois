@@ -1,8 +1,8 @@
-import { FontLoader, MeshStandardMaterial, TextBufferGeometry } from 'three';
+import { FontLoader, MeshPhongMaterial, MeshStandardMaterial, TextBufferGeometry } from 'three';
 import { watch } from 'vue';
-import Mesh from '../meshes/Mesh.js';
-import TextProps from '../meshes/TextProps.js';
-import snoise2 from '../glsl/snoise2.glsl.js';
+import Mesh from '../../meshes/Mesh.js';
+import TextProps from '../../meshes/TextProps.js';
+import snoise2 from '../../glsl/snoise2.glsl.js';
 
 export default {
   extends: Mesh,
@@ -28,12 +28,10 @@ export default {
 
     // uniforms
     this.uTime = { value: 0 };
-
     this.uNoiseCoef = { value: this.noiseCoef };
-    watch(() => this.noiseCoef, () => { this.uNoiseCoef.value = this.noiseCoef; });
-
+    watch(() => this.noiseCoef, (value) => { this.uNoiseCoef.value = value; });
     this.uZCoef = { value: this.zCoef };
-    watch(() => this.zCoef, () => { this.uZCoef.value = this.zCoef; });
+    watch(() => this.zCoef, (value) => { this.uZCoef.value = value; });
 
     const loader = new FontLoader();
     loader.load(this.fontSrc, (font) => {
@@ -50,7 +48,7 @@ export default {
   },
   methods: {
     createMaterial() {
-      this.material = new MeshStandardMaterial({ color: this.color, metalness: 0.8, roughness: 0.5 });
+      this.material = new MeshPhongMaterial({ color: this.color });
       this.material.onBeforeCompile = (shader) => {
         shader.uniforms.uTime = this.uTime;
         shader.uniforms.uNoiseCoef = this.uNoiseCoef;
@@ -94,4 +92,5 @@ export default {
       }
     },
   },
+  __hmrId: 'NoisyText',
 };
