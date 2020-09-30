@@ -2,12 +2,12 @@
   <Renderer ref="renderer" :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }">
     <Camera :position="{ x: -0, y: -120, z: 30 }" />
     <Scene background="#ffffff">
+      <PointLight ref="light1" color="#0E09DC" :intensity="0.85" :position="{ x: 0, y: 0, z: 50 }" />
+      <PointLight ref="light2" color="#1CD1E1" :intensity="0.85" :position="{ x: 0, y: 0, z: 50 }" />
+      <PointLight ref="light3" color="#18C02C" :intensity="0.85" :position="{ x: 0, y: 0, z: 50 }" />
+      <PointLight ref="light4" color="#ee3bcf" :intensity="0.85" :position="{ x: 0, y: 0, z: 50 }" />
 
-      <PointLight ref="light1" color="#0E09DC" :intensity="0.85" :position="{ x: 0, y: 0, z: 30 }" />
-      <PointLight ref="light2" color="#1CD1E1" :intensity="0.85" :position="{ x: 0, y: 0, z: 30 }" />
-      <PointLight ref="light3" color="#18C02C" :intensity="0.85" :position="{ x: 0, y: 0, z: 30 }" />
-      <PointLight ref="light4" color="#ee3bcf" :intensity="0.85" :position="{ x: 0, y: 0, z: 30 }" />
-
+      <PhysicalMaterial id="text-material" />
       <NoisyText
         text="TroisJS"
         font-src="helvetiker_regular.typeface.json"
@@ -18,8 +18,10 @@
         :z-coef="5"
         :position="{ x: 0, y: 0, z: 30 }"
         :rotation="{ x: Math.PI / 2, y: 0, z: 0 }"
+        material-id="text-material"
       />
 
+      <PhysicalMaterial id="plane-material" />
       <NoisyPlane
         :width="200" :width-segments="100"
         :height="200" :height-segments="100"
@@ -27,7 +29,18 @@
         :noise-coef="0.03"
         :z-coef="7"
         :position="{ x: 0, y: 0, z: 0 }"
+        material-id="plane-material"
       />
+
+      <!-- <PhysicalMaterial id="sphere-material" />
+      <NoisySphere
+        :radius="30"
+        :time-coef="0.0003"
+        :noise-coef="0.06"
+        :disp-coef="10"
+        :position="{ x: 0, y: 0, z: 0 }"
+        material-id="sphere-material"
+      /> -->
 
     </Scene>
   </Renderer>
@@ -35,10 +48,11 @@
 
 <script>
 import NoisyPlane from '../noisy/NoisyPlane.js';
+import NoisySphere from '../noisy/NoisySphere.js';
 import NoisyText from '../noisy/NoisyText.js';
 
 export default {
-  components: { NoisyPlane, NoisyText },
+  components: { NoisyPlane, NoisySphere, NoisyText },
   mounted() {
     const renderer = this.$refs.renderer;
     const light1 = this.$refs.light1.light;
