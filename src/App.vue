@@ -11,17 +11,18 @@
 import Demo1 from './components/demos/Demo1.vue';
 import Demo2 from './components/demos/Demo2.vue';
 import Demo3 from './components/demos/Demo3.vue';
+import Demo4 from './components/demos/Demo4.vue';
 import Slider1 from './components/demos/Slider1.vue';
 import DemoGLTF from './components/demos/DemoGLTF.vue';
 
 export default {
   name: 'App',
   components: {
-    Demo1, Demo2, Demo3, Slider1, DemoGLTF,
+    Demo1, Demo2, Demo3, Demo4, Slider1, DemoGLTF,
   },
   data() {
     return {
-      tests: ['Demo1', 'Demo2', 'Demo3', 'Slider1', 'DemoGLTF'],
+      tests: ['Demo1', 'Demo2', 'Demo3', 'Demo4', 'Slider1', 'DemoGLTF'],
       test: 'Demo1',
     };
   },

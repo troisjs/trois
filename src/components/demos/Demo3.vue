@@ -1,43 +1,109 @@
 <template>
-  <Renderer ref="renderer" :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }" :shadow="true">
-    <Camera :position="{ z: 100 }" />
-    <PhongMaterial id="material" color="#ffffff" />
+  <Renderer ref="renderer" :auto-clear="false" :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }" mouse-move="body" :mouse-raycast="true">
+    <Camera :position="{ z: 200 }" />
+    <StandardMaterial id="material" :transparent="true" :opacity="0.9" :metalness="0.8" :roughness="0.5" />
+    <PhongMaterial id="material1" />
     <Scene>
-      <SpotLight color="#ffffff" :intensity="0.5" :position="{ y: 150, z: 0 }" :cast-shadow="true" :shadow-map-size="{ width: 1024, height: 1024 }" />
-      <SpotLight color="#ff0000" :intensity="0.5" :position="{ y: -150, z: 0 }" :cast-shadow="true" :shadow-map-size="{ width: 1024, height: 1024 }" />
-      <InstancedMesh ref="imesh" material-id="material" :count="NUM_INSTANCES" :cast-shadow="true" :receive-shadow="true">
-        <SphereGeometry :radius="5" />
+      <AmbientLight color="#808080" />
+      <PointLight color="#ff6000" />
+      <PointLight ref="light" color="#0060ff" :intensity="0.5" />
+      <InstancedMesh ref="imesh" material-id="material" :count="NUM_INSTANCES">
+        <BoxGeometry :width="2" :height="2" :depth="10" />
       </InstancedMesh>
+      <Text
+        text="TroisJS"
+        font-src="helvetiker_regular.typeface.json"
+        material-id="material1"
+        align="center"
+        :size="30"
+        :height="5"
+        :position="{ x: 0, y: 0, z: 0 }"
+        :cast-shadow="true"
+      />
     </Scene>
     <EffectComposer>
       <RenderPass />
-      <UnrealBloomPass :strength="2" />
+      <UnrealBloomPass :strength="1" />
+      <HalftonePass :radius="1" :scatter="0" />
     </EffectComposer>
   </Renderer>
 </template>
 
 <script>
-import { Object3D, MathUtils } from 'three';
+import { Object3D, MathUtils, Vector3 } from 'three';
+
+const {
+  randFloat: rnd,
+  randFloatSpread: rndFS,
+} = MathUtils;
 
 export default {
   setup() {
+    const NUM_INSTANCES = 2000;
+    const instances = [];
+    const target = new Vector3();
+    const dummyO = new Object3D();
+    const dummyV = new Vector3();
+
+    for (let i = 0; i < NUM_INSTANCES; i++) {
+      instances.push({
+        position: new Vector3(rndFS(200), rndFS(200), rndFS(200)),
+        scale: rnd(0.2, 1),
+        scaleZ: rnd(0.1, 1),
+        velocity: new Vector3(rndFS(2), rndFS(2), rndFS(2)),
+        attraction: 0.03 + rnd(-0.01, 0.01),
+        vlimit: 1.2 + rnd(-0.1, 0.1),
+      });
+    }
+
     return {
-      NUM_INSTANCES: 2000,
+      NUM_INSTANCES,
+      instances,
+      target,
+      dummyO,
+      dummyV,
     };
   },
   mounted() {
-    // init instanced mesh matrix
-    const imesh = this.$refs.imesh.mesh;
-    const dummy = new Object3D();
-    const { randFloat: rnd, randFloatSpread: rndFS } = MathUtils;
-    for (let i = 0; i < this.NUM_INSTANCES; i++) {
-      dummy.position.set(rndFS(200), rndFS(200), rndFS(200));
-      const scale = rnd(0.2, 1);
-      dummy.scale.set(scale, scale, scale);
-      dummy.updateMatrix();
-      imesh.setMatrixAt(i, dummy.matrix);
-    }
-    imesh.instanceMatrix.needsUpdate = true;
+    this.renderer = this.$refs.renderer;
+    this.imesh = this.$refs.imesh.mesh;
+    this.light = this.$refs.light.light;
+    this.init();
+  },
+  methods: {
+    init() {
+      // init instanced mesh matrix
+      for (let i = 0; i < this.NUM_INSTANCES; i++) {
+        const { position, scale, scaleZ } = this.instances[i];
+        this.dummyO.position.copy(position);
+        this.dummyO.scale.set(scale, scale, scaleZ);
+        this.dummyO.updateMatrix();
+        this.imesh.setMatrixAt(i, this.dummyO.matrix);
+      }
+      this.imesh.instanceMatrix.needsUpdate = true;
+
+      // animate
+      this.renderer.onBeforeRender(this.animate);
+    },
+    animate() {
+      this.target.copy(this.renderer.three.mouseV3);
+      this.light.position.copy(this.target);
+
+      for (let i = 0; i < this.NUM_INSTANCES; i++) {
+        const { position, scale, scaleZ, velocity, attraction, vlimit } = this.instances[i];
+
+        this.dummyV.copy(this.target).sub(position).normalize().multiplyScalar(attraction);
+        velocity.add(this.dummyV).clampScalar(-vlimit, vlimit);
+        position.add(velocity);
+
+        this.dummyO.position.copy(position);
+        this.dummyO.scale.set(scale, scale, scaleZ);
+        this.dummyO.lookAt(this.dummyV.copy(position).add(velocity));
+        this.dummyO.updateMatrix();
+        this.imesh.setMatrixAt(i, this.dummyO.matrix);
+      }
+      this.imesh.instanceMatrix.needsUpdate = true;
+    },
   },
 };
 </script>

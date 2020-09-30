@@ -58,7 +58,7 @@ Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects
   - [x] Cylinder
   - [x] Dodecahedron
   - [x] Icosahedron
-  - [ ] Image (wip)
+  - [x] Image
   - [x] InstancedMesh
   - [x] Lathe
   - [x] Octahedron
@@ -96,7 +96,7 @@ app.use(TroisJSVuePlugin);
 
 ## PoC
 
-I first made a simple *Proof of Concept*, take a look at [Demo1.vue](/src/components/demos/Demo1.vue) :
+I first made a simple *Proof of Concept*, take a look at [Example1.vue](/src/components/examples/Example1.vue) :
 
 ```html
 <template>
