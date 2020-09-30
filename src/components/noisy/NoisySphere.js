@@ -1,4 +1,3 @@
-import { MeshPhysicalMaterial } from 'three';
 import { watch } from 'vue';
 import Sphere from '../../meshes/Sphere.js';
 import snoise4 from '../../glsl/snoise4.glsl.js';
@@ -24,9 +23,8 @@ export default {
       uTime, uNoiseCoef, uDispCoef,
     };
   },
-  created() {
-    this.createGeometry();
-    this.createMaterial();
+  mounted() {
+    this.updateMaterial();
 
     const startTime = Date.now();
     this.three.onBeforeRender(() => {
@@ -34,8 +32,7 @@ export default {
     });
   },
   methods: {
-    createMaterial() {
-      this.material = new MeshPhysicalMaterial();
+    updateMaterial() {
       this.material.onBeforeCompile = (shader) => {
         shader.uniforms.uTime = this.uTime;
         shader.uniforms.uNoiseCoef = this.uNoiseCoef;
@@ -57,9 +54,9 @@ export default {
             transformed += normalize(position) * vNoise * uDispCoef;
           `
         );
-
         this.materialShader = shader;
       };
+      this.material.needsupdate = true;
     },
   },
   __hmrId: 'NoisySphere',

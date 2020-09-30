@@ -1,4 +1,3 @@
-import { MeshLambertMaterial } from 'three';
 import { watch } from 'vue';
 import Plane from '../../meshes/Plane.js';
 import snoise3 from '../../glsl/snoise3.glsl.js';
@@ -22,16 +21,15 @@ export default {
       uTime, uNoiseCoef, uZCoef,
     };
   },
-  created() {
-    this.createMaterial();
+  mounted() {
+    this.updateMaterial();
     const startTime = Date.now();
     this.three.onBeforeRender(() => {
       this.uTime.value = (Date.now() - startTime) * this.timeCoef;
     });
   },
   methods: {
-    createMaterial() {
-      this.material = new MeshLambertMaterial({});
+    updateMaterial() {
       this.material.onBeforeCompile = (shader) => {
         shader.uniforms.uTime = this.uTime;
         shader.uniforms.uNoiseCoef = this.uNoiseCoef;
@@ -53,9 +51,9 @@ export default {
             transformed.z += vNoise * uZCoef;
           `
         );
-
         this.materialShader = shader;
       };
+      this.material.needsupdate = true;
     },
   },
   __hmrId: 'NoisyPlane',

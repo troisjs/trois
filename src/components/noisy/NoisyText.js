@@ -1,54 +1,37 @@
-import { FontLoader, MeshPhongMaterial, MeshStandardMaterial, TextBufferGeometry } from 'three';
 import { watch } from 'vue';
-import Mesh from '../../meshes/Mesh.js';
-import TextProps from '../../meshes/TextProps.js';
+import Text from '../../meshes/Text.js';
 import snoise2 from '../../glsl/snoise2.glsl.js';
 
 export default {
-  extends: Mesh,
+  extends: Text,
   props: {
-    ...TextProps,
-    color: { type: [String, Number], default: 0xffffff },
     timeCoef: { type: Number, default: 0.001 },
     noiseCoef: { type: Number, default: 0.015 },
     zCoef: { type: Number, default: 10 },
   },
-  created() {
-    // add watchers
-    const watchProps = [
-      'text', 'size', 'height', 'curveSegments',
-      'bevelEnabled', 'bevelThickness', 'bevelSize', 'bevelOffset', 'bevelSegments',
-      'align',
-    ];
-    watchProps.forEach(p => {
-      watch(() => this[p], () => {
-        if (this.font) this.refreshGeometry();
-      });
-    });
-
+  setup(props) {
     // uniforms
-    this.uTime = { value: 0 };
-    this.uNoiseCoef = { value: this.noiseCoef };
-    watch(() => this.noiseCoef, (value) => { this.uNoiseCoef.value = value; });
-    this.uZCoef = { value: this.zCoef };
-    watch(() => this.zCoef, (value) => { this.uZCoef.value = value; });
+    const uTime = { value: 0 };
+    const uNoiseCoef = { value: props.noiseCoef };
+    watch(() => props.noiseCoef, (value) => { uNoiseCoef.value = value; });
+    const uZCoef = { value: props.zCoef };
+    watch(() => props.zCoef, (value) => { uZCoef.value = value; });
 
-    const loader = new FontLoader();
-    loader.load(this.fontSrc, (font) => {
-      this.font = font;
-      this.createGeometry();
-      this.createMaterial();
-      this.initMesh();
+    return {
+      uTime, uNoiseCoef, uZCoef,
+    };
+  },
+  mounted() {
+    this.material = this.three.materials[this.materialId];
+    this.updateMaterial();
 
-      const startTime = Date.now();
-      this.three.onBeforeRender(() => {
-        this.uTime.value = (Date.now() - startTime) * this.timeCoef;
-      });
+    const startTime = Date.now();
+    this.three.onBeforeRender(() => {
+      this.uTime.value = (Date.now() - startTime) * this.timeCoef;
     });
   },
   methods: {
-    createMaterial() {
-      this.material = new MeshPhongMaterial({ color: this.color });
+    updateMaterial() {
       this.material.onBeforeCompile = (shader) => {
         shader.uniforms.uTime = this.uTime;
         shader.uniforms.uNoiseCoef = this.uNoiseCoef;
@@ -72,24 +55,7 @@ export default {
         );
         this.materialShader = shader;
       };
-    },
-    createGeometry() {
-      this.geometry = new TextBufferGeometry(this.text, {
-        font: this.font,
-        size: this.size,
-        height: this.height,
-        depth: this.depth,
-        curveSegments: this.curveSegments,
-        bevelEnabled: this.bevelEnabled,
-        bevelThickness: this.bevelThickness,
-        bevelSize: this.bevelSize,
-        bevelOffset: this.bevelOffset,
-        bevelSegments: this.bevelSegments,
-      });
-
-      if (this.align === 'center') {
-        this.geometry.center();
-      }
+      this.material.needsupdate = true;
     },
   },
   __hmrId: 'NoisyText',

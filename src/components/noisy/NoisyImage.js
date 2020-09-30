@@ -27,7 +27,7 @@ export default {
       uTime, uNoiseCoef, uZCoef, uDispCoef,
     };
   },
-  created() {
+  mounted() {
     const startTime = Date.now();
     this.three.onBeforeRender(() => {
       this.uTime.value = (Date.now() - startTime) * this.timeCoef;
