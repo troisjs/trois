@@ -126,7 +126,10 @@ export default {
 
 ## InstancedMesh
 
-Take a look at [Demo2.vue](/src/components/demos/Demo2.vue).
+Take a look at :
+
+- [Demo3.vue](/src/components/demos/Demo3.vue)
+- [Demo4.vue](/src/components/demos/Demo4.vue)
 
 ## GLTF
 
