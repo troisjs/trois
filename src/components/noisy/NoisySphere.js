@@ -5,6 +5,7 @@ import snoise4 from '../../glsl/snoise4.glsl.js';
 export default {
   extends: Sphere,
   props: {
+    radius: { type: Number, default: 20 },
     widthSegments: { type: Number, default: 128 },
     heightSegments: { type: Number, default: 128 },
     timeCoef: { type: Number, default: 0.001 },
