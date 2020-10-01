@@ -1,12 +1,12 @@
 import { MeshPhongMaterial } from 'three';
+import { propsValues } from '../tools.js';
 import Material from './Material';
 
 export default {
   extends: Material,
-  created() {
-    this.material = new MeshPhongMaterial({
-      color: this.color,
-    });
+  setup(props) {
+    const material = new MeshPhongMaterial(propsValues(props, ['id']));
+    return { material };
   },
   __hmrId: 'PhongMaterial',
 };

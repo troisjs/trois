@@ -6,6 +6,16 @@ export function setFromProp(o, prop) {
   }
 };
 
+export function propsValues(props, exclude) {
+  const values = {};
+  Object.entries(props).forEach(([key, value]) => {
+    if (!exclude || (exclude && !exclude.includes(key))) {
+      values[key] = value;
+    }
+  });
+  return values;
+};
+
 export function lerp(value1, value2, amount) {
   amount = amount < 0 ? 0 : amount;
   amount = amount > 1 ? 1 : amount;

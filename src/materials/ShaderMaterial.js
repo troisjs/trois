@@ -9,15 +9,11 @@ export default {
     fragmentShader: String,
   },
   mounted() {
-    if (!this.material) {
-      // this.material = new ShaderMaterial(this.$props);
-    }
     this.three.materials[this.id] = this.material;
   },
   unmounted() {
     this.material.dispose();
-  },
-  methods: {
+    delete this.three.materials[this.id];
   },
   render() {
     return [];
