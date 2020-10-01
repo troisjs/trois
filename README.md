@@ -7,7 +7,8 @@ I wanted to try to write a lib similar to [react-three-fiber](https://github.com
   <img src="/screenshots/troisjs3.jpg" width="45%" />
 </p>
 
-Demos : https://troisjs.github.io/trois/
+- 💻 Demos : https://troisjs.github.io/trois/
+- 📖 Doc (wip) : https://troisjs.github.io/doc/
 
 I started from scratch... I don't know if I will have time to maintain this, but feel free to participate :)
 
