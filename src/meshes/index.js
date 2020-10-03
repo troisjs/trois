@@ -1,3 +1,5 @@
+export { default as Mesh } from './Mesh.js';
+
 export { default as Box } from './Box.js';
 export { default as Circle } from './Circle.js';
 export { default as Cone } from './Cone.js';

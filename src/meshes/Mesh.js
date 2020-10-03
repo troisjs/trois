@@ -10,20 +10,20 @@ export default {
     position: Object,
     rotation: Object,
     scale: Object,
-    castShadow: {
-      type: Boolean,
-      default: false,
-    },
-    receiveShadow: {
-      type: Boolean,
-      default: false,
-    },
-    // mass: Number,
+    castShadow: Boolean,
+    receiveShadow: Boolean,
+  },
+  provide() {
+    return {
+      mesh: this,
+    };
   },
   mounted() {
+    // console.log('Mesh mounted');
     if (this.geometry && !this.mesh) this.initMesh();
   },
   unmounted() {
+    // console.log('Mesh unmounted');
     if (this.mesh) this.scene.remove(this.mesh);
     if (this.geometry) this.geometry.dispose();
     if (this.material && !this.materialId) this.material.dispose();
@@ -34,7 +34,11 @@ export default {
         this.material = this.three.materials[this.materialId];
       }
       this.mesh = new Mesh(this.geometry, this.material);
-
+      this.bindProps();
+      this.scene.add(this.mesh);
+      this.$emit('ready');
+    },
+    bindProps() {
       useBindProp(this, 'position', this.mesh.position);
       useBindProp(this, 'rotation', this.mesh.rotation);
       useBindProp(this, 'scale', this.mesh.scale);
@@ -47,15 +51,10 @@ export default {
       watch(() => this.materialId, () => {
         this.mesh.material = this.three.materials[this.materialId];
       });
-
-      this.scene.add(this.mesh);
-
-      // if (this.three.cannon) {
-      //   this.mesh.mass = this.mass;
-      //   this.three.cannon.addMesh(this.mesh);
-      // }
-
-      this.$emit('ready');
+    },
+    setGeometry(geometry) {
+      this.geometry = geometry;
+      if (this.mesh) this.mesh.geometry = geometry;
     },
     refreshGeometry() {
       const oldGeo = this.geometry;
@@ -65,6 +64,9 @@ export default {
     },
   },
   render() {
+    if (this.$slots.default) {
+      return this.$slots.default();
+    }
     return [];
   },
   __hmrId: 'Mesh',

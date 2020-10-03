@@ -8,23 +8,12 @@ export default {
     materialId: String,
     count: Number,
     position: Object,
-    castShadow: {
-      type: Boolean,
-      default: false,
-    },
-    receiveShadow: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  setup() {
-    return {
-      conf: {},
-    };
+    castShadow: Boolean,
+    receiveShadow: Boolean,
   },
   provide() {
     return {
-      parent: this.conf,
+      mesh: this,
     };
   },
   beforeMount() {
@@ -33,7 +22,7 @@ export default {
     }
   },
   mounted() {
-    this.mesh = new InstancedMesh(this.conf.geometry, this.three.materials[this.materialId], this.count);
+    this.mesh = new InstancedMesh(this.geometry, this.three.materials[this.materialId], this.count);
 
     useBindProp(this, 'position', this.mesh.position);
     useBindProp(this, 'rotation', this.mesh.rotation);
@@ -52,6 +41,12 @@ export default {
   },
   unmounted() {
     this.scene.remove(this.mesh);
+  },
+  methods: {
+    setGeometry(geometry) {
+      this.geometry = geometry;
+      if (this.mesh) this.mesh.geometry = geometry;
+    },
   },
   render() {
     return this.$slots.default();

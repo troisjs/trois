@@ -43,6 +43,7 @@ export const TroisJSVuePlugin = {
       'Cylinder',
       'Dodecahedron',
       'Icosahedron',
+      'Mesh',
       'Lathe',
       'Octahedron',
       'Plane',

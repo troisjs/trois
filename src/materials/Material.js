@@ -2,7 +2,7 @@ import { watch } from 'vue';
 import { Color, FrontSide } from 'three';
 
 export default {
-  inject: ['three'],
+  inject: ['three', 'mesh'],
   props: {
     id: String,
     color: { type: [String, Number], default: '#ffffff' },
@@ -16,7 +16,8 @@ export default {
     vertexColors: Boolean,
   },
   created() {
-    this.three.materials[this.id] = this.material;
+    if (this.id) this.three.materials[this.id] = this.material;
+    if (this.mesh) this.mesh.material = this.material;
 
     // won't work for flatShading
     ['color', 'depthTest', 'depthWrite', 'fog', 'opacity', 'transparent'].forEach(p => {
