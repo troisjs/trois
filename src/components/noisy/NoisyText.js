@@ -22,7 +22,6 @@ export default {
     };
   },
   mounted() {
-    this.material = this.three.materials[this.materialId];
     this.updateMaterial();
 
     const startTime = Date.now();

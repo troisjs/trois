@@ -1,10 +1,11 @@
 <template>
   <Renderer ref="renderer">
     <Camera :position="{ z: 10 }" />
-    <LambertMaterial id="material" />
     <Scene>
       <PointLight :position="{ y: 50, z: 50 }" />
-      <Box ref="box" :size="1" :rotation="{ y: Math.PI / 4, z: Math.PI / 4 }" material-id="material" />
+      <Box ref="box" :size="1" :rotation="{ y: Math.PI / 4, z: Math.PI / 4 }">
+        <LambertMaterial />
+      </Box>
     </Scene>
   </Renderer>
 </template>

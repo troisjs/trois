@@ -7,7 +7,6 @@
       <PointLight ref="light3" color="#18C02C" :intensity="0.85" :position="{ x: 0, y: 0, z: 50 }" />
       <PointLight ref="light4" color="#ee3bcf" :intensity="0.85" :position="{ x: 0, y: 0, z: 50 }" />
 
-      <PhysicalMaterial id="text-material" />
       <NoisyText
         text="TroisJS"
         font-src="helvetiker_regular.typeface.json"
@@ -18,10 +17,10 @@
         :z-coef="5"
         :position="{ x: 0, y: 0, z: 30 }"
         :rotation="{ x: Math.PI / 2, y: 0, z: 0 }"
-        material-id="text-material"
-      />
+      >
+        <PhysicalMaterial />
+      </NoisyText>
 
-      <PhysicalMaterial id="plane-material" />
       <NoisyPlane
         :width="200" :width-segments="100"
         :height="200" :height-segments="100"
@@ -29,18 +28,19 @@
         :noise-coef="0.03"
         :z-coef="7"
         :position="{ x: 0, y: 0, z: 0 }"
-        material-id="plane-material"
-      />
+      >
+        <PhysicalMaterial />
+      </NoisyPlane>
 
-      <!-- <PhysicalMaterial id="sphere-material" />
-      <NoisySphere
-        :radius="30"
+      <!-- <NoisySphere
+        :radius="10"
         :time-coef="0.0003"
         :noise-coef="0.06"
         :disp-coef="10"
-        :position="{ x: 0, y: 0, z: 0 }"
-        material-id="sphere-material"
-      /> -->
+        :position="{ x: 0, y: 0, z: 30 }"
+      >
+        <PhysicalMaterial flat-shading />
+      </NoisySphere> -->
 
     </Scene>
   </Renderer>
