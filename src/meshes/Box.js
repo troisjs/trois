@@ -5,7 +5,7 @@ import Mesh from './Mesh.js';
 export default {
   extends: Mesh,
   props: {
-    size: { type: Number },
+    size: Number,
     width: { type: Number, default: 1 },
     height: { type: Number, default: 1 },
     depth: { type: Number, default: 1 },
