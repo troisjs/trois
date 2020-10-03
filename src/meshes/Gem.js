@@ -26,6 +26,8 @@ export default {
   },
   unmounted() {
     this.three.offBeforeRender(this.updateCubeRT);
+    if (this.meshBack) this.scene.remove(this.meshBack);
+    if (this.materialBack) this.materialBack.dispose();
   },
   methods: {
     initGem() {
@@ -44,14 +46,14 @@ export default {
       this.material.premultipliedAlpha = true;
       this.material.needsUpdate = true;
 
-      this.backMaterial = this.material.clone();
-      this.backMaterial.envMapIntensity = 5;
-      this.material.metalness = 1;
-      this.material.roughness = 0;
-      this.backMaterial.opacity = 0.5;
-      this.backMaterial.side = BackSide;
+      this.materialBack = this.material.clone();
+      this.materialBack.side = BackSide;
+      this.materialBack.envMapIntensity = 5;
+      this.materialBack.metalness = 1;
+      this.materialBack.roughness = 0;
+      this.materialBack.opacity = 0.5;
 
-      this.meshBack = new TMesh(this.geometry, this.backMaterial);
+      this.meshBack = new TMesh(this.geometry, this.materialBack);
 
       useBindProp(this, 'position', this.meshBack.position);
       useBindProp(this, 'rotation', this.meshBack.rotation);
