@@ -1,13 +1,12 @@
 {
   "name": "troisjs",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "rollup": "rollup -c"
   },
   "dependencies": {
-    "chroma-js": "^2.1.0",
     "gsap": "^3.5.1",
     "three": "^0.120"
   },

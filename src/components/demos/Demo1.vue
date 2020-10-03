@@ -42,17 +42,17 @@
         <PhysicalMaterial flat-shading />
       </NoisySphere> -->
 
-      <MirrorMesh ref="mesh1" :position="{ x: -30, y: -15, z: 20 }" auto-update>
+      <MirrorMesh ref="mesh1" :position="{ x: -30, y: -20, z: 15 }" auto-update>
         <DodecahedronGeometry :radius="8" />
         <StandardMaterial color="#ffffff" :metalness="1" :roughness="0" />
       </MirrorMesh>
 
-      <RefractionMesh ref="mesh2" :position="{ x: 0, y: -15, z: 20 }" auto-update>
+      <RefractionMesh ref="mesh2" :position="{ x: 0, y: -20, z: 15 }" auto-update>
         <TorusGeometry :radius="8" :tube="3" />
         <StandardMaterial color="#ffffff" :metalness="1" :roughness="0" />
       </RefractionMesh>
 
-      <Gem ref="mesh3" :position="{ x: 30, y: -15, z: 20 }" auto-update>
+      <Gem ref="mesh3" :position="{ x: 30, y: -20, z: 15 }" auto-update>
         <DodecahedronGeometry :radius="8" />
         <StandardMaterial color="#0000ff" :metalness="1" :roughness="0" />
       </Gem>
