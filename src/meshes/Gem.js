@@ -17,13 +17,15 @@ export default {
     cubeRTSize: { type: Number, default: 512 },
     cubeCameraNear: { type: Number, default: 0.1 },
     cubeCameraFar: { type: Number, default: 2000 },
+    cubeRTAutoUpdate: Boolean,
   },
   mounted() {
     this.initGem();
-    this.three.onBeforeRender(this.updateCubeRT);
+    if (this.cubeRTAutoUpdate) this.three.onBeforeRender(this.updateCubeRT);
+    else this.rendererComponent.onMounted(this.updateCubeRT);
   },
   unmounted() {
-    this.three.offBeforeRender(this.upateCubeRT);
+    this.three.offBeforeRender(this.updateCubeRT);
   },
   methods: {
     initGem() {

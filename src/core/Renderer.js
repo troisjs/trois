@@ -38,15 +38,18 @@ export default {
     width: String,
     height: String,
   },
-  setup(props) {
+  setup() {
     return {
       three: useThree(),
       raf: true,
+      onMountedCallbacks: [],
     };
   },
   provide() {
     return {
       three: this.three,
+      // renderer: this.three.renderer,
+      rendererComponent: this,
     };
   },
   mounted() {
@@ -68,12 +71,17 @@ export default {
       if (this.three.composer) this.animateC();
       else this.animate();
     };
+
+    this.onMountedCallbacks.forEach(c => c());
   },
   beforeUnmount() {
     this.raf = false;
     this.three.dispose();
   },
   methods: {
+    onMounted(callback) {
+      this.onMountedCallbacks.push(callback);
+    },
     onBeforeRender(callback) {
       this.three.onBeforeRender(callback);
     },

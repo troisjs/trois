@@ -3,7 +3,7 @@ import { watch } from 'vue';
 import useBindProp from '../use/useBindProp.js';
 
 export default {
-  inject: ['three', 'scene'],
+  inject: ['three', 'scene', 'rendererComponent'],
   emits: ['ready'],
   props: {
     materialId: String,

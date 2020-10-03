@@ -7,7 +7,7 @@ export default {
     id: String,
     background: [String, Number],
   },
-  setup (props) {
+  setup(props) {
     const scene = new Scene();
     if (props.background) scene.background = new Color(props.background);
     watch(() => props.background, (value) => { scene.background = new Color(value); });
@@ -22,6 +22,14 @@ export default {
     if (!this.three.scene) {
       this.three.scene = this.scene;
     }
+  },
+  methods: {
+    // add(o) {
+    //   this.scene.add(o);
+    // },
+    // remove(o) {
+    //   this.scene.remove(o);
+    // },
   },
   render() {
     if (this.$slots.default) {

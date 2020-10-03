@@ -14,13 +14,15 @@ export default {
     cubeRTSize: { type: Number, default: 512 },
     cubeCameraNear: { type: Number, default: 0.1 },
     cubeCameraFar: { type: Number, default: 2000 },
+    cubeRTAutoUpdate: Boolean,
   },
   mounted() {
     this.initMirrorMesh();
-    this.three.onBeforeRender(this.upateCubeRT);
+    if (this.cubeRTAutoUpdate) this.three.onBeforeRender(this.updateCubeRT);
+    else this.rendererComponent.onMounted(this.updateCubeRT);
   },
   unmounted() {
-    this.three.offBeforeRender(this.upateCubeRT);
+    this.three.offBeforeRender(this.updateCubeRT);
   },
   methods: {
     initMirrorMesh() {
@@ -32,11 +34,10 @@ export default {
       this.material.envMap = cubeRT.texture;
       this.material.needsUpdate = true;
     },
-    upateCubeRT() {
+    updateCubeRT() {
       this.mesh.visible = false;
       this.cubeCamera.update(this.three.renderer, this.scene);
       this.mesh.visible = true;
-      console.log('upateCubeRT');
     },
   },
   __hmrId: 'MirrorMesh',
