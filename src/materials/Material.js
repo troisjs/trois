@@ -15,6 +15,11 @@ export default {
     transparent: Boolean,
     vertexColors: Boolean,
   },
+  provide() {
+    return {
+      material: this,
+    };
+  },
   beforeMount() {
     this.createMaterial();
     if (this.id) this.three.materials[this.id] = this.material;
@@ -29,6 +34,14 @@ export default {
     if (this.id) delete this.three.materials[this.id];
   },
   methods: {
+    setMap(texture) {
+      this.material.map = texture;
+      this.material.needsUpdate = true;
+    },
+    setEnvMap(texture) {
+      this.material.envMap = texture;
+      this.material.needsUpdate = true;
+    },
     _addWatchers() {
       // don't work for flatShading
       ['color', 'depthTest', 'depthWrite', 'fog', 'opacity', 'side', 'transparent'].forEach(p => {
@@ -43,6 +56,9 @@ export default {
     },
   },
   render() {
+    if (this.$slots.default) {
+      return this.$slots.default();
+    }
     return [];
   },
   __hmrId: 'Material',
