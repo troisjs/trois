@@ -36,6 +36,7 @@ export const TroisJSVuePlugin = {
       'ShaderMaterial',
       'StandardMaterial',
       'SubSurfaceMaterial',
+      'ToonMaterial',
 
       'Box',
       'Circle',
