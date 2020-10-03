@@ -10,7 +10,9 @@ export default {
     radiusSegments: { type: Number, default: 8 },
     closed: { type: Boolean, default: false },
   },
-  created() {
-    this.parent.geometry = new TubeBufferGeometry(this.path, this.tubularSegments, this.radius, this.radiusSegments, this.closed);
+  methods: {
+    createGeometry() {
+      this.geometry = new TubeBufferGeometry(this.path, this.tubularSegments, this.radius, this.radiusSegments, this.closed);
+    },
   },
 };

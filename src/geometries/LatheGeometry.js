@@ -9,7 +9,9 @@ export default {
     phiStart: { type: Number, default: 0 },
     phiLength: { type: Number, default: Math.PI * 2 },
   },
-  created() {
-    this.parent.geometry = new LatheBufferGeometry(this.points, this.segments, this.phiStart, this.phiLength);
+  methods: {
+    createGeometry() {
+      this.geometry = new LatheBufferGeometry(this.points, this.segments, this.phiStart, this.phiLength);
+    },
   },
 };

@@ -11,7 +11,9 @@ export default {
     p: { type: Number, default: 2 },
     q: { type: Number, default: 3 },
   },
-  created() {
-    this.parent.geometry = new TorusKnotBufferGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.p, this.q);
+  methods: {
+    createGeometry() {
+      this.geometry = new TorusKnotBufferGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.p, this.q);
+    },
   },
 };

@@ -4,11 +4,13 @@ import Geometry from './Geometry.js';
 export default {
   extends: Geometry,
   props: {
-    radius: Number,
+    radius: { type: Number, default: 1 },
     widthSegments: { type: Number, default: 12 },
     heightSegments: { type: Number, default: 12 },
   },
-  created() {
-    this.parent.geometry = new SphereBufferGeometry(this.radius, this.widthSegments, this.heightSegments);
+  methods: {
+    createGeometry() {
+      this.geometry = new SphereBufferGeometry(this.radius, this.widthSegments, this.heightSegments);
+    },
   },
 };

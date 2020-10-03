@@ -1,5 +1,6 @@
 export { default as BoxGeometry } from './BoxGeometry.js';
 export { default as CircleGeometry } from './CircleGeometry.js';
+export { default as ConeGeometry } from './ConeGeometry.js';
 export { default as CylinderGeometry } from './CylinderGeometry.js';
 export { default as DodecahedronGeometry } from './DodecahedronGeometry.js';
 export { default as IcosahedronGeometry } from './IcosahedronGeometry.js';

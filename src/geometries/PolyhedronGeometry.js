@@ -9,7 +9,9 @@ export default {
     radius: { type: Number, default: 1 },
     detail: { type: Number, default: 0 },
   },
-  created() {
-    this.parent.geometry = new PolyhedronBufferGeometry(this.vertices, this.indices, this.radius, this.detail);
+  methods: {
+    createGeometry() {
+      this.geometry = new PolyhedronBufferGeometry(this.vertices, this.indices, this.radius, this.detail);
+    },
   },
 };

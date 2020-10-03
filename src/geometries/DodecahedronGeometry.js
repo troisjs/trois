@@ -7,7 +7,9 @@ export default {
     radius: { type: Number, default: 1 },
     detail: { type: Number, default: 0 },
   },
-  created() {
-    this.parent.geometry = new DodecahedronBufferGeometry(this.radius, this.detail);
+  methods: {
+    createGeometry() {
+      this.geometry = new DodecahedronBufferGeometry(this.radius, this.detail);
+    },
   },
 };

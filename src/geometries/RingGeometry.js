@@ -11,7 +11,9 @@ export default {
     thetaStart: { type: Number, default: 0 },
     thetaLength: { type: Number, default: Math.PI * 2 },
   },
-  created() {
-    this.parent.geometry = new RingBufferGeometry(this.innerRadius, this.outerRadius, this.thetaSegments, this.phiSegments, this.thetaStart, this.thetaLength);
+  methods: {
+    createGeometry() {
+      this.geometry = new RingBufferGeometry(this.innerRadius, this.outerRadius, this.thetaSegments, this.phiSegments, this.thetaStart, this.thetaLength);
+    },
   },
 };

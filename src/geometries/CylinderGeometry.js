@@ -13,7 +13,9 @@ export default {
     thetaStart: { type: Number, default: 0 },
     thetaLength: { type: Number, default: Math.PI * 2 },
   },
-  created() {
-    this.parent.geometry = new CylinderBufferGeometry(this.radiusTop, this.radiusBottom, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
+  methods: {
+    createGeometry() {
+      this.geometry = new CylinderBufferGeometry(this.radiusTop, this.radiusBottom, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
+    },
   },
 };

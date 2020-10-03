@@ -10,7 +10,9 @@ export default {
     tubularSegments: { type: Number, default: 6 },
     arc: { type: Number, default: Math.PI * 2 },
   },
-  created() {
-    this.parent.geometry = new TorusBufferGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.arc);
+  methods: {
+    createGeometry() {
+      this.geometry = new TorusBufferGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.arc);
+    },
   },
 };
