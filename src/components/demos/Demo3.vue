@@ -8,6 +8,9 @@
 
       <InstancedMesh ref="imesh" material-id="material" :count="NUM_INSTANCES">
         <BoxGeometry :width="2" :height="2" :depth="10" />
+        <!-- <CylinderGeometry :radius-top="2" :radius-bottom="2" :height="10" :rotate-x="Math.PI / 2" /> -->
+        <!-- <ConeGeometry :radius="2" :height="10" :rotate-x="Math.PI / 2" /> -->
+        <!-- <OctahedronGeometry :radius="3" /> -->
         <StandardMaterial :transparent="true" :opacity="0.9" :metalness="0.8" :roughness="0.5" />
       </InstancedMesh>
 

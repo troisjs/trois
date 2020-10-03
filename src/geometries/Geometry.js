@@ -3,6 +3,11 @@ import { watch } from 'vue';
 export default {
   emits: ['ready'],
   inject: ['mesh'],
+  props: {
+    rotateX: Number,
+    rotateY: Number,
+    rotateZ: Number,
+  },
   created() {
     if (!this.mesh) {
       console.error('Missing parent Mesh');
@@ -12,6 +17,7 @@ export default {
   },
   beforeMount() {
     this.createGeometry();
+    this.rotateGeometry();
     this.mesh.setGeometry(this.geometry);
   },
   mounted() {
@@ -21,6 +27,11 @@ export default {
     this.geometry.dispose();
   },
   methods: {
+    rotateGeometry() {
+      if (this.rotateX) this.geometry.rotateX(this.rotateX);
+      if (this.rotateY) this.geometry.rotateY(this.rotateY);
+      if (this.rotateZ) this.geometry.rotateZ(this.rotateZ);
+    },
     addWatchers() {
       this.watchProps.forEach(prop => {
         watch(() => this[prop], () => {
@@ -31,6 +42,7 @@ export default {
     refreshGeometry() {
       const oldGeo = this.geometry;
       this.createGeometry();
+      this.rotateGeometry();
       this.mesh.setGeometry(this.geometry);
       oldGeo.dispose();
     },
