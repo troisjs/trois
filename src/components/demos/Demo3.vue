@@ -1,15 +1,16 @@
 <template>
   <Renderer ref="renderer" :auto-clear="false" :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }" mouse-move="body" :mouse-raycast="true">
     <Camera :position="{ z: 200 }" />
-    <StandardMaterial id="material" :transparent="true" :opacity="0.9" :metalness="0.8" :roughness="0.5" />
-    <PhongMaterial id="material1" />
     <Scene>
       <AmbientLight color="#808080" />
       <PointLight color="#ff6000" />
       <PointLight ref="light" color="#0060ff" :intensity="0.5" />
+
       <InstancedMesh ref="imesh" material-id="material" :count="NUM_INSTANCES">
         <BoxGeometry :width="2" :height="2" :depth="10" />
+        <StandardMaterial :transparent="true" :opacity="0.9" :metalness="0.8" :roughness="0.5" />
       </InstancedMesh>
+
       <Text
         text="TroisJS"
         font-src="helvetiker_regular.typeface.json"
@@ -19,7 +20,9 @@
         :height="5"
         :position="{ x: 0, y: 0, z: 0 }"
         :cast-shadow="true"
-      />
+      >
+        <PhongMaterial />
+      </Text>
     </Scene>
     <EffectComposer>
       <RenderPass />

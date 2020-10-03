@@ -1,12 +1,12 @@
 <template>
   <Renderer ref="renderer" :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }" :shadow="true">
     <Camera :position="{ z: 100 }" />
-    <PhongMaterial id="material" color="#ffffff" />
     <Scene>
       <SpotLight color="#ffffff" :intensity="0.5" :position="{ y: 150, z: 0 }" :cast-shadow="true" :shadow-map-size="{ width: 1024, height: 1024 }" />
       <SpotLight color="#ff0000" :intensity="0.5" :position="{ y: -150, z: 0 }" :cast-shadow="true" :shadow-map-size="{ width: 1024, height: 1024 }" />
       <InstancedMesh ref="imesh" material-id="material" :count="NUM_INSTANCES" :cast-shadow="true" :receive-shadow="true">
         <SphereGeometry :radius="5" />
+        <PhongMaterial />
       </InstancedMesh>
     </Scene>
     <EffectComposer>
