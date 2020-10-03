@@ -56,6 +56,7 @@ export const TroisJSVuePlugin = {
       'TorusKnot',
       'Tube',
 
+      'Gem',
       'Image',
       'InstancedMesh',
       'MirrorMesh',
