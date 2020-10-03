@@ -1,4 +1,5 @@
 import { Scene, Color } from 'three';
+import { watch } from 'vue';
 
 export default {
   inject: ['three'],
@@ -9,6 +10,7 @@ export default {
   setup (props) {
     const scene = new Scene();
     if (props.background) scene.background = new Color(props.background);
+    watch(() => props.background, (value) => { scene.background = new Color(value); });
     return { scene };
   },
   provide() {

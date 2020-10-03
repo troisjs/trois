@@ -56,6 +56,10 @@ export default {
       this.geometry = geometry;
       if (this.mesh) this.mesh.geometry = geometry;
     },
+    setMaterial(material) {
+      this.material = material;
+      if (this.mesh) this.mesh.material = material;
+    },
     refreshGeometry() {
       const oldGeo = this.geometry;
       this.createGeometry();
