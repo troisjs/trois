@@ -28,10 +28,11 @@ export default {
     };
   },
   mounted() {
-    const startTime = Date.now();
-    this.three.onBeforeRender(() => {
-      this.uTime.value = (Date.now() - startTime) * this.timeCoef;
-    });
+    this.startTime = Date.now();
+    this.three.onBeforeRender(this.updateTime);
+  },
+  unmounted() {
+    this.three.offBeforeRender(this.updateTime);
   },
   methods: {
     createGeometry() {
@@ -79,6 +80,9 @@ export default {
         );
         this.materialShader = shader;
       };
+    },
+    updateTime() {
+      this.uTime.value = (Date.now() - this.startTime) * this.timeCoef;
     },
   },
   __hmrId: 'NoisyImage',

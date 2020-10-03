@@ -23,10 +23,11 @@ export default {
   },
   mounted() {
     this.updateMaterial();
-    const startTime = Date.now();
-    this.three.onBeforeRender(() => {
-      this.uTime.value = (Date.now() - startTime) * this.timeCoef;
-    });
+    this.startTime = Date.now();
+    this.three.onBeforeRender(this.updateTime);
+  },
+  unmounted() {
+    this.three.offBeforeRender(this.updateTime);
   },
   methods: {
     updateMaterial() {
@@ -54,6 +55,9 @@ export default {
         this.materialShader = shader;
       };
       this.material.needsupdate = true;
+    },
+    updateTime() {
+      this.uTime.value = (Date.now() - this.startTime) * this.timeCoef;
     },
   },
   __hmrId: 'NoisyPlane',

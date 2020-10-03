@@ -5,7 +5,7 @@ import Mesh from './Mesh.js';
 export default {
   extends: Mesh,
   props: {
-    radius: { type: Number, default: 1 },
+    radius: { type: Number, default: 0.5 },
     tube: { type: Number, default: 0.4 },
     radialSegments: { type: Number, default: 8 },
     tubularSegments: { type: Number, default: 6 },

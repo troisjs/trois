@@ -34,9 +34,9 @@ export default function useThree() {
   };
 
   // handlers
-  const afterInitHandlers = [];
-  const afterResizeHandlers = [];
-  const beforeRenderHandlers = [];
+  let afterInitHandlers = [];
+  let afterResizeHandlers = [];
+  let beforeRenderHandlers = [];
 
   // mouse tracking
   const mouse = new Vector2();
@@ -60,8 +60,8 @@ export default function useThree() {
     renderC,
     setSize,
     onAfterInit,
-    onAfterResize,
-    onBeforeRender,
+    onAfterResize, offAfterResize,
+    onBeforeRender, offBeforeRender,
   };
 
   /**
@@ -119,24 +119,38 @@ export default function useThree() {
   };
 
   /**
-   * add after init handler
+   * add after init callback
    */
   function onAfterInit(callback) {
     afterInitHandlers.push(callback);
   }
 
   /**
-   * add after resize handler
+   * add after resize callback
    */
   function onAfterResize(callback) {
     afterResizeHandlers.push(callback);
   }
 
   /**
-   * add before render handler
+   * remove after resize callback
+   */
+  function offAfterResize(callback) {
+    afterResizeHandlers = afterResizeHandlers.filter(c => c !== callback);
+  }
+
+  /**
+   * add before render callback
    */
   function onBeforeRender(callback) {
     beforeRenderHandlers.push(callback);
+  }
+
+  /**
+   * remove before render callback
+   */
+  function offBeforeRender(callback) {
+    beforeRenderHandlers = beforeRenderHandlers.filter(c => c !== callback);
   }
 
   /**
@@ -161,7 +175,7 @@ export default function useThree() {
    * remove listeners
    */
   function dispose() {
-    beforeRenderHandlers.splice(0);
+    beforeRenderHandlers = [];
     window.removeEventListener('resize', onResize);
     if (obj.mouse_move_element) {
       obj.mouse_move_element.removeEventListener('mousemove', onMousemove);
