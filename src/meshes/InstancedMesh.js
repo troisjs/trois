@@ -54,6 +54,10 @@ export default {
       this.geometry = geometry;
       if (this.mesh) this.mesh.geometry = geometry;
     },
+    setMaterial(material) {
+      this.material = material;
+      if (this.mesh) this.mesh.material = material;
+    },
   },
   render() {
     return this.$slots.default();
