@@ -22,4 +22,5 @@ export { default as Gem } from './Gem.js';
 export { default as Image } from './Image.js';
 export { default as InstancedMesh } from './InstancedMesh.js';
 export { default as MirrorMesh } from './MirrorMesh.js';
+export { default as RefractionMesh } from './RefractionMesh.js';
 export { default as Sprite } from './Sprite.js';

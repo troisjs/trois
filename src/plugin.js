@@ -60,6 +60,7 @@ export const TroisJSVuePlugin = {
       'Image',
       'InstancedMesh',
       'MirrorMesh',
+      'RefractionMesh',
       'Sprite',
 
       'BokehPass',
