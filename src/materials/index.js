@@ -8,3 +8,4 @@ export { default as ToonMaterial } from './ToonMaterial.js';
 
 export { default as Map } from './Map.js';
 export { default as EnvMap } from './EnvMap.js';
+export { default as RefractionMap } from './RefractionMap.js';

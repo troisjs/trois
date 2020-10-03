@@ -14,7 +14,7 @@ import useBindProp from '../use/useBindProp.js';
 export default {
   extends: Mesh,
   props: {
-    cubeRTSize: { type: Number, default: 512 },
+    cubeRTSize: { type: Number, default: 256 },
     cubeCameraNear: { type: Number, default: 0.1 },
     cubeCameraFar: { type: Number, default: 2000 },
     autoUpdate: Boolean,

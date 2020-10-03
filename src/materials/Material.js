@@ -42,6 +42,10 @@ export default {
       this.material.envMap = texture;
       this.material.needsUpdate = true;
     },
+    setRefractionMap(texture, ratio) {
+      this.material.refractionRatio = ratio;
+      this.setEnvMap(texture);
+    },
     _addWatchers() {
       // don't work for flatShading
       ['color', 'depthTest', 'depthWrite', 'fog', 'opacity', 'side', 'transparent'].forEach(p => {

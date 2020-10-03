@@ -12,9 +12,10 @@ import useBindProp from '../use/useBindProp.js';
 export default {
   extends: Mesh,
   props: {
-    cubeRTSize: { type: Number, default: 512 },
+    cubeRTSize: { type: Number, default: 256 },
     cubeCameraNear: { type: Number, default: 0.1 },
     cubeCameraFar: { type: Number, default: 2000 },
+    refractionRatio: { type: Number, default: 0.98 },
     autoUpdate: Boolean,
   },
   mounted() {
@@ -33,7 +34,7 @@ export default {
       this.scene.add(this.cubeCamera);
 
       this.material.envMap = cubeRT.texture;
-      this.material.refractionRatio = 0.95;
+      this.material.refractionRatio = this.refractionRatio;
       this.material.needsUpdate = true;
     },
     updateCubeRT() {
