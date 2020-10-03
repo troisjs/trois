@@ -9,5 +9,11 @@ export default {
   unmounted() {
     this.material.setEnvMap(null);
   },
+  methods: {
+    refreshTexture() {
+      this.createTexture();
+      this.material.setEnvMap(this.texture);
+    },
+  },
   __hmrId: 'EnvMap',
 };

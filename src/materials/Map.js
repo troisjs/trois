@@ -10,6 +10,10 @@ export default {
     this.material.setMap(null);
   },
   methods: {
+    refreshTexture() {
+      this.createTexture();
+      this.material.setMap(this.texture);
+    },
   },
   __hmrId: 'Map',
 };

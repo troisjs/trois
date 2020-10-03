@@ -1,5 +1,5 @@
 import { TextureLoader } from 'three';
-// import { watch } from 'vue';
+import { watch } from 'vue';
 
 export default {
   inject: ['three'],
@@ -11,12 +11,19 @@ export default {
     onError: Function,
   },
   created() {
-    this.texture = new TextureLoader().load(this.src, this.onLoaded, this.onProgress, this.onError);
+    this.createTexture();
+    watch(() => this.src, this.refreshTexture);
   },
   unmounted() {
     this.texture.dispose();
   },
   methods: {
+    createTexture() {
+      this.texture = new TextureLoader().load(this.src, this.onLoaded, this.onProgress, this.onError);
+    },
+    refreshTexture() {
+      this.createTexture();
+    },
     onLoaded() {
       if (this.onLoad) this.onLoad();
       this.$emit('loaded');
