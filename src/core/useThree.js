@@ -34,9 +34,9 @@ export default function useThree() {
   };
 
   // handlers
-  let afterInitHandlers = [];
-  let afterResizeHandlers = [];
-  let beforeRenderHandlers = [];
+  let afterInitCallbacks = [];
+  let afterResizeCallbacks = [];
+  let beforeRenderCallbacks = [];
 
   // mouse tracking
   const mouse = new Vector2();
@@ -113,7 +113,7 @@ export default function useThree() {
       obj.mouse_move_element.addEventListener('mouseleave', onMouseleave);
     }
 
-    afterInitHandlers.forEach(c => c());
+    afterInitCallbacks.forEach(c => c());
 
     return true;
   };
@@ -122,35 +122,35 @@ export default function useThree() {
    * add after init callback
    */
   function onAfterInit(callback) {
-    afterInitHandlers.push(callback);
+    afterInitCallbacks.push(callback);
   }
 
   /**
    * add after resize callback
    */
   function onAfterResize(callback) {
-    afterResizeHandlers.push(callback);
+    afterResizeCallbacks.push(callback);
   }
 
   /**
    * remove after resize callback
    */
   function offAfterResize(callback) {
-    afterResizeHandlers = afterResizeHandlers.filter(c => c !== callback);
+    afterResizeCallbacks = afterResizeCallbacks.filter(c => c !== callback);
   }
 
   /**
    * add before render callback
    */
   function onBeforeRender(callback) {
-    beforeRenderHandlers.push(callback);
+    beforeRenderCallbacks.push(callback);
   }
 
   /**
    * remove before render callback
    */
   function offBeforeRender(callback) {
-    beforeRenderHandlers = beforeRenderHandlers.filter(c => c !== callback);
+    beforeRenderCallbacks = beforeRenderCallbacks.filter(c => c !== callback);
   }
 
   /**
@@ -158,7 +158,7 @@ export default function useThree() {
    */
   function render() {
     if (obj.orbitCtrl) obj.orbitCtrl.update();
-    beforeRenderHandlers.forEach(c => c());
+    beforeRenderCallbacks.forEach(c => c());
     obj.renderer.render(obj.scene, obj.camera);
   }
 
@@ -167,7 +167,7 @@ export default function useThree() {
    */
   function renderC() {
     if (obj.orbitCtrl) obj.orbitCtrl.update();
-    beforeRenderHandlers.forEach(c => c());
+    beforeRenderCallbacks.forEach(c => c());
     obj.composer.render();
   }
 
@@ -175,7 +175,7 @@ export default function useThree() {
    * remove listeners
    */
   function dispose() {
-    beforeRenderHandlers = [];
+    beforeRenderCallbacks = [];
     window.removeEventListener('resize', onResize);
     if (obj.mouse_move_element) {
       obj.mouse_move_element.removeEventListener('mousemove', onMousemove);
@@ -224,7 +224,7 @@ export default function useThree() {
     } else {
       setSize(conf.resize.clientWidth, conf.resize.clientHeight);
     }
-    afterResizeHandlers.forEach(c => c());
+    afterResizeCallbacks.forEach(c => c());
   }
 
   /**
