@@ -1,19 +1,22 @@
-import { ShaderMaterial } from 'three';
-
 export default {
-  inject: ['three'],
+  inject: ['three', 'mesh'],
   props: {
     id: String,
     uniforms: Object,
     vertexShader: String,
     fragmentShader: String,
   },
+  beforeMount() {
+    this.createMaterial();
+    if (this.id) this.three.materials[this.id] = this.material;
+    this.mesh.setMaterial(this.material);
+  },
   mounted() {
-    this.three.materials[this.id] = this.material;
+    if (this.addWatchers) this.addWatchers();
   },
   unmounted() {
     this.material.dispose();
-    delete this.three.materials[this.id];
+    if (this.id) delete this.three.materials[this.id];
   },
   render() {
     return [];

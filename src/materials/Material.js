@@ -15,24 +15,32 @@ export default {
     transparent: Boolean,
     vertexColors: Boolean,
   },
-  created() {
+  beforeMount() {
+    this.createMaterial();
     if (this.id) this.three.materials[this.id] = this.material;
-    if (this.mesh) this.mesh.material = this.material;
-
-    // won't work for flatShading
-    ['color', 'depthTest', 'depthWrite', 'fog', 'opacity', 'transparent'].forEach(p => {
-      watch(() => this[p], () => {
-        if (p === 'color') {
-          this.material.color = new Color(this.color);
-        } else {
-          this.material[p] = this[p];
-        }
-      });
-    });
+    this.mesh.setMaterial(this.material);
+  },
+  mounted() {
+    this._addWatchers();
+    if (this.addWatchers) this.addWatchers();
   },
   unmounted() {
     this.material.dispose();
-    delete this.three.materials[this.id];
+    if (this.id) delete this.three.materials[this.id];
+  },
+  methods: {
+    _addWatchers() {
+      // don't work for flatShading
+      ['color', 'depthTest', 'depthWrite', 'fog', 'opacity', 'side', 'transparent'].forEach(p => {
+        watch(() => this[p], () => {
+          if (p === 'color') {
+            this.material.color.set(this.color);
+          } else {
+            this.material[p] = this[p];
+          }
+        });
+      });
+    },
   },
   render() {
     return [];

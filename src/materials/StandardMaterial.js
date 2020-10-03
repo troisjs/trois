@@ -11,18 +11,21 @@ export default {
     metalness: { type: Number, default: 0 },
     roughness: { type: Number, default: 1 },
   },
-  setup(props) {
-    const material = new MeshStandardMaterial(propsValues(props, ['id']));
-    ['emissive', 'emissiveIntensity', 'metalness', 'roughness'].forEach(p => {
-      watch(() => props[p], (value) => {
-        if (p === 'emissive') {
-          material.emissive = new Color(value);
-        } else {
-          material[p] = value;
-        }
+  methods: {
+    createMaterial() {
+      this.material = new MeshStandardMaterial(propsValues(this.$props, ['id']));
+    },
+    addWatchers() {
+      ['emissive', 'emissiveIntensity', 'metalness', 'roughness'].forEach(p => {
+        watch(() => this[p], (value) => {
+          if (p === 'emissive') {
+            this.material.emissive = new Color(value);
+          } else {
+            this.material[p] = value;
+          }
+        });
       });
-    });
-    return { material };
+    },
   },
   __hmrId: 'StandardMaterial',
 };

@@ -4,9 +4,10 @@ import Material from './Material';
 
 export default {
   extends: Material,
-  setup(props) {
-    const material = new MeshLambertMaterial(propsValues(props, ['id']));
-    return { material };
+  methods: {
+    createMaterial() {
+      this.material = new MeshLambertMaterial(propsValues(this.$props, ['id']));
+    },
   },
   __hmrId: 'LambertMaterial',
 };

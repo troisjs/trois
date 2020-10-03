@@ -4,9 +4,10 @@ import Material from './Material';
 
 export default {
   extends: Material,
-  setup(props) {
-    const material = new MeshPhongMaterial(propsValues(props, ['id']));
-    return { material };
+  methods: {
+    createMaterial() {
+      this.material = new MeshPhongMaterial(propsValues(this.$props, ['id']));
+    },
   },
   __hmrId: 'PhongMaterial',
 };
