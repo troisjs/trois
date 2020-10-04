@@ -31,3 +31,26 @@ export function lerpv3(v1, v2, amount) {
 export function limit(val, min, max) {
   return val < min ? min : (val > max ? max : val);
 };
+
+// from https://github.com/pmndrs/drei/blob/master/src/useMatcapTexture.tsx
+const MATCAP_ROOT = 'https://rawcdn.githack.com/emmelleppi/matcaps/9b36ccaaf0a24881a39062d05566c9e92be4aa0d';
+
+export function getMatcapUrl(hash, format = 1024) {
+  const fileName = `${hash}${getMatcapFormatString(format)}.png`;
+  return `${MATCAP_ROOT}/${format}/${fileName}`;
+};
+
+function getMatcapFormatString(format) {
+  switch (format) {
+    case 64:
+      return '-64px';
+    case 128:
+      return '-128px';
+    case 256:
+      return '-256px';
+    case 512:
+      return '-512px';
+    default:
+      return '';
+  }
+}

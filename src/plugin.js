@@ -33,6 +33,7 @@ export const TroisJSVuePlugin = {
 
       'BasicMaterial',
       'LambertMaterial',
+      'MatcapMaterial',
       'PhongMaterial',
       'PhysicalMaterial',
       'ShaderMaterial',
@@ -42,6 +43,7 @@ export const TroisJSVuePlugin = {
 
       'Map',
       'EnvMap',
+      'RefractionMap',
 
       'Box',
       'Circle',
