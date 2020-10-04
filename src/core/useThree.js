@@ -28,9 +28,9 @@ export default function useThree() {
 
   // size
   const size = {
-    width: 0, height: 0,
-    wWidth: 0, wHeight: 0,
-    ratio: 0,
+    width: 1, height: 1,
+    wWidth: 1, wHeight: 1,
+    ratio: 1,
   };
 
   // handlers
