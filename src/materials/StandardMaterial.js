@@ -1,4 +1,4 @@
-import { Color, MeshStandardMaterial } from 'three';
+import { MeshStandardMaterial } from 'three';
 import { watch } from 'vue';
 import { propsValues } from '../tools.js';
 import Material from './Material';
@@ -19,7 +19,7 @@ export default {
       ['emissive', 'emissiveIntensity', 'metalness', 'roughness'].forEach(p => {
         watch(() => this[p], (value) => {
           if (p === 'emissive') {
-            this.material.emissive = new Color(value);
+            this.material[p].set(value);
           } else {
             this.material[p] = value;
           }
