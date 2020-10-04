@@ -2,16 +2,17 @@ import { TextureLoader } from 'three';
 import { watch } from 'vue';
 
 export default {
-  inject: ['three'],
+  inject: ['material'],
   emits: ['loaded'],
   props: {
     src: String,
     onLoad: Function,
     onProgress: Function,
     onError: Function,
+    id: { type: String, default: 'map' },
   },
   created() {
-    this.createTexture();
+    this.refreshTexture();
     watch(() => this.src, this.refreshTexture);
   },
   unmounted() {
@@ -23,6 +24,7 @@ export default {
     },
     refreshTexture() {
       this.createTexture();
+      this.material.setTexture(this.texture, this.id);
     },
     onLoaded() {
       if (this.onLoad) this.onLoad();

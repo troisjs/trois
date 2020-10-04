@@ -7,8 +7,6 @@ export const TroisJSVuePlugin = {
       'PerspectiveCamera',
       'Renderer',
       'Scene',
-      // 'Texture',
-      // 'CubeTexture',
 
       'BoxGeometry',
       'CircleGeometry',
@@ -41,9 +39,8 @@ export const TroisJSVuePlugin = {
       'SubSurfaceMaterial',
       'ToonMaterial',
 
-      'Map',
-      'EnvMap',
-      'RefractionMap',
+      'Texture',
+      'CubeTexture',
 
       'Box',
       'Circle',

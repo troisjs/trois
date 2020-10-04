@@ -34,17 +34,12 @@ export default {
     if (this.id) delete this.three.materials[this.id];
   },
   methods: {
-    setMap(texture) {
-      this.material.map = texture;
-      this.material.needsUpdate = true;
+    setProp(key, value, needsUpdate = false) {
+      this.material[key] = value;
+      this.material.needsUpdate = needsUpdate;
     },
-    setEnvMap(texture) {
-      this.material.envMap = texture;
-      this.material.needsUpdate = true;
-    },
-    setRefractionMap(texture, ratio) {
-      this.material.refractionRatio = ratio;
-      this.setEnvMap(texture);
+    setTexture(texture, key = 'map') {
+      this.setProp(key, texture, true);
     },
     _addWatchers() {
       // don't work for flatShading

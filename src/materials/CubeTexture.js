@@ -1,8 +1,8 @@
-import { CubeTextureLoader } from 'three';
+import { CubeTextureLoader, CubeRefractionMapping } from 'three';
 import { watch } from 'vue';
 
 export default {
-  inject: ['three'],
+  inject: ['material'],
   emits: ['loaded'],
   props: {
     path: String,
@@ -13,9 +13,12 @@ export default {
     onLoad: Function,
     onProgress: Function,
     onError: Function,
+    id: { type: String, default: 'envMap' },
+    refraction: Boolean,
+    refractionRatio: { type: Number, default: 0.98 },
   },
   created() {
-    this.createTexture();
+    this.refreshTexture();
     watch(() => this.path, this.refreshTexture);
     watch(() => this.urls, this.refreshTexture);
   },
@@ -30,6 +33,11 @@ export default {
     },
     refreshTexture() {
       this.createTexture();
+      this.material.setTexture(this.texture, this.id);
+      if (this.refraction) {
+        this.texture.mapping = CubeRefractionMapping;
+        this.material.setProp('refractionRatio', this.refractionRatio);
+      }
     },
     onLoaded() {
       if (this.onLoad) this.onLoad();
