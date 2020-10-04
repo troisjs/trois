@@ -3,38 +3,14 @@ import useThree from './useThree';
 
 export default {
   props: {
-    antialias: {
-      type: Boolean,
-      default: true,
-    },
-    alpha: {
-      type: Boolean,
-      default: false,
-    },
-    autoClear: {
-      type: Boolean,
-      default: true,
-    },
-    shadow: {
-      type: Boolean,
-      default: false,
-    },
-    orbitCtrl: {
-      type: [Boolean, Object],
-      default: false,
-    },
-    mouseMove: {
-      type: [Boolean, String],
-      default: false,
-    },
-    mouseRaycast: {
-      type: Boolean,
-      default: false,
-    },
-    resize: {
-      type: [Boolean, String, Element],
-      default: 'window',
-    },
+    antialias: Boolean,
+    alpha: Boolean,
+    autoClear: { type: Boolean, default: true },
+    mouseMove: { type: [Boolean, String], default: false },
+    mouseRaycast: { type: Boolean, default: false },
+    orbitCtrl: { type: [Boolean, Object], default: false },
+    resize: { type: [Boolean, String, Element], default: 'window' },
+    shadow: Boolean,
     width: String,
     height: String,
   },

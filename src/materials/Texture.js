@@ -16,6 +16,7 @@ export default {
     watch(() => this.src, this.refreshTexture);
   },
   unmounted() {
+    this.material.setTexture(null, this.id);
     this.texture.dispose();
   },
   methods: {

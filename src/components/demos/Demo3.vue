@@ -5,6 +5,8 @@
       <AmbientLight color="#808080" />
       <PointLight color="#ff6000" />
       <PointLight ref="light" color="#0060ff" :intensity="0.5" />
+      <PointLight color="#ff6000" :intensity="0.5" :position="{ x: 100}" />
+      <PointLight color="#0000ff" :intensity="0.5" :position="{ x: -100}" />
 
       <InstancedMesh ref="imesh" material-id="material" :count="NUM_INSTANCES">
         <BoxGeometry :width="2" :height="2" :depth="10" />

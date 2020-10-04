@@ -1,5 +1,5 @@
 <template>
-  <Renderer ref="renderer">
+  <Renderer ref="renderer" antialias>
     <Camera ref="camera" :position="{ z: 150 }"></Camera>
     <Scene ref="scene">
     </Scene>

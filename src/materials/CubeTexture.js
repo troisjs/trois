@@ -23,6 +23,7 @@ export default {
     watch(() => this.urls, this.refreshTexture);
   },
   unmounted() {
+    this.material.setTexture(null, this.id);
     this.texture.dispose();
   },
   methods: {
