@@ -9,7 +9,7 @@ export default {
     this.passes.push(pass);
     this.pass = pass;
 
-    this.resize();
+    // resize will be called in three init
     this.three.onAfterResize(this.resize);
   },
   unmounted() {

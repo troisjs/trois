@@ -20,7 +20,18 @@ export default {
         this.composer.addPass(pass);
       });
       this.three.composer = this.composer;
+
+      this.resize();
+      this.three.onAfterResize(this.resize);
     });
+  },
+  unmounted() {
+    this.three.offAfterResize(this.resize);
+  },
+  methods: {
+    resize() {
+      this.composer.setSize(this.three.size.width, this.three.size.height);
+    },
   },
   render() {
     return this.$slots.default();
