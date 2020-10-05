@@ -14,7 +14,6 @@ export default {
   },
   methods: {
     createMaterial() {
-      console.log(this.$props);
       this.material = new MeshPhongMaterial(propsValues(this.$props, ['id']));
     },
     addWatchers() {

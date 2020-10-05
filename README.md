@@ -31,9 +31,12 @@ Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects
 - [ ] Materials
   - [x] Basic
   - [x] Lambert
+  - [x] Mapcat
   - [x] Phong
-  - [x] Standard
   - [x] Physical
+  - [x] Standard
+  - [x] SubSurface
+  - [x] Toon
   - [ ] ...
 - [ ] Geometries
   - [x] Box
@@ -52,34 +55,14 @@ Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects
   - [x] TorusKnot
   - [x] Tube
   - [ ] ...
-- [ ] Meshes
-  - [x] Box
-  - [x] Circle
-  - [x] Cone
-  - [x] Cylinder
-  - [x] Dodecahedron
-  - [x] Icosahedron
-  - [x] Image
-  - [x] InstancedMesh
-  - [x] Lathe
-  - [x] Octahedron
-  - [x] Plane
-  - [x] Polyhedron
-  - [x] Ring
-  - [x] Sphere
-  - [x] Sprite
-  - [x] Tetrahedron
-  - [x] Text
-  - [x] Torus
-  - [x] TorusKnot
-  - [x] Tube
-  - [ ] ...
 - [ ] Post Processing
   - [x] EffectComposer
     - [x] BokehPass
     - [x] FilmPass
+    - [x] FXAAPass
     - [x] HalftonePass
     - [x] Renderpass
+    - [x] SMAAPass
     - [x] UnrealBloomPass
     - [ ] ...
 - [ ] ...
