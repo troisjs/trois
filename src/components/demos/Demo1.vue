@@ -1,5 +1,5 @@
 <template>
-  <Renderer ref="renderer" :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }">
+  <Renderer ref="renderer" antialias :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }">
     <Camera :position="{ x: -0, y: -120, z: 30 }" />
     <Scene background="#ffffff">
       <PointLight ref="light1" color="#0E09DC" :intensity="0.85" :position="{ x: 0, y: 0, z: 50 }" />
@@ -22,8 +22,8 @@
       </NoisyText> -->
 
       <NoisyPlane
-        :width="200" :width-segments="200"
-        :height="200" :height-segments="200"
+        :width="200" :width-segments="100"
+        :height="200" :height-segments="100"
         :time-coef="0.0003"
         :noise-coef="0.03"
         :z-coef="7"
@@ -42,20 +42,10 @@
         <PhysicalMaterial flat-shading />
       </NoisySphere> -->
 
-      <MirrorMesh ref="mesh1" :position="{ x: -30, y: -20, z: 15 }" auto-update>
-        <DodecahedronGeometry :radius="8" />
-        <StandardMaterial color="#ffffff" :metalness="1" :roughness="0" />
-      </MirrorMesh>
-
-      <RefractionMesh ref="mesh2" :position="{ x: 0, y: -20, z: 15 }" auto-update>
-        <TorusGeometry :radius="8" :tube="3" />
-        <StandardMaterial color="#ffffff" :metalness="1" :roughness="0" />
+      <RefractionMesh ref="mesh" :position="{ x: 0, y: -20, z: 15 }" auto-update>
+        <TorusGeometry :radius="8" :tube="3" :radial-segments="8" :tubular-segments="6" />
+        <StandardMaterial color="#ffffff" :metalness="1" :roughness="0" flat-shading />
       </RefractionMesh>
-
-      <Gem ref="mesh3" :position="{ x: 30, y: -20, z: 15 }" auto-update>
-        <DodecahedronGeometry :radius="8" />
-        <StandardMaterial color="#0000ff" :metalness="1" :roughness="0" />
-      </Gem>
 
     </Scene>
   </Renderer>
@@ -74,10 +64,7 @@ export default {
     const light2 = this.$refs.light2.light;
     const light3 = this.$refs.light3.light;
     const light4 = this.$refs.light4.light;
-    const mesh1 = this.$refs.mesh1.mesh;
-    const mesh2 = this.$refs.mesh2.mesh;
-    const mesh3 = this.$refs.mesh3.mesh;
-    const mesh4 = this.$refs.mesh3.meshBack;
+    const mesh = this.$refs.mesh.mesh;
 
     renderer.onBeforeRender(() => {
       const time = Date.now() * 0.001;
@@ -90,10 +77,7 @@ export default {
       light3.position.y = Math.sin(time * 0.6) * d;
       light4.position.x = Math.sin(time * 0.7) * d;
       light4.position.y = Math.cos(time * 0.8) * d;
-      mesh1.rotation.x += 0.015; mesh1.rotation.y += 0.008;
-      mesh2.rotation.x += 0.02; mesh2.rotation.y += 0.01;
-      mesh3.rotation.x += 0.007; mesh3.rotation.y += 0.013;
-      mesh4.rotation.x = mesh3.rotation.x; mesh4.rotation.y = mesh3.rotation.y;
+      mesh.rotation.x += 0.02; mesh.rotation.y += 0.01;
     });
   },
 };
