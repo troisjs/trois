@@ -7,4 +7,6 @@ export { default as FXAAPass } from './FXAAPass.js';
 export { default as HalftonePass } from './HalftonePass.js';
 export { default as SAOPass } from './SAOPass.js';
 export { default as SMAAPass } from './SMAAPass.js';
+export { default as TiltShiftPass } from './TiltShiftPass.js';
 export { default as UnrealBloomPass } from './UnrealBloomPass.js';
+export { default as ZoomBlurPass } from './ZoomBlurPass.js';

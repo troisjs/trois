@@ -76,7 +76,9 @@ export const TroisJSVuePlugin = {
       'RenderPass',
       'SAOPass',
       'SMAAPass',
+      'TiltShiftPass',
       'UnrealBloomPass',
+      'ZoomBlurPass',
 
       'GLTFViewer',
     ];
