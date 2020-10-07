@@ -34,7 +34,7 @@ export default function useThree() {
   };
 
   // handlers
-  let afterInitCallbacks = [];
+  const afterInitCallbacks = [];
   let afterResizeCallbacks = [];
   let beforeRenderCallbacks = [];
 
@@ -243,8 +243,13 @@ export default function useThree() {
       obj.composer.setSize(width, height);
     }
 
-    const wsize = getCameraSize();
-    size.wWidth = wsize[0]; size.wHeight = wsize[1];
+    if (obj.camera.type === 'OrthographicCamera') {
+      size.wWidth = obj.camera.right - obj.camera.left;
+      size.wHeight = obj.camera.top - obj.camera.bottom;
+    } else {
+      const wsize = getCameraSize();
+      size.wWidth = wsize[0]; size.wHeight = wsize[1];
+    }
   }
 
   /**
