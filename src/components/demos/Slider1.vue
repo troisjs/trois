@@ -10,14 +10,12 @@ export default {
   data() {
     return {
       images: [
-        { src: 'https://assets.codepen.io/33787/img1.jpg' },
-        { src: 'https://assets.codepen.io/33787/img2.jpg' },
-        { src: 'https://assets.codepen.io/33787/img3.jpg' },
-        { src: 'https://assets.codepen.io/33787/img4.jpg' },
+        { src: 'https://troisjs.github.io/trois/images/img1.jpg' },
+        { src: 'https://troisjs.github.io/trois/images/img2.jpg' },
+        { src: 'https://troisjs.github.io/trois/images/img3.jpg' },
+        { src: 'https://troisjs.github.io/trois/images/img4.jpg' },
       ],
     };
-  },
-  mounted() {
   },
 };
 </script>

@@ -22,6 +22,11 @@ export function lerp(value1, value2, amount) {
   return value1 + (value2 - value1) * amount;
 };
 
+export function lerpv2(v1, v2, amount) {
+  v1.x = lerp(v1.x, v2.x, amount);
+  v1.y = lerp(v1.y, v2.y, amount);
+};
+
 export function lerpv3(v1, v2, amount) {
   v1.x = lerp(v1.x, v2.x, amount);
   v1.y = lerp(v1.y, v2.y, amount);

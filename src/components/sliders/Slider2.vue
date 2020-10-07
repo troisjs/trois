@@ -1,17 +1,17 @@
 <template>
-  <Renderer ref="renderer" antialias>
-    <Camera ref="camera" :position="{ z: 150 }"></Camera>
-    <Scene ref="scene">
-    </Scene>
+  <Renderer ref="renderer" antialias mouse-move="body">
+    <OrthographicCamera ref="camera" :position="{ z: 10 }" />
+    <!-- <Camera :position="{ z: 10 }" /> -->
+    <Scene ref="scene" />
   </Renderer>
 </template>
 
 <script>
-import { Object3D } from 'three';
+import { Vector2 } from 'three';
 import { gsap, Power4 } from 'gsap';
-import { lerp } from '../../tools.js';
-import AnimatedPlane from './AnimatedPlane.js';
-import useTextures from '../../use/useTextures';
+import { lerp, lerpv2 } from '../../tools.js';
+import ZoomBlurImage from './ZoomBlurImage.js';
+import useTextures from '../../use/useTextures.js';
 
 export default {
   props: {
@@ -19,8 +19,10 @@ export default {
     events: { type: Object, default: () => { return { wheel: true, click: true, keyup: true }; } },
   },
   setup() {
+    const center = new Vector2();
     const { textures, loadTextures } = useTextures();
     return {
+      center,
       textures,
       loadTextures,
       progress: 0,
@@ -44,8 +46,7 @@ export default {
   methods: {
     init() {
       this.initScene();
-
-      gsap.fromTo(this.plane1.uProgress,
+      gsap.fromTo(this.image1.uStrength,
         {
           value: -2,
         },
@@ -59,36 +60,32 @@ export default {
       if (this.events.click) document.addEventListener('click', this.onClick);
       if (this.events.keyup) document.addEventListener('keyup', this.onKeyup);
       if (this.events.wheel) window.addEventListener('wheel', this.onWheel);
-      this.three.onBeforeRender(this.updateProgress);
+      this.three.onBeforeRender(this.animate);
       this.three.onAfterResize(this.onResize);
     },
     initScene() {
-      const renderer = this.three.renderer;
       const scene = this.$refs.scene.scene;
 
-      this.plane1 = new AnimatedPlane({
-        renderer, screen: this.three.size,
-        size: 10,
-        anim: 1,
-        texture: this.textures[0],
-      });
+      this.image1 = new ZoomBlurImage(this.three);
+      this.image1.setMap(this.textures[0]);
+      this.image2 = new ZoomBlurImage(this.three);
+      this.image2.setMap(this.textures[1]);
+      this.setImagesProgress(0);
 
-      this.plane2 = new AnimatedPlane({
-        renderer, screen: this.three.size,
-        size: 10,
-        anim: 2,
-        texture: this.textures[1],
-      });
+      scene.add(this.image1.mesh);
+      scene.add(this.image2.mesh);
+    },
+    animate() {
+      const { mouse } = this.three;
+      this.center.copy(mouse).divideScalar(2).addScalar(0.5);
+      lerpv2(this.image1.uCenter.value, this.center, 0.1);
+      lerpv2(this.image2.uCenter.value, this.center, 0.1);
 
-      this.setPlanesProgress(0);
-      this.planes = new Object3D();
-      this.planes.add(this.plane1.o3d);
-      this.planes.add(this.plane2.o3d);
-      scene.add(this.planes);
+      this.updateProgress();
     },
     onResize() {
-      this.plane1.resize();
-      this.plane2.resize();
+      this.image1.updateUV();
+      this.image2.updateUV();
     },
     onWheel(e) {
       // e.preventDefault();
@@ -137,20 +134,16 @@ export default {
       if ((pdiff > 0 && p1 < p0) || (pdiff < 0 && p0 < p1)) {
         const i = Math.floor(progress1) % this.images.length;
         const j = (i + 1) % this.images.length;
-        this.plane1.setTexture(this.textures[i]);
-        this.plane2.setTexture(this.textures[j]);
+        this.image1.setMap(this.textures[i]);
+        this.image2.setMap(this.textures[j]);
       }
 
       this.progress = progress1;
-      this.setPlanesProgress(this.progress % 1);
+      this.setImagesProgress(this.progress % 1);
     },
-    setPlanesProgress(progress) {
-      this.plane1.uProgress.value = progress;
-      this.plane2.uProgress.value = -1 + progress;
-      this.plane1.material.opacity = 1 - progress;
-      this.plane2.material.opacity = progress;
-      this.plane1.o3d.position.z = progress;
-      this.plane2.o3d.position.z = progress - 1;
+    setImagesProgress(progress) {
+      this.image1.uStrength.value = progress;
+      this.image2.uStrength.value = -1 + progress;
     },
   },
 };

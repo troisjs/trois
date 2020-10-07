@@ -4,6 +4,7 @@ export const TroisJSVuePlugin = {
   install: (app) => {
     const comps = [
       'Camera',
+      'OrthographicCamera',
       'PerspectiveCamera',
       'Renderer',
       'Scene',
