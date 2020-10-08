@@ -1,28 +1,37 @@
 import { TextureLoader } from 'three';
 
 export default function useTextures() {
-  const loader = new TextureLoader();
-  const textures = [];
+  const obj = {
+    loader: new TextureLoader(),
+    count: 0,
+    textures: [],
+    loadProgress: 0,
+    loadTextures,
+    dispose,
+  };
+  return obj;
 
-  const loadTexture = (img, index) => {
+  function loadTextures(images, cb) {
+    obj.count = images.length;
+    obj.textures.splice(0);
+    obj.loadProgress = 0;
+    Promise.all(images.map(loadTexture)).then(cb);
+  };
+
+  function loadTexture(img, index) {
     return new Promise(resolve => {
-      loader.load(
+      obj.loader.load(
         img.src,
         texture => {
-          textures[index] = texture;
+          obj.loadProgress += 1 / obj.count;
+          obj.textures[index] = texture;
           resolve(texture);
         }
       );
     });
   };
 
-  const loadTextures = (images, cb) => {
-    textures.splice(0);
-    Promise.all(images.map(loadTexture)).then(cb);
-  };
-
-  return {
-    textures,
-    loadTextures,
-  };
+  function dispose() {
+    obj.textures.forEach(t => t.dispose());
+  }
 };

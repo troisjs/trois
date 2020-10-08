@@ -5,16 +5,14 @@ import DefaultShader from './default';
 export default {
   uniforms: {
     tDiffuse: { value: null },
-    center: { value: new Vector2() },
+    center: { value: new Vector2(0.5, 0.5) },
     strength: { value: 0 },
-    texSize: { value: new Vector2() },
   },
   vertexShader: DefaultShader.vertexShader,
   fragmentShader: `
     uniform sampler2D tDiffuse;
     uniform vec2 center;
     uniform float strength;
-    uniform vec2 texSize;
     varying vec2 vUv;
 
     float random(vec3 scale, float seed) {
@@ -25,7 +23,7 @@ export default {
     void main() {
       vec4 color = vec4(0.0);
       float total = 0.0;
-      vec2 toCenter = center - vUv * texSize;
+      vec2 toCenter = center - vUv;
       
       /* randomize the lookup values to hide the fixed number of samples */
       float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);
@@ -33,7 +31,7 @@ export default {
       for (float t = 0.0; t <= 40.0; t++) {
         float percent = (t + offset) / 40.0;
         float weight = 4.0 * (percent - percent * percent);
-        vec4 texel = texture2D(tDiffuse, vUv + toCenter * percent * strength / texSize);
+        vec4 texel = texture2D(tDiffuse, vUv + toCenter * percent * strength);
 
         /* switch to pre-multiplied alpha to correctly blur transparent images */
         texel.rgb *= texel.a;

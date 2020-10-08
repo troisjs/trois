@@ -20,11 +20,11 @@ export default {
   },
   setup() {
     const center = new Vector2();
-    const { textures, loadTextures } = useTextures();
+    const loader = useTextures();
+
     return {
+      loader,
       center,
-      textures,
-      loadTextures,
       progress: 0,
       targetProgress: 0,
     };
@@ -35,10 +35,11 @@ export default {
     if (this.images.length < 2) {
       console.error('This slider needs at least 2 images.');
     } else {
-      this.loadTextures(this.images, this.init);
+      this.loader.loadTextures(this.images, this.init);
     }
   },
   unmounted() {
+    this.loader.dispose();
     document.removeEventListener('click', this.onClick);
     document.removeEventListener('keyup', this.onKeyup);
     window.removeEventListener('wheel', this.onWheel);
@@ -67,9 +68,9 @@ export default {
       const scene = this.$refs.scene.scene;
 
       this.image1 = new ZoomBlurImage(this.three);
-      this.image1.setMap(this.textures[0]);
+      this.image1.setMap(this.loader.textures[0]);
       this.image2 = new ZoomBlurImage(this.three);
-      this.image2.setMap(this.textures[1]);
+      this.image2.setMap(this.loader.textures[1]);
       this.setImagesProgress(0);
 
       scene.add(this.image1.mesh);
@@ -134,8 +135,8 @@ export default {
       if ((pdiff > 0 && p1 < p0) || (pdiff < 0 && p0 < p1)) {
         const i = Math.floor(progress1) % this.images.length;
         const j = (i + 1) % this.images.length;
-        this.image1.setMap(this.textures[i]);
-        this.image2.setMap(this.textures[j]);
+        this.image1.setMap(this.loader.textures[i]);
+        this.image2.setMap(this.loader.textures[j]);
       }
 
       this.progress = progress1;
