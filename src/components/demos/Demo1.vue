@@ -1,6 +1,6 @@
 <template>
   <Renderer ref="renderer" antialias :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }">
-    <Camera :position="{ x: -0, y: -120, z: 30 }" />
+    <Camera :position="{ x: -0, y: -100, z: 30 }" />
     <Scene background="#ffffff">
       <PointLight ref="light1" color="#0E09DC" :intensity="0.85" :position="{ x: 0, y: 0, z: 50 }" />
       <PointLight ref="light2" color="#1CD1E1" :intensity="0.85" :position="{ x: 0, y: 0, z: 50 }" />
@@ -25,11 +25,12 @@
         :width="200" :width-segments="100"
         :height="200" :height-segments="100"
         :time-coef="0.0003"
-        :noise-coef="0.03"
-        :z-coef="7"
+        :noise-coef="5"
+        :displacement-scale="15"
+        :delta-coef="1 / 200"
         :position="{ x: 0, y: 0, z: 0 }"
       >
-        <PhysicalMaterial flat-shading />
+        <PhysicalMaterial />
       </NoisyPlane>
 
       <!-- <NoisySphere
@@ -42,7 +43,7 @@
         <PhysicalMaterial flat-shading />
       </NoisySphere> -->
 
-      <RefractionMesh ref="mesh" :position="{ x: 0, y: -20, z: 15 }" auto-update>
+      <RefractionMesh ref="mesh" :position="{ x: 0, y: -20, z: 20 }" auto-update>
         <TorusGeometry :radius="8" :tube="3" :radial-segments="8" :tubular-segments="6" />
         <StandardMaterial color="#ffffff" :metalness="1" :roughness="0" flat-shading />
       </RefractionMesh>
