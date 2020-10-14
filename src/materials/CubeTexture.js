@@ -15,6 +15,7 @@ export default {
     onError: Function,
     id: { type: String, default: 'envMap' },
     refraction: Boolean,
+    // todo: remove ?
     refractionRatio: { type: Number, default: 0.98 },
   },
   created() {
