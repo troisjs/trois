@@ -5,6 +5,8 @@ I wanted to try to write a lib similar to [react-three-fiber](https://github.com
 <p>
   <img src="/screenshots/troisjs1.jpg" width="45%" />
   <img src="/screenshots/troisjs3.jpg" width="45%" />
+  <img src="/screenshots/troisjs4.jpg" width="45%" />
+  <img src="/screenshots/troisjs5.jpg" width="45%" />
 </p>
 
 - 💻 Demos : https://troisjs.github.io/trois/
@@ -106,23 +108,6 @@ export default {
   },
 };
 </script>
-```
-
-## InstancedMesh
-
-Take a look at :
-
-- [Demo3.vue](/src/components/demos/Demo3.vue)
-- [Demo4.vue](/src/components/demos/Demo4.vue)
-
-## GLTF
-
-Take a look at [DemoGLTF.vue](/src/components/demos/DemoGLTF.vue).
-
-```html
-<GLTFViewer src="test.glb" :camera-position="{ z: 1 }">
-  <AmbientLight />
-</GLTFViewer>
 ```
 
 ## Dev
