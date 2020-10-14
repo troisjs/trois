@@ -12,6 +12,7 @@ const props = {
   emissive: { type: [Number, String], default: 0 },
   emissiveIntensity: { type: Number, default: 1 },
   envMapIntensity: { type: Number, default: 1 },
+  lightMapIntensity: { type: Number, default: 1 },
   metalness: { type: Number, default: 0 },
   normalScale: { type: Object, default: () => new Vector2(1, 1) },
   roughness: { type: Number, default: 1 },
