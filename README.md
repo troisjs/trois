@@ -3,10 +3,10 @@
 I wanted to try to write a lib similar to [react-three-fiber](https://github.com/react-spring/react-three-fiber) but for VueJS.
 
 <p>
-  <img src="/screenshots/troisjs1.jpg" width="45%" />
-  <img src="/screenshots/troisjs3.jpg" width="45%" />
-  <img src="/screenshots/troisjs4.jpg" width="45%" />
-  <img src="/screenshots/troisjs5.jpg" width="45%" />
+  <a href="https://troisjs.github.io/trois/"><img src="/screenshots/troisjs1.jpg" width="45%" /></a>
+  <a href="https://troisjs.github.io/trois/"><img src="/screenshots/troisjs3.jpg" width="45%" /></a>
+  <a href="https://troisjs.github.io/trois/"><img src="/screenshots/troisjs4.jpg" width="45%" /></a>
+  <a href="https://troisjs.github.io/trois/"><img src="/screenshots/troisjs5.jpg" width="45%" /></a>
 </p>
 
 - 💻 Demos : https://troisjs.github.io/trois/
