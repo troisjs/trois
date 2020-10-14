@@ -14,16 +14,16 @@ import Demo3 from './components/demos/Demo3.vue';
 import Demo4 from './components/demos/Demo4.vue';
 import Slider1 from './components/demos/Slider1.vue';
 import Slider2 from './components/demos/Slider2.vue';
-import DemoGLTF from './components/demos/DemoGLTF.vue';
+import Textures from './components/demos/Textures.vue';
 
 export default {
   name: 'App',
   components: {
-    Demo1, Demo2, Demo3, Demo4, Slider1, Slider2, DemoGLTF,
+    Demo1, Demo2, Demo3, Demo4, Slider1, Slider2, Textures,
   },
   data() {
     return {
-      tests: ['Demo1', 'Demo2', 'Demo3', 'Demo4', 'Slider1', 'Slider2', 'DemoGLTF'],
+      tests: ['Demo1', 'Demo2', 'Demo3', 'Demo4', 'Textures', 'Slider1', 'Slider2'],
       test: 'Demo1',
     };
   },
