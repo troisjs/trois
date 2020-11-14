@@ -20,6 +20,7 @@ export default function useThree() {
     autoClear: true,
     orbit_ctrl: false,
     mouse_move: false,
+    mouse_click: false,
     mouse_raycast: false,
     resize: 'window',
     width: 0,
@@ -113,6 +114,10 @@ export default function useThree() {
       obj.mouse_move_element.addEventListener('mouseleave', onMouseleave);
     }
 
+    if (conf.mouse_click) {
+      obj.renderer.domElement.addEventListener('click', onClick);
+    }
+
     afterInitCallbacks.forEach(c => c());
 
     return true;
@@ -177,6 +182,7 @@ export default function useThree() {
   function dispose() {
     beforeRenderCallbacks = [];
     window.removeEventListener('resize', onResize);
+    obj.renderer.domElement.removeEventListener('click', onClick);
     if (obj.mouse_move_element) {
       obj.mouse_move_element.removeEventListener('mousemove', onMousemove);
       obj.mouse_move_element.removeEventListener('mouseleave', onMouseleave);
@@ -212,6 +218,17 @@ export default function useThree() {
       mousePlane.normal.normalize();
       raycaster.setFromCamera(mouse, obj.camera);
       raycaster.ray.intersectPlane(mousePlane, mouseV3);
+    }
+  }
+
+  /**
+   * mouseclick listener
+   */
+  function onClick(e) {
+    onMousemove(e)
+    raycaster.setFromCamera( mouse, obj.camera )
+    for (let item of raycaster.intersectObjects( obj.scene.children )) {
+      if (item.object.onClick) return item.object.onClick(item)
     }
   }
 

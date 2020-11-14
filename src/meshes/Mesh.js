@@ -12,6 +12,7 @@ export default {
     scale: Object,
     castShadow: Boolean,
     receiveShadow: Boolean,
+    onClick: Function
   },
   provide() {
     return {
@@ -34,6 +35,7 @@ export default {
         this.material = this.three.materials[this.materialId];
       }
       this.mesh = new Mesh(this.geometry, this.material);
+      if (this.onClick) this.mesh.onClick = this.onClick;
       this.bindProps();
       this.scene.add(this.mesh);
       this.$emit('ready');
