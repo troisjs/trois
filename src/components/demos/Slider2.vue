@@ -1,12 +1,12 @@
 <template>
-  <Slider2 :images="images" />
+  <Slider :images="images" />
 </template>
 
 <script>
-import Slider2 from '../sliders/Slider2.vue';
+import Slider from '../sliders/Slider2.vue';
 
 export default {
-  components: { Slider2 },
+  components: { Slider },
   data() {
     return {
       images: [

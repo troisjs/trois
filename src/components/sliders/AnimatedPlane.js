@@ -1,9 +1,7 @@
-
 import {
   BufferGeometry,
   DoubleSide,
   Face3,
-  Geometry,
   InstancedBufferAttribute,
   InstancedMesh,
   MathUtils,
@@ -12,6 +10,8 @@ import {
   Vector2,
   Vector3,
 } from 'three';
+
+import { Geometry } from 'three/examples/jsm/deprecated/Geometry.js';
 
 export default class AnimatedPlane {
   constructor(params) {
@@ -144,7 +144,7 @@ export default class AnimatedPlane {
     this.dy = this.wSize / 2;
     geometry.translate(-this.dx, -this.dy, 0);
 
-    this.bGeometry = new BufferGeometry().fromGeometry(geometry);
+    this.bGeometry = geometry.toBufferGeometry();
   }
 
   initAnimAttributes() {
