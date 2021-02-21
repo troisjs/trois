@@ -30,7 +30,7 @@ export default {
   },
   mounted() {
     const params = {
-      canvas: this.$refs.canvas,
+      canvas: this.$el,
       antialias: this.antialias,
       alpha: this.alpha,
       autoClear: this.autoClear,
@@ -74,10 +74,6 @@ export default {
     },
   },
   render() {
-    return h(
-      'canvas',
-      { ref: 'canvas' },
-      this.$slots.default()
-    );
+    return h('canvas', {}, this.$slots.default());
   },
 };
