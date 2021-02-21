@@ -3,7 +3,7 @@ import { watch } from 'vue';
 import useBindProp from '../use/useBindProp.js';
 
 export default {
-  inject: ['three', 'scene', 'rendererComponent'],
+  inject: ['three', 'scene', 'rendererComponent', 'group'],
   emits: ['ready'],
   props: {
     materialId: String,
@@ -35,7 +35,8 @@ export default {
       }
       this.mesh = new Mesh(this.geometry, this.material);
       this.bindProps();
-      this.scene.add(this.mesh);
+      if (this.group) this.group.add(this.mesh);
+      else this.scene.add(this.mesh);
       this.$emit('ready');
     },
     bindProps() {
