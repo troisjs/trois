@@ -1,13 +1,12 @@
 import { Group } from 'three';
-import { watch, inject } from 'vue';
-import useBindProp from '../use/useBindProp.js';
+import { inject } from 'vue';
 
 export default {
   inject: ['three'],
   setup(props) {
     const group = new Group();
-    const parentGroup = inject('group') || undefined
-    if (parentGroup) parentGroup.add(group)
+    const parentGroup = inject('group') || undefined;
+    if (parentGroup) parentGroup.add(group);
     else inject('scene').add(group);
     return { parentGroup, group };
   },
@@ -17,7 +16,7 @@ export default {
     };
   },
   unmounted() {
-    if (this.parentGroup) this.parentGroup.remove(this.group)
+    if (this.parentGroup) this.parentGroup.remove(this.group);
     else this.three.scene.remove(this.group);
   },
   render() {
