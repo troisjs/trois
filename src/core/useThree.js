@@ -21,7 +21,7 @@ export default function useThree() {
     orbit_ctrl: false,
     mouse_move: false,
     mouse_raycast: false,
-    resize: 'window',
+    resize: true,
     width: 0,
     height: 0,
   };
@@ -222,7 +222,8 @@ export default function useThree() {
     if (conf.resize === 'window') {
       setSize(window.innerWidth, window.innerHeight);
     } else {
-      setSize(conf.resize.clientWidth, conf.resize.clientHeight);
+      const elt = obj.renderer.domElement.parentNode;
+      setSize(elt.clientWidth, elt.clientHeight);
     }
     afterResizeCallbacks.forEach(c => c());
   }

@@ -9,7 +9,7 @@ export default {
     mouseMove: { type: [Boolean, String], default: false },
     mouseRaycast: { type: Boolean, default: false },
     orbitCtrl: { type: [Boolean, Object], default: false },
-    resize: { type: [Boolean, String, Element], default: 'window' },
+    resize: { type: [Boolean, String], default: true },
     shadow: Boolean,
     width: String,
     height: String,
