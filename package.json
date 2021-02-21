@@ -26,7 +26,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "rollup-plugin-vue": "^6.0.0-beta.10",
     "sass": "^1.26.10",
-    "vite": "^2.0.0-beta.65"
+    "vite": "^2.0.1"
   },
   "main": "build/trois.js",
   "module": "build/trois.module.js",
