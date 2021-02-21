@@ -32,7 +32,7 @@ export default {
       else this.boxColor = '#ffffff';
     },
     boxClick() {
-      console.log(arguments, 'click');
+      console.log('click');
     },
   },
 };

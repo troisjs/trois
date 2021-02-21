@@ -1,5 +1,5 @@
 import { watch } from 'vue';
-import { Color, FrontSide } from 'three';
+import { FrontSide } from 'three';
 
 export default {
   inject: ['three', 'mesh'],
