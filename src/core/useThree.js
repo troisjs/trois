@@ -21,6 +21,8 @@ export default function useThree() {
     orbit_ctrl: false,
     mouse_move: false,
     mouse_raycast: false,
+    mouse_over: false,
+    click: false,
     resize: true,
     width: 0,
     height: 0,
@@ -44,6 +46,9 @@ export default function useThree() {
   const mousePlane = new Plane(new Vector3(0, 0, 1), 0);
   const raycaster = new Raycaster();
 
+  // raycast objects
+  const intersectObjects = [];
+
   // returned object
   const obj = {
     conf,
@@ -62,6 +67,7 @@ export default function useThree() {
     onAfterInit,
     onAfterResize, offAfterResize,
     onBeforeRender, offBeforeRender,
+    addIntersectObject, removeIntersectObject,
   };
 
   /**
@@ -103,6 +109,7 @@ export default function useThree() {
       window.addEventListener('resize', onResize);
     }
 
+    conf.mouse_move = conf.mouse_move || conf.mouse_over;
     if (conf.mouse_move) {
       if (conf.mouse_move === 'body') {
         obj.mouse_move_element = document.body;
@@ -111,6 +118,10 @@ export default function useThree() {
       }
       obj.mouse_move_element.addEventListener('mousemove', onMousemove);
       obj.mouse_move_element.addEventListener('mouseleave', onMouseleave);
+    }
+
+    if (conf.click) {
+      obj.renderer.domElement.addEventListener('click', onClick);
     }
 
     afterInitCallbacks.forEach(c => c());
@@ -172,6 +183,25 @@ export default function useThree() {
   }
 
   /**
+   * add intersect object
+   */
+  function addIntersectObject(o) {
+    if (intersectObjects.indexOf(o) === -1) {
+      intersectObjects.push(o);
+    }
+  }
+
+  /**
+   * remove intersect object
+   */
+  function removeIntersectObject(o) {
+    const i = intersectObjects.indexOf(o);
+    if (i !== -1) {
+      intersectObjects.splice(i, 1);
+    }
+  }
+
+  /**
    * remove listeners
    */
   function dispose() {
@@ -181,8 +211,23 @@ export default function useThree() {
       obj.mouse_move_element.removeEventListener('mousemove', onMousemove);
       obj.mouse_move_element.removeEventListener('mouseleave', onMouseleave);
     }
+    obj.renderer.domElement.removeEventListener('click', onClick);
     if (obj.orbitCtrl) obj.orbitCtrl.dispose();
     this.renderer.dispose();
+  }
+
+  /**
+   * click listener
+   */
+  function onClick(e) {
+    mouse.x = (e.clientX / size.width) * 2 - 1;
+    mouse.y = -(e.clientY / size.height) * 2 + 1;
+    raycaster.setFromCamera(mouse, obj.camera);
+    const objects = raycaster.intersectObjects(intersectObjects);
+    for (let i = 0; i < objects.length; i++) {
+      const o = objects[i].object;
+      if (o.onClick) o.onClick(e);
+    }
   }
 
   /**
@@ -191,27 +236,51 @@ export default function useThree() {
   function onMousemove(e) {
     mouse.x = (e.clientX / size.width) * 2 - 1;
     mouse.y = -(e.clientY / size.height) * 2 + 1;
-    updateMouseV3();
+    onMousechange(e);
   }
 
   /**
    * mouseleave listener
    */
   function onMouseleave(e) {
-    mouse.x = 0;
-    mouse.y = 0;
-    updateMouseV3();
+    // mouse.x = 0;
+    // mouse.y = 0;
+    onMousechange(e);
   }
 
   /**
-   * get 3d mouse position
+   * mouse change
    */
-  function updateMouseV3() {
-    if (conf.mouse_raycast) {
-      obj.camera.getWorldDirection(mousePlane.normal);
-      mousePlane.normal.normalize();
+  function onMousechange(e) {
+    if (conf.mouse_over || conf.mouse_raycast) {
       raycaster.setFromCamera(mouse, obj.camera);
-      raycaster.ray.intersectPlane(mousePlane, mouseV3);
+
+      if (conf.mouse_raycast) {
+        // get mouse 3d position
+        obj.camera.getWorldDirection(mousePlane.normal);
+        mousePlane.normal.normalize();
+        raycaster.ray.intersectPlane(mousePlane, mouseV3);
+      }
+
+      if (conf.mouse_over) {
+        const onObjects = raycaster.intersectObjects(intersectObjects);
+        const offObjects = [...intersectObjects];
+        for (let i = 0; i < onObjects.length; i++) {
+          const o = onObjects[i].object;
+          if (!o.hover && o.onHover) {
+            o.hover = true;
+            o.onHover(true);
+          }
+          offObjects.splice(offObjects.indexOf(o), 1);
+        }
+        for (let i = 0; i < offObjects.length; i++) {
+          const o = offObjects[i];
+          if (o.hover && o.onHover) {
+            o.hover = false;
+            o.onHover(false);
+          }
+        }
+      }
     }
   }
 

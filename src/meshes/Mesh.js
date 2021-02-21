@@ -12,6 +12,8 @@ export default {
     scale: Object,
     castShadow: Boolean,
     receiveShadow: Boolean,
+    onHover: Function,
+    onClick: Function,
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
@@ -29,7 +31,10 @@ export default {
   },
   unmounted() {
     // console.log('Mesh unmounted');
-    if (this.mesh) this.parent.remove(this.mesh);
+    if (this.mesh) {
+      this.three.removeIntersectObject(this.mesh);
+      this.parent.remove(this.mesh);
+    }
     if (this.geometry) this.geometry.dispose();
     if (this.material && !this.materialId) this.material.dispose();
   },
@@ -39,6 +44,17 @@ export default {
         this.material = this.three.materials[this.materialId];
       }
       this.mesh = new Mesh(this.geometry, this.material);
+
+      if (this.onHover) {
+        this.mesh.onHover = (over) => { this.onHover({ component: this, over }); };
+        this.three.addIntersectObject(this.mesh);
+      }
+
+      if (this.onClick) {
+        this.mesh.onClick = (e) => { this.onClick({ component: this, event: e }); };
+        this.three.addIntersectObject(this.mesh);
+      }
+
       this.bindProps();
       this.parent.add(this.mesh);
       this.$emit('ready');
