@@ -8,6 +8,7 @@ export const TroisJSVuePlugin = {
       'PerspectiveCamera',
       'Renderer',
       'Scene',
+      'Group',
 
       'BoxGeometry',
       'CircleGeometry',

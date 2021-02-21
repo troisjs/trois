@@ -16,6 +16,7 @@ export default {
   provide() {
     return {
       scene: this.scene,
+      group: undefined
     };
   },
   mounted() {

@@ -4,7 +4,7 @@ import { setFromProp } from '../tools.js';
 import useBindProp from '../use/useBindProp.js';
 
 export default {
-  inject: ['scene'],
+  inject: ['scene', 'group'],
   props: {
     color: {
       type: String,
@@ -43,11 +43,17 @@ export default {
       });
     });
 
-    this.scene.add(this.light);
-    if (this.light.target) this.scene.add(this.light.target);
+    if (this.group) {
+      this.group.add(this.light);
+      if (this.light.target) this.group.add(this.light.target);
+    } else {
+      this.scene.add(this.light);
+      if (this.light.target) this.scene.add(this.light.target);
+    }
   },
   unmounted() {
-    this.scene.remove(this.light);
+    if (this.group) this.group.remove(this.light)
+    else this.scene.remove(this.light);
   },
   render() {
     return [];
