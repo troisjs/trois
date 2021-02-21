@@ -1,4 +1,4 @@
-import commonjs from '@rollup/plugin-commonjs';
+// import commonjs from '@rollup/plugin-commonjs';
 import vue from 'rollup-plugin-vue';
 import buble from '@rollup/plugin-buble';
 import { terser } from "rollup-plugin-terser";
@@ -8,20 +8,25 @@ const input = 'src/export.js';
 const external = [
   'three',
   'three/examples/jsm/controls/OrbitControls.js',
+  'three/examples/jsm/deprecated/Geometry.js',
   'three/examples/jsm/loaders/GLTFLoader.js',
   'three/examples/jsm/postprocessing/BokehPass.js',
   'three/examples/jsm/postprocessing/EffectComposer.js',
   'three/examples/jsm/postprocessing/FilmPass.js',
   'three/examples/jsm/postprocessing/HalftonePass.js',
   'three/examples/jsm/postprocessing/RenderPass.js',
+  'three/examples/jsm/postprocessing/Pass.js',
   'three/examples/jsm/postprocessing/SAOPass.js',
+  'three/examples/jsm/postprocessing/SMAAPass.js',
+  'three/examples/jsm/postprocessing/ShaderPass.js',
   'three/examples/jsm/postprocessing/UnrealBloomPass.js',
+  'three/examples/jsm/shaders/FXAAShader.js',
   'gsap',
   'vue',
 ];
 
 const plugins = [
-  commonjs(),
+  // commonjs(),
   vue(),
   buble({
     // transforms: { forOf: false },
@@ -123,27 +128,27 @@ export default [
       terser(),
     ],
   },
-  {
-    input,
-    external,
-    output: {
-      format: 'cjs',
-      file: 'build/trois.js',
-      sourcemap: true,
-    },
-    plugins,
-  },
-  {
-    input,
-    external,
-    output: {
-      format: 'cjs',
-      file: 'build/trois.min.js',
-      sourcemap: true,
-    },
-    plugins: [
-      ...plugins,
-      terser(),
-    ],
-  },
+  // {
+  //   input,
+  //   external,
+  //   output: {
+  //     format: 'cjs',
+  //     file: 'build/trois.js',
+  //     sourcemap: true,
+  //   },
+  //   plugins,
+  // },
+  // {
+  //   input,
+  //   external,
+  //   output: {
+  //     format: 'cjs',
+  //     file: 'build/trois.min.js',
+  //     sourcemap: true,
+  //   },
+  //   plugins: [
+  //     ...plugins,
+  //     terser(),
+  //   ],
+  // },
 ];

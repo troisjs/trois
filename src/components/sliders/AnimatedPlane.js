@@ -1,5 +1,4 @@
 import {
-  BufferGeometry,
   DoubleSide,
   Face3,
   InstancedBufferAttribute,

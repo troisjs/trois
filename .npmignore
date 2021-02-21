@@ -1,2 +1,7 @@
 docs
 screenshots
+.eslintrc.js
+.gitignore
+index.html
+rollup.config.js
+vite.config.js
