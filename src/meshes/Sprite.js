@@ -1,4 +1,5 @@
 import { Sprite, SpriteMaterial, TextureLoader } from 'three';
+import { inject } from 'vue';
 import useBindProp from '../use/useBindProp.js';
 
 export default {
@@ -9,6 +10,9 @@ export default {
     position: Object,
     scale: Object,
   },
+  created() {
+    this.parent = inject('group', this.scene);
+  },
   mounted() {
     this.texture = new TextureLoader().load(this.src, this.onLoaded);
     this.material = new SpriteMaterial({ map: this.texture });
@@ -17,13 +21,13 @@ export default {
     useBindProp(this, 'position', this.sprite.position);
     useBindProp(this, 'scale', this.sprite.scale);
 
-    this.scene.add(this.sprite);
+    this.parent.add(this.sprite);
     this.$emit('ready');
   },
   unmounted() {
     this.texture.dispose();
     this.material.dispose();
-    this.scene.remove(this.sprite);
+    this.parent.remove(this.sprite);
   },
   methods: {
     onLoaded() {

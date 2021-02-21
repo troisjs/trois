@@ -1,5 +1,5 @@
 import { Mesh } from 'three';
-import { watch } from 'vue';
+import { inject, watch } from 'vue';
 import useBindProp from '../use/useBindProp.js';
 
 export default {
@@ -13,6 +13,11 @@ export default {
     castShadow: Boolean,
     receiveShadow: Boolean,
   },
+  // can't use setup because it will not be used in sub components
+  // setup() {},
+  created() {
+    this.parent = inject('group', this.scene);
+  },
   provide() {
     return {
       mesh: this,
@@ -24,7 +29,7 @@ export default {
   },
   unmounted() {
     // console.log('Mesh unmounted');
-    if (this.mesh) this.scene.remove(this.mesh);
+    if (this.mesh) this.parent.remove(this.mesh);
     if (this.geometry) this.geometry.dispose();
     if (this.material && !this.materialId) this.material.dispose();
   },
@@ -35,7 +40,7 @@ export default {
       }
       this.mesh = new Mesh(this.geometry, this.material);
       this.bindProps();
-      this.scene.add(this.mesh);
+      this.parent.add(this.mesh);
       this.$emit('ready');
     },
     bindProps() {

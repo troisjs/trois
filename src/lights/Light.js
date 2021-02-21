@@ -1,5 +1,5 @@
 import { Color } from 'three';
-import { watch } from 'vue';
+import { inject, watch } from 'vue';
 import { setFromProp } from '../tools.js';
 import useBindProp from '../use/useBindProp.js';
 
@@ -20,6 +20,11 @@ export default {
     },
     shadowMapSize: Object,
     position: Object,
+  },
+  // can't use setup because it will not be used in sub components
+  // setup() {},
+  created() {
+    this.parent = inject('group', this.scene);
   },
   mounted() {
     useBindProp(this, 'position', this.light.position);
@@ -43,11 +48,12 @@ export default {
       });
     });
 
-    this.scene.add(this.light);
-    if (this.light.target) this.scene.add(this.light.target);
+    this.parent.add(this.light);
+    if (this.light.target) this.parent.add(this.light.target);
   },
   unmounted() {
-    this.scene.remove(this.light);
+    this.parent.remove(this.light);
+    if (this.light.target) this.parent.remove(this.light.target);
   },
   render() {
     return [];

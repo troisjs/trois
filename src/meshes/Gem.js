@@ -26,7 +26,7 @@ export default {
   },
   unmounted() {
     this.three.offBeforeRender(this.updateCubeRT);
-    if (this.meshBack) this.scene.remove(this.meshBack);
+    if (this.meshBack) this.parent.remove(this.meshBack);
     if (this.materialBack) this.materialBack.dispose();
   },
   methods: {
@@ -34,7 +34,7 @@ export default {
       const cubeRT = new WebGLCubeRenderTarget(this.cubeRTSize, { format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter });
       this.cubeCamera = new CubeCamera(this.cubeCameraNear, this.cubeCameraFar, cubeRT);
       useBindProp(this, 'position', this.cubeCamera.position);
-      this.scene.add(this.cubeCamera);
+      this.parent.add(this.cubeCamera);
 
       this.material.side = FrontSide;
       this.material.envMap = cubeRT.texture;
@@ -58,7 +58,7 @@ export default {
       useBindProp(this, 'position', this.meshBack.position);
       useBindProp(this, 'rotation', this.meshBack.rotation);
       useBindProp(this, 'scale', this.meshBack.scale);
-      this.scene.add(this.meshBack);
+      this.parent.add(this.meshBack);
     },
     updateCubeRT() {
       this.mesh.visible = false;

@@ -1,5 +1,5 @@
 import { InstancedMesh } from 'three';
-import { watch } from 'vue';
+import { inject, watch } from 'vue';
 import useBindProp from '../use/useBindProp.js';
 
 export default {
@@ -10,6 +10,9 @@ export default {
     position: Object,
     castShadow: Boolean,
     receiveShadow: Boolean,
+  },
+  created() {
+    this.parent = inject('group', this.scene);
   },
   provide() {
     return {
@@ -25,7 +28,7 @@ export default {
     this.initMesh();
   },
   unmounted() {
-    this.scene.remove(this.mesh);
+    this.parent.remove(this.mesh);
   },
   methods: {
     initMesh() {
@@ -48,7 +51,7 @@ export default {
       //   this.mesh.material = this.three.materials[this.materialId];
       // });
 
-      this.scene.add(this.mesh);
+      this.parent.add(this.mesh);
     },
     setGeometry(geometry) {
       this.geometry = geometry;
