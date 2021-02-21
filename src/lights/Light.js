@@ -52,7 +52,7 @@ export default {
     }
   },
   unmounted() {
-    if (this.group) this.group.remove(this.light)
+    if (this.group) this.group.remove(this.light);
     else this.scene.remove(this.light);
   },
   render() {
