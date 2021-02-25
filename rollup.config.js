@@ -2,7 +2,8 @@
 import vue from 'rollup-plugin-vue';
 import buble from '@rollup/plugin-buble';
 import { terser } from "rollup-plugin-terser";
-// import replace from '@rollup/plugin-replace';
+import replace from '@rollup/plugin-replace';
+import resolve from '@rollup/plugin-node-resolve';
 
 const input = 'src/export.js';
 const external = [
@@ -25,11 +26,18 @@ const external = [
   'vue',
 ];
 
+const cdn_replaces = {
+  'from \'vue\'': 'from \'https://unpkg.com/vue@3.0.5/dist/vue.esm-browser.prod.js\'',
+  'from \'three\'': 'from \'https://unpkg.com/three@0.125.2/build/three.module.js\'',
+  'from \'three/examples': 'from \'https://unpkg.com/three@0.125.2/examples',
+  'from \'gsap\'': 'from \'https://unpkg.com/gsap@3.5.1/index.js\'',
+  delimiters: ['', ''],
+};
+
 const plugins = [
-  // commonjs(),
   vue(),
   buble({
-    // transforms: { forOf: false },
+    transforms: { asyncAwait: false, forOf: false },
     objectAssign: 'Object.assign',
   }),
 ];
@@ -64,45 +72,35 @@ export default [
   //     terser(),
   //   ],
   // },
-  // {
-  //   input,
-  //   external,
-  //   output: {
-  //     format: 'es',
-  //     exports: 'named',
-  //     file: 'build/trois.module.cdn.js',
-  //     sourcemap: true,
-  //   },
-  //   plugins: [
-  //     replace({
-  //       'from \'three\'': 'from \'https://unpkg.com/three@0.120.1/build/three.module.js\'',
-  //       'from \'three/examples': 'from \'https://unpkg.com/three@0.120.1/examples',
-  //       'from \'gsap\'': 'from \'https://unpkg.com/gsap@3.5.1/index.js\'',
-  //       delimiters: ['', ''],
-  //     }),
-  //     ...plugins,
-  //   ],
-  // },
-  // {
-  //   input,
-  //   external,
-  //   output: {
-  //     format: 'es',
-  //     exports: 'named',
-  //     file: 'build/trois.module.cdn.min.js',
-  //     sourcemap: true,
-  //   },
-  //   plugins: [
-  //     replace({
-  //       'from \'three\'': 'from \'https://unpkg.com/three@0.120.1/build/three.module.js\'',
-  //       'from \'three/examples': 'from \'https://unpkg.com/three@0.120.1/examples',
-  //       'from \'gsap\'': 'from \'https://unpkg.com/gsap@3.5.1/index.js\'',
-  //       delimiters: ['', ''],
-  //     }),
-  //     ...plugins,
-  //     terser(),
-  //   ],
-  // },
+  {
+    input,
+    external,
+    output: {
+      format: 'es',
+      exports: 'named',
+      file: 'build/trois.module.cdn.js',
+      sourcemap: true,
+    },
+    plugins: [
+      replace(cdn_replaces),
+      ...plugins,
+    ],
+  },
+  {
+    input,
+    external,
+    output: {
+      format: 'es',
+      exports: 'named',
+      file: 'build/trois.module.cdn.min.js',
+      sourcemap: true,
+    },
+    plugins: [
+      replace(cdn_replaces),
+      ...plugins,
+      terser(),
+    ],
+  },
   {
     input,
     external,
@@ -128,27 +126,41 @@ export default [
       terser(),
     ],
   },
-  // {
-  //   input,
-  //   external,
-  //   output: {
-  //     format: 'cjs',
-  //     file: 'build/trois.js',
-  //     sourcemap: true,
-  //   },
-  //   plugins,
-  // },
-  // {
-  //   input,
-  //   external,
-  //   output: {
-  //     format: 'cjs',
-  //     file: 'build/trois.min.js',
-  //     sourcemap: true,
-  //   },
-  //   plugins: [
-  //     ...plugins,
-  //     terser(),
-  //   ],
-  // },
+  {
+    input,
+    external: [
+      'gsap',
+      'vue',
+    ],
+    output: {
+      format: 'cjs',
+      file: 'build/trois.js',
+      sourcemap: true,
+    },
+    plugins: [
+      ...plugins,
+      resolve({
+        moduleDirectories: ['node_modules'],
+      }),
+    ],
+  },
+  {
+    input,
+    external: [
+      'gsap',
+      'vue',
+    ],
+    output: {
+      format: 'cjs',
+      file: 'build/trois.min.js',
+      sourcemap: true,
+    },
+    plugins: [
+      ...plugins,
+      resolve({
+        moduleDirectories: ['node_modules'],
+      }),
+      terser(),
+    ],
+  },
 ];

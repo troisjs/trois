@@ -1,19 +1,20 @@
-import { h, toRef, watch, inject, resolveComponent, openBlock, createBlock, withCtx, createVNode, renderSlot } from 'vue';
-import { Vector2, Vector3, Plane as Plane$1, Raycaster, WebGLRenderer, OrthographicCamera as OrthographicCamera$1, PerspectiveCamera as PerspectiveCamera$1, Group as Group$1, Scene as Scene$1, Color, BoxBufferGeometry, CircleBufferGeometry, ConeBufferGeometry, CylinderBufferGeometry, DodecahedronBufferGeometry, IcosahedronBufferGeometry, LatheBufferGeometry, OctahedronBufferGeometry, PolyhedronBufferGeometry, RingBufferGeometry, SphereBufferGeometry, TetrahedronBufferGeometry, TorusBufferGeometry, TorusKnotBufferGeometry, Curve, TubeBufferGeometry, AmbientLight as AmbientLight$1, DirectionalLight as DirectionalLight$1, PointLight as PointLight$1, SpotLight as SpotLight$1, FrontSide, MeshBasicMaterial, MeshLambertMaterial, TextureLoader, MeshMatcapMaterial, MeshPhongMaterial, MeshStandardMaterial, MeshPhysicalMaterial, ShaderChunk, UniformsUtils, ShaderLib, ShaderMaterial as ShaderMaterial$1, MeshToonMaterial, CubeTextureLoader, CubeRefractionMapping, Mesh as Mesh$1, PlaneBufferGeometry, FontLoader, TextBufferGeometry, WebGLCubeRenderTarget, RGBFormat, LinearMipmapLinearFilter, CubeCamera, BackSide, DoubleSide, InstancedMesh as InstancedMesh$1, SpriteMaterial, Sprite as Sprite$1, WebGLRenderTarget, ObjectSpaceNormalMap, Object3D, Face3, MathUtils, InstancedBufferAttribute } from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { EffectComposer as EffectComposer$1 } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass as RenderPass$1 } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { BokehPass as BokehPass$1 } from 'three/examples/jsm/postprocessing/BokehPass.js';
-import { FilmPass as FilmPass$1 } from 'three/examples/jsm/postprocessing/FilmPass.js';
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
-import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader.js';
-import { HalftonePass as HalftonePass$1 } from 'three/examples/jsm/postprocessing/HalftonePass.js';
-import { SMAAPass as SMAAPass$1 } from 'three/examples/jsm/postprocessing/SMAAPass.js';
-import { UnrealBloomPass as UnrealBloomPass$1 } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
-import { Pass } from 'three/examples/jsm/postprocessing/Pass.js';
-import { gsap, Power4 } from 'gsap';
-import { Geometry as Geometry$1 } from 'three/examples/jsm/deprecated/Geometry.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { h, toRef, watch, inject } from 'https://unpkg.com/vue@3.0.5/dist/vue.esm-browser.prod.js';
+import { Vector2, Vector3, Plane as Plane$1, Raycaster, WebGLRenderer, OrthographicCamera as OrthographicCamera$1, PerspectiveCamera as PerspectiveCamera$1, Group as Group$1, Scene as Scene$1, Color, BoxBufferGeometry, CircleBufferGeometry, ConeBufferGeometry, CylinderBufferGeometry, DodecahedronBufferGeometry, IcosahedronBufferGeometry, LatheBufferGeometry, OctahedronBufferGeometry, PolyhedronBufferGeometry, RingBufferGeometry, SphereBufferGeometry, TetrahedronBufferGeometry, TorusBufferGeometry, TorusKnotBufferGeometry, Curve, TubeBufferGeometry, AmbientLight as AmbientLight$1, DirectionalLight as DirectionalLight$1, PointLight as PointLight$1, SpotLight as SpotLight$1, FrontSide, MeshBasicMaterial, MeshLambertMaterial, TextureLoader, MeshMatcapMaterial, MeshPhongMaterial, MeshStandardMaterial, MeshPhysicalMaterial, ShaderChunk, UniformsUtils, ShaderLib, ShaderMaterial as ShaderMaterial$1, MeshToonMaterial, CubeTextureLoader, CubeRefractionMapping, Mesh as Mesh$1, PlaneBufferGeometry, FontLoader, TextBufferGeometry, WebGLCubeRenderTarget, RGBFormat, LinearMipmapLinearFilter, CubeCamera, BackSide, DoubleSide, InstancedMesh as InstancedMesh$1, SpriteMaterial, Sprite as Sprite$1, WebGLRenderTarget, ObjectSpaceNormalMap, Object3D, Face3, MathUtils, InstancedBufferAttribute } from 'https://unpkg.com/three@0.125.2/build/three.module.js';
+import { OrbitControls } from 'https://unpkg.com/three@0.125.2/examples/jsm/controls/OrbitControls.js';
+import { EffectComposer as EffectComposer$1 } from 'https://unpkg.com/three@0.125.2/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass as RenderPass$1 } from 'https://unpkg.com/three@0.125.2/examples/jsm/postprocessing/RenderPass.js';
+import { BokehPass as BokehPass$1 } from 'https://unpkg.com/three@0.125.2/examples/jsm/postprocessing/BokehPass.js';
+import { FilmPass as FilmPass$1 } from 'https://unpkg.com/three@0.125.2/examples/jsm/postprocessing/FilmPass.js';
+import { ShaderPass } from 'https://unpkg.com/three@0.125.2/examples/jsm/postprocessing/ShaderPass.js';
+import { FXAAShader } from 'https://unpkg.com/three@0.125.2/examples/jsm/shaders/FXAAShader.js';
+import { HalftonePass as HalftonePass$1 } from 'https://unpkg.com/three@0.125.2/examples/jsm/postprocessing/HalftonePass.js';
+import { SMAAPass as SMAAPass$1 } from 'https://unpkg.com/three@0.125.2/examples/jsm/postprocessing/SMAAPass.js';
+import { UnrealBloomPass as UnrealBloomPass$1 } from 'https://unpkg.com/three@0.125.2/examples/jsm/postprocessing/UnrealBloomPass.js';
+import { Pass } from 'https://unpkg.com/three@0.125.2/examples/jsm/postprocessing/Pass.js';
+import { gsap, Power4 } from 'https://unpkg.com/gsap@3.5.1/index.js';
+import { Geometry as Geometry$1 } from 'https://unpkg.com/three@0.125.2/examples/jsm/deprecated/Geometry.js';
+import { resolveComponent, openBlock, createBlock, withCtx, createVNode, renderSlot } from 'https://unpkg.com/vue@3.0.5/dist/vue.esm-browser.prod.js';
+import { GLTFLoader } from 'https://unpkg.com/three@0.125.2/examples/jsm/loaders/GLTFLoader.js';
 
 /**
  * Three.js helper
@@ -3589,4 +3590,4 @@ var TroisJSVuePlugin = {
 };
 
 export { AmbientLight, BasicMaterial, BokehPass, Box, BoxGeometry, PerspectiveCamera as Camera, Circle, CircleGeometry, Cone, ConeGeometry, CubeTexture, Cylinder, CylinderGeometry, DirectionalLight, Dodecahedron, DodecahedronGeometry, EffectComposer, FXAAPass, FilmPass, script$1 as GLTFViewer, Gem, Group, HalftonePass, Icosahedron, IcosahedronGeometry, Image, InstancedMesh, LambertMaterial, Lathe, LatheGeometry, MatcapMaterial, Mesh, MirrorMesh, NoisyImage, NoisyPlane, NoisySphere, NoisyText, Octahedron, OctahedronGeometry, OrthographicCamera, PerspectiveCamera, PhongMaterial, PhysicalMaterial, Plane, PointLight, Polyhedron, PolyhedronGeometry, RefractionMesh, RenderPass, Renderer, Ring, RingGeometry, SMAAPass, Scene, script as Slider1, Sphere, SphereGeometry, SpotLight, Sprite, StandardMaterial, SubSurfaceMaterial, Tetrahedron, TetrahedronGeometry, Text, Texture, TiltShiftPass, ToonMaterial, Torus, TorusGeometry, TorusKnot, TorusKnotGeometry, TroisJSVuePlugin, Tube, TubeGeometry, UnrealBloomPass, ZoomBlurPass, getMatcapUrl, lerp, lerpv2, lerpv3, limit, propsValues, setFromProp };
-//# sourceMappingURL=trois.module.js.map
+//# sourceMappingURL=trois.module.cdn.js.map
