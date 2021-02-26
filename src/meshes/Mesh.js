@@ -60,8 +60,6 @@ export default {
         this.three.addIntersectObject(this.mesh);
       }
 
-      console.log(this.parent);
-
       this.bindProps();
       this.parent.add(this.mesh);
       this.$emit('ready');
