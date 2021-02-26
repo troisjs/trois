@@ -929,7 +929,13 @@ var TubeGeometry = {
 };
 
 var Light = {
-  inject: ['scene'],
+  inject: {
+    scene: 'scene',
+    parent: {
+      from: 'group',
+      default: function () { return inject('scene'); },
+    },
+  },
   props: {
     color: {
       type: String,
@@ -948,9 +954,6 @@ var Light = {
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
-  created: function created() {
-    this.parent = inject('group', this.scene);
-  },
   mounted: function mounted() {
     var this$1 = this;
 
@@ -1455,7 +1458,15 @@ var CubeTexture = {
 };
 
 var Mesh = {
-  inject: ['three', 'scene', 'rendererComponent'],
+  inject: {
+    three: 'three',
+    scene: 'scene',
+    rendererComponent: 'rendererComponent',
+    parent: {
+      from: 'group',
+      default: function () { return inject('scene'); },
+    },
+  },
   emits: ['ready'],
   props: {
     materialId: String,
@@ -1469,9 +1480,6 @@ var Mesh = {
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
-  created: function created() {
-    this.parent = inject('group', this.scene);
-  },
   provide: function provide() {
     return {
       mesh: this,
@@ -2205,8 +2213,9 @@ var InstancedMesh = {
     castShadow: Boolean,
     receiveShadow: Boolean,
   },
-  created: function created() {
-    this.parent = inject('group', this.scene);
+  setup: function setup() {
+    var parent = inject('group', inject('scene'));
+    return { parent: parent };
   },
   provide: function provide() {
     return {
@@ -2345,8 +2354,9 @@ var Sprite = {
     position: Object,
     scale: Object,
   },
-  created: function created() {
-    this.parent = inject('group', this.scene);
+  setup: function setup() {
+    var parent = inject('group', inject('scene'));
+    return { parent: parent };
   },
   mounted: function mounted() {
     this.texture = new TextureLoader().load(this.src, this.onLoaded);

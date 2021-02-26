@@ -126,41 +126,41 @@ export default [
       terser(),
     ],
   },
-  {
-    input,
-    external: [
-      'gsap',
-      'vue',
-    ],
-    output: {
-      format: 'cjs',
-      file: 'build/trois.js',
-      sourcemap: true,
-    },
-    plugins: [
-      ...plugins,
-      resolve({
-        moduleDirectories: ['node_modules'],
-      }),
-    ],
-  },
-  {
-    input,
-    external: [
-      'gsap',
-      'vue',
-    ],
-    output: {
-      format: 'cjs',
-      file: 'build/trois.min.js',
-      sourcemap: true,
-    },
-    plugins: [
-      ...plugins,
-      resolve({
-        moduleDirectories: ['node_modules'],
-      }),
-      terser(),
-    ],
-  },
+  // {
+  //   input,
+  //   external: [
+  //     'gsap',
+  //     'vue',
+  //   ],
+  //   output: {
+  //     format: 'cjs',
+  //     file: 'build/trois.js',
+  //     sourcemap: true,
+  //   },
+  //   plugins: [
+  //     ...plugins,
+  //     resolve({
+  //       moduleDirectories: ['node_modules'],
+  //     }),
+  //   ],
+  // },
+  // {
+  //   input,
+  //   external: [
+  //     'gsap',
+  //     'vue',
+  //   ],
+  //   output: {
+  //     format: 'cjs',
+  //     file: 'build/trois.min.js',
+  //     sourcemap: true,
+  //   },
+  //   plugins: [
+  //     ...plugins,
+  //     resolve({
+  //       moduleDirectories: ['node_modules'],
+  //     }),
+  //     terser(),
+  //   ],
+  // },
 ];
