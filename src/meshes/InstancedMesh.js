@@ -11,8 +11,9 @@ export default {
     castShadow: Boolean,
     receiveShadow: Boolean,
   },
-  created() {
-    this.parent = inject('group', this.scene);
+  setup() {
+    const parent = inject('group', inject('scene'));
+    return { parent };
   },
   provide() {
     return {

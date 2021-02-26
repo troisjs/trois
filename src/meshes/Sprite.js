@@ -10,8 +10,9 @@ export default {
     position: Object,
     scale: Object,
   },
-  created() {
-    this.parent = inject('group', this.scene);
+  setup() {
+    const parent = inject('group', inject('scene'));
+    return { parent };
   },
   mounted() {
     this.texture = new TextureLoader().load(this.src, this.onLoaded);

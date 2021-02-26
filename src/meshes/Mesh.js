@@ -3,7 +3,15 @@ import { inject, watch } from 'vue';
 import useBindProp from '../use/useBindProp.js';
 
 export default {
-  inject: ['three', 'scene', 'rendererComponent'],
+  inject: {
+    three: 'three',
+    scene: 'scene',
+    rendererComponent: 'rendererComponent',
+    parent: {
+      from: 'group',
+      default: () => inject('scene'),
+    },
+  },
   emits: ['ready'],
   props: {
     materialId: String,
@@ -17,9 +25,6 @@ export default {
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
-  created() {
-    this.parent = inject('group', this.scene);
-  },
   provide() {
     return {
       mesh: this,
@@ -54,6 +59,8 @@ export default {
         this.mesh.onClick = (e) => { this.onClick({ component: this, event: e }); };
         this.three.addIntersectObject(this.mesh);
       }
+
+      console.log(this.parent);
 
       this.bindProps();
       this.parent.add(this.mesh);

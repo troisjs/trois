@@ -4,7 +4,13 @@ import { setFromProp } from '../tools.js';
 import useBindProp from '../use/useBindProp.js';
 
 export default {
-  inject: ['scene'],
+  inject: {
+    scene: 'scene',
+    parent: {
+      from: 'group',
+      default: () => inject('scene'),
+    },
+  },
   props: {
     color: {
       type: String,
@@ -23,9 +29,6 @@ export default {
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
-  created() {
-    this.parent = inject('group', this.scene);
-  },
   mounted() {
     useBindProp(this, 'position', this.light.position);
 
