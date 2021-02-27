@@ -1,5 +1,5 @@
 <template>
-  <Renderer ref="renderer" :auto-clear="false" :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }" mouse-move="body" :mouse-raycast="true">
+  <Renderer ref="renderer" orbit-ctrl mouse-move mouse-raycast>
     <Camera :position="{ z: 200 }" />
     <Scene>
       <AmbientLight color="#808080" />
@@ -8,7 +8,7 @@
       <PointLight color="#ff6000" :intensity="0.5" :position="{ x: 100}" />
       <PointLight color="#0000ff" :intensity="0.5" :position="{ x: -100}" />
 
-      <InstancedMesh ref="imesh" material-id="material" :count="NUM_INSTANCES">
+      <InstancedMesh ref="imesh" :count="NUM_INSTANCES">
         <BoxGeometry :width="2" :height="2" :depth="10" />
         <!-- <CylinderGeometry :radius-top="2" :radius-bottom="2" :height="10" :rotate-x="Math.PI / 2" /> -->
         <!-- <ConeGeometry :radius="2" :height="10" :rotate-x="Math.PI / 2" /> -->
@@ -19,7 +19,6 @@
       <Text
         text="TroisJS"
         font-src="helvetiker_regular.typeface.json"
-        material-id="material1"
         align="center"
         :size="30"
         :height="5"

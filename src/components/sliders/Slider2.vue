@@ -1,7 +1,6 @@
 <template>
-  <Renderer ref="renderer" antialias mouse-move="body">
+  <Renderer ref="renderer" antialias mouse-move>
     <OrthographicCamera ref="camera" :position="{ z: 10 }" />
-    <!-- <Camera :position="{ z: 10 }" /> -->
     <Scene ref="scene" />
   </Renderer>
 </template>
