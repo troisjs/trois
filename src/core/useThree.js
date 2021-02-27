@@ -217,11 +217,18 @@ export default function useThree() {
   }
 
   /**
+   */
+  function updateMouse(e) {
+    const rect = e.target.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / size.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / size.height) * 2 + 1;
+  }
+
+  /**
    * click listener
    */
   function onClick(e) {
-    mouse.x = (e.clientX / size.width) * 2 - 1;
-    mouse.y = -(e.clientY / size.height) * 2 + 1;
+    updateMouse(e);
     raycaster.setFromCamera(mouse, obj.camera);
     const objects = raycaster.intersectObjects(intersectObjects);
     for (let i = 0; i < objects.length; i++) {
@@ -234,8 +241,7 @@ export default function useThree() {
    * mousemove listener
    */
   function onMousemove(e) {
-    mouse.x = (e.clientX / size.width) * 2 - 1;
-    mouse.y = -(e.clientY / size.height) * 2 + 1;
+    updateMouse(e);
     onMousechange(e);
   }
 
