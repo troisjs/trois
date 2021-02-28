@@ -7,8 +7,8 @@ export default {
   props: {
     radius: { type: Number, default: 0.5 },
     tube: { type: Number, default: 0.4 },
-    radialSegments: { type: Number, default: 64 },
     tubularSegments: { type: Number, default: 8 },
+    radialSegments: { type: Number, default: 64 },
     p: { type: Number, default: 2 },
     q: { type: Number, default: 3 },
   },
@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new TorusKnotBufferGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.p, this.q);
+      this.geometry = new TorusKnotBufferGeometry(this.radius, this.tube, this.tubularSegments, this.radialSegments, this.p, this.q);
     },
   },
   __hmrId: 'TorusKnot',
