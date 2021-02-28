@@ -229,11 +229,18 @@ function useThree() {
   }
 
   /**
+   */
+  function updateMouse(e) {
+    var rect = e.target.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / size.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / size.height) * 2 + 1;
+  }
+
+  /**
    * click listener
    */
   function onClick(e) {
-    mouse.x = (e.clientX / size.width) * 2 - 1;
-    mouse.y = -(e.clientY / size.height) * 2 + 1;
+    updateMouse(e);
     raycaster.setFromCamera(mouse, obj.camera);
     var objects = raycaster.intersectObjects(intersectObjects);
     for (var i = 0; i < objects.length; i++) {
@@ -246,8 +253,7 @@ function useThree() {
    * mousemove listener
    */
   function onMousemove(e) {
-    mouse.x = (e.clientX / size.width) * 2 - 1;
-    mouse.y = -(e.clientY / size.height) * 2 + 1;
+    updateMouse(e);
     onMousechange();
   }
 
@@ -3216,12 +3222,9 @@ var script = {
     events: { type: Object, default: function () { return { wheel: true, click: true, keyup: true }; } },
   },
   setup: function setup() {
-    var ref = useTextures();
-    var textures = ref.textures;
-    var loadTextures = ref.loadTextures;
+    var loader = useTextures();
     return {
-      textures: textures,
-      loadTextures: loadTextures,
+      loader: loader,
       progress: 0,
       targetProgress: 0,
     };
@@ -3232,13 +3235,15 @@ var script = {
     if (this.images.length < 2) {
       console.error('This slider needs at least 2 images.');
     } else {
-      this.loadTextures(this.images, this.init);
+      this.loader.loadTextures(this.images, this.init);
     }
   },
   unmounted: function unmounted() {
-    document.removeEventListener('click', this.onClick);
+    this.loader.dispose();
+    var domElement = this.three.renderer.domElement;
+    domElement.removeEventListener('click', this.onClick);
+    domElement.removeEventListener('wheel', this.onWheel);
     document.removeEventListener('keyup', this.onKeyup);
-    window.removeEventListener('wheel', this.onWheel);
   },
   methods: {
     init: function init() {
@@ -3255,9 +3260,10 @@ var script = {
         }
       );
 
-      if (this.events.click) { document.addEventListener('click', this.onClick); }
+      var domElement = this.three.renderer.domElement;
+      if (this.events.click) { domElement.addEventListener('click', this.onClick); }
+      if (this.events.wheel) { domElement.addEventListener('wheel', this.onWheel); }
       if (this.events.keyup) { document.addEventListener('keyup', this.onKeyup); }
-      if (this.events.wheel) { window.addEventListener('wheel', this.onWheel); }
       this.three.onBeforeRender(this.updateProgress);
       this.three.onAfterResize(this.onResize);
     },
@@ -3269,14 +3275,14 @@ var script = {
         renderer: renderer, screen: this.three.size,
         size: 10,
         anim: 1,
-        texture: this.textures[0],
+        texture: this.loader.textures[0],
       });
 
       this.plane2 = new AnimatedPlane({
         renderer: renderer, screen: this.three.size,
         size: 10,
         anim: 2,
-        texture: this.textures[1],
+        texture: this.loader.textures[1],
       });
 
       this.setPlanesProgress(0);
@@ -3336,8 +3342,8 @@ var script = {
       if ((pdiff > 0 && p1 < p0) || (pdiff < 0 && p0 < p1)) {
         var i = Math.floor(progress1) % this.images.length;
         var j = (i + 1) % this.images.length;
-        this.plane1.setTexture(this.textures[i]);
-        this.plane2.setTexture(this.textures[j]);
+        this.plane1.setTexture(this.loader.textures[i]);
+        this.plane2.setTexture(this.loader.textures[j]);
       }
 
       this.progress = progress1;
@@ -3377,7 +3383,223 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 script.render = render;
 script.__file = "src/components/sliders/Slider1.vue";
 
+function ZoomBlurImage(three) {
+  var geometry, material, mesh;
+
+  var uMap = { value: null };
+  var uCenter = { value: new Vector2(0.5, 0.5) };
+  var uStrength = { value: 0 };
+  var uUVOffset = { value: new Vector2(0, 0) };
+  var uUVScale = { value: new Vector2(1, 1) };
+
+  init();
+
+  return { geometry: geometry, material: material, mesh: mesh, uCenter: uCenter, uStrength: uStrength, setMap: setMap, updateUV: updateUV };
+
+  function init() {
+    geometry = new PlaneBufferGeometry(2, 2, 1, 1);
+
+    material = new ShaderMaterial$1({
+      transparent: true,
+      uniforms: {
+        map: uMap,
+        center: uCenter,
+        strength: uStrength,
+        uvOffset: uUVOffset,
+        uvScale: uUVScale,
+      },
+      vertexShader: "\n        varying vec2 vUv;\n        void main() {\n          vUv = uv;\n          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n        }\n      ",
+      // adapted from https://github.com/evanw/glfx.js
+      fragmentShader: "\n        uniform sampler2D map;\n        uniform vec2 center;\n        uniform float strength;\n        uniform vec2 uvOffset;\n        uniform vec2 uvScale;\n        varying vec2 vUv;\n\n        float random(vec3 scale, float seed) {\n          /* use the fragment position for a different seed per-pixel */\n          return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);\n        }\n        \n        void main() {\n          vec2 tUv = vUv * uvScale + uvOffset;\n          if (abs(strength) > 0.001) {\n            vec4 color = vec4(0.0);\n            float total = 0.0;\n            vec2 toCenter = center * uvScale + uvOffset - tUv;\n            \n            /* randomize the lookup values to hide the fixed number of samples */\n            float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);\n            \n            for (float t = 0.0; t <= 20.0; t++) {\n              float percent = (t + offset) / 20.0;\n              float weight = 2.0 * (percent - percent * percent);\n              vec4 texel = texture2D(map, tUv + toCenter * percent * strength);\n\n              /* switch to pre-multiplied alpha to correctly blur transparent images */\n              texel.rgb *= texel.a;\n\n              color += texel * weight;\n              total += weight;\n            }\n\n            gl_FragColor = color / total;\n\n            /* switch back from pre-multiplied alpha */\n            gl_FragColor.rgb /= gl_FragColor.a + 0.00001;\n            gl_FragColor.a = 1.0 - abs(strength);\n          } else {\n            gl_FragColor = texture2D(map, tUv);\n          }\n        }\n      ",
+    });
+
+    mesh = new Mesh$1(geometry, material);
+  }
+
+  function setMap(value) {
+    uMap.value = value;
+    updateUV();
+  }
+
+  function updateUV() {
+    var ratio = three.size.ratio;
+    var iRatio = uMap.value.image.width / uMap.value.image.height;
+    uUVOffset.value.set(0, 0);
+    uUVScale.value.set(1, 1);
+    if (iRatio > ratio) {
+      uUVScale.value.x = ratio / iRatio;
+      uUVOffset.value.x = (1 - uUVScale.value.x) / 2;
+    } else {
+      uUVScale.value.y = iRatio / ratio;
+      uUVOffset.value.y = (1 - uUVScale.value.y) / 2;
+    }
+  }
+}
+
 var script$1 = {
+  props: {
+    images: Array,
+    events: { type: Object, default: function () { return { wheel: true, click: true, keyup: true }; } },
+  },
+  setup: function setup() {
+    var center = new Vector2();
+    var loader = useTextures();
+
+    return {
+      loader: loader,
+      center: center,
+      progress: 0,
+      targetProgress: 0,
+    };
+  },
+  mounted: function mounted() {
+    this.three = this.$refs.renderer.three;
+
+    if (this.images.length < 2) {
+      console.error('This slider needs at least 2 images.');
+    } else {
+      this.loader.loadTextures(this.images, this.init);
+    }
+  },
+  unmounted: function unmounted() {
+    this.loader.dispose();
+    var domElement = this.three.renderer.domElement;
+    domElement.removeEventListener('click', this.onClick);
+    domElement.removeEventListener('wheel', this.onWheel);
+    document.removeEventListener('keyup', this.onKeyup);
+  },
+  methods: {
+    init: function init() {
+      this.initScene();
+      gsap.fromTo(this.image1.uStrength,
+        {
+          value: -2,
+        },
+        {
+          value: 0,
+          duration: 2.5,
+          ease: Power4.easeOut,
+        }
+      );
+
+      var domElement = this.three.renderer.domElement;
+      if (this.events.click) { domElement.addEventListener('click', this.onClick); }
+      if (this.events.wheel) { domElement.addEventListener('wheel', this.onWheel); }
+      if (this.events.keyup) { document.addEventListener('keyup', this.onKeyup); }
+      this.three.onBeforeRender(this.animate);
+      this.three.onAfterResize(this.onResize);
+    },
+    initScene: function initScene() {
+      var scene = this.$refs.scene.scene;
+
+      this.image1 = new ZoomBlurImage(this.three);
+      this.image1.setMap(this.loader.textures[0]);
+      this.image2 = new ZoomBlurImage(this.three);
+      this.image2.setMap(this.loader.textures[1]);
+      this.setImagesProgress(0);
+
+      scene.add(this.image1.mesh);
+      scene.add(this.image2.mesh);
+    },
+    animate: function animate() {
+      var ref = this.three;
+      var mouse = ref.mouse;
+      this.center.copy(mouse).divideScalar(2).addScalar(0.5);
+      lerpv2(this.image1.uCenter.value, this.center, 0.1);
+      lerpv2(this.image2.uCenter.value, this.center, 0.1);
+
+      this.updateProgress();
+    },
+    onResize: function onResize() {
+      this.image1.updateUV();
+      this.image2.updateUV();
+    },
+    onWheel: function onWheel(e) {
+      // e.preventDefault();
+      if (e.deltaY > 0) {
+        this.setTargetProgress(this.targetProgress + 1 / 20);
+      } else {
+        this.setTargetProgress(this.targetProgress - 1 / 20);
+      }
+    },
+    onClick: function onClick(e) {
+      if (e.clientY < this.three.size.height / 2) {
+        this.navPrevious();
+      } else {
+        this.navNext();
+      }
+    },
+    onKeyup: function onKeyup(e) {
+      if (e.keyCode === 37 || e.keyCode === 38) {
+        this.navPrevious();
+      } else if (e.keyCode === 39 || e.keyCode === 40) {
+        this.navNext();
+      }
+    },
+    navNext: function navNext() {
+      if (Number.isInteger(this.targetProgress)) { this.setTargetProgress(this.targetProgress + 1); }
+      else { this.setTargetProgress(Math.ceil(this.targetProgress)); }
+    },
+    navPrevious: function navPrevious() {
+      if (Number.isInteger(this.targetProgress)) { this.setTargetProgress(this.targetProgress - 1); }
+      else { this.setTargetProgress(Math.floor(this.targetProgress)); }
+    },
+    setTargetProgress: function setTargetProgress(value) {
+      this.targetProgress = value;
+      if (this.targetProgress < 0) {
+        this.progress += this.images.length;
+        this.targetProgress += this.images.length;
+      }
+    },
+    updateProgress: function updateProgress() {
+      var progress1 = lerp(this.progress, this.targetProgress, 0.1);
+      var pdiff = progress1 - this.progress;
+      if (pdiff === 0) { return; }
+
+      var p0 = this.progress % 1;
+      var p1 = progress1 % 1;
+      if ((pdiff > 0 && p1 < p0) || (pdiff < 0 && p0 < p1)) {
+        var i = Math.floor(progress1) % this.images.length;
+        var j = (i + 1) % this.images.length;
+        this.image1.setMap(this.loader.textures[i]);
+        this.image2.setMap(this.loader.textures[j]);
+      }
+
+      this.progress = progress1;
+      this.setImagesProgress(this.progress % 1);
+    },
+    setImagesProgress: function setImagesProgress(progress) {
+      this.image1.uStrength.value = progress;
+      this.image2.uStrength.value = -1 + progress;
+    },
+  },
+};
+
+function render$1(_ctx, _cache, $props, $setup, $data, $options) {
+  var _component_OrthographicCamera = resolveComponent("OrthographicCamera");
+  var _component_Scene = resolveComponent("Scene");
+  var _component_Renderer = resolveComponent("Renderer");
+
+  return (openBlock(), createBlock(_component_Renderer, {
+    ref: "renderer",
+    antialias: "",
+    "mouse-move": ""
+  }, {
+    default: withCtx(function () { return [
+      createVNode(_component_OrthographicCamera, {
+        ref: "camera",
+        position: { z: 10 }
+      }, null, 512 /* NEED_PATCH */),
+      createVNode(_component_Scene, { ref: "scene" }, null, 512 /* NEED_PATCH */)
+    ]; }),
+    _: 1 /* STABLE */
+  }, 512 /* NEED_PATCH */))
+}
+
+script$1.render = render$1;
+script$1.__file = "src/components/sliders/Slider2.vue";
+
+var script$2 = {
   props: {
     src: String,
     cameraPosition: Object,
@@ -3394,7 +3616,7 @@ var script$1 = {
   },
 };
 
-function render$1(_ctx, _cache, $props, $setup, $data, $options) {
+function render$2(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_Camera = resolveComponent("Camera");
   var _component_Scene = resolveComponent("Scene");
   var _component_Renderer = resolveComponent("Renderer");
@@ -3419,8 +3641,8 @@ function render$1(_ctx, _cache, $props, $setup, $data, $options) {
   }, 8 /* PROPS */, ["orbit-ctrl"]))
 }
 
-script$1.render = render$1;
-script$1.__file = "src/components/viewers/GLTFViewer.vue";
+script$2.render = render$2;
+script$2.__file = "src/components/viewers/GLTFViewer.vue";
 
 var TROIS = /*#__PURE__*/Object.freeze({
   __proto__: null,
@@ -3498,7 +3720,8 @@ var TROIS = /*#__PURE__*/Object.freeze({
   NoisySphere: NoisySphere,
   NoisyText: NoisyText,
   Slider1: script,
-  GLTFViewer: script$1,
+  Slider2: script$1,
+  GLTFViewer: script$2,
   setFromProp: setFromProp,
   propsValues: propsValues,
   lerp: lerp,
@@ -3598,5 +3821,5 @@ var TroisJSVuePlugin = {
   },
 };
 
-export { AmbientLight, BasicMaterial, BokehPass, Box, BoxGeometry, PerspectiveCamera as Camera, Circle, CircleGeometry, Cone, ConeGeometry, CubeTexture, Cylinder, CylinderGeometry, DirectionalLight, Dodecahedron, DodecahedronGeometry, EffectComposer, FXAAPass, FilmPass, script$1 as GLTFViewer, Gem, Group, HalftonePass, Icosahedron, IcosahedronGeometry, Image, InstancedMesh, LambertMaterial, Lathe, LatheGeometry, MatcapMaterial, Mesh, MirrorMesh, NoisyImage, NoisyPlane, NoisySphere, NoisyText, Octahedron, OctahedronGeometry, OrthographicCamera, PerspectiveCamera, PhongMaterial, PhysicalMaterial, Plane, PointLight, Polyhedron, PolyhedronGeometry, RefractionMesh, RenderPass, Renderer, Ring, RingGeometry, SMAAPass, Scene, script as Slider1, Sphere, SphereGeometry, SpotLight, Sprite, StandardMaterial, SubSurfaceMaterial, Tetrahedron, TetrahedronGeometry, Text, Texture, TiltShiftPass, ToonMaterial, Torus, TorusGeometry, TorusKnot, TorusKnotGeometry, TroisJSVuePlugin, Tube, TubeGeometry, UnrealBloomPass, ZoomBlurPass, getMatcapUrl, lerp, lerpv2, lerpv3, limit, propsValues, setFromProp };
+export { AmbientLight, BasicMaterial, BokehPass, Box, BoxGeometry, PerspectiveCamera as Camera, Circle, CircleGeometry, Cone, ConeGeometry, CubeTexture, Cylinder, CylinderGeometry, DirectionalLight, Dodecahedron, DodecahedronGeometry, EffectComposer, FXAAPass, FilmPass, script$2 as GLTFViewer, Gem, Group, HalftonePass, Icosahedron, IcosahedronGeometry, Image, InstancedMesh, LambertMaterial, Lathe, LatheGeometry, MatcapMaterial, Mesh, MirrorMesh, NoisyImage, NoisyPlane, NoisySphere, NoisyText, Octahedron, OctahedronGeometry, OrthographicCamera, PerspectiveCamera, PhongMaterial, PhysicalMaterial, Plane, PointLight, Polyhedron, PolyhedronGeometry, RefractionMesh, RenderPass, Renderer, Ring, RingGeometry, SMAAPass, Scene, script as Slider1, script$1 as Slider2, Sphere, SphereGeometry, SpotLight, Sprite, StandardMaterial, SubSurfaceMaterial, Tetrahedron, TetrahedronGeometry, Text, Texture, TiltShiftPass, ToonMaterial, Torus, TorusGeometry, TorusKnot, TorusKnotGeometry, TroisJSVuePlugin, Tube, TubeGeometry, UnrealBloomPass, ZoomBlurPass, getMatcapUrl, lerp, lerpv2, lerpv3, limit, propsValues, setFromProp };
 //# sourceMappingURL=trois.module.js.map

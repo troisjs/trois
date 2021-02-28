@@ -43,35 +43,6 @@ const plugins = [
 ];
 
 export default [
-  // {
-  //   input,
-  //   external,
-  //   output: {
-  //     format: 'umd',
-  //     name: 'TroisJS',
-  //     file: 'build/trois.umd.js',
-  //     sourcemap: true,
-  //     globals: {
-  //       'three': 'THREE',
-  //       'vue': 'Vue',
-  //     },
-  //   },
-  //   plugins,
-  // },
-  // {
-  //   input,
-  //   external,
-  //   output: {
-  //     format: 'umd',
-  //     name: 'TroisJS',
-  //     file: 'build/trois.umd.min.js',
-  //     sourcemap: true,
-  //   },
-  //   plugins: [
-  //     ...plugins,
-  //     terser(),
-  //   ],
-  // },
   {
     input,
     external,
@@ -126,24 +97,24 @@ export default [
       terser(),
     ],
   },
-  // {
-  //   input,
-  //   external: [
-  //     'gsap',
-  //     'vue',
-  //   ],
-  //   output: {
-  //     format: 'cjs',
-  //     file: 'build/trois.js',
-  //     sourcemap: true,
-  //   },
-  //   plugins: [
-  //     ...plugins,
-  //     resolve({
-  //       moduleDirectories: ['node_modules'],
-  //     }),
-  //   ],
-  // },
+  {
+    input,
+    external: [
+      'gsap',
+      'vue',
+    ],
+    output: {
+      format: 'cjs',
+      file: 'build/trois.js',
+      sourcemap: false,
+    },
+    plugins: [
+      ...plugins,
+      resolve({
+        moduleDirectories: ['node_modules'],
+      }),
+    ],
+  },
   // {
   //   input,
   //   external: [
