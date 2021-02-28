@@ -39,9 +39,10 @@ export default {
   },
   unmounted() {
     this.loader.dispose();
-    document.removeEventListener('click', this.onClick);
+    const domElement = this.three.renderer.domElement;
+    domElement.removeEventListener('click', this.onClick);
+    domElement.removeEventListener('wheel', this.onWheel);
     document.removeEventListener('keyup', this.onKeyup);
-    window.removeEventListener('wheel', this.onWheel);
   },
   methods: {
     init() {
@@ -57,9 +58,10 @@ export default {
         }
       );
 
-      if (this.events.click) document.addEventListener('click', this.onClick);
+      const domElement = this.three.renderer.domElement;
+      if (this.events.click) domElement.addEventListener('click', this.onClick);
+      if (this.events.wheel) domElement.addEventListener('wheel', this.onWheel);
       if (this.events.keyup) document.addEventListener('keyup', this.onKeyup);
-      if (this.events.wheel) window.addEventListener('wheel', this.onWheel);
       this.three.onBeforeRender(this.animate);
       this.three.onAfterResize(this.onResize);
     },

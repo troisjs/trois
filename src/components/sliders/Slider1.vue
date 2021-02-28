@@ -19,10 +19,9 @@ export default {
     events: { type: Object, default: () => { return { wheel: true, click: true, keyup: true }; } },
   },
   setup() {
-    const { textures, loadTextures } = useTextures();
+    const loader = useTextures();
     return {
-      textures,
-      loadTextures,
+      loader,
       progress: 0,
       targetProgress: 0,
     };
@@ -33,13 +32,15 @@ export default {
     if (this.images.length < 2) {
       console.error('This slider needs at least 2 images.');
     } else {
-      this.loadTextures(this.images, this.init);
+      this.loader.loadTextures(this.images, this.init);
     }
   },
   unmounted() {
-    document.removeEventListener('click', this.onClick);
+    this.loader.dispose();
+    const domElement = this.three.renderer.domElement;
+    domElement.removeEventListener('click', this.onClick);
+    domElement.removeEventListener('wheel', this.onWheel);
     document.removeEventListener('keyup', this.onKeyup);
-    window.removeEventListener('wheel', this.onWheel);
   },
   methods: {
     init() {
@@ -56,9 +57,10 @@ export default {
         }
       );
 
-      if (this.events.click) document.addEventListener('click', this.onClick);
+      const domElement = this.three.renderer.domElement;
+      if (this.events.click) domElement.addEventListener('click', this.onClick);
+      if (this.events.wheel) domElement.addEventListener('wheel', this.onWheel);
       if (this.events.keyup) document.addEventListener('keyup', this.onKeyup);
-      if (this.events.wheel) window.addEventListener('wheel', this.onWheel);
       this.three.onBeforeRender(this.updateProgress);
       this.three.onAfterResize(this.onResize);
     },
@@ -70,14 +72,14 @@ export default {
         renderer, screen: this.three.size,
         size: 10,
         anim: 1,
-        texture: this.textures[0],
+        texture: this.loader.textures[0],
       });
 
       this.plane2 = new AnimatedPlane({
         renderer, screen: this.three.size,
         size: 10,
         anim: 2,
-        texture: this.textures[1],
+        texture: this.loader.textures[1],
       });
 
       this.setPlanesProgress(0);
@@ -137,8 +139,8 @@ export default {
       if ((pdiff > 0 && p1 < p0) || (pdiff < 0 && p0 < p1)) {
         const i = Math.floor(progress1) % this.images.length;
         const j = (i + 1) % this.images.length;
-        this.plane1.setTexture(this.textures[i]);
-        this.plane2.setTexture(this.textures[j]);
+        this.plane1.setTexture(this.loader.textures[i]);
+        this.plane2.setTexture(this.loader.textures[j]);
       }
 
       this.progress = progress1;
