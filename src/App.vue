@@ -1,61 +1,49 @@
 <template>
-  <div class="app">
-    <ul class="navbar">
-      <li v-for="t in tests" :key="t" @click="test=t">{{ t }}</li>
-    </ul>
-    <component :is="test" />
-  </div>
+  <Renderer ref="renderer" mouse-over click>
+    <Camera :position="{ z: 10 }" />
+    <Scene>
+      <PointLight :position="{ y: 50, z: 50 }" />
+      <Box ref="box" @hover="boxHover" @click="boxClick" :size="1" :rotation="{ y: Math.PI / 4, z: Math.PI / 4 }">
+        <LambertMaterial :color="boxColor" />
+      </Box>
+    </Scene>
+  </Renderer>
 </template>
 
 <script>
-import Demo1 from './components/demos/Demo1.vue';
-import Demo2 from './components/demos/Demo2.vue';
-import Demo3 from './components/demos/Demo3.vue';
-import Demo4 from './components/demos/Demo4.vue';
-import Slider1 from './components/demos/Slider1.vue';
-import Slider2 from './components/demos/Slider2.vue';
-import Textures from './components/demos/Textures.vue';
-
 export default {
-  name: 'App',
-  components: {
-    Demo1, Demo2, Demo3, Demo4, Slider1, Slider2, Textures,
-  },
   data() {
     return {
-      tests: ['Demo1', 'Demo2', 'Demo3', 'Demo4', 'Textures', 'Slider1', 'Slider2'],
-      test: 'Demo1',
+      boxColor: '#ffffff',
     };
+  },
+  mounted() {
+    const renderer = this.$refs.renderer;
+    const box = this.$refs.box.mesh;
+    renderer.onBeforeRender(() => {
+      box.rotation.x += 0.01;
+    });
+  },
+  methods: {
+    boxHover({ over }) {
+      if (over) this.boxColor = '#ff0000';
+      else this.boxColor = '#ffffff';
+    },
+    boxClick() {
+      console.log('click');
+    },
   },
 };
 </script>
 
 <style lang="scss">
+body {
+  margin: 0;
+}
+
+body, html, #app, .app { height: 100%; }
+
 .app {
-  .navbar {
-    position: fixed;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    color: #fff;
-    text-align: center;
-    font-size: 14px;
-
-    li {
-      display: inline-block;
-      margin: 1em;
-      padding: 5px;
-      background: rgba(255, 255, 255, 0.5);
-      color: #000;
-      border-radius: 5px;;
-      cursor: pointer;
-      transition: background-color 0.4s;
-      &:hover {
-        background: rgba(255, 255, 255, 1);
-      }
-    }
-  }
-
   canvas {
     display: block;
   }
