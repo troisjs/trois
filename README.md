@@ -3,14 +3,14 @@
 I wanted to try to write a lib similar to [react-three-fiber](https://github.com/react-spring/react-three-fiber) but for VueJS.
 
 <p>
-  <a href="https://troisjs.github.io/trois/"><img src="/screenshots/troisjs1.jpg" width="45%" /></a>
-  <a href="https://troisjs.github.io/trois/"><img src="/screenshots/troisjs3.jpg" width="45%" /></a>
-  <a href="https://troisjs.github.io/trois/"><img src="/screenshots/troisjs4.jpg" width="45%" /></a>
-  <a href="https://troisjs.github.io/trois/"><img src="/screenshots/troisjs5.jpg" width="45%" /></a>
+  <a href="https://troisjs.github.io"><img src="/screenshots/troisjs1.jpg" width="45%" /></a>
+  <a href="https://troisjs.github.io"><img src="/screenshots/troisjs3.jpg" width="45%" /></a>
+  <a href="https://troisjs.github.io"><img src="/screenshots/troisjs4.jpg" width="45%" /></a>
+  <a href="https://troisjs.github.io"><img src="/screenshots/troisjs5.jpg" width="45%" /></a>
 </p>
 
-- 💻 Examples (wip) : https://troisjs.netlify.app/
-- 📖 Doc (wip) : https://troisjs.netlify.app/guide/
+- 💻 Examples (wip) : https://troisjs.github.io/
+- 📖 Doc (wip) : https://troisjs.github.io/guide/
 
 I started from scratch... I don't know if I will have time to maintain this, but feel free to participate :)
 
