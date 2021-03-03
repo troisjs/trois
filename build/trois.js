@@ -1,15 +1,19 @@
-import { h, toRef, watch, inject } from 'https://unpkg.com/vue@3.0.5/dist/vue.esm-browser.prod.js';
-import { Vector2, Vector3, Plane as Plane$1, Raycaster, WebGLRenderer, OrthographicCamera as OrthographicCamera$1, PerspectiveCamera as PerspectiveCamera$1, Group as Group$1, Scene as Scene$1, Color, BoxBufferGeometry, CircleBufferGeometry, ConeBufferGeometry, CylinderBufferGeometry, DodecahedronBufferGeometry, IcosahedronBufferGeometry, LatheBufferGeometry, OctahedronBufferGeometry, PolyhedronBufferGeometry, RingBufferGeometry, SphereBufferGeometry, TetrahedronBufferGeometry, TorusBufferGeometry, TorusKnotBufferGeometry, Curve, TubeBufferGeometry, AmbientLight as AmbientLight$1, DirectionalLight as DirectionalLight$1, PointLight as PointLight$1, SpotLight as SpotLight$1, FrontSide, MeshBasicMaterial, MeshLambertMaterial, TextureLoader, MeshMatcapMaterial, MeshPhongMaterial, MeshStandardMaterial, MeshPhysicalMaterial, ShaderChunk, UniformsUtils, ShaderLib, ShaderMaterial as ShaderMaterial$1, MeshToonMaterial, CubeTextureLoader, CubeRefractionMapping, Mesh as Mesh$1, PlaneBufferGeometry, FontLoader, TextBufferGeometry, WebGLCubeRenderTarget, RGBFormat, LinearMipmapLinearFilter, CubeCamera, BackSide, DoubleSide, InstancedMesh as InstancedMesh$1, SpriteMaterial, Sprite as Sprite$1 } from 'https://unpkg.com/three@0.125.2/build/three.module.js';
-import { OrbitControls } from 'https://unpkg.com/three@0.125.2/examples/jsm/controls/OrbitControls.js';
-import { EffectComposer as EffectComposer$1 } from 'https://unpkg.com/three@0.125.2/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass as RenderPass$1 } from 'https://unpkg.com/three@0.125.2/examples/jsm/postprocessing/RenderPass.js';
-import { BokehPass as BokehPass$1 } from 'https://unpkg.com/three@0.125.2/examples/jsm/postprocessing/BokehPass.js';
-import { FilmPass as FilmPass$1 } from 'https://unpkg.com/three@0.125.2/examples/jsm/postprocessing/FilmPass.js';
-import { ShaderPass } from 'https://unpkg.com/three@0.125.2/examples/jsm/postprocessing/ShaderPass.js';
-import { FXAAShader } from 'https://unpkg.com/three@0.125.2/examples/jsm/shaders/FXAAShader.js';
-import { HalftonePass as HalftonePass$1 } from 'https://unpkg.com/three@0.125.2/examples/jsm/postprocessing/HalftonePass.js';
-import { SMAAPass as SMAAPass$1 } from 'https://unpkg.com/three@0.125.2/examples/jsm/postprocessing/SMAAPass.js';
-import { UnrealBloomPass as UnrealBloomPass$1 } from 'https://unpkg.com/three@0.125.2/examples/jsm/postprocessing/UnrealBloomPass.js';
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+var vue = require('vue');
+var three = require('three');
+var OrbitControls_js = require('three/examples/jsm/controls/OrbitControls.js');
+var EffectComposer_js = require('three/examples/jsm/postprocessing/EffectComposer.js');
+var RenderPass_js = require('three/examples/jsm/postprocessing/RenderPass.js');
+var BokehPass_js = require('three/examples/jsm/postprocessing/BokehPass.js');
+var FilmPass_js = require('three/examples/jsm/postprocessing/FilmPass.js');
+var ShaderPass_js = require('three/examples/jsm/postprocessing/ShaderPass.js');
+var FXAAShader_js = require('three/examples/jsm/shaders/FXAAShader.js');
+var HalftonePass_js = require('three/examples/jsm/postprocessing/HalftonePass.js');
+var SMAAPass_js = require('three/examples/jsm/postprocessing/SMAAPass.js');
+var UnrealBloomPass_js = require('three/examples/jsm/postprocessing/UnrealBloomPass.js');
 
 /**
  * Three.js helper
@@ -44,10 +48,10 @@ function useThree() {
   var beforeRenderCallbacks = [];
 
   // mouse tracking
-  var mouse = new Vector2();
-  var mouseV3 = new Vector3();
-  var mousePlane = new Plane$1(new Vector3(0, 0, 1), 0);
-  var raycaster = new Raycaster();
+  var mouse = new three.Vector2();
+  var mouseV3 = new three.Vector3();
+  var mousePlane = new three.Plane(new three.Vector3(0, 0, 1), 0);
+  var raycaster = new three.Raycaster();
 
   // raycast objects
   var intersectObjects = [];
@@ -96,11 +100,11 @@ function useThree() {
       return;
     }
 
-    obj.renderer = new WebGLRenderer({ canvas: conf.canvas, antialias: conf.antialias, alpha: conf.alpha });
+    obj.renderer = new three.WebGLRenderer({ canvas: conf.canvas, antialias: conf.antialias, alpha: conf.alpha });
     obj.renderer.autoClear = conf.autoClear;
 
     if (conf.orbit_ctrl) {
-      obj.orbitCtrl = new OrbitControls(obj.camera, obj.renderer.domElement);
+      obj.orbitCtrl = new OrbitControls_js.OrbitControls(obj.camera, obj.renderer.domElement);
       if (conf.orbit_ctrl instanceof Object) {
         Object.entries(conf.orbit_ctrl).forEach(function (ref) {
           var key = ref[0];
@@ -425,7 +429,7 @@ var Renderer = {
     },
   },
   render: function render() {
-    return h('canvas', {}, this.$slots.default());
+    return vue.h('canvas', {}, this.$slots.default());
   },
 };
 
@@ -494,9 +498,9 @@ function getMatcapFormatString(format) {
 
 function useBindProp(comp, prop, object) {
   if (comp[prop]) {
-    var ref = toRef(comp, prop);
+    var ref = vue.toRef(comp, prop);
     setFromProp(object, ref.value);
-    watch(ref, function () {
+    vue.watch(ref, function () {
       setFromProp(object, ref.value);
     }, { deep: true });
   }
@@ -512,16 +516,16 @@ var OrthographicCamera = {
     near: { type: Number, default: 0.1 },
     far: { type: Number, default: 2000 },
     zoom: { type: Number, default: 1 },
-    position: { type: [Object, Vector3], default: { x: 0, y: 0, z: 0 } },
+    position: { type: [Object, three.Vector3], default: { x: 0, y: 0, z: 0 } },
   },
   created: function created() {
     var this$1 = this;
 
-    this.camera = new OrthographicCamera$1(this.left, this.right, this.top, this.bottom, this.near, this.far);
+    this.camera = new three.OrthographicCamera(this.left, this.right, this.top, this.bottom, this.near, this.far);
     useBindProp(this, 'position', this.camera.position);
 
     ['left', 'right', 'top', 'bottom', 'near', 'far', 'zoom'].forEach(function (p) {
-      watch(function () { return this$1[p]; }, function () {
+      vue.watch(function () { return this$1[p]; }, function () {
         this$1.camera[p] = this$1[p];
         this$1.camera.updateProjectionMatrix();
       });
@@ -542,16 +546,16 @@ var PerspectiveCamera = {
     far: { type: Number, default: 2000 },
     fov: { type: Number, default: 50 },
     near: { type: Number, default: 0.1 },
-    position: { type: [Object, Vector3], default: { x: 0, y: 0, z: 0 } },
+    position: { type: [Object, three.Vector3], default: { x: 0, y: 0, z: 0 } },
   },
   created: function created() {
     var this$1 = this;
 
-    this.camera = new PerspectiveCamera$1(this.fov, this.aspect, this.near, this.far);
+    this.camera = new three.PerspectiveCamera(this.fov, this.aspect, this.near, this.far);
     useBindProp(this, 'position', this.camera.position);
 
     ['aspect', 'far', 'fov', 'near'].forEach(function (p) {
-      watch(function () { return this$1[p]; }, function () {
+      vue.watch(function () { return this$1[p]; }, function () {
         this$1.camera[p] = this$1[p];
         this$1.camera.updateProjectionMatrix();
       });
@@ -573,8 +577,8 @@ var Group = {
     scale: Object,
   },
   setup: function setup(props) {
-    var parent = inject('group', inject('scene'));
-    var group = new Group$1();
+    var parent = vue.inject('group', vue.inject('scene'));
+    var group = new three.Group();
     useBindProp(props, 'position', group.position);
     useBindProp(props, 'rotation', group.rotation);
     useBindProp(props, 'scale', group.scale);
@@ -607,9 +611,9 @@ var Scene = {
     background: [String, Number],
   },
   setup: function setup(props) {
-    var scene = new Scene$1();
-    if (props.background) { scene.background = new Color(props.background); }
-    watch(function () { return props.background; }, function (value) { scene.background = new Color(value); });
+    var scene = new three.Scene();
+    if (props.background) { scene.background = new three.Color(props.background); }
+    vue.watch(function () { return props.background; }, function (value) { scene.background = new three.Color(value); });
     return { scene: scene };
   },
   provide: function provide() {
@@ -676,7 +680,7 @@ var Geometry = {
       var this$1 = this;
 
       this.watchProps.forEach(function (prop) {
-        watch(function () { return this$1[prop]; }, function () {
+        vue.watch(function () { return this$1[prop]; }, function () {
           this$1.refreshGeometry();
         });
       });
@@ -711,7 +715,7 @@ var BoxGeometry = {
       if (this.size) {
         w = this.size; h = this.size; d = this.size;
       }
-      this.geometry = new BoxBufferGeometry(w, h, d, this.widthSegments, this.heightSegments, this.depthSegments);
+      this.geometry = new three.BoxBufferGeometry(w, h, d, this.widthSegments, this.heightSegments, this.depthSegments);
     },
   },
 };
@@ -726,7 +730,7 @@ var CircleGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new CircleBufferGeometry(this.radius, this.segments, this.thetaStart, this.thetaLength);
+      this.geometry = new three.CircleBufferGeometry(this.radius, this.segments, this.thetaStart, this.thetaLength);
     },
   },
 };
@@ -744,7 +748,7 @@ var ConeGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new ConeBufferGeometry(this.radius, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
+      this.geometry = new three.ConeBufferGeometry(this.radius, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
     },
   },
 };
@@ -763,7 +767,7 @@ var CylinderGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new CylinderBufferGeometry(this.radiusTop, this.radiusBottom, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
+      this.geometry = new three.CylinderBufferGeometry(this.radiusTop, this.radiusBottom, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
     },
   },
 };
@@ -776,7 +780,7 @@ var DodecahedronGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new DodecahedronBufferGeometry(this.radius, this.detail);
+      this.geometry = new three.DodecahedronBufferGeometry(this.radius, this.detail);
     },
   },
 };
@@ -789,7 +793,7 @@ var IcosahedronGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new IcosahedronBufferGeometry(this.radius, this.detail);
+      this.geometry = new three.IcosahedronBufferGeometry(this.radius, this.detail);
     },
   },
 };
@@ -804,7 +808,7 @@ var LatheGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new LatheBufferGeometry(this.points, this.segments, this.phiStart, this.phiLength);
+      this.geometry = new three.LatheBufferGeometry(this.points, this.segments, this.phiStart, this.phiLength);
     },
   },
 };
@@ -817,7 +821,7 @@ var OctahedronGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new OctahedronBufferGeometry(this.radius, this.detail);
+      this.geometry = new three.OctahedronBufferGeometry(this.radius, this.detail);
     },
   },
 };
@@ -832,7 +836,7 @@ var PolyhedronGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new PolyhedronBufferGeometry(this.vertices, this.indices, this.radius, this.detail);
+      this.geometry = new three.PolyhedronBufferGeometry(this.vertices, this.indices, this.radius, this.detail);
     },
   },
 };
@@ -849,7 +853,7 @@ var RingGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new RingBufferGeometry(this.innerRadius, this.outerRadius, this.thetaSegments, this.phiSegments, this.thetaStart, this.thetaLength);
+      this.geometry = new three.RingBufferGeometry(this.innerRadius, this.outerRadius, this.thetaSegments, this.phiSegments, this.thetaStart, this.thetaLength);
     },
   },
 };
@@ -863,7 +867,7 @@ var SphereGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new SphereBufferGeometry(this.radius, this.widthSegments, this.heightSegments);
+      this.geometry = new three.SphereBufferGeometry(this.radius, this.widthSegments, this.heightSegments);
     },
   },
 };
@@ -876,7 +880,7 @@ var TetrahedronGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new TetrahedronBufferGeometry(this.radius, this.detail);
+      this.geometry = new three.TetrahedronBufferGeometry(this.radius, this.detail);
     },
   },
 };
@@ -892,7 +896,7 @@ var TorusGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new TorusBufferGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.arc);
+      this.geometry = new three.TorusBufferGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.arc);
     },
   },
 };
@@ -909,7 +913,7 @@ var TorusKnotGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new TorusKnotBufferGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.p, this.q);
+      this.geometry = new three.TorusKnotBufferGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.p, this.q);
     },
   },
 };
@@ -917,7 +921,7 @@ var TorusKnotGeometry = {
 var TubeGeometry = {
   extends: Geometry,
   props: {
-    path: Curve,
+    path: three.Curve,
     tubularSegments: { type: Number, default: 64 },
     radius: { type: Number, default: 1 },
     radiusSegments: { type: Number, default: 8 },
@@ -925,7 +929,7 @@ var TubeGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new TubeBufferGeometry(this.path, this.tubularSegments, this.radius, this.radiusSegments, this.closed);
+      this.geometry = new three.TubeBufferGeometry(this.path, this.tubularSegments, this.radius, this.radiusSegments, this.closed);
     },
   },
 };
@@ -935,7 +939,7 @@ var Light = {
     scene: 'scene',
     parent: {
       from: 'group',
-      default: function () { return inject('scene'); },
+      default: function () { return vue.inject('scene'); },
     },
   },
   props: {
@@ -971,9 +975,9 @@ var Light = {
     }
 
     ['color', 'intensity', 'castShadow'].forEach(function (p) {
-      watch(function () { return this$1[p]; }, function () {
+      vue.watch(function () { return this$1[p]; }, function () {
         if (p === 'color') {
-          this$1.light.color = new Color(this$1.color);
+          this$1.light.color = new three.Color(this$1.color);
         } else {
           this$1.light[p] = this$1[p];
         }
@@ -996,7 +1000,7 @@ var Light = {
 var AmbientLight = {
   extends: Light,
   created: function created() {
-    this.light = new AmbientLight$1(this.color, this.intensity);
+    this.light = new three.AmbientLight(this.color, this.intensity);
   },
   __hmrId: 'AmbientLight',
 };
@@ -1007,7 +1011,7 @@ var DirectionalLight = {
     target: Object,
   },
   created: function created() {
-    this.light = new DirectionalLight$1(this.color, this.intensity);
+    this.light = new three.DirectionalLight(this.color, this.intensity);
   },
   __hmrId: 'DirectionalLight',
 };
@@ -1025,7 +1029,7 @@ var PointLight = {
     },
   },
   created: function created() {
-    this.light = new PointLight$1(this.color, this.intensity, this.distance, this.decay);
+    this.light = new three.PointLight(this.color, this.intensity, this.distance, this.decay);
   },
   __hmrId: 'PointLight',
 };
@@ -1054,9 +1058,9 @@ var SpotLight = {
   created: function created() {
     var this$1 = this;
 
-    this.light = new SpotLight$1(this.color, this.intensity, this.distance, this.angle, this.penumbra, this.decay);
+    this.light = new three.SpotLight(this.color, this.intensity, this.distance, this.angle, this.penumbra, this.decay);
     ['angle', 'decay', 'distance', 'penumbra'].forEach(function (p) {
-      watch(function () { return this$1[p]; }, function () {
+      vue.watch(function () { return this$1[p]; }, function () {
         this$1.light[p] = this$1[p];
       });
     });
@@ -1074,7 +1078,7 @@ var Material = {
     flatShading: Boolean,
     fog: { type: Boolean, default: true },
     opacity: { type: Number, default: 1 },
-    side: { type: Number, default: FrontSide },
+    side: { type: Number, default: three.FrontSide },
     transparent: Boolean,
     vertexColors: Boolean,
   },
@@ -1113,7 +1117,7 @@ var Material = {
 
       // don't work for flatShading
       ['color', 'depthTest', 'depthWrite', 'fog', 'opacity', 'side', 'transparent'].forEach(function (p) {
-        watch(function () { return this$1[p]; }, function () {
+        vue.watch(function () { return this$1[p]; }, function () {
           if (p === 'color') {
             this$1.material.color.set(this$1.color);
           } else {
@@ -1136,7 +1140,7 @@ var BasicMaterial = {
   extends: Material,
   methods: {
     createMaterial: function createMaterial() {
-      this.material = new MeshBasicMaterial(propsValues(this.$props, ['id']));
+      this.material = new three.MeshBasicMaterial(propsValues(this.$props, ['id']));
     },
   },
   __hmrId: 'BasicMaterial',
@@ -1146,7 +1150,7 @@ var LambertMaterial = {
   extends: Material,
   methods: {
     createMaterial: function createMaterial() {
-      this.material = new MeshLambertMaterial(propsValues(this.$props, ['id']));
+      this.material = new three.MeshLambertMaterial(propsValues(this.$props, ['id']));
     },
   },
   __hmrId: 'LambertMaterial',
@@ -1162,8 +1166,8 @@ var MatcapMaterial = {
     createMaterial: function createMaterial() {
       var src = this.name ? getMatcapUrl(this.name) : this.src;
       var opts = propsValues(this.$props, ['id', 'src', 'name']);
-      opts.matcap = new TextureLoader().load(src);
-      this.material = new MeshMatcapMaterial(opts);
+      opts.matcap = new three.TextureLoader().load(src);
+      this.material = new three.MeshMatcapMaterial(opts);
     },
   },
   __hmrId: 'MatcapMaterial',
@@ -1180,13 +1184,13 @@ var PhongMaterial = {
   },
   methods: {
     createMaterial: function createMaterial() {
-      this.material = new MeshPhongMaterial(propsValues(this.$props, ['id']));
+      this.material = new three.MeshPhongMaterial(propsValues(this.$props, ['id']));
     },
     addWatchers: function addWatchers() {
       var this$1 = this;
 
       ['emissive', 'emissiveIntensity', 'reflectivity', 'shininess', 'specular'].forEach(function (p) {
-        watch(function () { return this$1[p]; }, function (value) {
+        vue.watch(function () { return this$1[p]; }, function (value) {
           if (p === 'emissive' || p === 'specular') {
             this$1.material[p].set(value);
           } else {
@@ -1209,7 +1213,7 @@ var props = {
   envMapIntensity: { type: Number, default: 1 },
   lightMapIntensity: { type: Number, default: 1 },
   metalness: { type: Number, default: 0 },
-  normalScale: { type: Object, default: function () { return new Vector2(1, 1); } },
+  normalScale: { type: Object, default: function () { return new three.Vector2(1, 1); } },
   roughness: { type: Number, default: 1 },
   refractionRatio: { type: Number, default: 0.98 },
   wireframe: Boolean,
@@ -1220,7 +1224,7 @@ var StandardMaterial = {
   props: props,
   methods: {
     createMaterial: function createMaterial() {
-      this.material = new MeshStandardMaterial(propsValues(this.$props, ['id', 'normalScale']));
+      this.material = new three.MeshStandardMaterial(propsValues(this.$props, ['id', 'normalScale']));
     },
     addWatchers: function addWatchers() {
       var this$1 = this;
@@ -1228,7 +1232,7 @@ var StandardMaterial = {
       // todo : use setProp ?
       Object.keys(props).forEach(function (p) {
         if (p === 'normalScale') { return; }
-        watch(function () { return this$1[p]; }, function (value) {
+        vue.watch(function () { return this$1[p]; }, function (value) {
           if (p === 'emissive') {
             this$1.material[p].set(value);
           } else {
@@ -1246,7 +1250,7 @@ var PhysicalMaterial = {
   extends: StandardMaterial,
   methods: {
     createMaterial: function createMaterial() {
-      this.material = new MeshPhysicalMaterial(propsValues(this.$props, ['id']));
+      this.material = new three.MeshPhysicalMaterial(propsValues(this.$props, ['id']));
     },
   },
   __hmrId: 'PhysicalMaterial',
@@ -1265,15 +1269,15 @@ function replaceAll(string, find, replace) {
   return string.split(find).join(replace);
 }
 
-var meshphongFragHead = ShaderChunk.meshphong_frag.slice(0, ShaderChunk.meshphong_frag.indexOf('void main() {'));
-var meshphongFragBody = ShaderChunk.meshphong_frag.slice(ShaderChunk.meshphong_frag.indexOf('void main() {'));
+var meshphongFragHead = three.ShaderChunk.meshphong_frag.slice(0, three.ShaderChunk.meshphong_frag.indexOf('void main() {'));
+var meshphongFragBody = three.ShaderChunk.meshphong_frag.slice(three.ShaderChunk.meshphong_frag.indexOf('void main() {'));
 
 var SubsurfaceScatteringShader = {
 
-  uniforms: UniformsUtils.merge([
-    ShaderLib.phong.uniforms,
+  uniforms: three.UniformsUtils.merge([
+    three.ShaderLib.phong.uniforms,
     {
-      thicknessColor: { value: new Color(0x668597) },
+      thicknessColor: { value: new three.Color(0x668597) },
       thicknessDistortion: { value: 0.1 },
       thicknessAmbient: { value: 0.0 },
       thicknessAttenuation: { value: 0.1 },
@@ -1281,12 +1285,12 @@ var SubsurfaceScatteringShader = {
       thicknessScale: { value: 10.0 },
     } ]),
 
-  vertexShader: ("\n    #define USE_UV\n    " + (ShaderChunk.meshphong_vert) + "\n  "),
+  vertexShader: ("\n    #define USE_UV\n    " + (three.ShaderChunk.meshphong_vert) + "\n  "),
 
   fragmentShader: "\n    #define USE_UV\n    #define SUBSURFACE\n\n    " + meshphongFragHead + "\n\n    uniform float thicknessPower;\n    uniform float thicknessScale;\n    uniform float thicknessDistortion;\n    uniform float thicknessAmbient;\n    uniform float thicknessAttenuation;\n    uniform vec3 thicknessColor;\n\n    void RE_Direct_Scattering(const in IncidentLight directLight, const in vec2 uv, const in GeometricContext geometry, inout ReflectedLight reflectedLight) {\n      #ifdef USE_COLOR\n        vec3 thickness = vColor * thicknessColor;\n      #else\n        vec3 thickness = thicknessColor;\n      #endif\n      vec3 scatteringHalf = normalize(directLight.direction + (geometry.normal * thicknessDistortion));\n      float scatteringDot = pow(saturate(dot(geometry.viewDir, -scatteringHalf)), thicknessPower) * thicknessScale;\n      vec3 scatteringIllu = (scatteringDot + thicknessAmbient) * thickness;\n      reflectedLight.directDiffuse += scatteringIllu * thicknessAttenuation * directLight.color;\n    }\n  " + meshphongFragBody.replace(
     '#include <lights_fragment_begin>',
     replaceAll(
-      ShaderChunk.lights_fragment_begin,
+      three.ShaderChunk.lights_fragment_begin,
       'RE_Direct( directLight, geometry, material, reflectedLight );',
       "\n        RE_Direct( directLight, geometry, material, reflectedLight );\n        #if defined( SUBSURFACE ) && defined( USE_UV )\n          RE_Direct_Scattering(directLight, vUv, geometry, reflectedLight);\n        #endif\n      "
     )
@@ -1336,7 +1340,7 @@ var SubSurfaceMaterial = {
   methods: {
     createMaterial: function createMaterial() {
       var params = SubsurfaceScatteringShader;
-      var uniforms = UniformsUtils.clone(params.uniforms);
+      var uniforms = three.UniformsUtils.clone(params.uniforms);
 
       Object.entries(this.$props).forEach(function (ref) {
         var key = ref[0];
@@ -1345,14 +1349,14 @@ var SubSurfaceMaterial = {
         var _key = key, _value = value;
         if (['color', 'thicknessColor'].includes(key)) {
           if (key === 'color') { _key = 'diffuse'; }
-          _value = new Color(value);
+          _value = new three.Color(value);
         }
         if (!['id', 'transparent', 'vertexColors'].includes(key)) {
           uniforms[_key].value = _value;
         }
       });
 
-      this.material = new ShaderMaterial$1(Object.assign({}, params,
+      this.material = new three.ShaderMaterial(Object.assign({}, params,
         {uniforms: uniforms,
         lights: true,
         transparent: this.transparent,
@@ -1366,7 +1370,7 @@ var ToonMaterial = {
   extends: Material,
   methods: {
     createMaterial: function createMaterial() {
-      this.material = new MeshToonMaterial(propsValues(this.$props, ['id']));
+      this.material = new three.MeshToonMaterial(propsValues(this.$props, ['id']));
     },
   },
   __hmrId: 'ToonMaterial',
@@ -1386,7 +1390,7 @@ var Texture = {
     var this$1 = this;
 
     this.refreshTexture();
-    watch(function () { return this$1.src; }, this.refreshTexture);
+    vue.watch(function () { return this$1.src; }, this.refreshTexture);
   },
   unmounted: function unmounted() {
     this.material.setTexture(null, this.id);
@@ -1394,7 +1398,7 @@ var Texture = {
   },
   methods: {
     createTexture: function createTexture() {
-      this.texture = new TextureLoader().load(this.src, this.onLoaded, this.onProgress, this.onError);
+      this.texture = new three.TextureLoader().load(this.src, this.onLoaded, this.onProgress, this.onError);
     },
     refreshTexture: function refreshTexture() {
       this.createTexture();
@@ -1431,8 +1435,8 @@ var CubeTexture = {
     var this$1 = this;
 
     this.refreshTexture();
-    watch(function () { return this$1.path; }, this.refreshTexture);
-    watch(function () { return this$1.urls; }, this.refreshTexture);
+    vue.watch(function () { return this$1.path; }, this.refreshTexture);
+    vue.watch(function () { return this$1.urls; }, this.refreshTexture);
   },
   unmounted: function unmounted() {
     this.material.setTexture(null, this.id);
@@ -1440,7 +1444,7 @@ var CubeTexture = {
   },
   methods: {
     createTexture: function createTexture() {
-      this.texture = new CubeTextureLoader()
+      this.texture = new three.CubeTextureLoader()
         .setPath(this.path)
         .load(this.urls, this.onLoaded, this.onProgress, this.onError);
     },
@@ -1448,7 +1452,7 @@ var CubeTexture = {
       this.createTexture();
       this.material.setTexture(this.texture, this.id);
       if (this.refraction) {
-        this.texture.mapping = CubeRefractionMapping;
+        this.texture.mapping = three.CubeRefractionMapping;
         this.material.setProp('refractionRatio', this.refractionRatio);
       }
     },
@@ -1469,7 +1473,7 @@ var Mesh = {
     rendererComponent: 'rendererComponent',
     parent: {
       from: 'group',
-      default: function () { return inject('scene'); },
+      default: function () { return vue.inject('scene'); },
     },
   },
   emits: ['ready'],
@@ -1510,7 +1514,7 @@ var Mesh = {
       if (!this.material && this.materialId) {
         this.material = this.three.materials[this.materialId];
       }
-      this.mesh = new Mesh$1(this.geometry, this.material);
+      this.mesh = new three.Mesh(this.geometry, this.material);
 
       if (this.onHover) {
         this.mesh.onHover = function (over) { this$1.onHover({ component: this$1, over: over }); };
@@ -1535,10 +1539,10 @@ var Mesh = {
 
       ['castShadow', 'receiveShadow'].forEach(function (p) {
         this$1.mesh[p] = this$1[p];
-        watch(function () { return this$1[p]; }, function () { this$1.mesh[p] = this$1[p]; });
+        vue.watch(function () { return this$1[p]; }, function () { this$1.mesh[p] = this$1[p]; });
       });
 
-      watch(function () { return this$1.materialId; }, function () {
+      vue.watch(function () { return this$1.materialId; }, function () {
         this$1.mesh.material = this$1.three.materials[this$1.materialId];
       });
     },
@@ -1583,7 +1587,7 @@ var Box = {
     this.createGeometry();
 
     ['size', 'width', 'height', 'depth', 'widthSegments', 'heightSegments', 'depthSegments'].forEach(function (prop) {
-      watch(function () { return this$1[prop]; }, function () {
+      vue.watch(function () { return this$1[prop]; }, function () {
         this$1.refreshGeometry();
       });
     });
@@ -1591,9 +1595,9 @@ var Box = {
   methods: {
     createGeometry: function createGeometry() {
       if (this.size) {
-        this.geometry = new BoxBufferGeometry(this.size, this.size, this.size);
+        this.geometry = new three.BoxBufferGeometry(this.size, this.size, this.size);
       } else {
-        this.geometry = new BoxBufferGeometry(this.width, this.height, this.depth);
+        this.geometry = new three.BoxBufferGeometry(this.width, this.height, this.depth);
       }
     },
   },
@@ -1615,14 +1619,14 @@ var Circle = {
 
     var watchProps = ['radius', 'segments', 'thetaStart', 'thetaLength'];
     watchProps.forEach(function (prop) {
-      watch(function () { return this$1[prop]; }, function () {
+      vue.watch(function () { return this$1[prop]; }, function () {
         this$1.refreshGeometry();
       });
     });
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new CircleBufferGeometry(this.radius, this.segments, this.thetaStart, this.thetaLength);
+      this.geometry = new three.CircleBufferGeometry(this.radius, this.segments, this.thetaStart, this.thetaLength);
     },
   },
   __hmrId: 'Circle',
@@ -1646,14 +1650,14 @@ var Cone = {
 
     var watchProps = ['radius', 'height', 'radialSegments', 'heightSegments', 'openEnded', 'thetaStart', 'thetaLength'];
     watchProps.forEach(function (prop) {
-      watch(function () { return this$1[prop]; }, function () {
+      vue.watch(function () { return this$1[prop]; }, function () {
         this$1.refreshGeometry();
       });
     });
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new ConeBufferGeometry(this.radius, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
+      this.geometry = new three.ConeBufferGeometry(this.radius, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
     },
   },
   __hmrId: 'Cone',
@@ -1678,14 +1682,14 @@ var Cylinder = {
 
     var watchProps = ['radiusTop', 'radiusBottom', 'height', 'radialSegments', 'heightSegments', 'openEnded', 'thetaStart', 'thetaLength'];
     watchProps.forEach(function (prop) {
-      watch(function () { return this$1[prop]; }, function () {
+      vue.watch(function () { return this$1[prop]; }, function () {
         this$1.refreshGeometry();
       });
     });
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new CylinderBufferGeometry(this.radiusTop, this.radiusBottom, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
+      this.geometry = new three.CylinderBufferGeometry(this.radiusTop, this.radiusBottom, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
     },
   },
   __hmrId: 'Cylinder',
@@ -1704,14 +1708,14 @@ var Dodecahedron = {
 
     var watchProps = ['radius', 'detail'];
     watchProps.forEach(function (prop) {
-      watch(function () { return this$1[prop]; }, function () {
+      vue.watch(function () { return this$1[prop]; }, function () {
         this$1.refreshGeometry();
       });
     });
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new DodecahedronBufferGeometry(this.radius, this.detail);
+      this.geometry = new three.DodecahedronBufferGeometry(this.radius, this.detail);
     },
   },
   __hmrId: 'Dodecahedron',
@@ -1730,14 +1734,14 @@ var Icosahedron = {
 
     var watchProps = ['radius', 'detail'];
     watchProps.forEach(function (prop) {
-      watch(function () { return this$1[prop]; }, function () {
+      vue.watch(function () { return this$1[prop]; }, function () {
         this$1.refreshGeometry();
       });
     });
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new IcosahedronBufferGeometry(this.radius, this.detail);
+      this.geometry = new three.IcosahedronBufferGeometry(this.radius, this.detail);
     },
   },
   __hmrId: 'Icosahedron',
@@ -1758,14 +1762,14 @@ var Lathe = {
 
     var watchProps = ['points', 'segments', 'phiStart', 'phiLength'];
     watchProps.forEach(function (prop) {
-      watch(function () { return this$1[prop]; }, function () {
+      vue.watch(function () { return this$1[prop]; }, function () {
         this$1.refreshGeometry();
       });
     });
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new LatheBufferGeometry(this.points, this.segments, this.phiStart, this.phiLength);
+      this.geometry = new three.LatheBufferGeometry(this.points, this.segments, this.phiStart, this.phiLength);
     },
   },
   __hmrId: 'Lathe',
@@ -1784,14 +1788,14 @@ var Octahedron = {
 
     var watchProps = ['radius', 'detail'];
     watchProps.forEach(function (prop) {
-      watch(function () { return this$1[prop]; }, function () {
+      vue.watch(function () { return this$1[prop]; }, function () {
         this$1.refreshGeometry();
       });
     });
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new OctahedronBufferGeometry(this.radius, this.detail);
+      this.geometry = new three.OctahedronBufferGeometry(this.radius, this.detail);
     },
   },
   __hmrId: 'Octahedron',
@@ -1812,14 +1816,14 @@ var Plane = {
 
     var watchProps = ['width', 'height', 'widthSegments', 'heightSegments'];
     watchProps.forEach(function (prop) {
-      watch(function () { return this$1[prop]; }, function () {
+      vue.watch(function () { return this$1[prop]; }, function () {
         this$1.refreshGeometry();
       });
     });
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new PlaneBufferGeometry(this.width, this.height, this.widthSegments, this.heightSegments);
+      this.geometry = new three.PlaneBufferGeometry(this.width, this.height, this.widthSegments, this.heightSegments);
     },
   },
   __hmrId: 'Plane',
@@ -1840,14 +1844,14 @@ var Polyhedron = {
 
     var watchProps = ['vertices', 'indices', 'radius', 'detail'];
     watchProps.forEach(function (prop) {
-      watch(function () { return this$1[prop]; }, function () {
+      vue.watch(function () { return this$1[prop]; }, function () {
         this$1.refreshGeometry();
       });
     });
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new PolyhedronBufferGeometry(this.vertices, this.indices, this.radius, this.detail);
+      this.geometry = new three.PolyhedronBufferGeometry(this.vertices, this.indices, this.radius, this.detail);
     },
   },
   __hmrId: 'Polyhedron',
@@ -1870,14 +1874,14 @@ var Ring = {
 
     var watchProps = ['innerRadius', 'outerRadius', 'thetaSegments', 'phiSegments', 'thetaStart', 'thetaLength'];
     watchProps.forEach(function (prop) {
-      watch(function () { return this$1[prop]; }, function () {
+      vue.watch(function () { return this$1[prop]; }, function () {
         this$1.refreshGeometry();
       });
     });
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new RingBufferGeometry(this.innerRadius, this.outerRadius, this.thetaSegments, this.phiSegments, this.thetaStart, this.thetaLength);
+      this.geometry = new three.RingBufferGeometry(this.innerRadius, this.outerRadius, this.thetaSegments, this.phiSegments, this.thetaStart, this.thetaLength);
     },
   },
   __hmrId: 'Ring',
@@ -1900,7 +1904,7 @@ var Sphere = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new SphereBufferGeometry(this.radius, this.widthSegments, this.heightSegments);
+      this.geometry = new three.SphereBufferGeometry(this.radius, this.widthSegments, this.heightSegments);
     },
   },
   __hmrId: 'Sphere',
@@ -1919,14 +1923,14 @@ var Tetrahedron = {
 
     var watchProps = ['radius', 'detail'];
     watchProps.forEach(function (prop) {
-      watch(function () { return this$1[prop]; }, function () {
+      vue.watch(function () { return this$1[prop]; }, function () {
         this$1.refreshGeometry();
       });
     });
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new TetrahedronBufferGeometry(this.radius, this.detail);
+      this.geometry = new three.TetrahedronBufferGeometry(this.radius, this.detail);
     },
   },
   __hmrId: 'Tetrahedron',
@@ -1959,12 +1963,12 @@ var Text = {
       'bevelEnabled', 'bevelThickness', 'bevelSize', 'bevelOffset', 'bevelSegments',
       'align' ];
     watchProps.forEach(function (p) {
-      watch(function () { return this$1[p]; }, function () {
+      vue.watch(function () { return this$1[p]; }, function () {
         if (this$1.font) { this$1.refreshGeometry(); }
       });
     });
 
-    var loader = new FontLoader();
+    var loader = new three.FontLoader();
     loader.load(this.fontSrc, function (font) {
       this$1.font = font;
       this$1.createGeometry();
@@ -1973,7 +1977,7 @@ var Text = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new TextBufferGeometry(this.text, {
+      this.geometry = new three.TextBufferGeometry(this.text, {
         font: this.font,
         size: this.size,
         height: this.height,
@@ -2009,14 +2013,14 @@ var Torus = {
 
     var watchProps = ['radius', 'tube', 'radialSegments', 'tubularSegments', 'arc'];
     watchProps.forEach(function (prop) {
-      watch(function () { return this$1[prop]; }, function () {
+      vue.watch(function () { return this$1[prop]; }, function () {
         this$1.refreshGeometry();
       });
     });
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new TorusBufferGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.arc);
+      this.geometry = new three.TorusBufferGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.arc);
     },
   },
   __hmrId: 'Torus',
@@ -2039,14 +2043,14 @@ var TorusKnot = {
 
     var watchProps = ['radius', 'tube', 'radialSegments', 'tubularSegments', 'p', 'q'];
     watchProps.forEach(function (prop) {
-      watch(function () { return this$1[prop]; }, function () {
+      vue.watch(function () { return this$1[prop]; }, function () {
         this$1.refreshGeometry();
       });
     });
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new TorusKnotBufferGeometry(this.radius, this.tube, this.tubularSegments, this.radialSegments, this.p, this.q);
+      this.geometry = new three.TorusKnotBufferGeometry(this.radius, this.tube, this.tubularSegments, this.radialSegments, this.p, this.q);
     },
   },
   __hmrId: 'TorusKnot',
@@ -2055,7 +2059,7 @@ var TorusKnot = {
 var Tube = {
   extends: Mesh,
   props: {
-    path: Curve,
+    path: three.Curve,
     tubularSegments: { type: Number, default: 64 },
     radius: { type: Number, default: 1 },
     radialSegments: { type: Number, default: 8 },
@@ -2068,14 +2072,14 @@ var Tube = {
 
     var watchProps = ['path', 'tubularSegments', 'radius', 'radialSegments', 'closed'];
     watchProps.forEach(function (prop) {
-      watch(function () { return this$1[prop]; }, function () {
+      vue.watch(function () { return this$1[prop]; }, function () {
         this$1.refreshGeometry();
       });
     });
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new TubeBufferGeometry(this.path, this.tubularSegments, this.radius, this.radialSegments, this.closed);
+      this.geometry = new three.TubeBufferGeometry(this.path, this.tubularSegments, this.radius, this.radialSegments, this.closed);
     },
   },
   __hmrId: 'Tube',
@@ -2101,12 +2105,12 @@ var Gem = {
   },
   methods: {
     initGem: function initGem() {
-      var cubeRT = new WebGLCubeRenderTarget(this.cubeRTSize, { format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter });
-      this.cubeCamera = new CubeCamera(this.cubeCameraNear, this.cubeCameraFar, cubeRT);
+      var cubeRT = new three.WebGLCubeRenderTarget(this.cubeRTSize, { format: three.RGBFormat, generateMipmaps: true, minFilter: three.LinearMipmapLinearFilter });
+      this.cubeCamera = new three.CubeCamera(this.cubeCameraNear, this.cubeCameraFar, cubeRT);
       useBindProp(this, 'position', this.cubeCamera.position);
       this.parent.add(this.cubeCamera);
 
-      this.material.side = FrontSide;
+      this.material.side = three.FrontSide;
       this.material.envMap = cubeRT.texture;
       this.material.envMapIntensity = 10;
       this.material.metalness = 0;
@@ -2117,13 +2121,13 @@ var Gem = {
       this.material.needsUpdate = true;
 
       this.materialBack = this.material.clone();
-      this.materialBack.side = BackSide;
+      this.materialBack.side = three.BackSide;
       this.materialBack.envMapIntensity = 5;
       this.materialBack.metalness = 1;
       this.materialBack.roughness = 0;
       this.materialBack.opacity = 0.5;
 
-      this.meshBack = new Mesh$1(this.geometry, this.materialBack);
+      this.meshBack = new three.Mesh(this.geometry, this.materialBack);
 
       useBindProp(this, 'position', this.meshBack.position);
       useBindProp(this, 'rotation', this.meshBack.rotation);
@@ -2157,23 +2161,23 @@ var Image = {
     this.createMaterial();
     this.initMesh();
 
-    watch(function () { return this$1.src; }, this.refreshTexture);
+    vue.watch(function () { return this$1.src; }, this.refreshTexture);
 
     ['width', 'height'].forEach(function (p) {
-      watch(function () { return this$1[p]; }, this$1.resize);
+      vue.watch(function () { return this$1[p]; }, this$1.resize);
     });
 
     if (this.keepSize) { this.three.onAfterResize(this.resize); }
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new PlaneBufferGeometry(1, 1, 1, 1);
+      this.geometry = new three.PlaneBufferGeometry(1, 1, 1, 1);
     },
     createMaterial: function createMaterial() {
-      this.material = new MeshBasicMaterial({ side: DoubleSide, map: this.loadTexture() });
+      this.material = new three.MeshBasicMaterial({ side: three.DoubleSide, map: this.loadTexture() });
     },
     loadTexture: function loadTexture() {
-      return new TextureLoader().load(this.src, this.onLoaded);
+      return new three.TextureLoader().load(this.src, this.onLoaded);
     },
     refreshTexture: function refreshTexture() {
       if (this.texture) { this.texture.dispose(); }
@@ -2219,7 +2223,7 @@ var InstancedMesh = {
     receiveShadow: Boolean,
   },
   setup: function setup() {
-    var parent = inject('group', inject('scene'));
+    var parent = vue.inject('group', vue.inject('scene'));
     return { parent: parent };
   },
   provide: function provide() {
@@ -2246,7 +2250,7 @@ var InstancedMesh = {
         this.material = this.three.materials[this.materialId];
       }
 
-      this.mesh = new InstancedMesh$1(this.geometry, this.material, this.count);
+      this.mesh = new three.InstancedMesh(this.geometry, this.material, this.count);
 
       useBindProp(this, 'position', this.mesh.position);
       useBindProp(this, 'rotation', this.mesh.rotation);
@@ -2254,7 +2258,7 @@ var InstancedMesh = {
 
       ['castShadow', 'receiveShadow'].forEach(function (p) {
         this$1.mesh[p] = this$1[p];
-        watch(function () { return this$1[p]; }, function () { this$1.mesh[p] = this$1[p]; });
+        vue.watch(function () { return this$1[p]; }, function () { this$1.mesh[p] = this$1[p]; });
       });
 
       // watch(() => this.materialId, () => {
@@ -2297,8 +2301,8 @@ var MirrorMesh = {
   },
   methods: {
     initMirrorMesh: function initMirrorMesh() {
-      var cubeRT = new WebGLCubeRenderTarget(this.cubeRTSize, { format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter });
-      this.cubeCamera = new CubeCamera(this.cubeCameraNear, this.cubeCameraFar, cubeRT);
+      var cubeRT = new three.WebGLCubeRenderTarget(this.cubeRTSize, { format: three.RGBFormat, generateMipmaps: true, minFilter: three.LinearMipmapLinearFilter });
+      this.cubeCamera = new three.CubeCamera(this.cubeCameraNear, this.cubeCameraFar, cubeRT);
       this.parent.add(this.cubeCamera);
 
       this.material.envMap = cubeRT.texture;
@@ -2333,8 +2337,8 @@ var RefractionMesh = {
   },
   methods: {
     initMirrorMesh: function initMirrorMesh() {
-      var cubeRT = new WebGLCubeRenderTarget(this.cubeRTSize, { mapping: CubeRefractionMapping, format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter });
-      this.cubeCamera = new CubeCamera(this.cubeCameraNear, this.cubeCameraFar, cubeRT);
+      var cubeRT = new three.WebGLCubeRenderTarget(this.cubeRTSize, { mapping: three.CubeRefractionMapping, format: three.RGBFormat, generateMipmaps: true, minFilter: three.LinearMipmapLinearFilter });
+      this.cubeCamera = new three.CubeCamera(this.cubeCameraNear, this.cubeCameraFar, cubeRT);
       useBindProp(this, 'position', this.cubeCamera.position);
       this.parent.add(this.cubeCamera);
 
@@ -2360,13 +2364,13 @@ var Sprite = {
     scale: Object,
   },
   setup: function setup() {
-    var parent = inject('group', inject('scene'));
+    var parent = vue.inject('group', vue.inject('scene'));
     return { parent: parent };
   },
   mounted: function mounted() {
-    this.texture = new TextureLoader().load(this.src, this.onLoaded);
-    this.material = new SpriteMaterial({ map: this.texture });
-    this.sprite = new Sprite$1(this.material);
+    this.texture = new three.TextureLoader().load(this.src, this.onLoaded);
+    this.material = new three.SpriteMaterial({ map: this.texture });
+    this.sprite = new three.Sprite(this.material);
     this.geometry = this.sprite.geometry;
     useBindProp(this, 'position', this.sprite.position);
     useBindProp(this, 'scale', this.sprite.scale);
@@ -2426,7 +2430,7 @@ var EffectComposer = {
     var this$1 = this;
 
     this.three.onAfterInit(function () {
-      this$1.composer = new EffectComposer$1(this$1.three.renderer);
+      this$1.composer = new EffectComposer_js.EffectComposer(this$1.three.renderer);
       this$1.three.renderer.autoClear = false;
       this$1.passes.forEach(function (pass) {
         this$1.composer.addPass(pass);
@@ -2476,7 +2480,7 @@ var RenderPass = {
     if (!this.three.camera) {
       console.error('Missing Camera');
     }
-    var pass = new RenderPass$1(this.three.scene, this.three.camera);
+    var pass = new RenderPass_js.RenderPass(this.three.scene, this.three.camera);
     this.passes.push(pass);
     this.pass = pass;
   },
@@ -2518,7 +2522,7 @@ var BokehPass = {
       width: this.three.size.width,
       height: this.three.size.height,
     };
-    var pass = new BokehPass$1(this.three.scene, this.three.camera, params);
+    var pass = new BokehPass_js.BokehPass(this.three.scene, this.three.camera, params);
     this.passes.push(pass);
     this.pass = pass;
   },
@@ -2552,7 +2556,7 @@ var FilmPass = {
     grayscale: function grayscale() { this.pass.uniforms.grayscale.value = this.grayscale; },
   },
   mounted: function mounted() {
-    var pass = new FilmPass$1(this.noiseIntensity, this.scanlinesIntensity, this.scanlinesCount, this.grayscale);
+    var pass = new FilmPass_js.FilmPass(this.noiseIntensity, this.scanlinesIntensity, this.scanlinesCount, this.grayscale);
     this.passes.push(pass);
     this.pass = pass;
   },
@@ -2562,7 +2566,7 @@ var FilmPass = {
 var FXAAPass = {
   extends: EffectPass,
   mounted: function mounted() {
-    var pass = new ShaderPass(FXAAShader);
+    var pass = new ShaderPass_js.ShaderPass(FXAAShader_js.FXAAShader);
     this.passes.push(pass);
     this.pass = pass;
 
@@ -2596,11 +2600,11 @@ var HalftonePass = {
   mounted: function mounted() {
     var this$1 = this;
 
-    var pass = new HalftonePass$1(this.three.size.width, this.three.size.height, {});
+    var pass = new HalftonePass_js.HalftonePass(this.three.size.width, this.three.size.height, {});
 
     ['shape', 'radius', 'rotateR', 'rotateG', 'rotateB', 'scatter'].forEach(function (p) {
       pass.uniforms[p].value = this$1[p];
-      watch(function () { return this$1[p]; }, function () {
+      vue.watch(function () { return this$1[p]; }, function () {
         pass.uniforms[p].value = this$1[p];
       });
     });
@@ -2615,7 +2619,7 @@ var SMAAPass = {
   extends: EffectPass,
   mounted: function mounted() {
     // three size is not set yet, but this pass will be resized by effect composer
-    var pass = new SMAAPass$1(this.three.size.width, this.three.size.height);
+    var pass = new SMAAPass_js.SMAAPass(this.three.size.width, this.three.size.height);
     this.passes.push(pass);
     this.pass = pass;
   },
@@ -2635,10 +2639,10 @@ var TiltShift = {
     tDiffuse: { value: null },
     blurRadius: { value: 0 },
     gradientRadius: { value: 0 },
-    start: { value: new Vector2() },
-    end: { value: new Vector2() },
-    delta: { value: new Vector2() },
-    texSize: { value: new Vector2() },
+    start: { value: new three.Vector2() },
+    end: { value: new three.Vector2() },
+    delta: { value: new three.Vector2() },
+    texSize: { value: new three.Vector2() },
   },
   vertexShader: DefaultShader.vertexShader,
   fragmentShader: "\n    uniform sampler2D tDiffuse;\n    uniform float blurRadius;\n    uniform float gradientRadius;\n    uniform vec2 start;\n    uniform vec2 end;\n    uniform vec2 delta;\n    uniform vec2 texSize;\n    varying vec2 vUv;\n\n    float random(vec3 scale, float seed) {\n      /* use the fragment position for a different seed per-pixel */\n      return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);\n    }\n\n    void main() {\n      vec4 color = vec4(0.0);\n      float total = 0.0;\n\n      /* randomize the lookup values to hide the fixed number of samples */\n      float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);\n\n      vec2 normal = normalize(vec2(start.y - end.y, end.x - start.x));\n      float radius = smoothstep(0.0, 1.0, abs(dot(vUv * texSize - start, normal)) / gradientRadius) * blurRadius;\n      for (float t = -30.0; t <= 30.0; t++) {\n          float percent = (t + offset - 0.5) / 30.0;\n          float weight = 1.0 - abs(percent);\n          vec4 texel = texture2D(tDiffuse, vUv + delta / texSize * percent * radius);\n          // vec4 texel2 = texture2D(tDiffuse, vUv + vec2(-delta.y, delta.x) / texSize * percent * radius);\n\n          /* switch to pre-multiplied alpha to correctly blur transparent images */\n          texel.rgb *= texel.a;\n          // texel2.rgb *= texel2.a;\n\n          color += texel * weight;\n          total += 2.0 * weight;\n      }\n\n      gl_FragColor = color / total;\n\n      /* switch back from pre-multiplied alpha */\n      gl_FragColor.rgb /= gl_FragColor.a + 0.00001;\n    }\n  ",
@@ -2649,7 +2653,7 @@ function useBindPropValue(src, srcProp, dst, dstProp) {
 
   if (src[srcProp]) {
     dst[dstProp] = src[srcProp];
-    watch(function () { return src[srcProp]; }, function (value) {
+    vue.watch(function () { return src[srcProp]; }, function (value) {
       dst[dstProp] = value;
     });
   }
@@ -2666,10 +2670,10 @@ var TiltShiftPass = {
   mounted: function mounted() {
     var this$1 = this;
 
-    this.pass = new ShaderPass(TiltShift);
+    this.pass = new ShaderPass_js.ShaderPass(TiltShift);
     this.passes.push(this.pass);
 
-    this.pass1 = new ShaderPass(TiltShift);
+    this.pass1 = new ShaderPass_js.ShaderPass(TiltShift);
     this.passes.push(this.pass1);
 
     var uniforms = this.uniforms = this.pass.uniforms;
@@ -2685,7 +2689,7 @@ var TiltShiftPass = {
 
     this.updateFocusLine();
     ['start', 'end'].forEach(function (p) {
-      watch(function () { return this$1[p]; }, this$1.updateFocusLine);
+      vue.watch(function () { return this$1[p]; }, this$1.updateFocusLine);
     });
 
     this.pass.setSize = function (width, height) {
@@ -2696,7 +2700,7 @@ var TiltShiftPass = {
     updateFocusLine: function updateFocusLine() {
       this.uniforms.start.value.copy(this.start);
       this.uniforms.end.value.copy(this.end);
-      var dv = new Vector2().copy(this.end).sub(this.start).normalize();
+      var dv = new three.Vector2().copy(this.end).sub(this.start).normalize();
       this.uniforms.delta.value.copy(dv);
       this.uniforms1.delta.value.set(-dv.y, dv.x);
     },
@@ -2717,8 +2721,8 @@ var UnrealBloomPass = {
     threshold: function threshold() { this.pass.threshold = this.threshold; },
   },
   mounted: function mounted() {
-    var size = new Vector2(this.three.size.width, this.three.size.height);
-    var pass = new UnrealBloomPass$1(size, this.strength, this.radius, this.threshold);
+    var size = new three.Vector2(this.three.size.width, this.three.size.height);
+    var pass = new UnrealBloomPass_js.UnrealBloomPass(size, this.strength, this.radius, this.threshold);
     this.passes.push(pass);
     this.pass = pass;
   },
@@ -2730,7 +2734,7 @@ var UnrealBloomPass = {
 var ZoomBlur = {
   uniforms: {
     tDiffuse: { value: null },
-    center: { value: new Vector2(0.5, 0.5) },
+    center: { value: new three.Vector2(0.5, 0.5) },
     strength: { value: 0 },
   },
   vertexShader: DefaultShader.vertexShader,
@@ -2744,7 +2748,7 @@ var ZoomBlurPass = {
     strength: { type: Number, default: 0.5 },
   },
   mounted: function mounted() {
-    this.pass = new ShaderPass(ZoomBlur);
+    this.pass = new ShaderPass_js.ShaderPass(ZoomBlur);
     this.passes.push(this.pass);
 
     var uniforms = this.uniforms = this.pass.uniforms;
@@ -2924,5 +2928,80 @@ var TroisJSVuePlugin = {
   },
 };
 
-export { AmbientLight, BasicMaterial, BokehPass, Box, BoxGeometry, PerspectiveCamera as Camera, Circle, CircleGeometry, Cone, ConeGeometry, CubeTexture, Cylinder, CylinderGeometry, DirectionalLight, Dodecahedron, DodecahedronGeometry, EffectComposer, FXAAPass, FilmPass, Gem, Group, HalftonePass, Icosahedron, IcosahedronGeometry, Image, InstancedMesh, LambertMaterial, Lathe, LatheGeometry, MatcapMaterial, Mesh, MirrorMesh, Octahedron, OctahedronGeometry, OrthographicCamera, PerspectiveCamera, PhongMaterial, PhysicalMaterial, Plane, PointLight, Polyhedron, PolyhedronGeometry, RefractionMesh, RenderPass, Renderer, Ring, RingGeometry, SMAAPass, Scene, Sphere, SphereGeometry, SpotLight, Sprite, StandardMaterial, SubSurfaceMaterial, Tetrahedron, TetrahedronGeometry, Text, Texture, TiltShiftPass, ToonMaterial, Torus, TorusGeometry, TorusKnot, TorusKnotGeometry, TroisJSVuePlugin, Tube, TubeGeometry, UnrealBloomPass, ZoomBlurPass, getMatcapUrl, lerp, lerpv2, lerpv3, limit, propsValues, setFromProp };
-//# sourceMappingURL=trois.module.cdn.js.map
+exports.AmbientLight = AmbientLight;
+exports.BasicMaterial = BasicMaterial;
+exports.BokehPass = BokehPass;
+exports.Box = Box;
+exports.BoxGeometry = BoxGeometry;
+exports.Camera = PerspectiveCamera;
+exports.Circle = Circle;
+exports.CircleGeometry = CircleGeometry;
+exports.Cone = Cone;
+exports.ConeGeometry = ConeGeometry;
+exports.CubeTexture = CubeTexture;
+exports.Cylinder = Cylinder;
+exports.CylinderGeometry = CylinderGeometry;
+exports.DirectionalLight = DirectionalLight;
+exports.Dodecahedron = Dodecahedron;
+exports.DodecahedronGeometry = DodecahedronGeometry;
+exports.EffectComposer = EffectComposer;
+exports.FXAAPass = FXAAPass;
+exports.FilmPass = FilmPass;
+exports.Gem = Gem;
+exports.Group = Group;
+exports.HalftonePass = HalftonePass;
+exports.Icosahedron = Icosahedron;
+exports.IcosahedronGeometry = IcosahedronGeometry;
+exports.Image = Image;
+exports.InstancedMesh = InstancedMesh;
+exports.LambertMaterial = LambertMaterial;
+exports.Lathe = Lathe;
+exports.LatheGeometry = LatheGeometry;
+exports.MatcapMaterial = MatcapMaterial;
+exports.Mesh = Mesh;
+exports.MirrorMesh = MirrorMesh;
+exports.Octahedron = Octahedron;
+exports.OctahedronGeometry = OctahedronGeometry;
+exports.OrthographicCamera = OrthographicCamera;
+exports.PerspectiveCamera = PerspectiveCamera;
+exports.PhongMaterial = PhongMaterial;
+exports.PhysicalMaterial = PhysicalMaterial;
+exports.Plane = Plane;
+exports.PointLight = PointLight;
+exports.Polyhedron = Polyhedron;
+exports.PolyhedronGeometry = PolyhedronGeometry;
+exports.RefractionMesh = RefractionMesh;
+exports.RenderPass = RenderPass;
+exports.Renderer = Renderer;
+exports.Ring = Ring;
+exports.RingGeometry = RingGeometry;
+exports.SMAAPass = SMAAPass;
+exports.Scene = Scene;
+exports.Sphere = Sphere;
+exports.SphereGeometry = SphereGeometry;
+exports.SpotLight = SpotLight;
+exports.Sprite = Sprite;
+exports.StandardMaterial = StandardMaterial;
+exports.SubSurfaceMaterial = SubSurfaceMaterial;
+exports.Tetrahedron = Tetrahedron;
+exports.TetrahedronGeometry = TetrahedronGeometry;
+exports.Text = Text;
+exports.Texture = Texture;
+exports.TiltShiftPass = TiltShiftPass;
+exports.ToonMaterial = ToonMaterial;
+exports.Torus = Torus;
+exports.TorusGeometry = TorusGeometry;
+exports.TorusKnot = TorusKnot;
+exports.TorusKnotGeometry = TorusKnotGeometry;
+exports.TroisJSVuePlugin = TroisJSVuePlugin;
+exports.Tube = Tube;
+exports.TubeGeometry = TubeGeometry;
+exports.UnrealBloomPass = UnrealBloomPass;
+exports.ZoomBlurPass = ZoomBlurPass;
+exports.getMatcapUrl = getMatcapUrl;
+exports.lerp = lerp;
+exports.lerpv2 = lerpv2;
+exports.lerpv3 = lerpv3;
+exports.limit = limit;
+exports.propsValues = propsValues;
+exports.setFromProp = setFromProp;

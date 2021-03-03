@@ -3,7 +3,6 @@ import vue from 'rollup-plugin-vue';
 import buble from '@rollup/plugin-buble';
 import { terser } from "rollup-plugin-terser";
 import replace from '@rollup/plugin-replace';
-import resolve from '@rollup/plugin-node-resolve';
 
 const input = 'src/export.js';
 const external = [
@@ -26,7 +25,7 @@ const external = [
   'vue',
 ];
 
-const cdn_replaces = {
+const cdnReplaces = {
   'from \'vue\'': 'from \'https://unpkg.com/vue@3.0.5/dist/vue.esm-browser.prod.js\'',
   'from \'three\'': 'from \'https://unpkg.com/three@0.125.2/build/three.module.js\'',
   'from \'three/examples': 'from \'https://unpkg.com/three@0.125.2/examples',
@@ -53,7 +52,7 @@ export default [
       sourcemap: true,
     },
     plugins: [
-      replace(cdn_replaces),
+      replace(cdnReplaces),
       ...plugins,
     ],
   },
@@ -67,7 +66,7 @@ export default [
       sourcemap: true,
     },
     plugins: [
-      replace(cdn_replaces),
+      replace(cdnReplaces),
       ...plugins,
       terser(),
     ],
@@ -99,39 +98,12 @@ export default [
   },
   {
     input,
-    external: [
-      'gsap',
-      'vue',
-    ],
+    external,
     output: {
       format: 'cjs',
       file: 'build/trois.js',
       sourcemap: false,
     },
-    plugins: [
-      ...plugins,
-      resolve({
-        moduleDirectories: ['node_modules'],
-      }),
-    ],
+    plugins,
   },
-  // {
-  //   input,
-  //   external: [
-  //     'gsap',
-  //     'vue',
-  //   ],
-  //   output: {
-  //     format: 'cjs',
-  //     file: 'build/trois.min.js',
-  //     sourcemap: true,
-  //   },
-  //   plugins: [
-  //     ...plugins,
-  //     resolve({
-  //       moduleDirectories: ['node_modules'],
-  //     }),
-  //     terser(),
-  //   ],
-  // },
 ];
