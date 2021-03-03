@@ -5,6 +5,6 @@ export * from './materials/index.js';
 export * from './meshes/index.js';
 export * from './effects/index.js';
 
-export * from './components/index.js';
+// export * from './components/index.js';
 
 export * from './tools.js';
