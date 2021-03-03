@@ -8,11 +8,17 @@
 <script>
 import { Vector2 } from 'three';
 import { gsap, Power4 } from 'gsap';
+
+import OrthographicCamera from '../../core/OrthographicCamera.js';
+import Renderer from '../../core/Renderer.js';
+import Scene from '../../core/Scene.js';
+
 import { lerp, lerpv2 } from '../../tools.js';
 import ZoomBlurImage from './ZoomBlurImage.js';
 import useTextures from '../../use/useTextures.js';
 
 export default {
+  components: { OrthographicCamera, Renderer, Scene },
   props: {
     images: Array,
     events: { type: Object, default: () => { return { wheel: true, click: true, keyup: true }; } },

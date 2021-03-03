@@ -9,8 +9,12 @@
 
 <script>
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import Camera from '../../core/PerspectiveCamera.js';
+import Renderer from '../../core/Renderer.js';
+import Scene from '../../core/Scene.js';
 
 export default {
+  components: { Camera, Renderer, Scene },
   props: {
     src: String,
     cameraPosition: Object,

@@ -9,11 +9,17 @@
 <script>
 import { Object3D } from 'three';
 import { gsap, Power4 } from 'gsap';
+
+import Camera from '../../core/PerspectiveCamera.js';
+import Renderer from '../../core/Renderer.js';
+import Scene from '../../core/Scene.js';
+
 import { lerp } from '../../tools.js';
 import AnimatedPlane from './AnimatedPlane.js';
 import useTextures from '../../use/useTextures';
 
 export default {
+  components: { Camera, Renderer, Scene },
   props: {
     images: Array,
     events: { type: Object, default: () => { return { wheel: true, click: true, keyup: true }; } },
