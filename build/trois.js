@@ -570,19 +570,15 @@ var PerspectiveCamera = {
 };
 
 var Group = {
-  inject: ['three', 'scene'],
+  inject: {
+    three: 'three',
+    scene: 'scene',
+    group: { default: null },
+  },
   props: {
     position: Object,
     rotation: Object,
     scale: Object,
-  },
-  setup: function setup(props) {
-    var parent = vue.inject('group', vue.inject('scene'));
-    var group = new three.Group();
-    useBindProp(props, 'position', group.position);
-    useBindProp(props, 'rotation', group.rotation);
-    useBindProp(props, 'scale', group.scale);
-    return { parent: parent, group: group };
   },
   provide: function provide() {
     return {
@@ -590,6 +586,13 @@ var Group = {
     };
   },
   created: function created() {
+    this.parent = this.group ? this.group : this.scene;
+
+    this.group = new three.Group();
+    useBindProp(this, 'position', this.group.position);
+    useBindProp(this, 'rotation', this.group.rotation);
+    useBindProp(this, 'scale', this.group.scale);
+
     this.parent.add(this.group);
   },
   unmounted: function unmounted() {
@@ -2212,7 +2215,11 @@ var Image = {
 };
 
 var InstancedMesh = {
-  inject: ['three', 'scene'],
+  inject: {
+    three: 'three',
+    scene: 'scene',
+    group: { default: null },
+  },
   props: {
     materialId: String,
     count: Number,
@@ -2220,14 +2227,13 @@ var InstancedMesh = {
     castShadow: Boolean,
     receiveShadow: Boolean,
   },
-  setup: function setup() {
-    var parent = vue.inject('group', vue.inject('scene'));
-    return { parent: parent };
-  },
   provide: function provide() {
     return {
       mesh: this,
     };
+  },
+  created: function created() {
+    this.parent = this.group ? this.group : this.scene;
   },
   beforeMount: function beforeMount() {
     if (!this.$slots.default) {
@@ -2355,15 +2361,18 @@ var RefractionMesh = {
 
 var Sprite = {
   emits: ['ready', 'loaded'],
-  inject: ['three', 'scene'],
+  inject: {
+    three: 'three',
+    scene: 'scene',
+    group: { default: null },
+  },
   props: {
     src: String,
     position: Object,
     scale: Object,
   },
-  setup: function setup() {
-    var parent = vue.inject('group', vue.inject('scene'));
-    return { parent: parent };
+  created: function created() {
+    this.parent = this.group ? this.group : this.scene;
   },
   mounted: function mounted() {
     this.texture = new three.TextureLoader().load(this.src, this.onLoaded);

@@ -1,4 +1,4 @@
-import { h, toRef, watch, inject } from 'vue';
+import { h, toRef, watch } from 'vue';
 import { Vector2, Vector3, Plane as Plane$1, Raycaster, WebGLRenderer, OrthographicCamera as OrthographicCamera$1, PerspectiveCamera as PerspectiveCamera$1, Group as Group$1, Scene as Scene$1, Color, BoxBufferGeometry, CircleBufferGeometry, ConeBufferGeometry, CylinderBufferGeometry, DodecahedronBufferGeometry, IcosahedronBufferGeometry, LatheBufferGeometry, OctahedronBufferGeometry, PolyhedronBufferGeometry, RingBufferGeometry, SphereBufferGeometry, TetrahedronBufferGeometry, TorusBufferGeometry, TorusKnotBufferGeometry, Curve, TubeBufferGeometry, AmbientLight as AmbientLight$1, DirectionalLight as DirectionalLight$1, PointLight as PointLight$1, SpotLight as SpotLight$1, FrontSide, MeshBasicMaterial, MeshLambertMaterial, TextureLoader, MeshMatcapMaterial, MeshPhongMaterial, MeshStandardMaterial, MeshPhysicalMaterial, ShaderChunk, UniformsUtils, ShaderLib, ShaderMaterial as ShaderMaterial$1, MeshToonMaterial, CubeTextureLoader, CubeRefractionMapping, Mesh as Mesh$1, PlaneBufferGeometry, FontLoader, TextBufferGeometry, WebGLCubeRenderTarget, RGBFormat, LinearMipmapLinearFilter, CubeCamera, BackSide, DoubleSide, InstancedMesh as InstancedMesh$1, SpriteMaterial, Sprite as Sprite$1 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { EffectComposer as EffectComposer$1 } from 'three/examples/jsm/postprocessing/EffectComposer.js';
@@ -566,19 +566,15 @@ var PerspectiveCamera = {
 };
 
 var Group = {
-  inject: ['three', 'scene'],
+  inject: {
+    three: 'three',
+    scene: 'scene',
+    group: { default: null },
+  },
   props: {
     position: Object,
     rotation: Object,
     scale: Object,
-  },
-  setup: function setup(props) {
-    var parent = inject('group', inject('scene'));
-    var group = new Group$1();
-    useBindProp(props, 'position', group.position);
-    useBindProp(props, 'rotation', group.rotation);
-    useBindProp(props, 'scale', group.scale);
-    return { parent: parent, group: group };
   },
   provide: function provide() {
     return {
@@ -586,6 +582,13 @@ var Group = {
     };
   },
   created: function created() {
+    this.parent = this.group ? this.group : this.scene;
+
+    this.group = new Group$1();
+    useBindProp(this, 'position', this.group.position);
+    useBindProp(this, 'rotation', this.group.rotation);
+    useBindProp(this, 'scale', this.group.scale);
+
     this.parent.add(this.group);
   },
   unmounted: function unmounted() {
@@ -2208,7 +2211,11 @@ var Image = {
 };
 
 var InstancedMesh = {
-  inject: ['three', 'scene'],
+  inject: {
+    three: 'three',
+    scene: 'scene',
+    group: { default: null },
+  },
   props: {
     materialId: String,
     count: Number,
@@ -2216,14 +2223,13 @@ var InstancedMesh = {
     castShadow: Boolean,
     receiveShadow: Boolean,
   },
-  setup: function setup() {
-    var parent = inject('group', inject('scene'));
-    return { parent: parent };
-  },
   provide: function provide() {
     return {
       mesh: this,
     };
+  },
+  created: function created() {
+    this.parent = this.group ? this.group : this.scene;
   },
   beforeMount: function beforeMount() {
     if (!this.$slots.default) {
@@ -2351,15 +2357,18 @@ var RefractionMesh = {
 
 var Sprite = {
   emits: ['ready', 'loaded'],
-  inject: ['three', 'scene'],
+  inject: {
+    three: 'three',
+    scene: 'scene',
+    group: { default: null },
+  },
   props: {
     src: String,
     position: Object,
     scale: Object,
   },
-  setup: function setup() {
-    var parent = inject('group', inject('scene'));
-    return { parent: parent };
+  created: function created() {
+    this.parent = this.group ? this.group : this.scene;
   },
   mounted: function mounted() {
     this.texture = new TextureLoader().load(this.src, this.onLoaded);
