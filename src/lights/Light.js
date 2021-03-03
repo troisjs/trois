@@ -1,15 +1,12 @@
 import { Color } from 'three';
-import { inject, watch } from 'vue';
+import { watch } from 'vue';
 import { setFromProp } from '../tools.js';
 import useBindProp from '../use/useBindProp.js';
 
 export default {
   inject: {
     scene: 'scene',
-    parent: {
-      from: 'group',
-      default: () => inject('scene'),
-    },
+    group: { default: null },
   },
   props: {
     color: {
@@ -29,6 +26,9 @@ export default {
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
+  created() {
+    this.parent = this.group ? this.group : this.scene;
+  },
   mounted() {
     useBindProp(this, 'position', this.light.position);
 

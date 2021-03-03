@@ -1,5 +1,5 @@
 import { Mesh } from 'three';
-import { inject, watch } from 'vue';
+import { watch } from 'vue';
 import useBindProp from '../use/useBindProp.js';
 
 export default {
@@ -7,10 +7,7 @@ export default {
     three: 'three',
     scene: 'scene',
     rendererComponent: 'rendererComponent',
-    parent: {
-      from: 'group',
-      default: () => inject('scene'),
-    },
+    group: { default: null },
   },
   emits: ['ready'],
   props: {
@@ -25,17 +22,18 @@ export default {
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
+  created() {
+    this.parent = this.group ? this.group : this.scene;
+  },
   provide() {
     return {
       mesh: this,
     };
   },
   mounted() {
-    // console.log('Mesh mounted');
     if (this.geometry && !this.mesh) this.initMesh();
   },
   unmounted() {
-    // console.log('Mesh unmounted');
     if (this.mesh) {
       this.three.removeIntersectObject(this.mesh);
       this.parent.remove(this.mesh);
