@@ -937,10 +937,7 @@ var TubeGeometry = {
 var Light = {
   inject: {
     scene: 'scene',
-    parent: {
-      from: 'group',
-      default: function () { return vue.inject('scene'); },
-    },
+    group: { default: null },
   },
   props: {
     color: {
@@ -960,6 +957,9 @@ var Light = {
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
+  created: function created() {
+    this.parent = this.group ? this.group : this.scene;
+  },
   mounted: function mounted() {
     var this$1 = this;
 
@@ -1471,10 +1471,7 @@ var Mesh = {
     three: 'three',
     scene: 'scene',
     rendererComponent: 'rendererComponent',
-    parent: {
-      from: 'group',
-      default: function () { return vue.inject('scene'); },
-    },
+    group: { default: null },
   },
   emits: ['ready'],
   props: {
@@ -1489,17 +1486,18 @@ var Mesh = {
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
+  created: function created() {
+    this.parent = this.group ? this.group : this.scene;
+  },
   provide: function provide() {
     return {
       mesh: this,
     };
   },
   mounted: function mounted() {
-    // console.log('Mesh mounted');
     if (this.geometry && !this.mesh) { this.initMesh(); }
   },
   unmounted: function unmounted() {
-    // console.log('Mesh unmounted');
     if (this.mesh) {
       this.three.removeIntersectObject(this.mesh);
       this.parent.remove(this.mesh);
