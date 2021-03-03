@@ -1,18 +1,20 @@
 import { Sprite, SpriteMaterial, TextureLoader } from 'three';
-import { inject } from 'vue';
 import useBindProp from '../use/useBindProp.js';
 
 export default {
   emits: ['ready', 'loaded'],
-  inject: ['three', 'scene'],
+  inject: {
+    three: 'three',
+    scene: 'scene',
+    group: { default: null },
+  },
   props: {
     src: String,
     position: Object,
     scale: Object,
   },
-  setup() {
-    const parent = inject('group', inject('scene'));
-    return { parent };
+  created() {
+    this.parent = this.group ? this.group : this.scene;
   },
   mounted() {
     this.texture = new TextureLoader().load(this.src, this.onLoaded);

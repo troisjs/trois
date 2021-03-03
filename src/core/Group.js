@@ -1,21 +1,16 @@
 import { Group } from 'three';
-import { inject } from 'vue';
 import useBindProp from '../use/useBindProp.js';
 
 export default {
-  inject: ['three', 'scene'],
+  inject: {
+    three: 'three',
+    scene: 'scene',
+    group: { default: null },
+  },
   props: {
     position: Object,
     rotation: Object,
     scale: Object,
-  },
-  setup(props) {
-    const parent = inject('group', inject('scene'));
-    const group = new Group();
-    useBindProp(props, 'position', group.position);
-    useBindProp(props, 'rotation', group.rotation);
-    useBindProp(props, 'scale', group.scale);
-    return { parent, group };
   },
   provide() {
     return {
@@ -23,6 +18,13 @@ export default {
     };
   },
   created() {
+    this.parent = this.group ? this.group : this.scene;
+
+    this.group = new Group();
+    useBindProp(this, 'position', this.group.position);
+    useBindProp(this, 'rotation', this.group.rotation);
+    useBindProp(this, 'scale', this.group.scale);
+
     this.parent.add(this.group);
   },
   unmounted() {

@@ -1,9 +1,13 @@
 import { InstancedMesh } from 'three';
-import { inject, watch } from 'vue';
+import { watch } from 'vue';
 import useBindProp from '../use/useBindProp.js';
 
 export default {
-  inject: ['three', 'scene'],
+  inject: {
+    three: 'three',
+    scene: 'scene',
+    group: { default: null },
+  },
   props: {
     materialId: String,
     count: Number,
@@ -11,14 +15,13 @@ export default {
     castShadow: Boolean,
     receiveShadow: Boolean,
   },
-  setup() {
-    const parent = inject('group', inject('scene'));
-    return { parent };
-  },
   provide() {
     return {
       mesh: this,
     };
+  },
+  created() {
+    this.parent = this.group ? this.group : this.scene;
   },
   beforeMount() {
     if (!this.$slots.default) {
