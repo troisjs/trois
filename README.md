@@ -1,6 +1,6 @@
-# ✨ VueJS 3 + ViteJS + ThreeJS ⚡
+# ✨ ThreeJS + VueJS 3 + ViteJS ⚡
 
-I wanted to try to write a lib similar to [react-three-fiber](https://github.com/react-spring/react-three-fiber) but for VueJS.
+I wanted to code something similar to [react-three-fiber](https://github.com/react-spring/react-three-fiber) but for VueJS.
 
 <p>
   <a href="https://troisjs.github.io"><img src="/screenshots/troisjs1.jpg" width="45%" /></a>
@@ -11,7 +11,7 @@ I wanted to try to write a lib similar to [react-three-fiber](https://github.com
 
 - 💻 Examples (wip) : https://troisjs.github.io/ ([sources](https://github.com/troisjs/troisjs.github.io/tree/master/src/components))
 - 📖 Doc (wip) : https://troisjs.github.io/guide/ ([repo](https://github.com/troisjs/troisjs.github.io))
-- 🚀 Codepen Example : https://codepen.io/soju22/pen/vYyrQaG
+- 🚀 Codepen examples : https://codepen.io/collection/AxoWoz
 
 I started from scratch, I will rewrite some of my [WebGL demos](https://codepen.io/collection/AGZywR) to see if this little toy can do the job.
 
@@ -19,7 +19,7 @@ I started from scratch, I will rewrite some of my [WebGL demos](https://codepen.
 
 ## HMR
 
-Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects when you update a template**. This means the result in your browser will be automatically updated without reloading all the stuff. **This is really helpful when you are creating a TroisJS Scene**.
+Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects when you update a template or a prop**. This means the result in your browser will be automatically updated without reloading all the stuff. **This is really helpful when you are creating a TroisJS Scene**.
 
 ## Features
 
@@ -67,51 +67,3 @@ Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects
     - [x] UnrealBloomPass
     - [ ] ...
 - [ ] ...
-
-## Installation
-
-    yarn add troisjs
-
-## Vue plugin
-
-```js
-import { TroisJSVuePlugin } from 'troisjs';
-app.use(TroisJSVuePlugin);
-```
-
-## PoC
-
-I first made a simple *Proof of Concept*, take a look at [Example1.vue](/src/components/examples/Example1.vue) :
-
-```html
-<template>
-  <Renderer ref="renderer">
-    <Camera :position="{ z: 10 }" />
-    <Scene>
-      <PointLight :position="{ y: 50, z: 50 }" />
-      <Box ref="box" :size="1" :rotation="{ y: Math.PI / 4, z: Math.PI / 4 }">
-        <LambertMaterial />
-      </Box>
-    </Scene>
-  </Renderer>
-</template>
-
-<script>
-export default {
-  mounted() {
-    const renderer = this.$refs.renderer;
-    const box = this.$refs.box.mesh;
-    renderer.onBeforeRender(() => {
-      box.rotation.x += 0.01;
-    });
-  },
-};
-</script>
-```
-
-## Dev
-
-    git clone https://github.com/troisjs/trois
-    cd trois
-    yarn
-    yarn dev
