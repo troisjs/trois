@@ -33,7 +33,7 @@ export default {
 
     this.updateFocusLine();
     ['start', 'end'].forEach(p => {
-      watch(() => this[p], this.updateFocusLine);
+      watch(() => this[p], this.updateFocusLine, { deep: true });
     });
 
     this.pass.setSize = (width, height) => {
