@@ -115,11 +115,11 @@ function useThree() {
       }
     }
 
-    if (conf.width && conf.height) {
-      setSize(conf.width, conf.height);
-    } else if (conf.resize) {
+    if (conf.resize) {
       onResize();
       window.addEventListener('resize', onResize);
+    } else {
+      setSize(conf.width | 300, conf.height | 150);
     }
 
     conf.mouse_move = conf.mouse_move || conf.mouse_over;
@@ -363,7 +363,7 @@ var Renderer = {
     mouseOver: { type: Boolean, default: false },
     click: { type: Boolean, default: false },
     orbitCtrl: { type: [Boolean, Object], default: false },
-    resize: { type: [Boolean, String], default: true },
+    resize: { type: [Boolean, String], default: false },
     shadow: Boolean,
     width: String,
     height: String,
@@ -547,12 +547,16 @@ var PerspectiveCamera = {
     fov: { type: Number, default: 50 },
     near: { type: Number, default: 0.1 },
     position: { type: [Object, three.Vector3], default: { x: 0, y: 0, z: 0 } },
+    lookAt: { type: [Object, three.Vector3], default: null },
   },
   created: function created() {
     var this$1 = this;
 
     this.camera = new three.PerspectiveCamera(this.fov, this.aspect, this.near, this.far);
     useBindProp(this, 'position', this.camera.position);
+
+    if (this.lookAt) { this.camera.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z); }
+    vue.watch(function () { return this$1.lookAt; }, function (v) { this$1.camera.lookAt(v.x, v.y, v.z); }, { deep: true });
 
     ['aspect', 'far', 'fov', 'near'].forEach(function (p) {
       vue.watch(function () { return this$1[p]; }, function () {
@@ -561,6 +565,7 @@ var PerspectiveCamera = {
       });
     });
 
+    // this.camera.updateProjectionMatrix();
     this.three.camera = this.camera;
   },
   render: function render() {
@@ -2696,7 +2701,7 @@ var TiltShiftPass = {
 
     this.updateFocusLine();
     ['start', 'end'].forEach(function (p) {
-      vue.watch(function () { return this$1[p]; }, this$1.updateFocusLine);
+      vue.watch(function () { return this$1[p]; }, this$1.updateFocusLine, { deep: true });
     });
 
     this.pass.setSize = function (width, height) {

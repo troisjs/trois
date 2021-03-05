@@ -5,7 +5,7 @@ import ShaderMaterial from './ShaderMaterial';
 export default {
   extends: ShaderMaterial,
   props: {
-    diffuse: { type: String, default: '#ffffff' },
+    color: { type: String, default: '#ffffff' },
     thicknessColor: { type: String, default: '#ffffff' },
     thicknessDistortion: { type: Number, default: 0.4 },
     thicknessAmbient: { type: Number, default: 0.01 },
@@ -20,12 +20,15 @@ export default {
     createMaterial() {
       const params = SubsurfaceScatteringShader;
       const uniforms = UniformsUtils.clone(params.uniforms);
+
       Object.entries(this.$props).forEach(([key, value]) => {
-        if (key === 'diffuse' || key === 'thicknessColor') {
-          value = new Color(value);
+        let _key = key, _value = value;
+        if (['color', 'thicknessColor'].includes(key)) {
+          if (key === 'color') _key = 'diffuse';
+          _value = new Color(value);
         }
-        if (key !== 'id' && key !== 'transparent' && key !== 'vertexColors') {
-          uniforms[key].value = value;
+        if (!['id', 'transparent', 'vertexColors'].includes(key)) {
+          uniforms[_key].value = _value;
         }
       });
 
