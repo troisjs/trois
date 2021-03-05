@@ -1,5 +1,5 @@
 <template>
-  <Renderer ref="renderer" :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }">
+  <Renderer ref="renderer" antialias resize :orbit-ctrl="{ enableDamping: true, dampingFactor: 0.05 }">
     <Camera ref="camera" :position="cameraPosition"></Camera>
     <Scene>
       <slot></slot>
