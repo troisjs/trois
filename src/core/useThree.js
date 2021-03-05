@@ -102,11 +102,11 @@ export default function useThree() {
       }
     }
 
-    if (conf.width && conf.height) {
-      setSize(conf.width, conf.height);
-    } else if (conf.resize) {
+    if (conf.resize) {
       onResize();
       window.addEventListener('resize', onResize);
+    } else {
+      setSize(conf.width | 300, conf.height | 150);
     }
 
     conf.mouse_move = conf.mouse_move || conf.mouse_over;
