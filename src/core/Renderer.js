@@ -11,7 +11,7 @@ export default {
     mouseOver: { type: Boolean, default: false },
     click: { type: Boolean, default: false },
     orbitCtrl: { type: [Boolean, Object], default: false },
-    resize: { type: [Boolean, String], default: true },
+    resize: { type: [Boolean, String], default: false },
     shadow: Boolean,
     width: String,
     height: String,
