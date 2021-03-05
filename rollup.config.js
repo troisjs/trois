@@ -21,15 +21,13 @@ const external = [
   'three/examples/jsm/postprocessing/ShaderPass.js',
   'three/examples/jsm/postprocessing/UnrealBloomPass.js',
   'three/examples/jsm/shaders/FXAAShader.js',
-  'gsap',
   'vue',
 ];
 
 const cdnReplaces = {
-  'from \'vue\'': 'from \'https://unpkg.com/vue@3.0.5/dist/vue.esm-browser.prod.js\'',
+  'from \'vue\'': 'from \'https://unpkg.com/vue@3.0.7/dist/vue.esm-browser.prod.js\'',
   'from \'three\'': 'from \'https://unpkg.com/three@0.125.2/build/three.module.js\'',
   'from \'three/examples': 'from \'https://unpkg.com/three@0.125.2/examples',
-  'from \'gsap\'': 'from \'https://unpkg.com/gsap@3.5.1/index.js\'',
   delimiters: ['', ''],
 };
 
