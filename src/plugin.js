@@ -1,3 +1,4 @@
+import { createApp as _createApp } from 'vue';
 import * as TROIS from './index.js';
 
 export const TroisJSVuePlugin = {
@@ -89,4 +90,8 @@ export const TroisJSVuePlugin = {
       app.component(comp, TROIS[comp]);
     });
   },
+};
+
+export function createApp(params) {
+  return _createApp(params).use(TroisJSVuePlugin);
 };

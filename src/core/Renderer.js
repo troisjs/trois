@@ -47,7 +47,8 @@ export default {
     };
 
     if (this.three.init(params)) {
-      this.three.renderer.shadowMap.enabled = this.shadow;
+      this.renderer = this.three.renderer;
+      this.renderer.shadowMap.enabled = this.shadow;
       if (this.three.composer) this.animateC();
       else this.animate();
     };

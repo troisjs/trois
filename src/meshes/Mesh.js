@@ -1,6 +1,6 @@
 import { Mesh } from 'three';
 import { watch } from 'vue';
-import useBindProp from '../use/useBindProp.js';
+import { bindProp } from '../tools.js';
 
 export default {
   inject: {
@@ -63,9 +63,9 @@ export default {
       this.$emit('ready');
     },
     bindProps() {
-      useBindProp(this, 'position', this.mesh.position);
-      useBindProp(this, 'rotation', this.mesh.rotation);
-      useBindProp(this, 'scale', this.mesh.scale);
+      bindProp(this, 'position', this.mesh.position);
+      bindProp(this, 'rotation', this.mesh.rotation);
+      bindProp(this, 'scale', this.mesh.scale);
 
       ['castShadow', 'receiveShadow'].forEach(p => {
         this.mesh[p] = this[p];

@@ -9,7 +9,7 @@ import {
 } from 'three';
 // import { watch } from 'vue';
 import Mesh from '../meshes/Mesh.js';
-import useBindProp from '../use/useBindProp.js';
+import { bindProp } from '../tools.js';
 
 export default {
   extends: Mesh,
@@ -33,7 +33,7 @@ export default {
     initGem() {
       const cubeRT = new WebGLCubeRenderTarget(this.cubeRTSize, { format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter });
       this.cubeCamera = new CubeCamera(this.cubeCameraNear, this.cubeCameraFar, cubeRT);
-      useBindProp(this, 'position', this.cubeCamera.position);
+      bindProp(this, 'position', this.cubeCamera.position);
       this.parent.add(this.cubeCamera);
 
       this.material.side = FrontSide;
@@ -55,9 +55,9 @@ export default {
 
       this.meshBack = new TMesh(this.geometry, this.materialBack);
 
-      useBindProp(this, 'position', this.meshBack.position);
-      useBindProp(this, 'rotation', this.meshBack.rotation);
-      useBindProp(this, 'scale', this.meshBack.scale);
+      bindProp(this, 'position', this.meshBack.position);
+      bindProp(this, 'rotation', this.meshBack.rotation);
+      bindProp(this, 'scale', this.meshBack.scale);
       this.parent.add(this.meshBack);
     },
     updateCubeRT() {

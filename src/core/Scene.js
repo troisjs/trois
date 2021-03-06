@@ -24,12 +24,8 @@ export default {
     }
   },
   methods: {
-    // add(o) {
-    //   this.scene.add(o);
-    // },
-    // remove(o) {
-    //   this.scene.remove(o);
-    // },
+    add(o) { this.scene.add(o); },
+    remove(o) { this.scene.remove(o); },
   },
   render() {
     if (this.$slots.default) {

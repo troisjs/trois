@@ -1,6 +1,6 @@
 import { OrthographicCamera, Vector3 } from 'three';
 import { watch } from 'vue';
-import useBindProp from '../use/useBindProp.js';
+import { bindProp } from '../tools.js';
 
 export default {
   inject: ['three'],
@@ -16,7 +16,7 @@ export default {
   },
   created() {
     this.camera = new OrthographicCamera(this.left, this.right, this.top, this.bottom, this.near, this.far);
-    useBindProp(this, 'position', this.camera.position);
+    bindProp(this, 'position', this.camera.position);
 
     ['left', 'right', 'top', 'bottom', 'near', 'far', 'zoom'].forEach(p => {
       watch(() => this[p], () => {

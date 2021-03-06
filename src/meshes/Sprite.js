@@ -1,5 +1,5 @@
 import { Sprite, SpriteMaterial, TextureLoader } from 'three';
-import useBindProp from '../use/useBindProp.js';
+import { bindProp } from '../tools.js';
 
 export default {
   emits: ['ready', 'loaded'],
@@ -21,8 +21,8 @@ export default {
     this.material = new SpriteMaterial({ map: this.texture });
     this.sprite = new Sprite(this.material);
     this.geometry = this.sprite.geometry;
-    useBindProp(this, 'position', this.sprite.position);
-    useBindProp(this, 'scale', this.sprite.scale);
+    bindProp(this, 'position', this.sprite.position);
+    bindProp(this, 'scale', this.sprite.scale);
 
     this.parent.add(this.sprite);
     this.$emit('ready');

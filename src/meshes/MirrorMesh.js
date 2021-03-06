@@ -6,7 +6,7 @@ import {
 } from 'three';
 // import { watch } from 'vue';
 import Mesh from './Mesh.js';
-import useBindProp from '../use/useBindProp.js';
+import { bindProp } from '../tools.js';
 
 export default {
   extends: Mesh,

@@ -1,7 +1,7 @@
 import { Color } from 'three';
 import { watch } from 'vue';
 import { setFromProp } from '../tools.js';
-import useBindProp from '../use/useBindProp.js';
+import { bindProp } from '../tools.js';
 
 export default {
   inject: {
@@ -30,10 +30,10 @@ export default {
     this.parent = this.group ? this.group : this.scene;
   },
   mounted() {
-    useBindProp(this, 'position', this.light.position);
+    bindProp(this, 'position', this.light.position);
 
     if (this.light.target) {
-      useBindProp(this, 'target', this.light.target.position);
+      bindProp(this, 'target', this.light.target.position);
     }
 
     if (this.light.shadow) {

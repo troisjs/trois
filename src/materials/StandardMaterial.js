@@ -1,7 +1,7 @@
 import { MeshStandardMaterial, Vector2 } from 'three';
 import { watch } from 'vue';
 import { propsValues } from '../tools.js';
-import useBindProp from '../use/useBindProp.js';
+import { bindProp } from '../tools.js';
 import Material from './Material';
 
 const props = {
@@ -39,7 +39,7 @@ export default {
           }
         });
       });
-      useBindProp(this, 'normalScale', this.material.normalScale);
+      bindProp(this, 'normalScale', this.material.normalScale);
     },
   },
   __hmrId: 'StandardMaterial',

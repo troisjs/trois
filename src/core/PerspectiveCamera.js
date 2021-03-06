@@ -1,6 +1,6 @@
 import { PerspectiveCamera, Vector3 } from 'three';
 import { watch } from 'vue';
-import useBindProp from '../use/useBindProp.js';
+import { bindProp } from '../tools.js';
 
 export default {
   inject: ['three'],
@@ -14,7 +14,7 @@ export default {
   },
   created() {
     this.camera = new PerspectiveCamera(this.fov, this.aspect, this.near, this.far);
-    useBindProp(this, 'position', this.camera.position);
+    bindProp(this, 'position', this.camera.position);
 
     if (this.lookAt) this.camera.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z);
     watch(() => this.lookAt, (v) => { this.camera.lookAt(v.x, v.y, v.z); }, { deep: true });

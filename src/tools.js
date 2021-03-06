@@ -1,9 +1,26 @@
+import { toRef, watch } from 'vue';
+
 export function setFromProp(o, prop) {
   if (prop instanceof Object) {
     Object.entries(prop).forEach(([key, value]) => {
       o[key] = value;
     });
   }
+};
+
+export function bindProp(comp, prop, object) {
+  const ref = toRef(comp, prop);
+  setFromProp(object, ref.value);
+  watch(ref, () => {
+    setFromProp(object, ref.value);
+  }, { deep: true });
+};
+
+export function bindPropValue(src, srcProp, dst, dstProp = 'value') {
+  dst[dstProp] = src[srcProp];
+  watch(() => src[srcProp], (value) => {
+    dst[dstProp] = value;
+  });
 };
 
 export function propsValues(props, exclude) {

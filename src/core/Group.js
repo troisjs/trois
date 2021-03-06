@@ -1,5 +1,5 @@
 import { Group } from 'three';
-import useBindProp from '../use/useBindProp.js';
+import { bindProp } from '../tools.js';
 
 export default {
   inject: {
@@ -18,23 +18,30 @@ export default {
     };
   },
   created() {
+    if (!this.$parent) {
+      console.error('Missing parent');
+    } else if (!this.$parent.add || !this.$parent.remove) {
+
+    }
+
     this.parent = this.group ? this.group : this.scene;
 
     this.group = new Group();
-    useBindProp(this, 'position', this.group.position);
-    useBindProp(this, 'rotation', this.group.rotation);
-    useBindProp(this, 'scale', this.group.scale);
+    bindProp(this, 'position', this.group.position);
+    bindProp(this, 'rotation', this.group.rotation);
+    bindProp(this, 'scale', this.group.scale);
 
     this.parent.add(this.group);
   },
   unmounted() {
-    this.parent.remove(this.group);
+    if (this.$parent) this.$parent.remove(this.group);
+  },
+  methods: {
+    add(o) { this.group.add(o); },
+    remove(o) { this.group.remove(o); },
   },
   render() {
-    if (this.$slots.default) {
-      return this.$slots.default();
-    }
-    return [];
+    return this.$slots.default ? this.$slots.default() : [];
   },
   __hmrId: 'Group',
 };
