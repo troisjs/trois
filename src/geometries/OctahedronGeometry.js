@@ -1,4 +1,4 @@
-import { OctahedronBufferGeometry } from 'three';
+import { OctahedronGeometry } from 'three';
 import Geometry from './Geometry.js';
 
 export default {
@@ -9,7 +9,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new OctahedronBufferGeometry(this.radius, this.detail);
+      this.geometry = new OctahedronGeometry(this.radius, this.detail);
     },
   },
 };

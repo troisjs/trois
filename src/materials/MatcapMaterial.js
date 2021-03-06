@@ -12,7 +12,7 @@ export default {
   methods: {
     createMaterial() {
       const src = this.name ? getMatcapUrl(this.name) : this.src;
-      const opts = propsValues(this.$props, ['id', 'src', 'name']);
+      const opts = propsValues(this.$props, ['src', 'name']);
       opts.matcap = new TextureLoader().load(src);
       this.material = new MeshMatcapMaterial(opts);
     },

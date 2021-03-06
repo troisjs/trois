@@ -15,6 +15,7 @@ export default {
   },
   created() {
     this.light = new PointLight(this.color, this.intensity, this.distance, this.decay);
+    this.initLight();
   },
   __hmrId: 'PointLight',
 };

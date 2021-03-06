@@ -1,4 +1,4 @@
-import { CircleBufferGeometry } from 'three';
+import { CircleGeometry } from 'three';
 import Geometry from './Geometry.js';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new CircleBufferGeometry(this.radius, this.segments, this.thetaStart, this.thetaLength);
+      this.geometry = new CircleGeometry(this.radius, this.segments, this.thetaStart, this.thetaLength);
     },
   },
 };

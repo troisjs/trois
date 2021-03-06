@@ -1,51 +1,24 @@
 import { Mesh } from 'three';
-import { watch } from 'vue';
-import { bindProp } from '../tools.js';
+import Object3D from '../core/Object3D.js';
 
 export default {
-  inject: {
-    three: 'three',
-    scene: 'scene',
-    rendererComponent: 'rendererComponent',
-    group: { default: null },
-  },
-  emits: ['ready'],
+  extends: Object3D,
   props: {
-    materialId: String,
-    position: Object,
-    rotation: Object,
-    scale: Object,
-    castShadow: Boolean,
-    receiveShadow: Boolean,
     onHover: Function,
     onClick: Function,
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
-  created() {
-    this.parent = this.group ? this.group : this.scene;
-  },
   provide() {
     return {
       mesh: this,
     };
   },
   mounted() {
-    if (this.geometry && !this.mesh) this.initMesh();
-  },
-  unmounted() {
-    if (this.mesh) {
-      this.three.removeIntersectObject(this.mesh);
-      this.parent.remove(this.mesh);
-    }
-    if (this.geometry) this.geometry.dispose();
-    if (this.material && !this.materialId) this.material.dispose();
+    if (!this.mesh && !this.loading) this.initMesh();
   },
   methods: {
     initMesh() {
-      if (!this.material && this.materialId) {
-        this.material = this.three.materials[this.materialId];
-      }
       this.mesh = new Mesh(this.geometry, this.material);
 
       if (this.onHover) {
@@ -58,23 +31,7 @@ export default {
         this.three.addIntersectObject(this.mesh);
       }
 
-      this.bindProps();
-      this.parent.add(this.mesh);
-      this.$emit('ready');
-    },
-    bindProps() {
-      bindProp(this, 'position', this.mesh.position);
-      bindProp(this, 'rotation', this.mesh.rotation);
-      bindProp(this, 'scale', this.mesh.scale);
-
-      ['castShadow', 'receiveShadow'].forEach(p => {
-        this.mesh[p] = this[p];
-        watch(() => this[p], () => { this.mesh[p] = this[p]; });
-      });
-
-      watch(() => this.materialId, () => {
-        this.mesh.material = this.three.materials[this.materialId];
-      });
+      this.initObject3D(this.mesh);
     },
     setGeometry(geometry) {
       this.geometry = geometry;
@@ -91,11 +48,13 @@ export default {
       oldGeo.dispose();
     },
   },
-  render() {
-    if (this.$slots.default) {
-      return this.$slots.default();
+  unmounted() {
+    if (this.mesh) {
+      this.three.removeIntersectObject(this.mesh);
     }
-    return [];
+    // for predefined mesh (geometry and material are not unmounted)
+    if (this.geometry) this.geometry.dispose();
+    if (this.material) this.material.dispose();
   },
   __hmrId: 'Mesh',
 };

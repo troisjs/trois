@@ -1,4 +1,4 @@
-import { DodecahedronBufferGeometry } from 'three';
+import { DodecahedronGeometry } from 'three';
 import Geometry from './Geometry.js';
 
 export default {
@@ -9,7 +9,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new DodecahedronBufferGeometry(this.radius, this.detail);
+      this.geometry = new DodecahedronGeometry(this.radius, this.detail);
     },
   },
 };

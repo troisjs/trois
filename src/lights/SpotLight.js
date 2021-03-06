@@ -5,22 +5,10 @@ import Light from './Light.js';
 export default {
   extends: Light,
   props: {
-    angle: {
-      type: Number,
-      default: Math.PI / 3,
-    },
-    decay: {
-      type: Number,
-      default: 1,
-    },
-    distance: {
-      type: Number,
-      default: 0,
-    },
-    penumbra: {
-      type: Number,
-      default: 0,
-    },
+    angle: { type: Number, default: Math.PI / 3 },
+    decay: { type: Number, default: 1 },
+    distance: { type: Number, default: 0 },
+    penumbra: { type: Number, default: 0 },
     target: Object,
   },
   created() {
@@ -30,6 +18,7 @@ export default {
         this.light[p] = this[p];
       });
     });
+    this.initLight();
   },
   __hmrId: 'SpotLight',
 };

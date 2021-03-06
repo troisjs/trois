@@ -1,4 +1,4 @@
-import { TorusKnotBufferGeometry } from 'three';
+import { TorusKnotGeometry } from 'three';
 import Geometry from './Geometry.js';
 
 export default {
@@ -13,7 +13,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new TorusKnotBufferGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.p, this.q);
+      this.geometry = new TorusKnotGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.p, this.q);
     },
   },
 };

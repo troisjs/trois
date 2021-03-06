@@ -1,4 +1,4 @@
-import { LatheBufferGeometry } from 'three';
+import { LatheGeometry } from 'three';
 import Geometry from './Geometry.js';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new LatheBufferGeometry(this.points, this.segments, this.phiStart, this.phiLength);
+      this.geometry = new LatheGeometry(this.points, this.segments, this.phiStart, this.phiLength);
     },
   },
 };

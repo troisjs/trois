@@ -5,6 +5,7 @@ export default {
   extends: Light,
   created() {
     this.light = new AmbientLight(this.color, this.intensity);
+    this.initLight();
   },
   __hmrId: 'AmbientLight',
 };

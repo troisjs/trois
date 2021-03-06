@@ -4,7 +4,6 @@ import { FrontSide } from 'three';
 export default {
   inject: ['three', 'mesh'],
   props: {
-    id: String,
     color: { type: [String, Number], default: '#ffffff' },
     depthTest: { type: Boolean, default: true },
     depthWrite: { type: Boolean, default: true },
@@ -20,18 +19,15 @@ export default {
       material: this,
     };
   },
-  beforeMount() {
+  created() {
     this.createMaterial();
-    if (this.id) this.three.materials[this.id] = this.material;
     this.mesh.setMaterial(this.material);
-  },
-  mounted() {
+
     this._addWatchers();
     if (this.addWatchers) this.addWatchers();
   },
   unmounted() {
     this.material.dispose();
-    if (this.id) delete this.three.materials[this.id];
   },
   methods: {
     setProp(key, value, needsUpdate = false) {
@@ -55,10 +51,7 @@ export default {
     },
   },
   render() {
-    if (this.$slots.default) {
-      return this.$slots.default();
-    }
-    return [];
+    return this.$slots.default ? this.$slots.default() : [];
   },
   __hmrId: 'Material',
 };

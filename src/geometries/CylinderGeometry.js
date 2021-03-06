@@ -1,4 +1,4 @@
-import { CylinderBufferGeometry } from 'three';
+import { CylinderGeometry } from 'three';
 import Geometry from './Geometry.js';
 
 export default {
@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new CylinderBufferGeometry(this.radiusTop, this.radiusBottom, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
+      this.geometry = new CylinderGeometry(this.radiusTop, this.radiusBottom, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
     },
   },
 };

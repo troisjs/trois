@@ -1,4 +1,4 @@
-import { ConeBufferGeometry } from 'three';
+import { ConeGeometry } from 'three';
 import Geometry from './Geometry.js';
 
 export default {
@@ -14,7 +14,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new ConeBufferGeometry(this.radius, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
+      this.geometry = new ConeGeometry(this.radius, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
     },
   },
 };

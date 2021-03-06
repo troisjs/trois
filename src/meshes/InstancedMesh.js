@@ -1,61 +1,28 @@
 import { InstancedMesh } from 'three';
-import { watch } from 'vue';
-import { bindProp } from '../tools.js';
+import Object3D from '../core/Object3D.js';
 
 export default {
-  inject: {
-    three: 'three',
-    scene: 'scene',
-    group: { default: null },
-  },
+  extends: Object3D,
   props: {
-    materialId: String,
     count: Number,
-    position: Object,
-    castShadow: Boolean,
-    receiveShadow: Boolean,
   },
   provide() {
     return {
       mesh: this,
     };
   },
-  created() {
-    this.parent = this.group ? this.group : this.scene;
-  },
   beforeMount() {
     if (!this.$slots.default) {
       console.error('Missing Geometry');
     }
   },
-  mounted() {
+  created() {
     this.initMesh();
-  },
-  unmounted() {
-    this.parent.remove(this.mesh);
   },
   methods: {
     initMesh() {
-      if (!this.material && this.materialId) {
-        this.material = this.three.materials[this.materialId];
-      }
-
       this.mesh = new InstancedMesh(this.geometry, this.material, this.count);
-
-      bindProp(this, 'position', this.mesh.position);
-      bindProp(this, 'rotation', this.mesh.rotation);
-      bindProp(this, 'scale', this.mesh.scale);
-
-      ['castShadow', 'receiveShadow'].forEach(p => {
-        this.mesh[p] = this[p];
-        watch(() => this[p], () => { this.mesh[p] = this[p]; });
-      });
-
-      // watch(() => this.materialId, () => {
-      //   this.mesh.material = this.three.materials[this.materialId];
-      // });
-
-      this.parent.add(this.mesh);
+      this.initObject3D(this.mesh);
     },
     setGeometry(geometry) {
       this.geometry = geometry;
@@ -65,9 +32,6 @@ export default {
       this.material = material;
       if (this.mesh) this.mesh.material = material;
     },
-  },
-  render() {
-    return this.$slots.default();
   },
   __hmrId: 'InstancedMesh',
 };

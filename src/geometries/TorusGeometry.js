@@ -1,4 +1,4 @@
-import { TorusBufferGeometry } from 'three';
+import { TorusGeometry } from 'three';
 import Geometry from './Geometry.js';
 
 export default {
@@ -12,7 +12,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new TorusBufferGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.arc);
+      this.geometry = new TorusGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.arc);
     },
   },
 };

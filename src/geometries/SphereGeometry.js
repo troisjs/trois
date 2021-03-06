@@ -1,4 +1,4 @@
-import { SphereBufferGeometry } from 'three';
+import { SphereGeometry } from 'three';
 import Geometry from './Geometry.js';
 
 export default {
@@ -10,7 +10,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new SphereBufferGeometry(this.radius, this.widthSegments, this.heightSegments);
+      this.geometry = new SphereGeometry(this.radius, this.widthSegments, this.heightSegments);
     },
   },
 };

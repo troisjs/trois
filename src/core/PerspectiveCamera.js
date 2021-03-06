@@ -26,7 +26,6 @@ export default {
       });
     });
 
-    // this.camera.updateProjectionMatrix();
     this.three.camera = this.camera;
   },
   render() {

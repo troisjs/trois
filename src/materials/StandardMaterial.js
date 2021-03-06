@@ -25,7 +25,7 @@ export default {
   props,
   methods: {
     createMaterial() {
-      this.material = new MeshStandardMaterial(propsValues(this.$props, ['id', 'normalScale']));
+      this.material = new MeshStandardMaterial(propsValues(this.$props, ['normalScale']));
     },
     addWatchers() {
       // todo : use setProp ?

@@ -6,7 +6,7 @@ export default {
   extends: StandardMaterial,
   methods: {
     createMaterial() {
-      this.material = new MeshPhysicalMaterial(propsValues(this.$props, ['id']));
+      this.material = new MeshPhysicalMaterial(propsValues(this.$props));
     },
   },
   __hmrId: 'PhysicalMaterial',

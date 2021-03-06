@@ -28,9 +28,6 @@ export default {
     remove(o) { this.scene.remove(o); },
   },
   render() {
-    if (this.$slots.default) {
-      return this.$slots.default();
-    }
-    return [];
+    return this.$slots.default ? this.$slots.default() : [];
   },
 };

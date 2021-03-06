@@ -1,4 +1,4 @@
-import { PolyhedronBufferGeometry } from 'three';
+import { PolyhedronGeometry } from 'three';
 import Geometry from './Geometry.js';
 
 export default {
@@ -11,7 +11,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new PolyhedronBufferGeometry(this.vertices, this.indices, this.radius, this.detail);
+      this.geometry = new PolyhedronGeometry(this.vertices, this.indices, this.radius, this.detail);
     },
   },
 };

@@ -27,7 +27,7 @@ export default {
           if (key === 'color') _key = 'diffuse';
           _value = new Color(value);
         }
-        if (!['id', 'transparent', 'vertexColors'].includes(key)) {
+        if (!['transparent', 'vertexColors'].includes(key)) {
           uniforms[_key].value = _value;
         }
       });

@@ -1,4 +1,4 @@
-import { Curve, TubeBufferGeometry } from 'three';
+import { Curve, TubeGeometry } from 'three';
 import Geometry from './Geometry.js';
 
 export default {
@@ -12,7 +12,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new TubeBufferGeometry(this.path, this.tubularSegments, this.radius, this.radiusSegments, this.closed);
+      this.geometry = new TubeGeometry(this.path, this.tubularSegments, this.radius, this.radiusSegments, this.closed);
     },
   },
 };

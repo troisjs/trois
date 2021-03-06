@@ -1,4 +1,4 @@
-import { BoxBufferGeometry } from 'three';
+import { BoxGeometry } from 'three';
 import Geometry from './Geometry.js';
 
 export default {
@@ -18,7 +18,7 @@ export default {
       if (this.size) {
         w = this.size; h = this.size; d = this.size;
       }
-      this.geometry = new BoxBufferGeometry(w, h, d, this.widthSegments, this.heightSegments, this.depthSegments);
+      this.geometry = new BoxGeometry(w, h, d, this.widthSegments, this.heightSegments, this.depthSegments);
     },
   },
 };

@@ -7,8 +7,7 @@ import {
   RGBFormat,
   WebGLCubeRenderTarget,
 } from 'three';
-// import { watch } from 'vue';
-import Mesh from '../meshes/Mesh.js';
+import Mesh from './Mesh.js';
 import { bindProp } from '../tools.js';
 
 export default {
@@ -26,15 +25,17 @@ export default {
   },
   unmounted() {
     this.three.offBeforeRender(this.updateCubeRT);
-    if (this.meshBack) this.parent.remove(this.meshBack);
+    if (this.meshBack) this.$parent.remove(this.meshBack);
     if (this.materialBack) this.materialBack.dispose();
   },
   methods: {
     initGem() {
+      this.initMesh();
+
       const cubeRT = new WebGLCubeRenderTarget(this.cubeRTSize, { format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter });
       this.cubeCamera = new CubeCamera(this.cubeCameraNear, this.cubeCameraFar, cubeRT);
       bindProp(this, 'position', this.cubeCamera.position);
-      this.parent.add(this.cubeCamera);
+      this.$parent.add(this.cubeCamera);
 
       this.material.side = FrontSide;
       this.material.envMap = cubeRT.texture;
@@ -58,7 +59,7 @@ export default {
       bindProp(this, 'position', this.meshBack.position);
       bindProp(this, 'rotation', this.meshBack.rotation);
       bindProp(this, 'scale', this.meshBack.scale);
-      this.parent.add(this.meshBack);
+      this.$parent.add(this.meshBack);
     },
     updateCubeRT() {
       this.mesh.visible = false;

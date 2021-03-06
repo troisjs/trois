@@ -1,4 +1,4 @@
-import { RingBufferGeometry } from 'three';
+import { RingGeometry } from 'three';
 import Geometry from './Geometry.js';
 
 export default {
@@ -13,7 +13,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new RingBufferGeometry(this.innerRadius, this.outerRadius, this.thetaSegments, this.phiSegments, this.thetaStart, this.thetaLength);
+      this.geometry = new RingGeometry(this.innerRadius, this.outerRadius, this.thetaSegments, this.phiSegments, this.thetaStart, this.thetaLength);
     },
   },
 };

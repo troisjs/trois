@@ -32,7 +32,5 @@ export default {
       this.$emit('loaded');
     },
   },
-  render() {
-    return [];
-  },
+  render() { return []; },
 };

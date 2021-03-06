@@ -6,7 +6,7 @@ export default {
   extends: Material,
   methods: {
     createMaterial() {
-      this.material = new MeshToonMaterial(propsValues(this.$props, ['id']));
+      this.material = new MeshToonMaterial(propsValues(this.$props));
     },
   },
   __hmrId: 'ToonMaterial',

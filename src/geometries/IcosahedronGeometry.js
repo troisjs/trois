@@ -1,4 +1,4 @@
-import { IcosahedronBufferGeometry } from 'three';
+import { IcosahedronGeometry } from 'three';
 import Geometry from './Geometry.js';
 
 export default {
@@ -9,7 +9,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new IcosahedronBufferGeometry(this.radius, this.detail);
+      this.geometry = new IcosahedronGeometry(this.radius, this.detail);
     },
   },
 };

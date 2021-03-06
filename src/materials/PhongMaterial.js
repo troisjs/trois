@@ -14,7 +14,7 @@ export default {
   },
   methods: {
     createMaterial() {
-      this.material = new MeshPhongMaterial(propsValues(this.$props, ['id']));
+      this.material = new MeshPhongMaterial(propsValues(this.$props));
     },
     addWatchers() {
       ['emissive', 'emissiveIntensity', 'reflectivity', 'shininess', 'specular'].forEach(p => {

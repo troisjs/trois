@@ -1,39 +1,31 @@
 import { Sprite, SpriteMaterial, TextureLoader } from 'three';
-import { bindProp } from '../tools.js';
+import Object3D from '../core/Object3D.js';
 
 export default {
-  emits: ['ready', 'loaded'],
-  inject: {
-    three: 'three',
-    scene: 'scene',
-    group: { default: null },
-  },
+  extends: Object3D,
+  emits: ['loaded'],
   props: {
     src: String,
-    position: Object,
-    scale: Object,
+  },
+  data() {
+    return {
+      loading: true,
+    };
   },
   created() {
-    this.parent = this.group ? this.group : this.scene;
-  },
-  mounted() {
     this.texture = new TextureLoader().load(this.src, this.onLoaded);
     this.material = new SpriteMaterial({ map: this.texture });
     this.sprite = new Sprite(this.material);
     this.geometry = this.sprite.geometry;
-    bindProp(this, 'position', this.sprite.position);
-    bindProp(this, 'scale', this.sprite.scale);
-
-    this.parent.add(this.sprite);
-    this.$emit('ready');
+    this.initObject3D(this.sprite);
   },
   unmounted() {
     this.texture.dispose();
     this.material.dispose();
-    this.parent.remove(this.sprite);
   },
   methods: {
     onLoaded() {
+      this.loading = false;
       this.updateUV();
       this.$emit('loaded');
     },
@@ -56,9 +48,6 @@ export default {
       positions[15] = -x; positions[16] = y;
       this.geometry.attributes.position.needsUpdate = true;
     },
-  },
-  render() {
-    return [];
   },
   __hmrId: 'Sprite',
 };

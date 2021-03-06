@@ -8,6 +8,11 @@ export default {
   props: {
     ...TextProps,
   },
+  data() {
+    return {
+      loading: true,
+    };
+  },
   created() {
     // add watchers
     const watchProps = [
@@ -23,6 +28,7 @@ export default {
 
     const loader = new FontLoader();
     loader.load(this.fontSrc, (font) => {
+      this.loading = false;
       this.font = font;
       this.createGeometry();
       this.initMesh();

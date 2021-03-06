@@ -1,4 +1,4 @@
-import Texture from '../core/Texture';
+import Texture from './Texture.js';
 
 export default {
   extends: Texture,

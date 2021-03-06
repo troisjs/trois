@@ -6,7 +6,7 @@ export default {
   extends: Material,
   methods: {
     createMaterial() {
-      this.material = new MeshLambertMaterial(propsValues(this.$props, ['id']));
+      this.material = new MeshLambertMaterial(propsValues(this.$props));
     },
   },
   __hmrId: 'LambertMaterial',
