@@ -1,9 +1,12 @@
+import { watch } from 'vue';
 import { InstancedMesh } from 'three';
 import Object3D from '../core/Object3D.js';
 
 export default {
   extends: Object3D,
   props: {
+    castShadow: Boolean,
+    receiveShadow: Boolean,
     count: Number,
   },
   provide() {
@@ -22,6 +25,12 @@ export default {
   methods: {
     initMesh() {
       this.mesh = new InstancedMesh(this.geometry, this.material, this.count);
+
+      ['castShadow', 'receiveShadow'].forEach(p => {
+        this.mesh[p] = this[p];
+        watch(() => this[p], () => { this.mesh[p] = this[p]; });
+      });
+
       this.initObject3D(this.mesh);
     },
     setGeometry(geometry) {

@@ -1,9 +1,12 @@
+import { watch } from 'vue';
 import { Mesh } from 'three';
 import Object3D from '../core/Object3D.js';
 
 export default {
   extends: Object3D,
   props: {
+    castShadow: Boolean,
+    receiveShadow: Boolean,
     onHover: Function,
     onClick: Function,
   },
@@ -20,6 +23,11 @@ export default {
   methods: {
     initMesh() {
       this.mesh = new Mesh(this.geometry, this.material);
+
+      ['castShadow', 'receiveShadow'].forEach(p => {
+        this.mesh[p] = this[p];
+        watch(() => this[p], () => { this.mesh[p] = this[p]; });
+      });
 
       if (this.onHover) {
         this.mesh.onHover = (over) => { this.onHover({ component: this, over }); };

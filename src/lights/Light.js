@@ -1,25 +1,23 @@
 import { Color } from 'three';
 import { watch } from 'vue';
+import Object3D from '../core/Object3D.js';
 import { bindProp, setFromProp } from '../tools.js';
 
 export default {
+  extends: Object3D,
   props: {
     color: { type: String, default: '#ffffff' },
     intensity: { type: Number, default: 1 },
     castShadow: { type: Boolean, default: false },
     shadowMapSize: { type: Object, default: { x: 512, y: 512 } },
-    position: Object,
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
   unmounted() {
-    this.$parent.remove(this.light);
     if (this.light.target) this.$parent.remove(this.light.target);
   },
   methods: {
     initLight() {
-      bindProp(this, 'position', this.light.position);
-
       if (this.light.target) {
         bindProp(this, 'target', this.light.target.position);
       }
@@ -39,7 +37,7 @@ export default {
         });
       });
 
-      this.$parent.add(this.light);
+      this.initObject3D(this.light);
       if (this.light.target) this.$parent.add(this.light.target);
     },
   },
