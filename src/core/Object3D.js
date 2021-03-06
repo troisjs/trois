@@ -6,7 +6,6 @@ export default {
     position: Object,
     rotation: Object,
     scale: Object,
-    loading: Boolean,
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
