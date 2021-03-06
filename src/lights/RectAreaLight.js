@@ -9,6 +9,7 @@ export default {
   props: {
     width: { type: Number, default: 10 },
     height: { type: Number, default: 10 },
+    helper: Boolean,
   },
   created() {
     RectAreaLightUniformsLib.init();
@@ -20,7 +21,7 @@ export default {
       });
     });
 
-    this.$parent.add(new RectAreaLightHelper(this.light));
+    if (this.helper) this.$parent.add(new RectAreaLightHelper(this.light));
     this.initLight();
   },
   __hmrId: 'RectAreaLight',
