@@ -30,6 +30,7 @@ export const TroisJSVuePlugin = {
       'AmbientLight',
       'DirectionalLight',
       'PointLight',
+      'RectAreaLight',
       'SpotLight',
 
       'BasicMaterial',
