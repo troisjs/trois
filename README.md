@@ -1,5 +1,7 @@
 # ✨ ThreeJS + VueJS 3 + ViteJS ⚡
 
+*Trois* is a french word, it means *Three*.
+
 <p>
   <a href="https://troisjs.github.io/examples/demos/3.html"><img src="/screenshots/troisjs_1.jpg" width="30%" /></a>
   <a href="https://troisjs.github.io/examples/demos/4.html"><img src="/screenshots/troisjs_3.jpg" width="30%" /></a>
@@ -21,7 +23,38 @@ I wanted to code something similar to *react-three-fiber* but for VueJS.
 
 I started from scratch, I will rewrite some of my [WebGL demos](https://codepen.io/collection/AGZywR) to see if this little toy can do the job.
 
-*Trois* is a french word, it means *Three*.
+## Usage (CDN)
+
+TroisJS is really simple and easy to use :
+
+```html
+<div id="app">
+  <renderer ref="renderer" antialias orbit-ctrl resize="window">
+    <camera :position="{ z: 10 }"></camera>
+    <scene>
+      <point-light :position="{ y: 50, z: 50 }"></point-light>
+      <box ref="box" :rotation="{ y: Math.PI / 4, z: Math.PI / 4 }">
+        <lambert-material></lambert-material>
+      </box>
+    </scene>
+  </renderer>
+</div>
+
+<script type="module">
+  import { createApp } from 'https://unpkg.com/troisjs@0.1.12/build/trois.module.cdn.min.js';
+  createApp({
+    mounted() {
+      const renderer = this.$refs.renderer;
+      const box = this.$refs.box.mesh;
+      renderer.onBeforeRender(() => {
+        box.rotation.x += 0.01;
+      });
+    }
+  }).mount('#app');;
+</script>
+```
+
+Read more on https://troisjs.github.io/guide/
 
 ## HMR
 
@@ -32,19 +65,19 @@ Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects
 - [ ] Lights
   - [x] AmbientLight
   - [x] DirectionalLight
+  - [x] HemisphereLight
   - [x] PointLight
+  - [x] RectAreaLight
   - [x] SpotLight
-  - [ ] ...
 - [ ] Materials
   - [x] Basic
   - [x] Lambert
-  - [x] Mapcat
+  - [x] Mapcap
   - [x] Phong
   - [x] Physical
   - [x] Standard
   - [x] SubSurface
   - [x] Toon
-  - [ ] ...
 - [ ] Geometries
   - [x] Box
   - [x] Circle
@@ -61,7 +94,6 @@ Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects
   - [x] Torus
   - [x] TorusKnot
   - [x] Tube
-  - [ ] ...
 - [ ] Post Processing
   - [x] EffectComposer
     - [x] BokehPass
@@ -71,5 +103,5 @@ Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects
     - [x] Renderpass
     - [x] SMAAPass
     - [x] UnrealBloomPass
-    - [ ] ...
-- [ ] ...
+    - [x] TiltShiftPass
+    - [x] ZoomBlurPass
