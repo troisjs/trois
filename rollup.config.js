@@ -9,6 +9,8 @@ const external = [
   'three',
   'three/examples/jsm/controls/OrbitControls.js',
   'three/examples/jsm/deprecated/Geometry.js',
+  'three/examples/jsm/lights/RectAreaLightUniformsLib.js',
+  'three/examples/jsm/helpers/RectAreaLightHelper.js',
   'three/examples/jsm/loaders/GLTFLoader.js',
   'three/examples/jsm/postprocessing/BokehPass.js',
   'three/examples/jsm/postprocessing/EffectComposer.js',
