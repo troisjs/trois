@@ -82,4 +82,5 @@ export default {
   render() {
     return h('canvas', {}, this.$slots.default());
   },
+  __hmrId: 'Renderer',
 };

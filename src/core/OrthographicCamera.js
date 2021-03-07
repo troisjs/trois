@@ -28,7 +28,6 @@ export default {
 
     this.three.camera = this.camera;
   },
-  render() {
-    return [];
-  },
+  render() { return []; },
+  __hmrId: 'OrthographicCamera',
 };

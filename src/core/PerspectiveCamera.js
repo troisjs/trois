@@ -30,4 +30,5 @@ export default {
     this.three.camera = this.camera;
   },
   render() { return []; },
+  __hmrId: 'PerspectiveCamera',
 };

@@ -2,6 +2,7 @@ import { watch } from 'vue';
 import { bindProp } from '../tools.js';
 
 export default {
+  name: 'Object3D',
   inject: ['three', 'scene', 'rendererComponent'],
   props: {
     position: { type: Object, default: { x: 0, y: 0, z: 0 } },
