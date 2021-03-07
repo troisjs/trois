@@ -3,10 +3,16 @@
 I wanted to code something similar to [react-three-fiber](https://github.com/react-spring/react-three-fiber) but for VueJS.
 
 <p>
-  <a href="https://troisjs.github.io"><img src="/screenshots/troisjs1.jpg" width="45%" /></a>
-  <a href="https://troisjs.github.io"><img src="/screenshots/troisjs3.jpg" width="45%" /></a>
-  <a href="https://troisjs.github.io"><img src="/screenshots/troisjs4.jpg" width="45%" /></a>
-  <a href="https://troisjs.github.io"><img src="/screenshots/troisjs5.jpg" width="45%" /></a>
+  <a href="https://troisjs.github.io/examples/demos/3.html"><img src="/screenshots/troisjs_1.jpg" width="30%" /></a>
+  <a href="https://troisjs.github.io/examples/demos/4.html"><img src="/screenshots/troisjs_3.jpg" width="30%" /></a>
+  <a href="https://troisjs.github.io/examples/demos/1.html"><img src="/screenshots/troisjs_4.jpg" width="30%" /></a>
+  <a href="https://troisjs.github.io/examples/demos/2.html"><img src="/screenshots/troisjs_5.jpg" width="30%" /></a>
+  <a href="https://troisjs.github.io/examples/materials/2.html"><img src="/screenshots/troisjs_2.jpg" width="30%" /></a>
+  <a href="https://troisjs.github.io/examples/loop.html"><img src="/screenshots/troisjs_6.jpg" width="30%" /></a>
+  <a href="https://troisjs.github.io/examples/shadows.html"><img src="/screenshots/troisjs_7.jpg" width="30%" /></a>
+  <a href="https://troisjs.github.io/examples/demos/5.html"><img src="/screenshots/troisjs_8.jpg" width="30%" /></a>
+  <a href="https://troisjs.github.io/examples/lights.html"><img src="/screenshots/troisjs_9.jpg" width="30%" /></a>
+
 </p>
 
 - 💻 Examples (wip) : https://troisjs.github.io/ ([sources](https://github.com/troisjs/troisjs.github.io/tree/master/src/components))
