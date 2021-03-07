@@ -35,4 +35,5 @@ export default {
   render() {
     return this.$slots.default ? this.$slots.default() : [];
   },
+  __hmrId: 'Object3D',
 };

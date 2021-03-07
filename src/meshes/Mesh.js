@@ -65,4 +65,5 @@ export default {
     if (this.geometry) this.geometry.dispose();
     if (this.material) this.material.dispose();
   },
+  __hmrId: 'Mesh',
 };
