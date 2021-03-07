@@ -21,8 +21,15 @@ export default {
       });
     });
 
-    if (this.helper) this.$parent.add(new RectAreaLightHelper(this.light));
+    if (this.helper) {
+      this.lightHelper = new RectAreaLightHelper(this.light);
+      this.$parent.add(this.lightHelper);
+    }
+
     this.initLight();
+  },
+  unmounted() {
+    if (this.lightHelper) this.$parent.remove(this.lightHelper);
   },
   __hmrId: 'RectAreaLight',
 };
