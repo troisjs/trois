@@ -1,3 +1,4 @@
+import { watch } from 'vue';
 import { bindProp } from '../tools.js';
 
 export default {
@@ -6,6 +7,7 @@ export default {
     position: Object,
     rotation: Object,
     scale: Object,
+    lookAt: { type: Object, default: null },
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
@@ -20,6 +22,9 @@ export default {
       bindProp(this, 'position', this.o3d.position);
       bindProp(this, 'rotation', this.o3d.rotation);
       bindProp(this, 'scale', this.o3d.scale);
+
+      if (this.lookAt) this.o3d.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z);
+      watch(() => this.lookAt, (v) => { this.o3d.lookAt(v.x, v.y, v.z); }, { deep: true });
 
       if (this.$parent.add) this.$parent.add(this.o3d);
     },
