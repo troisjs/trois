@@ -5,6 +5,7 @@ import { bindProp, setFromProp } from '../tools.js';
 
 export default {
   extends: Object3D,
+  name: 'Light',
   props: {
     color: { type: String, default: '#ffffff' },
     intensity: { type: Number, default: 1 },
@@ -40,9 +41,6 @@ export default {
       this.initObject3D(this.light);
       if (this.light.target) this.$parent.add(this.light.target);
     },
-  },
-  render() {
-    return [];
   },
   __hmrId: 'Light',
 };
