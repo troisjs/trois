@@ -2,6 +2,7 @@ import { h } from 'vue';
 import useThree from './useThree';
 
 export default {
+  name: 'Renderer',
   props: {
     antialias: Boolean,
     alpha: Boolean,

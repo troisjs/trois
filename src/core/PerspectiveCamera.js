@@ -1,8 +1,9 @@
-import { PerspectiveCamera, Vector3 } from 'three';
+import { PerspectiveCamera } from 'three';
 import { watch } from 'vue';
 import { bindProp } from '../tools.js';
 
 export default {
+  name: 'PerspectiveCamera',
   inject: ['three'],
   props: {
     aspect: { type: Number, default: 1 },
@@ -28,8 +29,5 @@ export default {
 
     this.three.camera = this.camera;
   },
-  render() {
-    return [];
-  },
-  __hmrId: 'PerspectiveCamera',
+  render() { return []; },
 };

@@ -2,6 +2,7 @@ import { Scene, Color } from 'three';
 import { watch } from 'vue';
 
 export default {
+  name: 'Scene',
   inject: ['three'],
   props: {
     id: String,

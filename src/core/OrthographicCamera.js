@@ -3,6 +3,7 @@ import { watch } from 'vue';
 import { bindProp } from '../tools.js';
 
 export default {
+  name: 'OrthographicCamera',
   inject: ['three'],
   props: {
     left: { type: Number, default: -1 },
@@ -30,5 +31,4 @@ export default {
   render() {
     return [];
   },
-  __hmrId: 'OrthographicCamera',
 };

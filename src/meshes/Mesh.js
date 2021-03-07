@@ -4,6 +4,7 @@ import Object3D from '../core/Object3D.js';
 
 export default {
   extends: Object3D,
+  name: 'Mesh',
   props: {
     castShadow: Boolean,
     receiveShadow: Boolean,
@@ -64,5 +65,4 @@ export default {
     if (this.geometry) this.geometry.dispose();
     if (this.material) this.material.dispose();
   },
-  __hmrId: 'Mesh',
 };
