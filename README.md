@@ -1,7 +1,5 @@
 # ✨ ThreeJS + VueJS 3 + ViteJS ⚡
 
-I wanted to code something similar to [react-three-fiber](https://github.com/react-spring/react-three-fiber) but for VueJS.
-
 <p>
   <a href="https://troisjs.github.io/examples/demos/3.html"><img src="/screenshots/troisjs_1.jpg" width="30%" /></a>
   <a href="https://troisjs.github.io/examples/demos/4.html"><img src="/screenshots/troisjs_3.jpg" width="30%" /></a>
@@ -18,6 +16,8 @@ I wanted to code something similar to [react-three-fiber](https://github.com/rea
 - 💻 Examples (wip) : https://troisjs.github.io/ ([sources](https://github.com/troisjs/troisjs.github.io/tree/master/src/components))
 - 📖 Doc (wip) : https://troisjs.github.io/guide/ ([repo](https://github.com/troisjs/troisjs.github.io))
 - 🚀 Codepen examples : https://codepen.io/collection/AxoWoz
+
+I wanted to code something similar to *react-three-fiber* but for VueJS.
 
 I started from scratch, I will rewrite some of my [WebGL demos](https://codepen.io/collection/AGZywR) to see if this little toy can do the job.
 
