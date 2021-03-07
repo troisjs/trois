@@ -29,6 +29,7 @@ export const TroisJSVuePlugin = {
 
       'AmbientLight',
       'DirectionalLight',
+      'HemisphereLight',
       'PointLight',
       'RectAreaLight',
       'SpotLight',
