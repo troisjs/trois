@@ -1,7 +1,6 @@
-import { MeshStandardMaterial, Vector2 } from 'three';
+import { MeshStandardMaterial } from 'three';
 import { watch } from 'vue';
-import { propsValues } from '../tools.js';
-import { bindProp } from '../tools.js';
+import { bindProp, propsValues } from '../tools.js';
 import Material from './Material';
 
 const props = {
@@ -14,7 +13,7 @@ const props = {
   envMapIntensity: { type: Number, default: 1 },
   lightMapIntensity: { type: Number, default: 1 },
   metalness: { type: Number, default: 0 },
-  normalScale: { type: Object, default: () => new Vector2(1, 1) },
+  normalScale: { type: Object, default: { x: 1, y: 1 } },
   roughness: { type: Number, default: 1 },
   refractionRatio: { type: Number, default: 0.98 },
   wireframe: Boolean,
@@ -39,7 +38,7 @@ export default {
           }
         });
       });
-      bindProp(this, 'normalScale', this.material.normalScale);
+      bindProp(this, 'normalScale', this.material);
     },
   },
   __hmrId: 'StandardMaterial',

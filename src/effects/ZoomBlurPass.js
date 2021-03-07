@@ -1,7 +1,7 @@
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import EffectPass from './EffectPass.js';
 import ZoomBlur from '../shaders/ZoomBlur.js';
-import { bindProp, bindPropValue } from '../tools.js';
+import { bindProp } from '../tools.js';
 
 export default {
   extends: EffectPass,
@@ -14,8 +14,8 @@ export default {
     this.passes.push(this.pass);
 
     const uniforms = this.uniforms = this.pass.uniforms;
-    bindProp(this, 'center', uniforms.center.value);
-    bindPropValue(this, 'strength', uniforms.strength);
+    bindProp(this, 'center', uniforms.center, 'value');
+    bindProp(this, 'strength', uniforms.strength, 'value');
   },
   __hmrId: 'ZoomBlurPass',
 };

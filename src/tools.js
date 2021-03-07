@@ -8,19 +8,16 @@ export function setFromProp(o, prop) {
   }
 };
 
-export function bindProp(comp, prop, object) {
-  const ref = toRef(comp, prop);
-  setFromProp(object, ref.value);
-  watch(ref, () => {
-    setFromProp(object, ref.value);
-  }, { deep: true });
-};
-
-export function bindPropValue(src, srcProp, dst, dstProp = 'value') {
-  dst[dstProp] = src[srcProp];
-  watch(() => src[srcProp], (value) => {
-    dst[dstProp] = value;
-  });
+export function bindProp(src, srcProp, dst, dstProp) {
+  if (!dstProp) dstProp = srcProp;
+  const ref = toRef(src, srcProp);
+  if (ref.value instanceof Object) {
+    setFromProp(dst[dstProp], ref.value);
+    watch(ref, (value) => { setFromProp(dst[dstProp], value); }, { deep: true });
+  } else {
+    if (ref.value) dst[dstProp] = src[srcProp];
+    watch(ref, (value) => { dst[dstProp] = value; });
+  }
 };
 
 export function propsValues(props, exclude) {

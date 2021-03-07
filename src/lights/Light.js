@@ -19,7 +19,7 @@ export default {
   methods: {
     initLight() {
       if (this.light.target) {
-        bindProp(this, 'target', this.light.target.position);
+        bindProp(this, 'target', this.light.target, 'position');
       }
 
       if (this.light.shadow) {

@@ -32,7 +32,7 @@ export default {
     initGem() {
       const cubeRT = new WebGLCubeRenderTarget(this.cubeRTSize, { format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter });
       this.cubeCamera = new CubeCamera(this.cubeCameraNear, this.cubeCameraFar, cubeRT);
-      bindProp(this, 'position', this.cubeCamera.position);
+      bindProp(this, 'position', this.cubeCamera);
       this.$parent.add(this.cubeCamera);
 
       this.material.side = FrontSide;
@@ -54,9 +54,9 @@ export default {
 
       this.meshBack = new TMesh(this.geometry, this.materialBack);
 
-      bindProp(this, 'position', this.meshBack.position);
-      bindProp(this, 'rotation', this.meshBack.rotation);
-      bindProp(this, 'scale', this.meshBack.scale);
+      bindProp(this, 'position', this.meshBack);
+      bindProp(this, 'rotation', this.meshBack);
+      bindProp(this, 'scale', this.meshBack);
       this.$parent.add(this.meshBack);
     },
     updateCubeRT() {

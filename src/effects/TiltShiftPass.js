@@ -3,7 +3,7 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { watch } from 'vue';
 import EffectPass from './EffectPass.js';
 import TiltShift from '../shaders/TiltShift.js';
-import { bindPropValue } from '../tools.js';
+import { bindProp } from '../tools.js';
 
 export default {
   extends: EffectPass,
@@ -28,8 +28,8 @@ export default {
     uniforms1.end = uniforms.end;
     uniforms1.texSize = uniforms.texSize;
 
-    bindPropValue(this, 'blurRadius', uniforms.blurRadius);
-    bindPropValue(this, 'gradientRadius', uniforms.gradientRadius);
+    bindProp(this, 'blurRadius', uniforms.blurRadius, 'value');
+    bindProp(this, 'gradientRadius', uniforms.gradientRadius, 'value');
 
     this.updateFocusLine();
     ['start', 'end'].forEach(p => {

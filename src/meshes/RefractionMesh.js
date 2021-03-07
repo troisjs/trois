@@ -30,7 +30,7 @@ export default {
     initMirrorMesh() {
       const cubeRT = new WebGLCubeRenderTarget(this.cubeRTSize, { mapping: CubeRefractionMapping, format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter });
       this.cubeCamera = new CubeCamera(this.cubeCameraNear, this.cubeCameraFar, cubeRT);
-      bindProp(this, 'position', this.cubeCamera.position);
+      bindProp(this, 'position', this.cubeCamera);
       this.$parent.add(this.cubeCamera);
 
       this.material.envMap = cubeRT.texture;
