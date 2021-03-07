@@ -5,6 +5,8 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var vue = require('vue');
 var three = require('three');
 var OrbitControls_js = require('three/examples/jsm/controls/OrbitControls.js');
+var RectAreaLightUniformsLib_js = require('three/examples/jsm/lights/RectAreaLightUniformsLib.js');
+var RectAreaLightHelper_js = require('three/examples/jsm/helpers/RectAreaLightHelper.js');
 var EffectComposer_js = require('three/examples/jsm/postprocessing/EffectComposer.js');
 var RenderPass_js = require('three/examples/jsm/postprocessing/RenderPass.js');
 var BokehPass_js = require('three/examples/jsm/postprocessing/BokehPass.js');
@@ -354,6 +356,7 @@ function useThree() {
 }
 
 var Renderer = {
+  name: 'Renderer',
   props: {
     antialias: Boolean,
     alpha: Boolean,
@@ -399,7 +402,8 @@ var Renderer = {
     };
 
     if (this.three.init(params)) {
-      this.three.renderer.shadowMap.enabled = this.shadow;
+      this.renderer = this.three.renderer;
+      this.renderer.shadowMap.enabled = this.shadow;
       if (this.three.composer) { this.animateC(); }
       else { this.animate(); }
     }
@@ -431,6 +435,7 @@ var Renderer = {
   render: function render() {
     return vue.h('canvas', {}, this.$slots.default());
   },
+  __hmrId: 'Renderer',
 };
 
 function setFromProp(o, prop) {
@@ -441,6 +446,17 @@ function setFromProp(o, prop) {
 
       o[key] = value;
     });
+  }
+}
+function bindProp(src, srcProp, dst, dstProp) {
+  if (!dstProp) { dstProp = srcProp; }
+  var ref = vue.toRef(src, srcProp);
+  if (ref.value instanceof Object) {
+    setFromProp(dst[dstProp], ref.value);
+    vue.watch(ref, function (value) { setFromProp(dst[dstProp], value); }, { deep: true });
+  } else {
+    if (ref.value) { dst[dstProp] = src[srcProp]; }
+    vue.watch(ref, function (value) { dst[dstProp] = value; });
   }
 }
 function propsValues(props, exclude) {
@@ -496,17 +512,8 @@ function getMatcapFormatString(format) {
   }
 }
 
-function useBindProp(comp, prop, object) {
-  if (comp[prop]) {
-    var ref = vue.toRef(comp, prop);
-    setFromProp(object, ref.value);
-    vue.watch(ref, function () {
-      setFromProp(object, ref.value);
-    }, { deep: true });
-  }
-}
-
 var OrthographicCamera = {
+  name: 'OrthographicCamera',
   inject: ['three'],
   props: {
     left: { type: Number, default: -1 },
@@ -516,13 +523,13 @@ var OrthographicCamera = {
     near: { type: Number, default: 0.1 },
     far: { type: Number, default: 2000 },
     zoom: { type: Number, default: 1 },
-    position: { type: [Object, three.Vector3], default: { x: 0, y: 0, z: 0 } },
+    position: { type: Object, default: { x: 0, y: 0, z: 0 } },
   },
   created: function created() {
     var this$1 = this;
 
     this.camera = new three.OrthographicCamera(this.left, this.right, this.top, this.bottom, this.near, this.far);
-    useBindProp(this, 'position', this.camera.position);
+    bindProp(this, 'position', this.camera);
 
     ['left', 'right', 'top', 'bottom', 'near', 'far', 'zoom'].forEach(function (p) {
       vue.watch(function () { return this$1[p]; }, function () {
@@ -533,27 +540,26 @@ var OrthographicCamera = {
 
     this.three.camera = this.camera;
   },
-  render: function render() {
-    return [];
-  },
+  render: function render() { return []; },
   __hmrId: 'OrthographicCamera',
 };
 
 var PerspectiveCamera = {
+  name: 'PerspectiveCamera',
   inject: ['three'],
   props: {
     aspect: { type: Number, default: 1 },
     far: { type: Number, default: 2000 },
     fov: { type: Number, default: 50 },
     near: { type: Number, default: 0.1 },
-    position: { type: [Object, three.Vector3], default: { x: 0, y: 0, z: 0 } },
-    lookAt: { type: [Object, three.Vector3], default: null },
+    position: { type: Object, default: { x: 0, y: 0, z: 0 } },
+    lookAt: { type: Object, default: null },
   },
   created: function created() {
     var this$1 = this;
 
     this.camera = new three.PerspectiveCamera(this.fov, this.aspect, this.near, this.far);
-    useBindProp(this, 'position', this.camera.position);
+    bindProp(this, 'position', this.camera);
 
     if (this.lookAt) { this.camera.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z); }
     vue.watch(function () { return this$1.lookAt; }, function (v) { this$1.camera.lookAt(v.x, v.y, v.z); }, { deep: true });
@@ -565,54 +571,63 @@ var PerspectiveCamera = {
       });
     });
 
-    // this.camera.updateProjectionMatrix();
     this.three.camera = this.camera;
   },
-  render: function render() {
-    return [];
-  },
+  render: function render() { return []; },
   __hmrId: 'PerspectiveCamera',
 };
 
-var Group = {
-  inject: {
-    three: 'three',
-    scene: 'scene',
-    group: { default: null },
-  },
+var Object3D = {
+  name: 'Object3D',
+  inject: ['three', 'scene', 'rendererComponent'],
   props: {
-    position: Object,
-    rotation: Object,
-    scale: Object,
+    position: { type: Object, default: { x: 0, y: 0, z: 0 } },
+    rotation: { type: Object, default: { x: 0, y: 0, z: 0 } },
+    scale: { type: Object, default: { x: 1, y: 1, z: 1 } },
+    lookAt: { type: Object, default: null },
   },
-  provide: function provide() {
-    return {
-      group: this.group,
-    };
-  },
-  created: function created() {
-    this.parent = this.group ? this.group : this.scene;
-
-    this.group = new three.Group();
-    useBindProp(this, 'position', this.group.position);
-    useBindProp(this, 'rotation', this.group.rotation);
-    useBindProp(this, 'scale', this.group.scale);
-
-    this.parent.add(this.group);
-  },
+  // can't use setup because it will not be used in sub components
+  // setup() {},
   unmounted: function unmounted() {
-    this.parent.remove(this.group);
+    if (this.$parent.remove) { this.$parent.remove(this.o3d); }
+  },
+  methods: {
+    initObject3D: function initObject3D(o3d) {
+      var this$1 = this;
+
+      this.o3d = o3d;
+
+      bindProp(this, 'position', this.o3d);
+      bindProp(this, 'rotation', this.o3d);
+      bindProp(this, 'scale', this.o3d);
+
+      // fix lookat.x
+      if (this.lookAt) { this.o3d.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z); }
+      vue.watch(function () { return this$1.lookAt; }, function (v) { this$1.o3d.lookAt(v.x, v.y, v.z); }, { deep: true });
+
+      if (this.$parent.add) { this.$parent.add(this.o3d); }
+    },
+    add: function add(o) { this.o3d.add(o); },
+    remove: function remove(o) { this.o3d.remove(o); },
   },
   render: function render() {
-    if (this.$slots.default) {
-      return this.$slots.default();
-    }
-    return [];
+    return this.$slots.default ? this.$slots.default() : [];
+  },
+  __hmrId: 'Object3D',
+};
+
+var Group = {
+  name: 'Group',
+  extends: Object3D,
+  created: function created() {
+    this.group = new three.Group();
+    this.initObject3D(this.group);
   },
   __hmrId: 'Group',
 };
 
 var Scene = {
+  name: 'Scene',
   inject: ['three'],
   props: {
     id: String,
@@ -635,23 +650,16 @@ var Scene = {
     }
   },
   methods: {
-    // add(o) {
-    //   this.scene.add(o);
-    // },
-    // remove(o) {
-    //   this.scene.remove(o);
-    // },
+    add: function add(o) { this.scene.add(o); },
+    remove: function remove(o) { this.scene.remove(o); },
   },
   render: function render() {
-    if (this.$slots.default) {
-      return this.$slots.default();
-    }
-    return [];
+    return this.$slots.default ? this.$slots.default() : [];
   },
+  __hmrId: 'Scene',
 };
 
 var Geometry = {
-  emits: ['ready'],
   inject: ['mesh'],
   props: {
     rotateX: Number,
@@ -664,26 +672,20 @@ var Geometry = {
     if (!this.mesh) {
       console.error('Missing parent Mesh');
     }
+
     this.watchProps = [];
     Object.entries(this.$props).forEach(function (e) { return this$1.watchProps.push(e[0]); });
-  },
-  beforeMount: function beforeMount() {
+
     this.createGeometry();
     this.rotateGeometry();
     this.mesh.setGeometry(this.geometry);
-  },
-  mounted: function mounted() {
+
     this.addWatchers();
   },
   unmounted: function unmounted() {
     this.geometry.dispose();
   },
   methods: {
-    rotateGeometry: function rotateGeometry() {
-      if (this.rotateX) { this.geometry.rotateX(this.rotateX); }
-      if (this.rotateY) { this.geometry.rotateY(this.rotateY); }
-      if (this.rotateZ) { this.geometry.rotateZ(this.rotateZ); }
-    },
     addWatchers: function addWatchers() {
       var this$1 = this;
 
@@ -693,6 +695,11 @@ var Geometry = {
         });
       });
     },
+    rotateGeometry: function rotateGeometry() {
+      if (this.rotateX) { this.geometry.rotateX(this.rotateX); }
+      if (this.rotateY) { this.geometry.rotateY(this.rotateY); }
+      if (this.rotateZ) { this.geometry.rotateZ(this.rotateZ); }
+    },
     refreshGeometry: function refreshGeometry() {
       var oldGeo = this.geometry;
       this.createGeometry();
@@ -701,9 +708,7 @@ var Geometry = {
       oldGeo.dispose();
     },
   },
-  render: function render() {
-    return [];
-  },
+  render: function render() { return []; },
 };
 
 var BoxGeometry = {
@@ -723,7 +728,7 @@ var BoxGeometry = {
       if (this.size) {
         w = this.size; h = this.size; d = this.size;
       }
-      this.geometry = new three.BoxBufferGeometry(w, h, d, this.widthSegments, this.heightSegments, this.depthSegments);
+      this.geometry = new three.BoxGeometry(w, h, d, this.widthSegments, this.heightSegments, this.depthSegments);
     },
   },
 };
@@ -738,7 +743,7 @@ var CircleGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new three.CircleBufferGeometry(this.radius, this.segments, this.thetaStart, this.thetaLength);
+      this.geometry = new three.CircleGeometry(this.radius, this.segments, this.thetaStart, this.thetaLength);
     },
   },
 };
@@ -756,7 +761,7 @@ var ConeGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new three.ConeBufferGeometry(this.radius, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
+      this.geometry = new three.ConeGeometry(this.radius, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
     },
   },
 };
@@ -775,7 +780,7 @@ var CylinderGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new three.CylinderBufferGeometry(this.radiusTop, this.radiusBottom, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
+      this.geometry = new three.CylinderGeometry(this.radiusTop, this.radiusBottom, this.height, this.radialSegments, this.heightSegments, this.openEnded, this.thetaStart, this.thetaLength);
     },
   },
 };
@@ -788,7 +793,7 @@ var DodecahedronGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new three.DodecahedronBufferGeometry(this.radius, this.detail);
+      this.geometry = new three.DodecahedronGeometry(this.radius, this.detail);
     },
   },
 };
@@ -801,7 +806,7 @@ var IcosahedronGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new three.IcosahedronBufferGeometry(this.radius, this.detail);
+      this.geometry = new three.IcosahedronGeometry(this.radius, this.detail);
     },
   },
 };
@@ -816,7 +821,7 @@ var LatheGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new three.LatheBufferGeometry(this.points, this.segments, this.phiStart, this.phiLength);
+      this.geometry = new three.LatheGeometry(this.points, this.segments, this.phiStart, this.phiLength);
     },
   },
 };
@@ -829,7 +834,7 @@ var OctahedronGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new three.OctahedronBufferGeometry(this.radius, this.detail);
+      this.geometry = new three.OctahedronGeometry(this.radius, this.detail);
     },
   },
 };
@@ -844,7 +849,7 @@ var PolyhedronGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new three.PolyhedronBufferGeometry(this.vertices, this.indices, this.radius, this.detail);
+      this.geometry = new three.PolyhedronGeometry(this.vertices, this.indices, this.radius, this.detail);
     },
   },
 };
@@ -861,7 +866,7 @@ var RingGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new three.RingBufferGeometry(this.innerRadius, this.outerRadius, this.thetaSegments, this.phiSegments, this.thetaStart, this.thetaLength);
+      this.geometry = new three.RingGeometry(this.innerRadius, this.outerRadius, this.thetaSegments, this.phiSegments, this.thetaStart, this.thetaLength);
     },
   },
 };
@@ -875,7 +880,7 @@ var SphereGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new three.SphereBufferGeometry(this.radius, this.widthSegments, this.heightSegments);
+      this.geometry = new three.SphereGeometry(this.radius, this.widthSegments, this.heightSegments);
     },
   },
 };
@@ -888,7 +893,7 @@ var TetrahedronGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new three.TetrahedronBufferGeometry(this.radius, this.detail);
+      this.geometry = new three.TetrahedronGeometry(this.radius, this.detail);
     },
   },
 };
@@ -904,7 +909,7 @@ var TorusGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new three.TorusBufferGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.arc);
+      this.geometry = new three.TorusGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.arc);
     },
   },
 };
@@ -921,7 +926,7 @@ var TorusKnotGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new three.TorusKnotBufferGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.p, this.q);
+      this.geometry = new three.TorusKnotGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.p, this.q);
     },
   },
 };
@@ -937,70 +942,51 @@ var TubeGeometry = {
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new three.TubeBufferGeometry(this.path, this.tubularSegments, this.radius, this.radiusSegments, this.closed);
+      this.geometry = new three.TubeGeometry(this.path, this.tubularSegments, this.radius, this.radiusSegments, this.closed);
     },
   },
 };
 
 var Light = {
-  inject: {
-    scene: 'scene',
-    group: { default: null },
-  },
+  extends: Object3D,
+  name: 'Light',
   props: {
-    color: {
-      type: String,
-      default: '#ffffff',
-    },
-    intensity: {
-      type: Number,
-      default: 1,
-    },
-    castShadow: {
-      type: Boolean,
-      default: false,
-    },
-    shadowMapSize: Object,
-    position: Object,
+    color: { type: String, default: '#ffffff' },
+    intensity: { type: Number, default: 1 },
+    castShadow: { type: Boolean, default: false },
+    shadowMapSize: { type: Object, default: { x: 512, y: 512 } },
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
-  created: function created() {
-    this.parent = this.group ? this.group : this.scene;
-  },
-  mounted: function mounted() {
-    var this$1 = this;
-
-    useBindProp(this, 'position', this.light.position);
-
-    if (this.light.target) {
-      useBindProp(this, 'target', this.light.target.position);
-    }
-
-    if (this.light.shadow) {
-      this.light.castShadow = this.castShadow;
-      setFromProp(this.light.shadow.mapSize, this.shadowMapSize);
-    }
-
-    ['color', 'intensity', 'castShadow'].forEach(function (p) {
-      vue.watch(function () { return this$1[p]; }, function () {
-        if (p === 'color') {
-          this$1.light.color = new three.Color(this$1.color);
-        } else {
-          this$1.light[p] = this$1[p];
-        }
-      });
-    });
-
-    this.parent.add(this.light);
-    if (this.light.target) { this.parent.add(this.light.target); }
-  },
   unmounted: function unmounted() {
-    this.parent.remove(this.light);
-    if (this.light.target) { this.parent.remove(this.light.target); }
+    if (this.light.target) { this.$parent.remove(this.light.target); }
   },
-  render: function render() {
-    return [];
+  methods: {
+    initLight: function initLight() {
+      var this$1 = this;
+
+      if (this.light.target) {
+        bindProp(this, 'target', this.light.target, 'position');
+      }
+
+      if (this.light.shadow) {
+        this.light.castShadow = this.castShadow;
+        setFromProp(this.light.shadow.mapSize, this.shadowMapSize);
+      }
+
+      ['color', 'intensity', 'castShadow'].forEach(function (p) {
+        vue.watch(function () { return this$1[p]; }, function () {
+          if (p === 'color') {
+            this$1.light.color = new three.Color(this$1.color);
+          } else {
+            this$1.light[p] = this$1[p];
+          }
+        });
+      });
+
+      this.initObject3D(this.light);
+      if (this.light.target) { this.$parent.add(this.light.target); }
+    },
   },
   __hmrId: 'Light',
 };
@@ -1009,6 +995,7 @@ var AmbientLight = {
   extends: Light,
   created: function created() {
     this.light = new three.AmbientLight(this.color, this.intensity);
+    this.initLight();
   },
   __hmrId: 'AmbientLight',
 };
@@ -1020,8 +1007,22 @@ var DirectionalLight = {
   },
   created: function created() {
     this.light = new three.DirectionalLight(this.color, this.intensity);
+    this.initLight();
   },
   __hmrId: 'DirectionalLight',
+};
+
+var HemisphereLight = {
+  extends: Light,
+  props: {
+    groundColor: { type: String, default: '#ffffff' },
+  },
+  created: function created() {
+    this.light = new three.HemisphereLight(this.color, this.groundColor, this.intensity);
+    bindProp(this, 'groundColor', this.light);
+    this.initLight();
+  },
+  __hmrId: 'HemisphereLight',
 };
 
 var PointLight = {
@@ -1038,29 +1039,50 @@ var PointLight = {
   },
   created: function created() {
     this.light = new three.PointLight(this.color, this.intensity, this.distance, this.decay);
+    this.initLight();
   },
   __hmrId: 'PointLight',
+};
+
+var RectAreaLight = {
+  extends: Light,
+  props: {
+    width: { type: Number, default: 10 },
+    height: { type: Number, default: 10 },
+    helper: Boolean,
+  },
+  created: function created() {
+    var this$1 = this;
+
+    RectAreaLightUniformsLib_js.RectAreaLightUniformsLib.init();
+    this.light = new three.RectAreaLight(this.color, this.intensity, this.width, this.height);
+
+    ['width', 'height'].forEach(function (p) {
+      vue.watch(function () { return this$1[p]; }, function () {
+        this$1.light[p] = this$1[p];
+      });
+    });
+
+    if (this.helper) {
+      this.lightHelper = new RectAreaLightHelper_js.RectAreaLightHelper(this.light);
+      this.$parent.add(this.lightHelper);
+    }
+
+    this.initLight();
+  },
+  unmounted: function unmounted() {
+    if (this.lightHelper) { this.$parent.remove(this.lightHelper); }
+  },
+  __hmrId: 'RectAreaLight',
 };
 
 var SpotLight = {
   extends: Light,
   props: {
-    angle: {
-      type: Number,
-      default: Math.PI / 3,
-    },
-    decay: {
-      type: Number,
-      default: 1,
-    },
-    distance: {
-      type: Number,
-      default: 0,
-    },
-    penumbra: {
-      type: Number,
-      default: 0,
-    },
+    angle: { type: Number, default: Math.PI / 3 },
+    decay: { type: Number, default: 1 },
+    distance: { type: Number, default: 0 },
+    penumbra: { type: Number, default: 0 },
     target: Object,
   },
   created: function created() {
@@ -1072,6 +1094,7 @@ var SpotLight = {
         this$1.light[p] = this$1[p];
       });
     });
+    this.initLight();
   },
   __hmrId: 'SpotLight',
 };
@@ -1079,7 +1102,6 @@ var SpotLight = {
 var Material = {
   inject: ['three', 'mesh'],
   props: {
-    id: String,
     color: { type: [String, Number], default: '#ffffff' },
     depthTest: { type: Boolean, default: true },
     depthWrite: { type: Boolean, default: true },
@@ -1095,18 +1117,15 @@ var Material = {
       material: this,
     };
   },
-  beforeMount: function beforeMount() {
+  created: function created() {
     this.createMaterial();
-    if (this.id) { this.three.materials[this.id] = this.material; }
     this.mesh.setMaterial(this.material);
-  },
-  mounted: function mounted() {
+
     this._addWatchers();
     if (this.addWatchers) { this.addWatchers(); }
   },
   unmounted: function unmounted() {
     this.material.dispose();
-    if (this.id) { delete this.three.materials[this.id]; }
   },
   methods: {
     setProp: function setProp(key, value, needsUpdate) {
@@ -1136,10 +1155,7 @@ var Material = {
     },
   },
   render: function render() {
-    if (this.$slots.default) {
-      return this.$slots.default();
-    }
-    return [];
+    return this.$slots.default ? this.$slots.default() : [];
   },
   __hmrId: 'Material',
 };
@@ -1148,7 +1164,7 @@ var BasicMaterial = {
   extends: Material,
   methods: {
     createMaterial: function createMaterial() {
-      this.material = new three.MeshBasicMaterial(propsValues(this.$props, ['id']));
+      this.material = new three.MeshBasicMaterial(propsValues(this.$props));
     },
   },
   __hmrId: 'BasicMaterial',
@@ -1158,7 +1174,7 @@ var LambertMaterial = {
   extends: Material,
   methods: {
     createMaterial: function createMaterial() {
-      this.material = new three.MeshLambertMaterial(propsValues(this.$props, ['id']));
+      this.material = new three.MeshLambertMaterial(propsValues(this.$props));
     },
   },
   __hmrId: 'LambertMaterial',
@@ -1173,7 +1189,7 @@ var MatcapMaterial = {
   methods: {
     createMaterial: function createMaterial() {
       var src = this.name ? getMatcapUrl(this.name) : this.src;
-      var opts = propsValues(this.$props, ['id', 'src', 'name']);
+      var opts = propsValues(this.$props, ['src', 'name']);
       opts.matcap = new three.TextureLoader().load(src);
       this.material = new three.MeshMatcapMaterial(opts);
     },
@@ -1192,7 +1208,7 @@ var PhongMaterial = {
   },
   methods: {
     createMaterial: function createMaterial() {
-      this.material = new three.MeshPhongMaterial(propsValues(this.$props, ['id']));
+      this.material = new three.MeshPhongMaterial(propsValues(this.$props));
     },
     addWatchers: function addWatchers() {
       var this$1 = this;
@@ -1221,7 +1237,7 @@ var props = {
   envMapIntensity: { type: Number, default: 1 },
   lightMapIntensity: { type: Number, default: 1 },
   metalness: { type: Number, default: 0 },
-  normalScale: { type: Object, default: function () { return new three.Vector2(1, 1); } },
+  normalScale: { type: Object, default: { x: 1, y: 1 } },
   roughness: { type: Number, default: 1 },
   refractionRatio: { type: Number, default: 0.98 },
   wireframe: Boolean,
@@ -1232,7 +1248,7 @@ var StandardMaterial = {
   props: props,
   methods: {
     createMaterial: function createMaterial() {
-      this.material = new three.MeshStandardMaterial(propsValues(this.$props, ['id', 'normalScale']));
+      this.material = new three.MeshStandardMaterial(propsValues(this.$props, ['normalScale']));
     },
     addWatchers: function addWatchers() {
       var this$1 = this;
@@ -1248,7 +1264,7 @@ var StandardMaterial = {
           }
         });
       });
-      useBindProp(this, 'normalScale', this.material.normalScale);
+      bindProp(this, 'normalScale', this.material);
     },
   },
   __hmrId: 'StandardMaterial',
@@ -1258,7 +1274,7 @@ var PhysicalMaterial = {
   extends: StandardMaterial,
   methods: {
     createMaterial: function createMaterial() {
-      this.material = new three.MeshPhysicalMaterial(propsValues(this.$props, ['id']));
+      this.material = new three.MeshPhysicalMaterial(propsValues(this.$props));
     },
   },
   __hmrId: 'PhysicalMaterial',
@@ -1308,22 +1324,17 @@ var SubsurfaceScatteringShader = {
 var ShaderMaterial = {
   inject: ['three', 'mesh'],
   props: {
-    id: String,
     uniforms: Object,
     vertexShader: String,
     fragmentShader: String,
   },
-  beforeMount: function beforeMount() {
+  created: function created() {
     this.createMaterial();
-    if (this.id) { this.three.materials[this.id] = this.material; }
     this.mesh.setMaterial(this.material);
-  },
-  mounted: function mounted() {
     if (this.addWatchers) { this.addWatchers(); }
   },
   unmounted: function unmounted() {
     this.material.dispose();
-    if (this.id) { delete this.three.materials[this.id]; }
   },
   render: function render() {
     return [];
@@ -1359,7 +1370,7 @@ var SubSurfaceMaterial = {
           if (key === 'color') { _key = 'diffuse'; }
           _value = new three.Color(value);
         }
-        if (!['id', 'transparent', 'vertexColors'].includes(key)) {
+        if (!['transparent', 'vertexColors'].includes(key)) {
           uniforms[_key].value = _value;
         }
       });
@@ -1378,7 +1389,7 @@ var ToonMaterial = {
   extends: Material,
   methods: {
     createMaterial: function createMaterial() {
-      this.material = new three.MeshToonMaterial(propsValues(this.$props, ['id']));
+      this.material = new three.MeshToonMaterial(propsValues(this.$props));
     },
   },
   __hmrId: 'ToonMaterial',
@@ -1388,11 +1399,19 @@ var Texture = {
   inject: ['material'],
   emits: ['loaded'],
   props: {
+    id: { type: String, default: 'map' },
     src: String,
     onLoad: Function,
     onProgress: Function,
     onError: Function,
-    id: { type: String, default: 'map' },
+    mapping: { type: Number, default: three.UVMapping },
+    wrapS: { type: Number, default: three.ClampToEdgeWrapping },
+    wrapT: { type: Number, default: three.ClampToEdgeWrapping },
+    magFilter: { type: Number, default: three.LinearFilter },
+    minFilter: { type: Number, default: three.LinearMipmapLinearFilter },
+    repeat: { type: Object, default: { x: 1, y: 1 } },
+    rotation: { type: Number, default: 0 },
+    center: { type: Object, default: { x: 0, y: 0 } },
   },
   created: function created() {
     var this$1 = this;
@@ -1406,7 +1425,13 @@ var Texture = {
   },
   methods: {
     createTexture: function createTexture() {
+      var this$1 = this;
+
       this.texture = new three.TextureLoader().load(this.src, this.onLoaded, this.onProgress, this.onError);
+      var wathProps = ['mapping', 'wrapS', 'wrapT', 'magFilter', 'minFilter', 'repeat', 'rotation', 'rotation', 'center'];
+      wathProps.forEach(function (prop) {
+        bindProp(this$1, prop, this$1.texture);
+      });
     },
     refreshTexture: function refreshTexture() {
       this.createTexture();
@@ -1417,9 +1442,7 @@ var Texture = {
       this.$emit('loaded');
     },
   },
-  render: function render() {
-    return [];
-  },
+  render: function render() { return []; },
 };
 
 var CubeTexture = {
@@ -1475,18 +1498,9 @@ var CubeTexture = {
 };
 
 var Mesh = {
-  inject: {
-    three: 'three',
-    scene: 'scene',
-    rendererComponent: 'rendererComponent',
-    group: { default: null },
-  },
-  emits: ['ready'],
+  extends: Object3D,
+  name: 'Mesh',
   props: {
-    materialId: String,
-    position: Object,
-    rotation: Object,
-    scale: Object,
     castShadow: Boolean,
     receiveShadow: Boolean,
     onHover: Function,
@@ -1494,33 +1508,24 @@ var Mesh = {
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
-  created: function created() {
-    this.parent = this.group ? this.group : this.scene;
-  },
   provide: function provide() {
     return {
       mesh: this,
     };
   },
   mounted: function mounted() {
-    if (this.geometry && !this.mesh) { this.initMesh(); }
-  },
-  unmounted: function unmounted() {
-    if (this.mesh) {
-      this.three.removeIntersectObject(this.mesh);
-      this.parent.remove(this.mesh);
-    }
-    if (this.geometry) { this.geometry.dispose(); }
-    if (this.material && !this.materialId) { this.material.dispose(); }
+    if (!this.mesh && !this.loading) { this.initMesh(); }
   },
   methods: {
     initMesh: function initMesh() {
       var this$1 = this;
 
-      if (!this.material && this.materialId) {
-        this.material = this.three.materials[this.materialId];
-      }
       this.mesh = new three.Mesh(this.geometry, this.material);
+
+      ['castShadow', 'receiveShadow'].forEach(function (p) {
+        this$1.mesh[p] = this$1[p];
+        vue.watch(function () { return this$1[p]; }, function () { this$1.mesh[p] = this$1[p]; });
+      });
 
       if (this.onHover) {
         this.mesh.onHover = function (over) { this$1.onHover({ component: this$1, over: over }); };
@@ -1532,25 +1537,7 @@ var Mesh = {
         this.three.addIntersectObject(this.mesh);
       }
 
-      this.bindProps();
-      this.parent.add(this.mesh);
-      this.$emit('ready');
-    },
-    bindProps: function bindProps() {
-      var this$1 = this;
-
-      useBindProp(this, 'position', this.mesh.position);
-      useBindProp(this, 'rotation', this.mesh.rotation);
-      useBindProp(this, 'scale', this.mesh.scale);
-
-      ['castShadow', 'receiveShadow'].forEach(function (p) {
-        this$1.mesh[p] = this$1[p];
-        vue.watch(function () { return this$1[p]; }, function () { this$1.mesh[p] = this$1[p]; });
-      });
-
-      vue.watch(function () { return this$1.materialId; }, function () {
-        this$1.mesh.material = this$1.three.materials[this$1.materialId];
-      });
+      this.initObject3D(this.mesh);
     },
     setGeometry: function setGeometry(geometry) {
       this.geometry = geometry;
@@ -1567,11 +1554,13 @@ var Mesh = {
       oldGeo.dispose();
     },
   },
-  render: function render() {
-    if (this.$slots.default) {
-      return this.$slots.default();
+  unmounted: function unmounted() {
+    if (this.mesh) {
+      this.three.removeIntersectObject(this.mesh);
     }
-    return [];
+    // for predefined mesh (geometry and material are not unmounted)
+    if (this.geometry) { this.geometry.dispose(); }
+    if (this.material) { this.material.dispose(); }
   },
   __hmrId: 'Mesh',
 };
@@ -1960,6 +1949,11 @@ var TextProps = {
 var Text = {
   extends: Mesh,
   props: Object.assign({}, TextProps),
+  data: function data() {
+    return {
+      loading: true,
+    };
+  },
   created: function created() {
     var this$1 = this;
 
@@ -1976,6 +1970,7 @@ var Text = {
 
     var loader = new three.FontLoader();
     loader.load(this.fontSrc, function (font) {
+      this$1.loading = false;
       this$1.font = font;
       this$1.createGeometry();
       this$1.initMesh();
@@ -2066,6 +2061,7 @@ var Tube = {
   extends: Mesh,
   props: {
     path: three.Curve,
+    points: Array,
     tubularSegments: { type: Number, default: 64 },
     radius: { type: Number, default: 1 },
     radialSegments: { type: Number, default: 8 },
@@ -2075,21 +2071,83 @@ var Tube = {
     var this$1 = this;
 
     this.createGeometry();
-
-    var watchProps = ['path', 'tubularSegments', 'radius', 'radialSegments', 'closed'];
+    var watchProps = ['tubularSegments', 'radius', 'radialSegments', 'closed'];
     watchProps.forEach(function (prop) {
-      vue.watch(function () { return this$1[prop]; }, function () {
+      vue.watch(function () { return this$1[prop]; }, function (v) {
         this$1.refreshGeometry();
       });
     });
+    // watch(() => this.points, () => {
+    //   this.updatePoints();
+    // });
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new three.TubeBufferGeometry(this.path, this.tubularSegments, this.radius, this.radialSegments, this.closed);
+      var curve;
+      if (this.points) {
+        curve = new three.CatmullRomCurve3(this.points);
+      } else if (this.path) {
+        curve = this.path;
+      } else {
+        console.error('Missing path curve or points.');
+      }
+      this.geometry = new three.TubeGeometry(curve, this.tubularSegments, this.radius, this.radialSegments, this.closed);
+    },
+    updateCurve: function updateCurve() {
+      updateTubeGeometryPoints(this.geometry, this.points);
     },
   },
   __hmrId: 'Tube',
 };
+
+function updateTubeGeometryPoints(tube, points) {
+  var curve = new three.CatmullRomCurve3(points);
+  var ref = tube.parameters;
+  var radialSegments = ref.radialSegments;
+  var radius = ref.radius;
+  var tubularSegments = ref.tubularSegments;
+  var closed = ref.closed;
+  var frames = curve.computeFrenetFrames(tubularSegments, closed);
+  tube.tangents = frames.tangents;
+  tube.normals = frames.normals;
+  tube.binormals = frames.binormals;
+  tube.parameters.path = curve;
+
+  var pArray = tube.attributes.position.array;
+  var nArray = tube.attributes.normal.array;
+  var normal = new three.Vector3();
+  var P;
+
+  for (var i = 0; i < tubularSegments; i++) {
+    updateSegment(i);
+  }
+  updateSegment(tubularSegments);
+
+  tube.attributes.position.needsUpdate = true;
+  tube.attributes.normal.needsUpdate = true;
+
+  function updateSegment(i) {
+    P = curve.getPointAt(i / tubularSegments, P);
+    var N = frames.normals[i];
+    var B = frames.binormals[i];
+    for (var j = 0; j <= radialSegments; j++) {
+      var v = j / radialSegments * Math.PI * 2;
+      var sin = Math.sin(v);
+      var cos = -Math.cos(v);
+      normal.x = (cos * N.x + sin * B.x);
+      normal.y = (cos * N.y + sin * B.y);
+      normal.z = (cos * N.z + sin * B.z);
+      normal.normalize();
+      var index = (i * (radialSegments + 1) + j) * 3;
+      nArray[index] = normal.x;
+      nArray[index + 1] = normal.y;
+      nArray[index + 2] = normal.z;
+      pArray[index] = P.x + radius * normal.x;
+      pArray[index + 1] = P.y + radius * normal.y;
+      pArray[index + 2] = P.z + radius * normal.z;
+    }
+  }
+}
 
 var Gem = {
   extends: Mesh,
@@ -2106,15 +2164,15 @@ var Gem = {
   },
   unmounted: function unmounted() {
     this.three.offBeforeRender(this.updateCubeRT);
-    if (this.meshBack) { this.parent.remove(this.meshBack); }
+    if (this.meshBack) { this.$parent.remove(this.meshBack); }
     if (this.materialBack) { this.materialBack.dispose(); }
   },
   methods: {
     initGem: function initGem() {
       var cubeRT = new three.WebGLCubeRenderTarget(this.cubeRTSize, { format: three.RGBFormat, generateMipmaps: true, minFilter: three.LinearMipmapLinearFilter });
       this.cubeCamera = new three.CubeCamera(this.cubeCameraNear, this.cubeCameraFar, cubeRT);
-      useBindProp(this, 'position', this.cubeCamera.position);
-      this.parent.add(this.cubeCamera);
+      bindProp(this, 'position', this.cubeCamera);
+      this.$parent.add(this.cubeCamera);
 
       this.material.side = three.FrontSide;
       this.material.envMap = cubeRT.texture;
@@ -2135,10 +2193,10 @@ var Gem = {
 
       this.meshBack = new three.Mesh(this.geometry, this.materialBack);
 
-      useBindProp(this, 'position', this.meshBack.position);
-      useBindProp(this, 'rotation', this.meshBack.rotation);
-      useBindProp(this, 'scale', this.meshBack.scale);
-      this.parent.add(this.meshBack);
+      bindProp(this, 'position', this.meshBack);
+      bindProp(this, 'rotation', this.meshBack);
+      bindProp(this, 'scale', this.meshBack);
+      this.$parent.add(this.meshBack);
     },
     updateCubeRT: function updateCubeRT() {
       this.mesh.visible = false;
@@ -2220,61 +2278,37 @@ var Image = {
 };
 
 var InstancedMesh = {
-  inject: {
-    three: 'three',
-    scene: 'scene',
-    group: { default: null },
-  },
+  extends: Object3D,
   props: {
-    materialId: String,
-    count: Number,
-    position: Object,
     castShadow: Boolean,
     receiveShadow: Boolean,
+    count: Number,
   },
   provide: function provide() {
     return {
       mesh: this,
     };
   },
-  created: function created() {
-    this.parent = this.group ? this.group : this.scene;
-  },
   beforeMount: function beforeMount() {
     if (!this.$slots.default) {
       console.error('Missing Geometry');
     }
   },
-  mounted: function mounted() {
+  created: function created() {
     this.initMesh();
-  },
-  unmounted: function unmounted() {
-    this.parent.remove(this.mesh);
   },
   methods: {
     initMesh: function initMesh() {
       var this$1 = this;
 
-      if (!this.material && this.materialId) {
-        this.material = this.three.materials[this.materialId];
-      }
-
       this.mesh = new three.InstancedMesh(this.geometry, this.material, this.count);
-
-      useBindProp(this, 'position', this.mesh.position);
-      useBindProp(this, 'rotation', this.mesh.rotation);
-      useBindProp(this, 'scale', this.mesh.scale);
 
       ['castShadow', 'receiveShadow'].forEach(function (p) {
         this$1.mesh[p] = this$1[p];
         vue.watch(function () { return this$1[p]; }, function () { this$1.mesh[p] = this$1[p]; });
       });
 
-      // watch(() => this.materialId, () => {
-      //   this.mesh.material = this.three.materials[this.materialId];
-      // });
-
-      this.parent.add(this.mesh);
+      this.initObject3D(this.mesh);
     },
     setGeometry: function setGeometry(geometry) {
       this.geometry = geometry;
@@ -2284,9 +2318,6 @@ var InstancedMesh = {
       this.material = material;
       if (this.mesh) { this.mesh.material = material; }
     },
-  },
-  render: function render() {
-    return this.$slots.default();
   },
   __hmrId: 'InstancedMesh',
 };
@@ -2306,13 +2337,13 @@ var MirrorMesh = {
   },
   unmounted: function unmounted() {
     this.three.offBeforeRender(this.updateCubeRT);
-    if (this.cubeCamera) { this.parent.remove(this.cubeCamera); }
+    if (this.cubeCamera) { this.$parent.remove(this.cubeCamera); }
   },
   methods: {
     initMirrorMesh: function initMirrorMesh() {
       var cubeRT = new three.WebGLCubeRenderTarget(this.cubeRTSize, { format: three.RGBFormat, generateMipmaps: true, minFilter: three.LinearMipmapLinearFilter });
       this.cubeCamera = new three.CubeCamera(this.cubeCameraNear, this.cubeCameraFar, cubeRT);
-      this.parent.add(this.cubeCamera);
+      this.$parent.add(this.cubeCamera);
 
       this.material.envMap = cubeRT.texture;
       this.material.needsUpdate = true;
@@ -2342,14 +2373,14 @@ var RefractionMesh = {
   },
   unmounted: function unmounted() {
     this.three.offBeforeRender(this.updateCubeRT);
-    if (this.cubeCamera) { this.parent.remove(this.cubeCamera); }
+    if (this.cubeCamera) { this.$parent.remove(this.cubeCamera); }
   },
   methods: {
     initMirrorMesh: function initMirrorMesh() {
       var cubeRT = new three.WebGLCubeRenderTarget(this.cubeRTSize, { mapping: three.CubeRefractionMapping, format: three.RGBFormat, generateMipmaps: true, minFilter: three.LinearMipmapLinearFilter });
       this.cubeCamera = new three.CubeCamera(this.cubeCameraNear, this.cubeCameraFar, cubeRT);
-      useBindProp(this, 'position', this.cubeCamera.position);
-      this.parent.add(this.cubeCamera);
+      bindProp(this, 'position', this.cubeCamera);
+      this.$parent.add(this.cubeCamera);
 
       this.material.envMap = cubeRT.texture;
       this.material.refractionRatio = this.refractionRatio;
@@ -2365,38 +2396,30 @@ var RefractionMesh = {
 };
 
 var Sprite = {
-  emits: ['ready', 'loaded'],
-  inject: {
-    three: 'three',
-    scene: 'scene',
-    group: { default: null },
-  },
+  extends: Object3D,
+  emits: ['loaded'],
   props: {
     src: String,
-    position: Object,
-    scale: Object,
+  },
+  data: function data() {
+    return {
+      loading: true,
+    };
   },
   created: function created() {
-    this.parent = this.group ? this.group : this.scene;
-  },
-  mounted: function mounted() {
     this.texture = new three.TextureLoader().load(this.src, this.onLoaded);
     this.material = new three.SpriteMaterial({ map: this.texture });
     this.sprite = new three.Sprite(this.material);
     this.geometry = this.sprite.geometry;
-    useBindProp(this, 'position', this.sprite.position);
-    useBindProp(this, 'scale', this.sprite.scale);
-
-    this.parent.add(this.sprite);
-    this.$emit('ready');
+    this.initObject3D(this.sprite);
   },
   unmounted: function unmounted() {
     this.texture.dispose();
     this.material.dispose();
-    this.parent.remove(this.sprite);
   },
   methods: {
     onLoaded: function onLoaded() {
+      this.loading = false;
       this.updateUV();
       this.$emit('loaded');
     },
@@ -2419,9 +2442,6 @@ var Sprite = {
       positions[15] = -x; positions[16] = y;
       this.geometry.attributes.position.needsUpdate = true;
     },
-  },
-  render: function render() {
-    return [];
   },
   __hmrId: 'Sprite',
 };
@@ -2660,17 +2680,6 @@ var TiltShift = {
   fragmentShader: "\n    uniform sampler2D tDiffuse;\n    uniform float blurRadius;\n    uniform float gradientRadius;\n    uniform vec2 start;\n    uniform vec2 end;\n    uniform vec2 delta;\n    uniform vec2 texSize;\n    varying vec2 vUv;\n\n    float random(vec3 scale, float seed) {\n      /* use the fragment position for a different seed per-pixel */\n      return fract(sin(dot(gl_FragCoord.xyz + seed, scale)) * 43758.5453 + seed);\n    }\n\n    void main() {\n      vec4 color = vec4(0.0);\n      float total = 0.0;\n\n      /* randomize the lookup values to hide the fixed number of samples */\n      float offset = random(vec3(12.9898, 78.233, 151.7182), 0.0);\n\n      vec2 normal = normalize(vec2(start.y - end.y, end.x - start.x));\n      float radius = smoothstep(0.0, 1.0, abs(dot(vUv * texSize - start, normal)) / gradientRadius) * blurRadius;\n      for (float t = -30.0; t <= 30.0; t++) {\n          float percent = (t + offset - 0.5) / 30.0;\n          float weight = 1.0 - abs(percent);\n          vec4 texel = texture2D(tDiffuse, vUv + delta / texSize * percent * radius);\n          // vec4 texel2 = texture2D(tDiffuse, vUv + vec2(-delta.y, delta.x) / texSize * percent * radius);\n\n          /* switch to pre-multiplied alpha to correctly blur transparent images */\n          texel.rgb *= texel.a;\n          // texel2.rgb *= texel2.a;\n\n          color += texel * weight;\n          total += 2.0 * weight;\n      }\n\n      gl_FragColor = color / total;\n\n      /* switch back from pre-multiplied alpha */\n      gl_FragColor.rgb /= gl_FragColor.a + 0.00001;\n    }\n  ",
 };
 
-function useBindPropValue(src, srcProp, dst, dstProp) {
-  if ( dstProp === void 0 ) dstProp = 'value';
-
-  if (src[srcProp]) {
-    dst[dstProp] = src[srcProp];
-    vue.watch(function () { return src[srcProp]; }, function (value) {
-      dst[dstProp] = value;
-    });
-  }
-}
-
 var TiltShiftPass = {
   extends: EffectPass,
   props: {
@@ -2696,8 +2705,8 @@ var TiltShiftPass = {
     uniforms1.end = uniforms.end;
     uniforms1.texSize = uniforms.texSize;
 
-    useBindPropValue(this, 'blurRadius', uniforms.blurRadius);
-    useBindPropValue(this, 'gradientRadius', uniforms.gradientRadius);
+    bindProp(this, 'blurRadius', uniforms.blurRadius, 'value');
+    bindProp(this, 'gradientRadius', uniforms.gradientRadius, 'value');
 
     this.updateFocusLine();
     ['start', 'end'].forEach(function (p) {
@@ -2764,8 +2773,8 @@ var ZoomBlurPass = {
     this.passes.push(this.pass);
 
     var uniforms = this.uniforms = this.pass.uniforms;
-    useBindProp(this, 'center', uniforms.center.value);
-    useBindPropValue(this, 'strength', uniforms.strength);
+    bindProp(this, 'center', uniforms.center, 'value');
+    bindProp(this, 'strength', uniforms.strength, 'value');
   },
   __hmrId: 'ZoomBlurPass',
 };
@@ -2795,7 +2804,9 @@ var TROIS = /*#__PURE__*/Object.freeze({
   TubeGeometry: TubeGeometry,
   AmbientLight: AmbientLight,
   DirectionalLight: DirectionalLight,
+  HemisphereLight: HemisphereLight,
   PointLight: PointLight,
+  RectAreaLight: RectAreaLight,
   SpotLight: SpotLight,
   BasicMaterial: BasicMaterial,
   LambertMaterial: LambertMaterial,
@@ -2842,6 +2853,7 @@ var TROIS = /*#__PURE__*/Object.freeze({
   UnrealBloomPass: UnrealBloomPass,
   ZoomBlurPass: ZoomBlurPass,
   setFromProp: setFromProp,
+  bindProp: bindProp,
   propsValues: propsValues,
   lerp: lerp,
   lerpv2: lerpv2,
@@ -2878,7 +2890,9 @@ var TroisJSVuePlugin = {
 
       'AmbientLight',
       'DirectionalLight',
+      'HemisphereLight',
       'PointLight',
+      'RectAreaLight',
       'SpotLight',
 
       'BasicMaterial',
@@ -2940,6 +2954,10 @@ var TroisJSVuePlugin = {
   },
 };
 
+function createApp(params) {
+  return vue.createApp(params).use(TroisJSVuePlugin);
+}
+
 exports.AmbientLight = AmbientLight;
 exports.BasicMaterial = BasicMaterial;
 exports.BokehPass = BokehPass;
@@ -2962,6 +2980,7 @@ exports.FilmPass = FilmPass;
 exports.Gem = Gem;
 exports.Group = Group;
 exports.HalftonePass = HalftonePass;
+exports.HemisphereLight = HemisphereLight;
 exports.Icosahedron = Icosahedron;
 exports.IcosahedronGeometry = IcosahedronGeometry;
 exports.Image = Image;
@@ -2982,6 +3001,7 @@ exports.Plane = Plane;
 exports.PointLight = PointLight;
 exports.Polyhedron = Polyhedron;
 exports.PolyhedronGeometry = PolyhedronGeometry;
+exports.RectAreaLight = RectAreaLight;
 exports.RefractionMesh = RefractionMesh;
 exports.RenderPass = RenderPass;
 exports.Renderer = Renderer;
@@ -3010,6 +3030,8 @@ exports.Tube = Tube;
 exports.TubeGeometry = TubeGeometry;
 exports.UnrealBloomPass = UnrealBloomPass;
 exports.ZoomBlurPass = ZoomBlurPass;
+exports.bindProp = bindProp;
+exports.createApp = createApp;
 exports.getMatcapUrl = getMatcapUrl;
 exports.lerp = lerp;
 exports.lerpv2 = lerpv2;
