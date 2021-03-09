@@ -36,8 +36,9 @@ export default {
       }
       this.geometry = new TubeGeometry(curve, this.tubularSegments, this.radius, this.radialSegments, this.closed);
     },
-    updateCurve() {
-      updateTubeGeometryPoints(this.geometry, this.points);
+    // update curve points (without using prop, faster)
+    updateCurve(points) {
+      updateTubeGeometryPoints(this.geometry, points);
     },
   },
   __hmrId: 'Tube',
