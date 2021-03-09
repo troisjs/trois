@@ -2077,9 +2077,9 @@ var Tube = {
         this$1.refreshGeometry();
       });
     });
-    // watch(() => this.points, () => {
-    //   this.updatePoints();
-    // });
+    vue.watch(function () { return this$1.points; }, function () {
+      updateTubeGeometryPoints(this$1.geometry, this$1.points);
+    });
   },
   methods: {
     createGeometry: function createGeometry() {
@@ -2093,8 +2093,9 @@ var Tube = {
       }
       this.geometry = new three.TubeGeometry(curve, this.tubularSegments, this.radius, this.radialSegments, this.closed);
     },
-    updateCurve: function updateCurve() {
-      updateTubeGeometryPoints(this.geometry, this.points);
+    // update curve points (without using prop, faster)
+    updateCurve: function updateCurve(points) {
+      updateTubeGeometryPoints(this.geometry, points);
     },
   },
   __hmrId: 'Tube',

@@ -1,6 +1,6 @@
 {
   "name": "troisjs",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

@@ -20,9 +20,9 @@ export default {
         this.refreshGeometry();
       });
     });
-    // watch(() => this.points, () => {
-    //   this.updatePoints();
-    // });
+    watch(() => this.points, () => {
+      updateTubeGeometryPoints(this.geometry, this.points);
+    });
   },
   methods: {
     createGeometry() {
