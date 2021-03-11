@@ -27,7 +27,15 @@ export default {
       if (this.lookAt) this.o3d.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z);
       watch(() => this.lookAt, (v) => { this.o3d.lookAt(v.x, v.y, v.z); }, { deep: true });
 
-      if (this.$parent.add) this.$parent.add(this.o3d);
+      // traverse parents until we find something we can add to
+      let parent = this.$parent;
+      while (parent) {
+        if (parent.add) {
+          parent.add(this.o3d);
+          break;
+        }
+        parent = parent.$parent;
+      }
     },
     add(o) { this.o3d.add(o); },
     remove(o) { this.o3d.remove(o); },
