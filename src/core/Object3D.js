@@ -13,7 +13,15 @@ export default {
   // can't use setup because it will not be used in sub components
   // setup() {},
   unmounted() {
-    if (this.$parent.remove) this.$parent.remove(this.o3d);
+    // traverse ancestors until we find something we can remove from
+    let parent = this.$parent;
+    while (parent) {
+      if (parent.remove) {
+        parent.remove(this.o3d);
+        break;
+      }
+      parent = parent.$parent;
+    }
   },
   methods: {
     initObject3D(o3d) {
@@ -27,7 +35,7 @@ export default {
       if (this.lookAt) this.o3d.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z);
       watch(() => this.lookAt, (v) => { this.o3d.lookAt(v.x, v.y, v.z); }, { deep: true });
 
-      // traverse parents until we find something we can add to
+      // traverse ancestors until we find something we can add to
       let parent = this.$parent;
       while (parent) {
         if (parent.add) {
