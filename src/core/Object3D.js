@@ -13,7 +13,7 @@ export default {
   // can't use setup because it will not be used in sub components
   // setup() {},
   unmounted() {
-    if (this.$parent.remove) this.$parent.remove(this.o3d);
+    if (this._parent) this._parent.remove(this.o3d);
   },
   methods: {
     initObject3D(o3d) {
@@ -23,11 +23,20 @@ export default {
       bindProp(this, 'rotation', this.o3d);
       bindProp(this, 'scale', this.o3d);
 
-      // fix lookat.x
+      // TODO : fix lookat.x
       if (this.lookAt) this.o3d.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z);
       watch(() => this.lookAt, (v) => { this.o3d.lookAt(v.x, v.y, v.z); }, { deep: true });
 
-      if (this.$parent.add) this.$parent.add(this.o3d);
+      let parent = this.$parent;
+      while (parent) {
+        if (parent.add) {
+          parent.add(this.o3d);
+          this._parent = parent;
+          break;
+        }
+        parent = parent.$parent;
+      }
+      if (!this._parent) console.error('Missing parent (Scene, Group...)');
     },
     add(o) { this.o3d.add(o); },
     remove(o) { this.o3d.remove(o); },
