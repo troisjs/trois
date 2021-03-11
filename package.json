@@ -23,7 +23,7 @@
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-vue": "^6.0.0-beta.10",
     "sass": "^1.26.10",
-    "three": "^0.125.2",
+    "three": "^0.126",
     "vite": "^2.0.5",
     "vue": "^3.0.7"
   },

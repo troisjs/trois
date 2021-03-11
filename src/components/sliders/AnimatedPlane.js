@@ -1,6 +1,5 @@
 import {
   DoubleSide,
-  Face3,
   InstancedBufferAttribute,
   InstancedMesh,
   MathUtils,
@@ -10,7 +9,7 @@ import {
   Vector3,
 } from 'three';
 
-import { Geometry } from 'three/examples/jsm/deprecated/Geometry.js';
+import { Geometry, Face3 } from 'three/examples/jsm/deprecated/Geometry.js';
 
 export default class AnimatedPlane {
   constructor(params) {
