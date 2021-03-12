@@ -5,12 +5,13 @@ import { propsValues, defaultFragmentShader, defaultVertexShader } from '../tool
 export default {
   inject: ['three', 'mesh'],
   props: {
-    uniforms: { type: Object, default: () => {} },
+    uniforms: { type: Object, default: () => { return {}; } },
     vertexShader: { type: String, default: defaultVertexShader },
     fragmentShader: { type: String, default: defaultFragmentShader },
   },
   created() {
     this.createMaterial();
+    console.log(this.uniforms);
     ['vertexShader', 'fragmentShader'].forEach(p => {
       watch(() => this[p], () => {
         // recreate material if we change either shader
