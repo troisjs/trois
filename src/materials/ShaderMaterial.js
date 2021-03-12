@@ -11,7 +11,6 @@ export default {
   },
   created() {
     this.createMaterial();
-    console.log(this.uniforms);
     ['vertexShader', 'fragmentShader'].forEach(p => {
       watch(() => this[p], () => {
         // recreate material if we change either shader
