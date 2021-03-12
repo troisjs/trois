@@ -25,6 +25,12 @@ export default {
       ['uniforms', 'vertexShader', 'fragmentShader'].forEach(p => {
         watch(() => this[p], (value) => {
           this.material[p] = value;
+
+          if (p === 'vertexShader' || p === 'fragmentShader') {
+            // recreate material if we change either shader
+            this.material.dispose();
+            this.createMaterial();
+          }
         },
           // only watch deep on uniforms
           { deep: p === 'uniforms' }
