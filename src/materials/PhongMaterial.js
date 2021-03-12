@@ -11,6 +11,10 @@ export default {
     reflectivity: { type: Number, default: 1 },
     shininess: { type: Number, default: 30 },
     specular: { type: [String, Number], default: 0x111111 },
+    wireframe: { type: Boolean, default: false },
+    wireframeLinecap: { type: String, default: 'round' },
+    wireframeLinejoin: { type: String, default: 'round' },
+    wireframeLinewidth: { type: Number, default: 1 }
   },
   methods: {
     createMaterial() {

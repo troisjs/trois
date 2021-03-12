@@ -16,7 +16,10 @@ const props = {
   normalScale: { type: Object, default: { x: 1, y: 1 } },
   roughness: { type: Number, default: 1 },
   refractionRatio: { type: Number, default: 0.98 },
-  wireframe: Boolean,
+  wireframe: { type: Boolean, default: false },
+  wireframeLinecap: { type: String, default: 'round' },
+  wireframeLinejoin: { type: String, default: 'round' },
+  wireframeLinewidth: { type: Number, default: 1 }
 };
 
 export default {
