@@ -1,9 +1,8 @@
 import { Color, ShaderMaterial as TShaderMaterial, UniformsUtils } from 'three';
 import SubsurfaceScatteringShader from './SubsurfaceScatteringShader.js';
-import ShaderMaterial from './ShaderMaterial';
 
 export default {
-  extends: ShaderMaterial,
+  inject: ['three', 'mesh'],
   props: {
     color: { type: String, default: '#ffffff' },
     thicknessColor: { type: String, default: '#ffffff' },
@@ -15,6 +14,13 @@ export default {
     transparent: { type: Boolean, default: false },
     opacity: { type: Number, default: 1 },
     vertexColors: { type: Boolean, default: false },
+  },
+  created() {
+    this.createMaterial();
+    this.mesh.setMaterial(this.material);
+  },
+  unmounted() {
+    this.material.dispose();
   },
   methods: {
     createMaterial() {
@@ -40,6 +46,9 @@ export default {
         vertexColors: this.vertexColors,
       });
     },
+  },
+  render() {
+    return [];
   },
   __hmrId: 'SubSurfaceMaterial',
 };
