@@ -1,9 +1,12 @@
+import { ShaderMaterial } from 'three'
+import { propsValues, defaultFragmentShader, defaultVertexShader } from '../tools.js';
+
 export default {
   inject: ['three', 'mesh'],
   props: {
     uniforms: Object,
-    vertexShader: String,
-    fragmentShader: String,
+    vertexShader: { type: String, default: defaultVertexShader },
+    fragmentShader: { type: String, default: defaultFragmentShader },
   },
   created() {
     this.createMaterial();
@@ -12,6 +15,11 @@ export default {
   },
   unmounted() {
     this.material.dispose();
+  },
+  methods: {
+    createMaterial() {
+      this.material = new ShaderMaterial(propsValues(this.$props));
+    },
   },
   render() {
     return [];
