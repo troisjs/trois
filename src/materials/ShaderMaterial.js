@@ -1,10 +1,11 @@
 import { ShaderMaterial } from 'three'
+import { watch } from 'vue';
 import { propsValues, defaultFragmentShader, defaultVertexShader } from '../tools.js';
 
 export default {
   inject: ['three', 'mesh'],
   props: {
-    uniforms: Object,
+    uniforms: { type: Object, default: () => { } },
     vertexShader: { type: String, default: defaultVertexShader },
     fragmentShader: { type: String, default: defaultFragmentShader },
   },
@@ -19,6 +20,16 @@ export default {
   methods: {
     createMaterial() {
       this.material = new ShaderMaterial(propsValues(this.$props));
+    },
+    addWatchers() {
+      ['uniforms', 'vertexShader', 'fragmentShader'].forEach(p => {
+        watch(() => this[p], (value) => {
+          this.material[p] = value;
+        },
+          // only watch deep on uniforms
+          { deep: p === 'uniforms' }
+        );
+      });
     },
   },
   render() {
