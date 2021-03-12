@@ -11,12 +11,14 @@ export default {
     reflectivity: { type: Number, default: 1 },
     shininess: { type: Number, default: 30 },
     specular: { type: [String, Number], default: 0x111111 },
+    flatShading: Boolean,
   },
   methods: {
     createMaterial() {
       this.material = new MeshPhongMaterial(propsValues(this.$props));
     },
     addWatchers() {
+      // TODO : handle flatShading ?
       ['emissive', 'emissiveIntensity', 'reflectivity', 'shininess', 'specular'].forEach(p => {
         watch(() => this[p], (value) => {
           if (p === 'emissive' || p === 'specular') {

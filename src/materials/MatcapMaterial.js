@@ -8,6 +8,7 @@ export default {
   props: {
     src: String,
     name: String,
+    flatShading: Boolean,
   },
   methods: {
     createMaterial() {
@@ -15,6 +16,9 @@ export default {
       const opts = propsValues(this.$props, ['src', 'name']);
       opts.matcap = new TextureLoader().load(src);
       this.material = new MeshMatcapMaterial(opts);
+    },
+    addWatchers() {
+      // TODO
     },
   },
   __hmrId: 'MatcapMaterial',

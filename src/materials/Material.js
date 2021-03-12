@@ -7,7 +7,6 @@ export default {
     color: { type: [String, Number], default: '#ffffff' },
     depthTest: { type: Boolean, default: true },
     depthWrite: { type: Boolean, default: true },
-    flatShading: Boolean,
     fog: { type: Boolean, default: true },
     opacity: { type: Number, default: 1 },
     side: { type: Number, default: FrontSide },
@@ -38,7 +37,6 @@ export default {
       this.setProp(key, texture, true);
     },
     _addWatchers() {
-      // don't work for flatShading
       ['color', 'depthTest', 'depthWrite', 'fog', 'opacity', 'side', 'transparent'].forEach(p => {
         watch(() => this[p], () => {
           if (p === 'color') {

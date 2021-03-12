@@ -16,6 +16,7 @@ const props = {
   normalScale: { type: Object, default: { x: 1, y: 1 } },
   roughness: { type: Number, default: 1 },
   refractionRatio: { type: Number, default: 0.98 },
+  flatShading: Boolean,
   wireframe: Boolean,
 };
 
@@ -27,7 +28,7 @@ export default {
       this.material = new MeshStandardMaterial(propsValues(this.$props, ['normalScale']));
     },
     addWatchers() {
-      // todo : use setProp ?
+      // TODO : use setProp, handle flatShading ?
       Object.keys(props).forEach(p => {
         if (p === 'normalScale') return;
         watch(() => this[p], (value) => {
