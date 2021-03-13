@@ -25,7 +25,7 @@ const SubsurfaceScatteringShader = {
   uniforms: UniformsUtils.merge([
     ShaderLib.phong.uniforms,
     {
-      thicknessColor: { value: new Color(0x668597) },
+      thicknessColor: { value: new Color(0xffffff) },
       thicknessDistortion: { value: 0.1 },
       thicknessAmbient: { value: 0.0 },
       thicknessAttenuation: { value: 0.1 },
