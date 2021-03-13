@@ -1,17 +1,15 @@
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import Object3D from '../core/Object3D.js';
+import Model from './Model.js';
 
 export default {
-  extends: Object3D,
-  emits: ['loaded'],
+  extends: Model,
   props: {
     src: String,
   },
   created() {
     const loader = new GLTFLoader();
     loader.load(this.src, (gltf) => {
-      this.$emit('loaded', gltf);
-      this.initObject3D(gltf.scene);
-    });
+      this.onLoad(gltf.scene);
+    }, this.onProgress, this.onError);
   },
 };

@@ -1,17 +1,15 @@
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
-import Object3D from '../core/Object3D.js';
+import Model from './Model.js';
 
 export default {
-  extends: Object3D,
-  emits: ['loaded'],
+  extends: Model,
   props: {
     src: String,
   },
   created() {
     const loader = new FBXLoader();
     loader.load(this.src, (fbx) => {
-      this.$emit('loaded', fbx);
-      this.initObject3D(fbx);
-    });
+      this.onLoad(fbx);
+    }, this.onProgress, this.onError);
   },
 };
