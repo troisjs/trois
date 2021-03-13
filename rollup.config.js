@@ -12,6 +12,7 @@ const external = [
   'three/examples/jsm/lights/RectAreaLightUniformsLib.js',
   'three/examples/jsm/helpers/RectAreaLightHelper.js',
   'three/examples/jsm/loaders/GLTFLoader.js',
+  'three/examples/jsm/loaders/FBXLoader.js',
   'three/examples/jsm/postprocessing/BokehPass.js',
   'three/examples/jsm/postprocessing/EffectComposer.js',
   'three/examples/jsm/postprocessing/FilmPass.js',

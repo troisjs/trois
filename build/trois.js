@@ -7,6 +7,8 @@ var three = require('three');
 var OrbitControls_js = require('three/examples/jsm/controls/OrbitControls.js');
 var RectAreaLightUniformsLib_js = require('three/examples/jsm/lights/RectAreaLightUniformsLib.js');
 var RectAreaLightHelper_js = require('three/examples/jsm/helpers/RectAreaLightHelper.js');
+var GLTFLoader_js = require('three/examples/jsm/loaders/GLTFLoader.js');
+var FBXLoader_js = require('three/examples/jsm/loaders/FBXLoader.js');
 var EffectComposer_js = require('three/examples/jsm/postprocessing/EffectComposer.js');
 var RenderPass_js = require('three/examples/jsm/postprocessing/RenderPass.js');
 var BokehPass_js = require('three/examples/jsm/postprocessing/BokehPass.js');
@@ -448,6 +450,11 @@ function setFromProp(o, prop) {
     });
   }
 }
+function bindProps(src, props, dst) {
+  props.forEach(function (prop) {
+    bindProp(src, prop, dst);
+  });
+}
 function bindProp(src, srcProp, dst, dstProp) {
   if (!dstProp) { dstProp = srcProp; }
   var ref = vue.toRef(src, srcProp);
@@ -511,6 +518,11 @@ function getMatcapFormatString(format) {
       return '';
   }
 }
+
+// shader defaults
+var defaultVertexShader = "\nvarying vec2 vUv;\nvoid main(){\n  vUv = uv;\n  gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);\n}";
+
+var defaultFragmentShader = "\nvarying vec2 vUv;\nvoid main() {\n  gl_FragColor = vec4(vUv.x, vUv.y, 0., 1.0);\n}";
 
 var OrthographicCamera = {
   name: 'OrthographicCamera',
@@ -589,7 +601,7 @@ var Object3D = {
   // can't use setup because it will not be used in sub components
   // setup() {},
   unmounted: function unmounted() {
-    if (this.$parent.remove) { this.$parent.remove(this.o3d); }
+    if (this._parent) { this._parent.remove(this.o3d); }
   },
   methods: {
     initObject3D: function initObject3D(o3d) {
@@ -601,11 +613,20 @@ var Object3D = {
       bindProp(this, 'rotation', this.o3d);
       bindProp(this, 'scale', this.o3d);
 
-      // fix lookat.x
+      // TODO : fix lookat.x
       if (this.lookAt) { this.o3d.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z); }
       vue.watch(function () { return this$1.lookAt; }, function (v) { this$1.o3d.lookAt(v.x, v.y, v.z); }, { deep: true });
 
-      if (this.$parent.add) { this.$parent.add(this.o3d); }
+      var parent = this.$parent;
+      while (parent) {
+        if (parent.add) {
+          parent.add(this.o3d);
+          this._parent = parent;
+          break;
+        }
+        parent = parent.$parent;
+      }
+      if (!this._parent) { console.error('Missing parent (Scene, Group...)'); }
     },
     add: function add(o) { this.o3d.add(o); },
     remove: function remove(o) { this.o3d.remove(o); },
@@ -636,7 +657,7 @@ var Scene = {
   setup: function setup(props) {
     var scene = new three.Scene();
     if (props.background) { scene.background = new three.Color(props.background); }
-    vue.watch(function () { return props.background; }, function (value) { scene.background = new three.Color(value); });
+    vue.watch(function () { return props.background; }, function (value) { scene.background.set(value); });
     return { scene: scene };
   },
   provide: function provide() {
@@ -919,14 +940,14 @@ var TorusKnotGeometry = {
   props: {
     radius: { type: Number, default: 1 },
     tube: { type: Number, default: 0.4 },
-    radialSegments: { type: Number, default: 64 },
-    tubularSegments: { type: Number, default: 8 },
+    tubularSegments: { type: Number, default: 64 },
+    radialSegments: { type: Number, default: 8 },
     p: { type: Number, default: 2 },
     q: { type: Number, default: 3 },
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new three.TorusKnotGeometry(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.p, this.q);
+      this.geometry = new three.TorusKnotGeometry(this.radius, this.tube, this.tubularSegments, this.radialSegments, this.p, this.q);
     },
   },
 };
@@ -955,6 +976,7 @@ var Light = {
     intensity: { type: Number, default: 1 },
     castShadow: { type: Boolean, default: false },
     shadowMapSize: { type: Object, default: { x: 512, y: 512 } },
+    shadowCamera: { type: Object, default: {} },
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
@@ -972,12 +994,13 @@ var Light = {
       if (this.light.shadow) {
         this.light.castShadow = this.castShadow;
         setFromProp(this.light.shadow.mapSize, this.shadowMapSize);
+        setFromProp(this.light.shadow.camera, this.shadowCamera);
       }
 
       ['color', 'intensity', 'castShadow'].forEach(function (p) {
         vue.watch(function () { return this$1[p]; }, function () {
           if (p === 'color') {
-            this$1.light.color = new three.Color(this$1.color);
+            this$1.light.color.set(this$1.color);
           } else {
             this$1.light[p] = this$1[p];
           }
@@ -1015,11 +1038,13 @@ var DirectionalLight = {
 var HemisphereLight = {
   extends: Light,
   props: {
-    groundColor: { type: String, default: '#ffffff' },
+    groundColor: { type: String, default: '#444444' },
   },
   created: function created() {
+    var this$1 = this;
+
     this.light = new three.HemisphereLight(this.color, this.groundColor, this.intensity);
-    bindProp(this, 'groundColor', this.light);
+    vue.watch(function () { return this$1.groundColor; }, function (value) { this$1.light.groundColor.set(value); });
     this.initLight();
   },
   __hmrId: 'HemisphereLight',
@@ -1105,7 +1130,6 @@ var Material = {
     color: { type: [String, Number], default: '#ffffff' },
     depthTest: { type: Boolean, default: true },
     depthWrite: { type: Boolean, default: true },
-    flatShading: Boolean,
     fog: { type: Boolean, default: true },
     opacity: { type: Number, default: 1 },
     side: { type: Number, default: three.FrontSide },
@@ -1142,7 +1166,6 @@ var Material = {
     _addWatchers: function _addWatchers() {
       var this$1 = this;
 
-      // don't work for flatShading
       ['color', 'depthTest', 'depthWrite', 'fog', 'opacity', 'side', 'transparent'].forEach(function (p) {
         vue.watch(function () { return this$1[p]; }, function () {
           if (p === 'color') {
@@ -1160,11 +1183,23 @@ var Material = {
   __hmrId: 'Material',
 };
 
+var wireframeProps = {
+  wireframe: { type: Boolean, default: false },
+  // not needed for WebGL
+  // wireframeLinecap: { type: String, default: 'round' },
+  // wireframeLinejoin: { type: String, default: 'round' },
+  wireframeLinewidth: { type: Number, default: 1 }, // not really useful
+};
+
 var BasicMaterial = {
   extends: Material,
+  props: Object.assign({}, wireframeProps),
   methods: {
     createMaterial: function createMaterial() {
       this.material = new three.MeshBasicMaterial(propsValues(this.$props));
+    },
+    addWatchers: function addWatchers() {
+      bindProps(this, Object.keys(wireframeProps), this.material);
     },
   },
   __hmrId: 'BasicMaterial',
@@ -1172,9 +1207,13 @@ var BasicMaterial = {
 
 var LambertMaterial = {
   extends: Material,
+  props: Object.assign({}, wireframeProps),
   methods: {
     createMaterial: function createMaterial() {
       this.material = new three.MeshLambertMaterial(propsValues(this.$props));
+    },
+    addWatchers: function addWatchers() {
+      bindProps(this, Object.keys(wireframeProps), this.material);
     },
   },
   __hmrId: 'LambertMaterial',
@@ -1185,6 +1224,7 @@ var MatcapMaterial = {
   props: {
     src: String,
     name: String,
+    flatShading: Boolean,
   },
   methods: {
     createMaterial: function createMaterial() {
@@ -1193,19 +1233,22 @@ var MatcapMaterial = {
       opts.matcap = new three.TextureLoader().load(src);
       this.material = new three.MeshMatcapMaterial(opts);
     },
+    addWatchers: function addWatchers() {
+      // TODO
+    },
   },
   __hmrId: 'MatcapMaterial',
 };
 
 var PhongMaterial = {
   extends: Material,
-  props: {
-    emissive: { type: [Number, String], default: 0 },
+  props: Object.assign({}, {emissive: { type: [Number, String], default: 0 },
     emissiveIntensity: { type: Number, default: 1 },
     reflectivity: { type: Number, default: 1 },
     shininess: { type: Number, default: 30 },
     specular: { type: [String, Number], default: 0x111111 },
-  },
+    flatShading: Boolean},
+    wireframeProps),
   methods: {
     createMaterial: function createMaterial() {
       this.material = new three.MeshPhongMaterial(propsValues(this.$props));
@@ -1213,6 +1256,7 @@ var PhongMaterial = {
     addWatchers: function addWatchers() {
       var this$1 = this;
 
+      // TODO : handle flatShading ?
       ['emissive', 'emissiveIntensity', 'reflectivity', 'shininess', 'specular'].forEach(function (p) {
         vue.watch(function () { return this$1[p]; }, function (value) {
           if (p === 'emissive' || p === 'specular') {
@@ -1222,6 +1266,7 @@ var PhongMaterial = {
           }
         });
       });
+      bindProps(this, Object.keys(wireframeProps), this.material);
     },
   },
   __hmrId: 'PhongMaterial',
@@ -1240,12 +1285,13 @@ var props = {
   normalScale: { type: Object, default: { x: 1, y: 1 } },
   roughness: { type: Number, default: 1 },
   refractionRatio: { type: Number, default: 0.98 },
-  wireframe: Boolean,
+  flatShading: Boolean,
 };
 
 var StandardMaterial = {
   extends: Material,
-  props: props,
+  props: Object.assign({}, props,
+    wireframeProps),
   methods: {
     createMaterial: function createMaterial() {
       this.material = new three.MeshStandardMaterial(propsValues(this.$props, ['normalScale']));
@@ -1253,7 +1299,7 @@ var StandardMaterial = {
     addWatchers: function addWatchers() {
       var this$1 = this;
 
-      // todo : use setProp ?
+      // TODO : use setProp, handle flatShading ?
       Object.keys(props).forEach(function (p) {
         if (p === 'normalScale') { return; }
         vue.watch(function () { return this$1[p]; }, function (value) {
@@ -1265,6 +1311,7 @@ var StandardMaterial = {
         });
       });
       bindProp(this, 'normalScale', this.material);
+      bindProps(this, Object.keys(wireframeProps), this.material);
     },
   },
   __hmrId: 'StandardMaterial',
@@ -1272,12 +1319,52 @@ var StandardMaterial = {
 
 var PhysicalMaterial = {
   extends: StandardMaterial,
+  props: {
+    flatShading: Boolean,
+  },
   methods: {
     createMaterial: function createMaterial() {
       this.material = new three.MeshPhysicalMaterial(propsValues(this.$props));
     },
+    addWatchers: function addWatchers() {
+      // TODO
+    },
   },
   __hmrId: 'PhysicalMaterial',
+};
+
+var ShaderMaterial = {
+  inject: ['three', 'mesh'],
+  props: {
+    uniforms: { type: Object, default: function () { return {}; } },
+    vertexShader: { type: String, default: defaultVertexShader },
+    fragmentShader: { type: String, default: defaultFragmentShader },
+  },
+  created: function created() {
+    var this$1 = this;
+
+    this.createMaterial();
+    ['vertexShader', 'fragmentShader'].forEach(function (p) {
+      vue.watch(function () { return this$1[p]; }, function () {
+        // recreate material if we change either shader
+        this$1.material.dispose();
+        this$1.createMaterial();
+      });
+    });
+  },
+  unmounted: function unmounted() {
+    this.material.dispose();
+  },
+  methods: {
+    createMaterial: function createMaterial() {
+      this.material = new three.ShaderMaterial(propsValues(this.$props));
+      this.mesh.setMaterial(this.material);
+    },
+  },
+  render: function render() {
+    return [];
+  },
+  __hmrId: 'ShaderMaterial',
 };
 
 /**
@@ -1301,7 +1388,7 @@ var SubsurfaceScatteringShader = {
   uniforms: three.UniformsUtils.merge([
     three.ShaderLib.phong.uniforms,
     {
-      thicknessColor: { value: new three.Color(0x668597) },
+      thicknessColor: { value: new three.Color(0xffffff) },
       thicknessDistortion: { value: 0.1 },
       thicknessAmbient: { value: 0.0 },
       thicknessAttenuation: { value: 0.1 },
@@ -1321,29 +1408,8 @@ var SubsurfaceScatteringShader = {
   ),
 };
 
-var ShaderMaterial = {
-  inject: ['three', 'mesh'],
-  props: {
-    uniforms: Object,
-    vertexShader: String,
-    fragmentShader: String,
-  },
-  created: function created() {
-    this.createMaterial();
-    this.mesh.setMaterial(this.material);
-    if (this.addWatchers) { this.addWatchers(); }
-  },
-  unmounted: function unmounted() {
-    this.material.dispose();
-  },
-  render: function render() {
-    return [];
-  },
-  __hmrId: 'ShaderMaterial',
-};
-
 var SubSurfaceMaterial = {
-  extends: ShaderMaterial,
+  inject: ['three', 'mesh'],
   props: {
     color: { type: String, default: '#ffffff' },
     thicknessColor: { type: String, default: '#ffffff' },
@@ -1355,6 +1421,13 @@ var SubSurfaceMaterial = {
     transparent: { type: Boolean, default: false },
     opacity: { type: Number, default: 1 },
     vertexColors: { type: Boolean, default: false },
+  },
+  created: function created() {
+    this.createMaterial();
+    this.mesh.setMaterial(this.material);
+  },
+  unmounted: function unmounted() {
+    this.material.dispose();
   },
   methods: {
     createMaterial: function createMaterial() {
@@ -1382,14 +1455,21 @@ var SubSurfaceMaterial = {
         vertexColors: this.vertexColors}));
     },
   },
+  render: function render() {
+    return [];
+  },
   __hmrId: 'SubSurfaceMaterial',
 };
 
 var ToonMaterial = {
   extends: Material,
+  props: Object.assign({}, wireframeProps),
   methods: {
     createMaterial: function createMaterial() {
       this.material = new three.MeshToonMaterial(propsValues(this.$props));
+    },
+    addWatchers: function addWatchers() {
+      bindProps(this, Object.keys(wireframeProps), this.material);
     },
   },
   __hmrId: 'ToonMaterial',
@@ -2447,6 +2527,40 @@ var Sprite = {
   __hmrId: 'Sprite',
 };
 
+var GLTF = {
+  extends: Object3D,
+  emits: ['loaded'],
+  props: {
+    src: String,
+  },
+  created: function created() {
+    var this$1 = this;
+
+    var loader = new GLTFLoader_js.GLTFLoader();
+    loader.load(this.src, function (gltf) {
+      this$1.$emit('loaded', gltf);
+      this$1.initObject3D(gltf.scene);
+    });
+  },
+};
+
+var FBX = {
+  extends: Object3D,
+  emits: ['loaded'],
+  props: {
+    src: String,
+  },
+  created: function created() {
+    var this$1 = this;
+
+    var loader = new FBXLoader_js.FBXLoader();
+    loader.load(this.src, function (fbx) {
+      this$1.$emit('loaded', fbx);
+      this$1.initObject3D(fbx);
+    });
+  },
+};
+
 var EffectComposer = {
   setup: function setup() {
     return {
@@ -2814,6 +2928,7 @@ var TROIS = /*#__PURE__*/Object.freeze({
   MatcapMaterial: MatcapMaterial,
   PhongMaterial: PhongMaterial,
   PhysicalMaterial: PhysicalMaterial,
+  ShaderMaterial: ShaderMaterial,
   StandardMaterial: StandardMaterial,
   SubSurfaceMaterial: SubSurfaceMaterial,
   ToonMaterial: ToonMaterial,
@@ -2843,6 +2958,8 @@ var TROIS = /*#__PURE__*/Object.freeze({
   MirrorMesh: MirrorMesh,
   RefractionMesh: RefractionMesh,
   Sprite: Sprite,
+  GLTFModel: GLTF,
+  FBXModel: FBX,
   EffectComposer: EffectComposer,
   RenderPass: RenderPass,
   BokehPass: BokehPass,
@@ -2854,13 +2971,16 @@ var TROIS = /*#__PURE__*/Object.freeze({
   UnrealBloomPass: UnrealBloomPass,
   ZoomBlurPass: ZoomBlurPass,
   setFromProp: setFromProp,
+  bindProps: bindProps,
   bindProp: bindProp,
   propsValues: propsValues,
   lerp: lerp,
   lerpv2: lerpv2,
   lerpv3: lerpv3,
   limit: limit,
-  getMatcapUrl: getMatcapUrl
+  getMatcapUrl: getMatcapUrl,
+  defaultVertexShader: defaultVertexShader,
+  defaultFragmentShader: defaultFragmentShader
 });
 
 var TroisJSVuePlugin = {
@@ -2872,22 +2992,6 @@ var TroisJSVuePlugin = {
       'Renderer',
       'Scene',
       'Group',
-
-      'BoxGeometry',
-      'CircleGeometry',
-      'ConeGeometry',
-      'CylinderGeometry',
-      'DodecahedronGeometry',
-      'IcosahedronGeometry',
-      'LatheGeometry',
-      'OctahedronGeometry',
-      'PolyhedronGeometry',
-      'RingGeometry',
-      'SphereGeometry',
-      'TetrahedronGeometry',
-      'TorusGeometry',
-      'TorusKnotGeometry',
-      'TubeGeometry',
 
       'AmbientLight',
       'DirectionalLight',
@@ -2909,24 +3013,25 @@ var TroisJSVuePlugin = {
       'Texture',
       'CubeTexture',
 
-      'Box',
-      'Circle',
-      'Cone',
-      'Cylinder',
-      'Dodecahedron',
-      'Icosahedron',
       'Mesh',
-      'Lathe',
-      'Octahedron',
+
+      'Box', 'BoxGeometry',
+      'Circle', 'CircleGeometry',
+      'Cone', 'ConeGeometry',
+      'Cylinder', 'CylinderGeometry',
+      'Dodecahedron', 'DodecahedronGeometry',
+      'Icosahedron', 'IcosahedronGeometry',
+      'Lathe', 'LatheGeometry',
+      'Octahedron', 'OctahedronGeometry',
       'Plane',
-      'Polyhedron',
-      'Ring',
-      'Sphere',
-      'Tetrahedron',
+      'Polyhedron', 'PolyhedronGeometry',
+      'Ring', 'RingGeometry',
+      'Sphere', 'SphereGeometry',
+      'Tetrahedron', 'TetrahedronGeometry',
       'Text',
-      'Torus',
-      'TorusKnot',
-      'Tube',
+      'Torus', 'TorusGeometry',
+      'TorusKnot', 'TorusKnotGeometry',
+      'Tube', 'TubeGeometry',
 
       'Gem',
       'Image',
@@ -2934,6 +3039,9 @@ var TroisJSVuePlugin = {
       'MirrorMesh',
       'RefractionMesh',
       'Sprite',
+
+      'FBXModel',
+      'GLTFModel',
 
       'BokehPass',
       'EffectComposer',
@@ -2976,8 +3084,10 @@ exports.DirectionalLight = DirectionalLight;
 exports.Dodecahedron = Dodecahedron;
 exports.DodecahedronGeometry = DodecahedronGeometry;
 exports.EffectComposer = EffectComposer;
+exports.FBXModel = FBX;
 exports.FXAAPass = FXAAPass;
 exports.FilmPass = FilmPass;
+exports.GLTFModel = GLTF;
 exports.Gem = Gem;
 exports.Group = Group;
 exports.HalftonePass = HalftonePass;
@@ -3010,6 +3120,7 @@ exports.Ring = Ring;
 exports.RingGeometry = RingGeometry;
 exports.SMAAPass = SMAAPass;
 exports.Scene = Scene;
+exports.ShaderMaterial = ShaderMaterial;
 exports.Sphere = Sphere;
 exports.SphereGeometry = SphereGeometry;
 exports.SpotLight = SpotLight;
@@ -3032,7 +3143,10 @@ exports.TubeGeometry = TubeGeometry;
 exports.UnrealBloomPass = UnrealBloomPass;
 exports.ZoomBlurPass = ZoomBlurPass;
 exports.bindProp = bindProp;
+exports.bindProps = bindProps;
 exports.createApp = createApp;
+exports.defaultFragmentShader = defaultFragmentShader;
+exports.defaultVertexShader = defaultVertexShader;
 exports.getMatcapUrl = getMatcapUrl;
 exports.lerp = lerp;
 exports.lerpv2 = lerpv2;

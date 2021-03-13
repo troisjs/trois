@@ -1,8 +1,10 @@
 import { h, toRef, watch, createApp as createApp$1 } from 'vue';
-import { Vector2, Vector3, Plane as Plane$1, Raycaster, WebGLRenderer, OrthographicCamera as OrthographicCamera$1, PerspectiveCamera as PerspectiveCamera$1, Group as Group$1, Scene as Scene$1, Color, BoxGeometry as BoxGeometry$1, CircleGeometry as CircleGeometry$1, ConeGeometry as ConeGeometry$1, CylinderGeometry as CylinderGeometry$1, DodecahedronGeometry as DodecahedronGeometry$1, IcosahedronGeometry as IcosahedronGeometry$1, LatheGeometry as LatheGeometry$1, OctahedronGeometry as OctahedronGeometry$1, PolyhedronGeometry as PolyhedronGeometry$1, RingGeometry as RingGeometry$1, SphereGeometry as SphereGeometry$1, TetrahedronGeometry as TetrahedronGeometry$1, TorusGeometry as TorusGeometry$1, TorusKnotGeometry as TorusKnotGeometry$1, Curve, TubeGeometry as TubeGeometry$1, AmbientLight as AmbientLight$1, DirectionalLight as DirectionalLight$1, HemisphereLight as HemisphereLight$1, PointLight as PointLight$1, RectAreaLight as RectAreaLight$1, SpotLight as SpotLight$1, FrontSide, MeshBasicMaterial, MeshLambertMaterial, TextureLoader, MeshMatcapMaterial, MeshPhongMaterial, MeshStandardMaterial, MeshPhysicalMaterial, ShaderChunk, UniformsUtils, ShaderLib, ShaderMaterial as ShaderMaterial$1, MeshToonMaterial, UVMapping, ClampToEdgeWrapping, LinearFilter, LinearMipmapLinearFilter, CubeTextureLoader, CubeRefractionMapping, Mesh as Mesh$1, BoxBufferGeometry, CircleBufferGeometry, ConeBufferGeometry, CylinderBufferGeometry, DodecahedronBufferGeometry, IcosahedronBufferGeometry, LatheBufferGeometry, OctahedronBufferGeometry, PlaneBufferGeometry, PolyhedronBufferGeometry, RingBufferGeometry, SphereBufferGeometry, TetrahedronBufferGeometry, FontLoader, TextBufferGeometry, TorusBufferGeometry, TorusKnotBufferGeometry, CatmullRomCurve3, WebGLCubeRenderTarget, RGBFormat, CubeCamera, BackSide, DoubleSide, InstancedMesh as InstancedMesh$1, SpriteMaterial, Sprite as Sprite$1 } from 'three';
+import { Vector2, Vector3, Plane as Plane$1, Raycaster, WebGLRenderer, OrthographicCamera as OrthographicCamera$1, PerspectiveCamera as PerspectiveCamera$1, Group as Group$1, Scene as Scene$1, Color, BoxGeometry as BoxGeometry$1, CircleGeometry as CircleGeometry$1, ConeGeometry as ConeGeometry$1, CylinderGeometry as CylinderGeometry$1, DodecahedronGeometry as DodecahedronGeometry$1, IcosahedronGeometry as IcosahedronGeometry$1, LatheGeometry as LatheGeometry$1, OctahedronGeometry as OctahedronGeometry$1, PolyhedronGeometry as PolyhedronGeometry$1, RingGeometry as RingGeometry$1, SphereGeometry as SphereGeometry$1, TetrahedronGeometry as TetrahedronGeometry$1, TorusGeometry as TorusGeometry$1, TorusKnotGeometry as TorusKnotGeometry$1, Curve, TubeGeometry as TubeGeometry$1, AmbientLight as AmbientLight$1, DirectionalLight as DirectionalLight$1, HemisphereLight as HemisphereLight$1, PointLight as PointLight$1, RectAreaLight as RectAreaLight$1, SpotLight as SpotLight$1, FrontSide, MeshBasicMaterial, MeshLambertMaterial, TextureLoader, MeshMatcapMaterial, MeshPhongMaterial, MeshStandardMaterial, MeshPhysicalMaterial, ShaderMaterial as ShaderMaterial$1, ShaderChunk, UniformsUtils, ShaderLib, MeshToonMaterial, UVMapping, ClampToEdgeWrapping, LinearFilter, LinearMipmapLinearFilter, CubeTextureLoader, CubeRefractionMapping, Mesh as Mesh$1, BoxBufferGeometry, CircleBufferGeometry, ConeBufferGeometry, CylinderBufferGeometry, DodecahedronBufferGeometry, IcosahedronBufferGeometry, LatheBufferGeometry, OctahedronBufferGeometry, PlaneBufferGeometry, PolyhedronBufferGeometry, RingBufferGeometry, SphereBufferGeometry, TetrahedronBufferGeometry, FontLoader, TextBufferGeometry, TorusBufferGeometry, TorusKnotBufferGeometry, CatmullRomCurve3, WebGLCubeRenderTarget, RGBFormat, CubeCamera, BackSide, DoubleSide, InstancedMesh as InstancedMesh$1, SpriteMaterial, Sprite as Sprite$1 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { EffectComposer as EffectComposer$1 } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass as RenderPass$1 } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { BokehPass as BokehPass$1 } from 'three/examples/jsm/postprocessing/BokehPass.js';
@@ -444,6 +446,11 @@ function setFromProp(o, prop) {
     });
   }
 }
+function bindProps(src, props, dst) {
+  props.forEach(function (prop) {
+    bindProp(src, prop, dst);
+  });
+}
 function bindProp(src, srcProp, dst, dstProp) {
   if (!dstProp) { dstProp = srcProp; }
   var ref = toRef(src, srcProp);
@@ -507,6 +514,11 @@ function getMatcapFormatString(format) {
       return '';
   }
 }
+
+// shader defaults
+var defaultVertexShader = "\nvarying vec2 vUv;\nvoid main(){\n  vUv = uv;\n  gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);\n}";
+
+var defaultFragmentShader = "\nvarying vec2 vUv;\nvoid main() {\n  gl_FragColor = vec4(vUv.x, vUv.y, 0., 1.0);\n}";
 
 var OrthographicCamera = {
   name: 'OrthographicCamera',
@@ -585,7 +597,7 @@ var Object3D = {
   // can't use setup because it will not be used in sub components
   // setup() {},
   unmounted: function unmounted() {
-    if (this.$parent.remove) { this.$parent.remove(this.o3d); }
+    if (this._parent) { this._parent.remove(this.o3d); }
   },
   methods: {
     initObject3D: function initObject3D(o3d) {
@@ -597,11 +609,20 @@ var Object3D = {
       bindProp(this, 'rotation', this.o3d);
       bindProp(this, 'scale', this.o3d);
 
-      // fix lookat.x
+      // TODO : fix lookat.x
       if (this.lookAt) { this.o3d.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z); }
       watch(function () { return this$1.lookAt; }, function (v) { this$1.o3d.lookAt(v.x, v.y, v.z); }, { deep: true });
 
-      if (this.$parent.add) { this.$parent.add(this.o3d); }
+      var parent = this.$parent;
+      while (parent) {
+        if (parent.add) {
+          parent.add(this.o3d);
+          this._parent = parent;
+          break;
+        }
+        parent = parent.$parent;
+      }
+      if (!this._parent) { console.error('Missing parent (Scene, Group...)'); }
     },
     add: function add(o) { this.o3d.add(o); },
     remove: function remove(o) { this.o3d.remove(o); },
@@ -632,7 +653,7 @@ var Scene = {
   setup: function setup(props) {
     var scene = new Scene$1();
     if (props.background) { scene.background = new Color(props.background); }
-    watch(function () { return props.background; }, function (value) { scene.background = new Color(value); });
+    watch(function () { return props.background; }, function (value) { scene.background.set(value); });
     return { scene: scene };
   },
   provide: function provide() {
@@ -915,14 +936,14 @@ var TorusKnotGeometry = {
   props: {
     radius: { type: Number, default: 1 },
     tube: { type: Number, default: 0.4 },
-    radialSegments: { type: Number, default: 64 },
-    tubularSegments: { type: Number, default: 8 },
+    tubularSegments: { type: Number, default: 64 },
+    radialSegments: { type: Number, default: 8 },
     p: { type: Number, default: 2 },
     q: { type: Number, default: 3 },
   },
   methods: {
     createGeometry: function createGeometry() {
-      this.geometry = new TorusKnotGeometry$1(this.radius, this.tube, this.radialSegments, this.tubularSegments, this.p, this.q);
+      this.geometry = new TorusKnotGeometry$1(this.radius, this.tube, this.tubularSegments, this.radialSegments, this.p, this.q);
     },
   },
 };
@@ -951,6 +972,7 @@ var Light = {
     intensity: { type: Number, default: 1 },
     castShadow: { type: Boolean, default: false },
     shadowMapSize: { type: Object, default: { x: 512, y: 512 } },
+    shadowCamera: { type: Object, default: {} },
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
@@ -968,12 +990,13 @@ var Light = {
       if (this.light.shadow) {
         this.light.castShadow = this.castShadow;
         setFromProp(this.light.shadow.mapSize, this.shadowMapSize);
+        setFromProp(this.light.shadow.camera, this.shadowCamera);
       }
 
       ['color', 'intensity', 'castShadow'].forEach(function (p) {
         watch(function () { return this$1[p]; }, function () {
           if (p === 'color') {
-            this$1.light.color = new Color(this$1.color);
+            this$1.light.color.set(this$1.color);
           } else {
             this$1.light[p] = this$1[p];
           }
@@ -1011,11 +1034,13 @@ var DirectionalLight = {
 var HemisphereLight = {
   extends: Light,
   props: {
-    groundColor: { type: String, default: '#ffffff' },
+    groundColor: { type: String, default: '#444444' },
   },
   created: function created() {
+    var this$1 = this;
+
     this.light = new HemisphereLight$1(this.color, this.groundColor, this.intensity);
-    bindProp(this, 'groundColor', this.light);
+    watch(function () { return this$1.groundColor; }, function (value) { this$1.light.groundColor.set(value); });
     this.initLight();
   },
   __hmrId: 'HemisphereLight',
@@ -1101,7 +1126,6 @@ var Material = {
     color: { type: [String, Number], default: '#ffffff' },
     depthTest: { type: Boolean, default: true },
     depthWrite: { type: Boolean, default: true },
-    flatShading: Boolean,
     fog: { type: Boolean, default: true },
     opacity: { type: Number, default: 1 },
     side: { type: Number, default: FrontSide },
@@ -1138,7 +1162,6 @@ var Material = {
     _addWatchers: function _addWatchers() {
       var this$1 = this;
 
-      // don't work for flatShading
       ['color', 'depthTest', 'depthWrite', 'fog', 'opacity', 'side', 'transparent'].forEach(function (p) {
         watch(function () { return this$1[p]; }, function () {
           if (p === 'color') {
@@ -1156,11 +1179,23 @@ var Material = {
   __hmrId: 'Material',
 };
 
+var wireframeProps = {
+  wireframe: { type: Boolean, default: false },
+  // not needed for WebGL
+  // wireframeLinecap: { type: String, default: 'round' },
+  // wireframeLinejoin: { type: String, default: 'round' },
+  wireframeLinewidth: { type: Number, default: 1 }, // not really useful
+};
+
 var BasicMaterial = {
   extends: Material,
+  props: Object.assign({}, wireframeProps),
   methods: {
     createMaterial: function createMaterial() {
       this.material = new MeshBasicMaterial(propsValues(this.$props));
+    },
+    addWatchers: function addWatchers() {
+      bindProps(this, Object.keys(wireframeProps), this.material);
     },
   },
   __hmrId: 'BasicMaterial',
@@ -1168,9 +1203,13 @@ var BasicMaterial = {
 
 var LambertMaterial = {
   extends: Material,
+  props: Object.assign({}, wireframeProps),
   methods: {
     createMaterial: function createMaterial() {
       this.material = new MeshLambertMaterial(propsValues(this.$props));
+    },
+    addWatchers: function addWatchers() {
+      bindProps(this, Object.keys(wireframeProps), this.material);
     },
   },
   __hmrId: 'LambertMaterial',
@@ -1181,6 +1220,7 @@ var MatcapMaterial = {
   props: {
     src: String,
     name: String,
+    flatShading: Boolean,
   },
   methods: {
     createMaterial: function createMaterial() {
@@ -1189,19 +1229,22 @@ var MatcapMaterial = {
       opts.matcap = new TextureLoader().load(src);
       this.material = new MeshMatcapMaterial(opts);
     },
+    addWatchers: function addWatchers() {
+      // TODO
+    },
   },
   __hmrId: 'MatcapMaterial',
 };
 
 var PhongMaterial = {
   extends: Material,
-  props: {
-    emissive: { type: [Number, String], default: 0 },
+  props: Object.assign({}, {emissive: { type: [Number, String], default: 0 },
     emissiveIntensity: { type: Number, default: 1 },
     reflectivity: { type: Number, default: 1 },
     shininess: { type: Number, default: 30 },
     specular: { type: [String, Number], default: 0x111111 },
-  },
+    flatShading: Boolean},
+    wireframeProps),
   methods: {
     createMaterial: function createMaterial() {
       this.material = new MeshPhongMaterial(propsValues(this.$props));
@@ -1209,6 +1252,7 @@ var PhongMaterial = {
     addWatchers: function addWatchers() {
       var this$1 = this;
 
+      // TODO : handle flatShading ?
       ['emissive', 'emissiveIntensity', 'reflectivity', 'shininess', 'specular'].forEach(function (p) {
         watch(function () { return this$1[p]; }, function (value) {
           if (p === 'emissive' || p === 'specular') {
@@ -1218,6 +1262,7 @@ var PhongMaterial = {
           }
         });
       });
+      bindProps(this, Object.keys(wireframeProps), this.material);
     },
   },
   __hmrId: 'PhongMaterial',
@@ -1236,12 +1281,13 @@ var props = {
   normalScale: { type: Object, default: { x: 1, y: 1 } },
   roughness: { type: Number, default: 1 },
   refractionRatio: { type: Number, default: 0.98 },
-  wireframe: Boolean,
+  flatShading: Boolean,
 };
 
 var StandardMaterial = {
   extends: Material,
-  props: props,
+  props: Object.assign({}, props,
+    wireframeProps),
   methods: {
     createMaterial: function createMaterial() {
       this.material = new MeshStandardMaterial(propsValues(this.$props, ['normalScale']));
@@ -1249,7 +1295,7 @@ var StandardMaterial = {
     addWatchers: function addWatchers() {
       var this$1 = this;
 
-      // todo : use setProp ?
+      // TODO : use setProp, handle flatShading ?
       Object.keys(props).forEach(function (p) {
         if (p === 'normalScale') { return; }
         watch(function () { return this$1[p]; }, function (value) {
@@ -1261,6 +1307,7 @@ var StandardMaterial = {
         });
       });
       bindProp(this, 'normalScale', this.material);
+      bindProps(this, Object.keys(wireframeProps), this.material);
     },
   },
   __hmrId: 'StandardMaterial',
@@ -1268,12 +1315,52 @@ var StandardMaterial = {
 
 var PhysicalMaterial = {
   extends: StandardMaterial,
+  props: {
+    flatShading: Boolean,
+  },
   methods: {
     createMaterial: function createMaterial() {
       this.material = new MeshPhysicalMaterial(propsValues(this.$props));
     },
+    addWatchers: function addWatchers() {
+      // TODO
+    },
   },
   __hmrId: 'PhysicalMaterial',
+};
+
+var ShaderMaterial = {
+  inject: ['three', 'mesh'],
+  props: {
+    uniforms: { type: Object, default: function () { return {}; } },
+    vertexShader: { type: String, default: defaultVertexShader },
+    fragmentShader: { type: String, default: defaultFragmentShader },
+  },
+  created: function created() {
+    var this$1 = this;
+
+    this.createMaterial();
+    ['vertexShader', 'fragmentShader'].forEach(function (p) {
+      watch(function () { return this$1[p]; }, function () {
+        // recreate material if we change either shader
+        this$1.material.dispose();
+        this$1.createMaterial();
+      });
+    });
+  },
+  unmounted: function unmounted() {
+    this.material.dispose();
+  },
+  methods: {
+    createMaterial: function createMaterial() {
+      this.material = new ShaderMaterial$1(propsValues(this.$props));
+      this.mesh.setMaterial(this.material);
+    },
+  },
+  render: function render() {
+    return [];
+  },
+  __hmrId: 'ShaderMaterial',
 };
 
 /**
@@ -1297,7 +1384,7 @@ var SubsurfaceScatteringShader = {
   uniforms: UniformsUtils.merge([
     ShaderLib.phong.uniforms,
     {
-      thicknessColor: { value: new Color(0x668597) },
+      thicknessColor: { value: new Color(0xffffff) },
       thicknessDistortion: { value: 0.1 },
       thicknessAmbient: { value: 0.0 },
       thicknessAttenuation: { value: 0.1 },
@@ -1317,29 +1404,8 @@ var SubsurfaceScatteringShader = {
   ),
 };
 
-var ShaderMaterial = {
-  inject: ['three', 'mesh'],
-  props: {
-    uniforms: Object,
-    vertexShader: String,
-    fragmentShader: String,
-  },
-  created: function created() {
-    this.createMaterial();
-    this.mesh.setMaterial(this.material);
-    if (this.addWatchers) { this.addWatchers(); }
-  },
-  unmounted: function unmounted() {
-    this.material.dispose();
-  },
-  render: function render() {
-    return [];
-  },
-  __hmrId: 'ShaderMaterial',
-};
-
 var SubSurfaceMaterial = {
-  extends: ShaderMaterial,
+  inject: ['three', 'mesh'],
   props: {
     color: { type: String, default: '#ffffff' },
     thicknessColor: { type: String, default: '#ffffff' },
@@ -1351,6 +1417,13 @@ var SubSurfaceMaterial = {
     transparent: { type: Boolean, default: false },
     opacity: { type: Number, default: 1 },
     vertexColors: { type: Boolean, default: false },
+  },
+  created: function created() {
+    this.createMaterial();
+    this.mesh.setMaterial(this.material);
+  },
+  unmounted: function unmounted() {
+    this.material.dispose();
   },
   methods: {
     createMaterial: function createMaterial() {
@@ -1378,14 +1451,21 @@ var SubSurfaceMaterial = {
         vertexColors: this.vertexColors}));
     },
   },
+  render: function render() {
+    return [];
+  },
   __hmrId: 'SubSurfaceMaterial',
 };
 
 var ToonMaterial = {
   extends: Material,
+  props: Object.assign({}, wireframeProps),
   methods: {
     createMaterial: function createMaterial() {
       this.material = new MeshToonMaterial(propsValues(this.$props));
+    },
+    addWatchers: function addWatchers() {
+      bindProps(this, Object.keys(wireframeProps), this.material);
     },
   },
   __hmrId: 'ToonMaterial',
@@ -2443,6 +2523,40 @@ var Sprite = {
   __hmrId: 'Sprite',
 };
 
+var GLTF = {
+  extends: Object3D,
+  emits: ['loaded'],
+  props: {
+    src: String,
+  },
+  created: function created() {
+    var this$1 = this;
+
+    var loader = new GLTFLoader();
+    loader.load(this.src, function (gltf) {
+      this$1.$emit('loaded', gltf);
+      this$1.initObject3D(gltf.scene);
+    });
+  },
+};
+
+var FBX = {
+  extends: Object3D,
+  emits: ['loaded'],
+  props: {
+    src: String,
+  },
+  created: function created() {
+    var this$1 = this;
+
+    var loader = new FBXLoader();
+    loader.load(this.src, function (fbx) {
+      this$1.$emit('loaded', fbx);
+      this$1.initObject3D(fbx);
+    });
+  },
+};
+
 var EffectComposer = {
   setup: function setup() {
     return {
@@ -2810,6 +2924,7 @@ var TROIS = /*#__PURE__*/Object.freeze({
   MatcapMaterial: MatcapMaterial,
   PhongMaterial: PhongMaterial,
   PhysicalMaterial: PhysicalMaterial,
+  ShaderMaterial: ShaderMaterial,
   StandardMaterial: StandardMaterial,
   SubSurfaceMaterial: SubSurfaceMaterial,
   ToonMaterial: ToonMaterial,
@@ -2839,6 +2954,8 @@ var TROIS = /*#__PURE__*/Object.freeze({
   MirrorMesh: MirrorMesh,
   RefractionMesh: RefractionMesh,
   Sprite: Sprite,
+  GLTFModel: GLTF,
+  FBXModel: FBX,
   EffectComposer: EffectComposer,
   RenderPass: RenderPass,
   BokehPass: BokehPass,
@@ -2850,13 +2967,16 @@ var TROIS = /*#__PURE__*/Object.freeze({
   UnrealBloomPass: UnrealBloomPass,
   ZoomBlurPass: ZoomBlurPass,
   setFromProp: setFromProp,
+  bindProps: bindProps,
   bindProp: bindProp,
   propsValues: propsValues,
   lerp: lerp,
   lerpv2: lerpv2,
   lerpv3: lerpv3,
   limit: limit,
-  getMatcapUrl: getMatcapUrl
+  getMatcapUrl: getMatcapUrl,
+  defaultVertexShader: defaultVertexShader,
+  defaultFragmentShader: defaultFragmentShader
 });
 
 var TroisJSVuePlugin = {
@@ -2868,22 +2988,6 @@ var TroisJSVuePlugin = {
       'Renderer',
       'Scene',
       'Group',
-
-      'BoxGeometry',
-      'CircleGeometry',
-      'ConeGeometry',
-      'CylinderGeometry',
-      'DodecahedronGeometry',
-      'IcosahedronGeometry',
-      'LatheGeometry',
-      'OctahedronGeometry',
-      'PolyhedronGeometry',
-      'RingGeometry',
-      'SphereGeometry',
-      'TetrahedronGeometry',
-      'TorusGeometry',
-      'TorusKnotGeometry',
-      'TubeGeometry',
 
       'AmbientLight',
       'DirectionalLight',
@@ -2905,24 +3009,25 @@ var TroisJSVuePlugin = {
       'Texture',
       'CubeTexture',
 
-      'Box',
-      'Circle',
-      'Cone',
-      'Cylinder',
-      'Dodecahedron',
-      'Icosahedron',
       'Mesh',
-      'Lathe',
-      'Octahedron',
+
+      'Box', 'BoxGeometry',
+      'Circle', 'CircleGeometry',
+      'Cone', 'ConeGeometry',
+      'Cylinder', 'CylinderGeometry',
+      'Dodecahedron', 'DodecahedronGeometry',
+      'Icosahedron', 'IcosahedronGeometry',
+      'Lathe', 'LatheGeometry',
+      'Octahedron', 'OctahedronGeometry',
       'Plane',
-      'Polyhedron',
-      'Ring',
-      'Sphere',
-      'Tetrahedron',
+      'Polyhedron', 'PolyhedronGeometry',
+      'Ring', 'RingGeometry',
+      'Sphere', 'SphereGeometry',
+      'Tetrahedron', 'TetrahedronGeometry',
       'Text',
-      'Torus',
-      'TorusKnot',
-      'Tube',
+      'Torus', 'TorusGeometry',
+      'TorusKnot', 'TorusKnotGeometry',
+      'Tube', 'TubeGeometry',
 
       'Gem',
       'Image',
@@ -2930,6 +3035,9 @@ var TroisJSVuePlugin = {
       'MirrorMesh',
       'RefractionMesh',
       'Sprite',
+
+      'FBXModel',
+      'GLTFModel',
 
       'BokehPass',
       'EffectComposer',
@@ -2955,5 +3063,5 @@ function createApp(params) {
   return createApp$1(params).use(TroisJSVuePlugin);
 }
 
-export { AmbientLight, BasicMaterial, BokehPass, Box, BoxGeometry, PerspectiveCamera as Camera, Circle, CircleGeometry, Cone, ConeGeometry, CubeTexture, Cylinder, CylinderGeometry, DirectionalLight, Dodecahedron, DodecahedronGeometry, EffectComposer, FXAAPass, FilmPass, Gem, Group, HalftonePass, HemisphereLight, Icosahedron, IcosahedronGeometry, Image, InstancedMesh, LambertMaterial, Lathe, LatheGeometry, MatcapMaterial, Mesh, MirrorMesh, Octahedron, OctahedronGeometry, OrthographicCamera, PerspectiveCamera, PhongMaterial, PhysicalMaterial, Plane, PointLight, Polyhedron, PolyhedronGeometry, RectAreaLight, RefractionMesh, RenderPass, Renderer, Ring, RingGeometry, SMAAPass, Scene, Sphere, SphereGeometry, SpotLight, Sprite, StandardMaterial, SubSurfaceMaterial, Tetrahedron, TetrahedronGeometry, Text, Texture, TiltShiftPass, ToonMaterial, Torus, TorusGeometry, TorusKnot, TorusKnotGeometry, TroisJSVuePlugin, Tube, TubeGeometry, UnrealBloomPass, ZoomBlurPass, bindProp, createApp, getMatcapUrl, lerp, lerpv2, lerpv3, limit, propsValues, setFromProp };
+export { AmbientLight, BasicMaterial, BokehPass, Box, BoxGeometry, PerspectiveCamera as Camera, Circle, CircleGeometry, Cone, ConeGeometry, CubeTexture, Cylinder, CylinderGeometry, DirectionalLight, Dodecahedron, DodecahedronGeometry, EffectComposer, FBX as FBXModel, FXAAPass, FilmPass, GLTF as GLTFModel, Gem, Group, HalftonePass, HemisphereLight, Icosahedron, IcosahedronGeometry, Image, InstancedMesh, LambertMaterial, Lathe, LatheGeometry, MatcapMaterial, Mesh, MirrorMesh, Octahedron, OctahedronGeometry, OrthographicCamera, PerspectiveCamera, PhongMaterial, PhysicalMaterial, Plane, PointLight, Polyhedron, PolyhedronGeometry, RectAreaLight, RefractionMesh, RenderPass, Renderer, Ring, RingGeometry, SMAAPass, Scene, ShaderMaterial, Sphere, SphereGeometry, SpotLight, Sprite, StandardMaterial, SubSurfaceMaterial, Tetrahedron, TetrahedronGeometry, Text, Texture, TiltShiftPass, ToonMaterial, Torus, TorusGeometry, TorusKnot, TorusKnotGeometry, TroisJSVuePlugin, Tube, TubeGeometry, UnrealBloomPass, ZoomBlurPass, bindProp, bindProps, createApp, defaultFragmentShader, defaultVertexShader, getMatcapUrl, lerp, lerpv2, lerpv3, limit, propsValues, setFromProp };
 //# sourceMappingURL=trois.module.js.map
