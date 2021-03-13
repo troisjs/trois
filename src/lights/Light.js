@@ -11,6 +11,7 @@ export default {
     intensity: { type: Number, default: 1 },
     castShadow: { type: Boolean, default: false },
     shadowMapSize: { type: Object, default: { x: 512, y: 512 } },
+    shadowCamera: { type: Object, default: {} },
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
@@ -26,12 +27,13 @@ export default {
       if (this.light.shadow) {
         this.light.castShadow = this.castShadow;
         setFromProp(this.light.shadow.mapSize, this.shadowMapSize);
+        setFromProp(this.light.shadow.camera, this.shadowCamera);
       }
 
       ['color', 'intensity', 'castShadow'].forEach(p => {
         watch(() => this[p], () => {
           if (p === 'color') {
-            this.light.color = new Color(this.color);
+            this.light.color.set(this.color);
           } else {
             this.light[p] = this[p];
           }
