@@ -53,3 +53,11 @@ export default {
   },
   __hmrId: 'Material',
 };
+
+export const wireframeProps = {
+  wireframe: { type: Boolean, default: false },
+  // not needed for WebGL
+  // wireframeLinecap: { type: String, default: 'round' },
+  // wireframeLinejoin: { type: String, default: 'round' },
+  wireframeLinewidth: { type: Number, default: 1 }, // not really useful
+};

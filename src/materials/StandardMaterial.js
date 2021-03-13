@@ -1,7 +1,7 @@
 import { MeshStandardMaterial } from 'three';
 import { watch } from 'vue';
-import { bindProp, propsValues } from '../tools.js';
-import Material from './Material';
+import { bindProp, bindProps, propsValues } from '../tools.js';
+import Material, { wireframeProps } from './Material';
 
 const props = {
   aoMapIntensity: { type: Number, default: 1 },
@@ -17,12 +17,14 @@ const props = {
   roughness: { type: Number, default: 1 },
   refractionRatio: { type: Number, default: 0.98 },
   flatShading: Boolean,
-  wireframe: Boolean,
 };
 
 export default {
   extends: Material,
-  props,
+  props: {
+    ...props,
+    ...wireframeProps,
+  },
   methods: {
     createMaterial() {
       this.material = new MeshStandardMaterial(propsValues(this.$props, ['normalScale']));
@@ -40,6 +42,7 @@ export default {
         });
       });
       bindProp(this, 'normalScale', this.material);
+      bindProps(this, Object.keys(wireframeProps), this.material);
     },
   },
   __hmrId: 'StandardMaterial',

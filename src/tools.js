@@ -8,6 +8,12 @@ export function setFromProp(o, prop) {
   }
 };
 
+export function bindProps(src, props, dst) {
+  props.forEach(prop => {
+    bindProp(src, prop, dst);
+  });
+};
+
 export function bindProp(src, srcProp, dst, dstProp) {
   if (!dstProp) dstProp = srcProp;
   const ref = toRef(src, srcProp);

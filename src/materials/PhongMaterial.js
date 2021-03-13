@@ -1,7 +1,7 @@
 import { MeshPhongMaterial } from 'three';
 import { watch } from 'vue';
-import { propsValues } from '../tools.js';
-import Material from './Material';
+import { bindProps, propsValues } from '../tools.js';
+import Material, { wireframeProps } from './Material';
 
 export default {
   extends: Material,
@@ -12,6 +12,7 @@ export default {
     shininess: { type: Number, default: 30 },
     specular: { type: [String, Number], default: 0x111111 },
     flatShading: Boolean,
+    ...wireframeProps,
   },
   methods: {
     createMaterial() {
@@ -28,6 +29,7 @@ export default {
           }
         });
       });
+      bindProps(this, Object.keys(wireframeProps), this.material);
     },
   },
   __hmrId: 'PhongMaterial',
