@@ -11,7 +11,7 @@ export default {
   setup(props) {
     const scene = new Scene();
     if (props.background) scene.background = new Color(props.background);
-    watch(() => props.background, (value) => { scene.background = new Color(value); });
+    watch(() => props.background, (value) => { scene.background.set(value); });
     return { scene };
   },
   provide() {
