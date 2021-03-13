@@ -29,8 +29,8 @@ const external = [
 
 const cdnReplaces = {
   'from \'vue\'': 'from \'https://unpkg.com/vue@3.0.7/dist/vue.esm-browser.prod.js\'',
-  'from \'three\'': 'from \'https://unpkg.com/three@0.125.2/build/three.module.js\'',
-  'from \'three/examples': 'from \'https://unpkg.com/three@0.125.2/examples',
+  'from \'three\'': 'from \'https://unpkg.com/three@0.126.1/build/three.module.js\'',
+  'from \'three/examples': 'from \'https://unpkg.com/three@0.126.1/examples',
   delimiters: ['', ''],
 };
 
