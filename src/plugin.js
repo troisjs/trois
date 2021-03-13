@@ -58,6 +58,7 @@ export const TroisJSVuePlugin = {
       'RefractionMesh',
       'Sprite',
 
+      'FBXModel',
       'GLTFModel',
 
       'BokehPass',
