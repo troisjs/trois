@@ -1,4 +1,3 @@
-import { Color } from 'three';
 import { watch } from 'vue';
 import Object3D from '../core/Object3D.js';
 import { bindProp, setFromProp } from '../tools.js';
