@@ -10,6 +10,7 @@ import {
   WebGLRenderTarget,
 } from 'three';
 
+// shaders from https://github.com/evanw/webgl-water
 function LiquidEffect(renderer) {
   this.renderer = renderer;
   this.width = 512;
