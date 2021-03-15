@@ -1,28 +1,16 @@
-import { CircleBufferGeometry } from 'three';
-import { watch } from 'vue';
 import Mesh from './Mesh.js';
+import { props, createGeometry } from '../geometries/CircleGeometry.js';
 
 export default {
   extends: Mesh,
-  props: {
-    radius: { type: Number, default: 1 },
-    segments: { type: Number, default: 8 },
-    thetaStart: { type: Number, default: 0 },
-    thetaLength: { type: Number, default: Math.PI * 2 },
-  },
+  props,
   created() {
     this.createGeometry();
-
-    const watchProps = ['radius', 'segments', 'thetaStart', 'thetaLength'];
-    watchProps.forEach(prop => {
-      watch(() => this[prop], () => {
-        this.refreshGeometry();
-      });
-    });
+    this.addGeometryWatchers(props);
   },
   methods: {
     createGeometry() {
-      this.geometry = new CircleBufferGeometry(this.radius, this.segments, this.thetaStart, this.thetaLength);
+      this.geometry = createGeometry(this);
     },
   },
   __hmrId: 'Circle',
