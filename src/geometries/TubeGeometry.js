@@ -6,7 +6,7 @@ export const props = {
   path: Curve,
   tubularSegments: { type: Number, default: 64 },
   radius: { type: Number, default: 1 },
-  radiusSegments: { type: Number, default: 8 },
+  radialSegments: { type: Number, default: 8 },
   closed: { type: Boolean, default: false },
 };
 
