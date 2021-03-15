@@ -1,26 +1,16 @@
-import { IcosahedronBufferGeometry } from 'three';
-import { watch } from 'vue';
 import Mesh from './Mesh.js';
+import { props, createGeometry } from '../geometries/IcosahedronGeometry.js';
 
 export default {
   extends: Mesh,
-  props: {
-    radius: { type: Number, default: 1 },
-    detail: { type: Number, default: 0 },
-  },
+  props,
   created() {
     this.createGeometry();
-
-    const watchProps = ['radius', 'detail'];
-    watchProps.forEach(prop => {
-      watch(() => this[prop], () => {
-        this.refreshGeometry();
-      });
-    });
+    this.addGeometryWatchers(props);
   },
   methods: {
     createGeometry() {
-      this.geometry = new IcosahedronBufferGeometry(this.radius, this.detail);
+      this.geometry = createGeometry(this);
     },
   },
   __hmrId: 'Icosahedron',

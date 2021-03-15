@@ -1,15 +1,21 @@
 import { DodecahedronGeometry } from 'three';
 import Geometry from './Geometry.js';
 
+export const props = {
+  radius: { type: Number, default: 1 },
+  detail: { type: Number, default: 0 },
+};
+
+export function createGeometry(comp) {
+  return new DodecahedronGeometry(comp.radius, comp.detail);
+};
+
 export default {
   extends: Geometry,
-  props: {
-    radius: { type: Number, default: 1 },
-    detail: { type: Number, default: 0 },
-  },
+  props,
   methods: {
     createGeometry() {
-      this.geometry = new DodecahedronGeometry(this.radius, this.detail);
+      this.geometry = createGeometry(this);
     },
   },
 };

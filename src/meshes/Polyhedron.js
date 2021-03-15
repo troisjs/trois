@@ -1,28 +1,16 @@
-import { PolyhedronBufferGeometry } from 'three';
-import { watch } from 'vue';
 import Mesh from './Mesh.js';
+import { props, createGeometry } from '../geometries/PolyhedronGeometry.js';
 
 export default {
   extends: Mesh,
-  props: {
-    vertices: Array,
-    indices: Array,
-    radius: { type: Number, default: 1 },
-    detail: { type: Number, default: 0 },
-  },
+  props,
   created() {
     this.createGeometry();
-
-    const watchProps = ['vertices', 'indices', 'radius', 'detail'];
-    watchProps.forEach(prop => {
-      watch(() => this[prop], () => {
-        this.refreshGeometry();
-      });
-    });
+    this.addGeometryWatchers(props);
   },
   methods: {
     createGeometry() {
-      this.geometry = new PolyhedronBufferGeometry(this.vertices, this.indices, this.radius, this.detail);
+      this.geometry = createGeometry(this);
     },
   },
   __hmrId: 'Polyhedron',
