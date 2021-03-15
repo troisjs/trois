@@ -6,7 +6,8 @@ export default {
   inject: ['material'],
   emits: ['loaded'],
   props: {
-    id: { type: String, default: 'map' },
+    name: { type: String, default: 'map' },
+    uniform: { type: String, default: null },
     src: String,
     onLoad: Function,
     onProgress: Function,
@@ -25,7 +26,7 @@ export default {
     watch(() => this.src, this.refreshTexture);
   },
   unmounted() {
-    if (this.material && this.material.setTexture) this.material.setTexture(null, this.id);
+    if (this.material && this.material.setTexture) this.material.setTexture(null, this.name);
     this.texture.dispose();
   },
   methods: {
@@ -38,10 +39,16 @@ export default {
     },
     refreshTexture() {
       this.createTexture();
-      if (this.material && this.material.setTexture) { this.material.setTexture(this.texture, this.id); }
+      // handle standard material
+      if (this.material && this.material.setTexture) { this.material.setTexture(this.texture, this.name); }
+      // handle shader material
       else if (this.material && this.material.material.type === "ShaderMaterial") {
-        const id = this.id === 'map' ? this.src.replace(/\..*/, '') : this.id;
-        this.material.uniforms[id] = { value: this.texture };
+        // require a `uniform` prop so we know what to call the uniform
+        if (!this.uniform) {
+          console.warn('"uniform" prop required to use texture in a shader.')
+          return
+        }
+        this.material.uniforms[this.uniform] = { value: this.texture };
       }
     },
     onLoaded() {
