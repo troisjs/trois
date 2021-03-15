@@ -19,7 +19,7 @@ export default {
     this.liquidEffect = new LiquidEffect(this.three.renderer);
     this.rendererComponent.onMounted(() => {
       this.liquidEffect.renderer = this.rendererComponent.renderer;
-      this.three.onBeforeRender(this.liquidEffect.update);
+      this.three.onBeforeRender(this.update);
     });
 
     this.material = new MeshStandardMaterial({ color: this.color, side: DoubleSide, metalness: this.metalness, roughness: this.roughness,
@@ -44,6 +44,11 @@ export default {
     this.initObject3D(this.mesh);
   },
   unmounted() {
-    this.three.offBeforeRender(this.liquidEffect.update);
+    this.three.offBeforeRender(this.update);
+  },
+  methods: {
+    update() {
+      this.liquidEffect.update();
+    },
   },
 };
