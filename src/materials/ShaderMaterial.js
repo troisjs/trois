@@ -9,6 +9,11 @@ export default {
     vertexShader: { type: String, default: defaultVertexShader },
     fragmentShader: { type: String, default: defaultFragmentShader },
   },
+  provide() {
+    return {
+      material: this,
+    };
+  },
   created() {
     this.createMaterial();
     ['vertexShader', 'fragmentShader'].forEach(p => {
@@ -29,7 +34,7 @@ export default {
     },
   },
   render() {
-    return [];
+    return this.$slots.default ? this.$slots.default() : [];
   },
   __hmrId: 'ShaderMaterial',
 };
