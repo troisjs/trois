@@ -1,4 +1,3 @@
-import { watch } from 'vue';
 import Mesh from './Mesh.js';
 import { props, createGeometry } from '../geometries/BoxGeometry.js';
 
@@ -7,11 +6,7 @@ export default {
   props,
   created() {
     this.createGeometry();
-    Object.keys(props).forEach(prop => {
-      watch(() => this[prop], () => {
-        this.refreshGeometry();
-      });
-    });
+    this.addGeometryWatchers(props);
   },
   methods: {
     createGeometry() {
