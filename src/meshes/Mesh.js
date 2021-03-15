@@ -42,6 +42,13 @@ export default {
 
       this.initObject3D(this.mesh);
     },
+    addGeometryWatchers(props) {
+      Object.keys(props).forEach(prop => {
+        watch(() => this[prop], () => {
+          this.refreshGeometry();
+        });
+      });
+    },
     setGeometry(geometry) {
       this.geometry = geometry;
       if (this.mesh) this.mesh.geometry = geometry;
