@@ -25,7 +25,7 @@ export default {
     watch(() => this.src, this.refreshTexture);
   },
   unmounted() {
-    this.material.setTexture(null, this.id);
+    if (this.material && this.material.setTexture) this.material.setTexture(null, this.id);
     this.texture.dispose();
   },
   methods: {
@@ -38,7 +38,11 @@ export default {
     },
     refreshTexture() {
       this.createTexture();
-      this.material.setTexture(this.texture, this.id);
+      if (this.material && this.material.setTexture) { this.material.setTexture(this.texture, this.id); }
+      else if (this.material && this.material.material.type === "ShaderMaterial") {
+        const id = this.id === 'map' ? this.src.replace(/\..*/, '') : this.id;
+        this.material.uniforms[id] = { value: this.texture };
+      }
     },
     onLoaded() {
       if (this.onLoad) this.onLoad();
