@@ -3,7 +3,7 @@ import {
   Mesh,
   NearestFilter,
   OrthographicCamera,
-  PlaneBufferGeometry,
+  PlaneGeometry,
   RGBAFormat,
   ShaderMaterial,
   Uniform,
@@ -181,7 +181,7 @@ LiquidEffect.prototype.swapBuffers = function () {
 // from https://threejs.org/examples/js/postprocessing/EffectComposer.js
 const FullScreenQuad = (function () {
   const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
-  const geometry = new PlaneBufferGeometry(2, 2);
+  const geometry = new PlaneGeometry(2, 2);
 
   const FullScreenQuad = function (material) {
     this._mesh = new Mesh(geometry, material);

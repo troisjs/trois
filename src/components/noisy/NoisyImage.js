@@ -1,4 +1,4 @@
-import { DoubleSide, MeshBasicMaterial, PlaneBufferGeometry } from 'three';
+import { DoubleSide, MeshBasicMaterial, PlaneGeometry } from 'three';
 import { watch } from 'vue';
 import Image from '../../meshes/Image.js';
 import snoise2 from '../../glsl/snoise2.glsl.js';
@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new PlaneBufferGeometry(1, 1, this.widthSegments, this.heightSegments);
+      this.geometry = new PlaneGeometry(1, 1, this.widthSegments, this.heightSegments);
     },
     createMaterial() {
       this.material = new MeshBasicMaterial({ side: DoubleSide, map: this.loadTexture() });

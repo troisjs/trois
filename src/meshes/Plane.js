@@ -1,4 +1,4 @@
-import { PlaneBufferGeometry } from 'three';
+import { PlaneGeometry } from 'three';
 import { watch } from 'vue';
 import Mesh from './Mesh.js';
 
@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new PlaneBufferGeometry(this.width, this.height, this.widthSegments, this.heightSegments);
+      this.geometry = new PlaneGeometry(this.width, this.height, this.widthSegments, this.heightSegments);
     },
   },
   __hmrId: 'Plane',

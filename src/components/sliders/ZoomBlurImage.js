@@ -1,6 +1,6 @@
 import {
   Mesh,
-  PlaneBufferGeometry,
+  PlaneGeometry,
   ShaderMaterial,
   Vector2,
 } from 'three';
@@ -19,7 +19,7 @@ export default function ZoomBlurImage(three) {
   return { geometry, material, mesh, uCenter, uStrength, setMap, updateUV };
 
   function init() {
-    geometry = new PlaneBufferGeometry(2, 2, 1, 1);
+    geometry = new PlaneGeometry(2, 2, 1, 1);
 
     material = new ShaderMaterial({
       transparent: true,

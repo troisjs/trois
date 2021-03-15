@@ -1,4 +1,4 @@
-import { DoubleSide, MeshBasicMaterial, PlaneBufferGeometry, TextureLoader } from 'three';
+import { DoubleSide, MeshBasicMaterial, PlaneGeometry, TextureLoader } from 'three';
 import { watch } from 'vue';
 import Mesh from './Mesh.js';
 
@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new PlaneBufferGeometry(1, 1, 1, 1);
+      this.geometry = new PlaneGeometry(1, 1, 1, 1);
     },
     createMaterial() {
       this.material = new MeshBasicMaterial({ side: DoubleSide, map: this.loadTexture() });

@@ -1,4 +1,4 @@
-import { FontLoader, TextBufferGeometry } from 'three';
+import { FontLoader, TextGeometry } from 'three';
 import { watch } from 'vue';
 import Mesh from './Mesh.js';
 import TextProps from './TextProps.js';
@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     createGeometry() {
-      this.geometry = new TextBufferGeometry(this.text, {
+      this.geometry = new TextGeometry(this.text, {
         font: this.font,
         size: this.size,
         height: this.height,

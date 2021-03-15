@@ -1,4 +1,4 @@
-import { DoubleSide, Mesh, MeshStandardMaterial, PlaneBufferGeometry } from 'three';
+import { DoubleSide, Mesh, MeshStandardMaterial, PlaneGeometry } from 'three';
 import { watch } from 'vue';
 import Object3D from '../../core/Object3D.js';
 import { bindProps } from '../../tools.js';
@@ -39,7 +39,7 @@ export default {
     bindProps(this, ['metalness', 'roughness'], this.material);
     watch(() => this.color, (value) => this.material.color.set(value));
 
-    this.geometry = new PlaneBufferGeometry(this.width, this.height, this.widthSegments, this.heightSegments);
+    this.geometry = new PlaneGeometry(this.width, this.height, this.widthSegments, this.heightSegments);
     this.mesh = new Mesh(this.geometry, this.material);
     this.initObject3D(this.mesh);
   },
