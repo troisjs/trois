@@ -13,7 +13,7 @@ export default {
     onLoad: Function,
     onProgress: Function,
     onError: Function,
-    id: { type: String, default: 'envMap' },
+    name: { type: String, default: 'envMap' },
     refraction: Boolean,
     // todo: remove ?
     refractionRatio: { type: Number, default: 0.98 },
@@ -24,7 +24,7 @@ export default {
     watch(() => this.urls, this.refreshTexture);
   },
   unmounted() {
-    this.material.setTexture(null, this.id);
+    this.material.setTexture(null, this.name);
     this.texture.dispose();
   },
   methods: {
@@ -35,7 +35,7 @@ export default {
     },
     refreshTexture() {
       this.createTexture();
-      this.material.setTexture(this.texture, this.id);
+      this.material.setTexture(this.texture, this.name);
       if (this.refraction) {
         this.texture.mapping = CubeRefractionMapping;
         this.material.setProp('refractionRatio', this.refractionRatio);
