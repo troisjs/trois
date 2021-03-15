@@ -25,7 +25,6 @@ function LiquidEffect(renderer) {
     type: FloatType,
     format: RGBAFormat,
     depthBuffer: false,
-    // stencilBuffer: false,
   };
 
   this.hMap = new WebGLRenderTarget(this.width, this.height, targetOptions);
