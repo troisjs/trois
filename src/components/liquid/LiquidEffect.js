@@ -1,6 +1,7 @@
 import {
   FloatType,
   Mesh,
+  NearestFilter,
   OrthographicCamera,
   PlaneBufferGeometry,
   RGBAFormat,
@@ -18,8 +19,17 @@ function LiquidEffect(renderer) {
   // this.delta = new Vector2(this.width / Math.pow(width, 2), this.height / Math.pow(height, 2));
   this.delta = new Vector2(1 / this.width, 1 / this.height);
 
-  this.hMap = new WebGLRenderTarget(this.width, this.height, { type: FloatType, format: RGBAFormat, depthBuffer: false, stencilBuffer: false });
-  this.hMap1 = new WebGLRenderTarget(this.width, this.height, { type: FloatType, format: RGBAFormat, depthBuffer: false, stencilBuffer: false });
+  const targetOptions = {
+    minFilter: NearestFilter,
+    magFilter: NearestFilter,
+    type: FloatType,
+    format: RGBAFormat,
+    depthBuffer: false,
+    // stencilBuffer: false,
+  };
+
+  this.hMap = new WebGLRenderTarget(this.width, this.height, targetOptions);
+  this.hMap1 = new WebGLRenderTarget(this.width, this.height, targetOptions);
   this.fsQuad = new FullScreenQuad();
 
   this.initShaders();
@@ -150,10 +160,10 @@ LiquidEffect.prototype.addDrop = function (x, y, radius, strength) {
   this.swapBuffers();
 };
 
-LiquidEffect.prototype.renderBuffer = function (buffer, target) {
-  this.copyMat.uniforms.tDiffuse.value = buffer.texture;
-  this.renderShaderMat(this.copyMat, target);
-};
+// LiquidEffect.prototype.renderBuffer = function (buffer, target) {
+//   this.copyMat.uniforms.tDiffuse.value = buffer.texture;
+//   this.renderShaderMat(this.copyMat, target);
+// };
 
 LiquidEffect.prototype.renderShaderMat = function (mat, target) {
   this.fsQuad.material = mat;
