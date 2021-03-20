@@ -4,7 +4,7 @@ import { bindProp } from '../tools.js';
 export default {
   name: 'Object3D',
   inject: ['three', 'scene', 'rendererComponent'],
-  emits: ['ready'],
+  emits: ['created', 'ready'],
   props: {
     position: { type: Object, default: { x: 0, y: 0, z: 0 } },
     rotation: { type: Object, default: { x: 0, y: 0, z: 0 } },
@@ -19,6 +19,7 @@ export default {
   methods: {
     initObject3D(o3d) {
       this.o3d = o3d;
+      this.$emit('created', this.o3d);
 
       bindProp(this, 'position', this.o3d);
       bindProp(this, 'rotation', this.o3d);
