@@ -1,6 +1,6 @@
-import { watch } from 'vue';
 import { InstancedMesh } from 'three';
 import Object3D from '../core/Object3D.js';
+import { bindProp } from '../tools.js';
 
 export default {
   extends: Object3D,
@@ -19,17 +19,15 @@ export default {
       console.error('Missing Geometry');
     }
   },
-  created() {
+  mounted() {
     this.initMesh();
   },
   methods: {
     initMesh() {
       this.mesh = new InstancedMesh(this.geometry, this.material, this.count);
 
-      ['castShadow', 'receiveShadow'].forEach(p => {
-        this.mesh[p] = this[p];
-        watch(() => this[p], () => { this.mesh[p] = this[p]; });
-      });
+      bindProp(this, 'castShadow', this.mesh);
+      bindProp(this, 'receiveShadow', this.mesh);
 
       this.initObject3D(this.mesh);
     },
@@ -39,6 +37,7 @@ export default {
     },
     setMaterial(material) {
       this.material = material;
+      this.material.instancingColor = true;
       if (this.mesh) this.mesh.material = material;
     },
   },
