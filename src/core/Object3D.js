@@ -4,6 +4,7 @@ import { bindProp } from '../tools.js';
 export default {
   name: 'Object3D',
   inject: ['three', 'scene', 'rendererComponent'],
+  emits: ['ready'],
   props: {
     position: { type: Object, default: { x: 0, y: 0, z: 0 } },
     rotation: { type: Object, default: { x: 0, y: 0, z: 0 } },
@@ -37,6 +38,8 @@ export default {
         parent = parent.$parent;
       }
       if (!this._parent) console.error('Missing parent (Scene, Group...)');
+
+      this.$emit('ready', this);
     },
     add(o) { this.o3d.add(o); },
     remove(o) { this.o3d.remove(o); },
