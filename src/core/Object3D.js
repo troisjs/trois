@@ -38,8 +38,7 @@ export default {
         parent = parent.$parent;
       }
       if (!this._parent) console.error('Missing parent (Scene, Group...)');
-
-      this.$emit('ready', this);
+      else this.$emit('ready', this);
     },
     add(o) { this.o3d.add(o); },
     remove(o) { this.o3d.remove(o); },
