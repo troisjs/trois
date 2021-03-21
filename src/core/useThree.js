@@ -275,7 +275,7 @@ export default function useThree() {
           const o = onObjects[i].object;
           if (!o.hover && o.onHover) {
             o.hover = true;
-            o.onHover(true);
+            o.onHover(true, onObjects[i]);
           }
           offObjects.splice(offObjects.indexOf(o), 1);
         }
@@ -283,7 +283,7 @@ export default function useThree() {
           const o = offObjects[i];
           if (o.hover && o.onHover) {
             o.hover = false;
-            o.onHover(false);
+            o.onHover(false, offObjects[i]);
           }
         }
       }

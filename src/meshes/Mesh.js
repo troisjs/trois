@@ -31,7 +31,7 @@ export default {
       });
 
       if (this.onHover) {
-        this.mesh.onHover = (over) => { this.onHover({ component: this, over }); };
+        this.mesh.onHover = (over, hit) => { this.onHover({ component: this, over, hit }); };
         this.three.addIntersectObject(this.mesh);
       }
 

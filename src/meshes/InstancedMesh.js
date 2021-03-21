@@ -8,6 +8,8 @@ export default {
     castShadow: Boolean,
     receiveShadow: Boolean,
     count: Number,
+    onHover: Function,
+    onClick: Function
   },
   provide() {
     return {
@@ -28,6 +30,16 @@ export default {
 
       bindProp(this, 'castShadow', this.mesh);
       bindProp(this, 'receiveShadow', this.mesh);
+
+      if (this.onHover) {
+        this.mesh.onHover = (over, hit) => { this.onHover({ component: this, over, hit }); };
+        this.three.addIntersectObject(this.mesh);
+      }
+
+      if (this.onClick) {
+        this.mesh.onClick = (e) => { this.onClick({ component: this, event: e }); };
+        this.three.addIntersectObject(this.mesh);
+      }
 
       this.initObject3D(this.mesh);
     },
