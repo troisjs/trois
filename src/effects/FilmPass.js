@@ -29,8 +29,7 @@ export default {
   },
   mounted() {
     const pass = new FilmPass(this.noiseIntensity, this.scanlinesIntensity, this.scanlinesCount, this.grayscale);
-    this.passes.push(pass);
-    this.pass = pass;
+    this.completePass(pass);
   },
   __hmrId: 'FilmPass',
 };

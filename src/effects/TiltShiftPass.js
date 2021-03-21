@@ -39,6 +39,9 @@ export default {
     this.pass.setSize = (width, height) => {
       uniforms.texSize.value.set(width, height);
     };
+
+    this.completePass(pass);
+    this.completePass(pass1);
   },
   methods: {
     updateFocusLine() {

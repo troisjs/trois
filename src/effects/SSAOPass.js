@@ -18,8 +18,7 @@ export default {
       this.three.size.width,
       this.three.size.height
     );
-    this.passes.push(pass);
-    this.pass = pass;
+    this.completePass(pass);
 
     for (let key of Object.keys(this.options)) {
       this.pass[key] = this.options[key];
