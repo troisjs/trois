@@ -36,5 +36,5 @@ export default {
       this.pass.height = this.three.size.height
     },
   },
-  __hmrId: 'FXAAPass',
+  __hmrId: 'SSAOPass',
 };
