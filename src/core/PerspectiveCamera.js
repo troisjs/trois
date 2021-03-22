@@ -1,8 +1,10 @@
 import { PerspectiveCamera } from 'three';
 import { watch } from 'vue';
 import { bindProp } from '../tools.js';
+import Camera from './Camera.js';
 
 export default {
+  extends: Camera,
   name: 'PerspectiveCamera',
   inject: ['three'],
   props: {
@@ -29,6 +31,5 @@ export default {
 
     this.three.camera = this.camera;
   },
-  render() { return []; },
   __hmrId: 'PerspectiveCamera',
 };
