@@ -94,6 +94,7 @@ export default {
             instanceId: intersect.instanceId
           }
         });
+        // TODO: optimize
         const newIntersects = intersects.filter(intersect => !old.find(val => val.object === intersect.object && val.instanceId === intersect.instanceId));
         if (newIntersects.length) {
           this.onPointerEnter(newIntersects)
@@ -113,6 +114,7 @@ export default {
             instanceId: intersect.instanceId
           }
         });
+        // TODO: optimize
         const expiredIntersects = this._intersects.filter(intersect => !newObjects.find(val => val.object === intersect.object && val.instanceId === intersect.instanceId));
         if (expiredIntersects.length) {
           this.onPointerLeave(expiredIntersects)
