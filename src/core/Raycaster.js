@@ -39,10 +39,9 @@ export default {
   },
   setup() {
     const raycaster = new Raycaster();
-    // TODO: change to 'pointer', add event listeners for mousemove and touch
-    const mouse = new Vector2();
+    const pointer = new Vector2();
 
-    return { mouse, raycaster }
+    return { pointer, raycaster }
   },
   data() {
     return {
@@ -61,6 +60,11 @@ export default {
         parent = parent.$parent
       }
     }
+
+    // add event listeners
+    window.addEventListener('mousemove', this.onMouseMove)
+    window.addEventListener('touchstart', this.onTouchMove)
+    window.addEventListener('touchmove', this.onTouchMove)
 
     // add update method
     this.three.onBeforeRender(this.update)
@@ -81,7 +85,7 @@ export default {
       }
 
       // run standard camera-based raycaster...
-      this.raycaster.setFromCamera(this.mouse, this.raycasterCamera);
+      this.raycaster.setFromCamera(this.pointer, this.raycasterCamera);
       const intersects = this.raycaster.intersectObjects(
         // ...against either our predefined objects or all objects in scene
         this.intersects || scene.children
@@ -124,10 +128,25 @@ export default {
 
       // save internal intersect list
       this._intersects = intersects;
+    },
+    onMouseMove(evt) {
+      this.pointer.x = (evt.offsetX / this.three.size.width) * 2 - 1;
+      this.pointer.y = - (evt.offsetY / this.three.size.height) * 2 + 1;
+    },
+    onTouchMove(evt) {
+      const touch = evt.touches[0]
+      const { top: canvasTop, left: canvasLeft } = touch.target.getBoundingClientRect()
+      this.pointer.x = ((touch.clientX - canvasLeft) / this.three.size.width) * 2 - 1
+      this.pointer.y = -((touch.clientY) / this.three.size.height) * 2 + 1
     }
   },
   render() {
     return this.$slots.default ? this.$slots.default() : [];
+  },
+  unmounted() {
+    window.removeEventListener('mousemove', this.onMouseMove)
+    window.removeEventListener('touchstart', this.onTouchMove)
+    window.removeEventListener('touchmove', this.onTouchMove)
   },
   __hmrId: 'Raycaster',
 };
