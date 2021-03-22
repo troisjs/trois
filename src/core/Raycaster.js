@@ -49,6 +49,14 @@ export default {
     }
   },
   mounted() {
+    // add update method
+    this.three.onBeforeRender(this.update)
+
+    // if we have a custom onBeforeRender method, assume 
+    // the user is handling everything and exit setup
+    if (this.onBeforeRender) return;
+
+
     // prep non-reactive list of intersections
     this._intersects = []
 
@@ -65,9 +73,6 @@ export default {
     window.addEventListener('mousemove', this.onMouseMove)
     window.addEventListener('touchstart', this.onTouchMove)
     window.addEventListener('touchmove', this.onTouchMove)
-
-    // add update method
-    this.three.onBeforeRender(this.update)
   },
   methods: {
     update() {
