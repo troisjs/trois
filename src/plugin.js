@@ -7,6 +7,7 @@ export const TroisJSVuePlugin = {
       'Camera',
       'OrthographicCamera',
       'PerspectiveCamera',
+      'Raycaster',
       'Renderer',
       'Scene',
       'Group',
