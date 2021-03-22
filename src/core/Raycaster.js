@@ -39,6 +39,7 @@ export default {
   },
   setup() {
     const raycaster = new Raycaster();
+    // TODO: change to 'pointer', add event listeners for mousemove and touch
     const mouse = new Vector2();
 
     return { mouse, raycaster }
