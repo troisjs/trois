@@ -1,5 +1,3 @@
-import { watch } from 'vue';
-import { bindProp } from '../tools.js';
 import { Raycaster, Vector2 } from 'three'
 
 export default {
