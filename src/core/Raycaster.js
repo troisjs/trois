@@ -96,6 +96,21 @@ export default {
         this.intersects || scene.children
       );
 
+      // capture expired intersects
+      if (this.onPointerLeave) {
+        const newObjects = intersects.map(intersect => {
+          return {
+            object: intersect.object,
+            instanceId: intersect.instanceId
+          }
+        });
+        // TODO: optimize
+        const expiredIntersects = this._intersects.filter(intersect => !newObjects.find(val => val.object === intersect.object && val.instanceId === intersect.instanceId));
+        if (expiredIntersects.length) {
+          this.onPointerLeave(expiredIntersects)
+        }
+      }
+
       // capture new intersects
       if (this.onPointerEnter) {
         const old = this._intersects.map(intersect => {
@@ -114,21 +129,6 @@ export default {
       // capture current intersects
       if (this.onPointerOver) {
         this.onPointerOver(intersects)
-      }
-
-      // capture expired intersects
-      if (this.onPointerLeave) {
-        const newObjects = intersects.map(intersect => {
-          return {
-            object: intersect.object,
-            instanceId: intersect.instanceId
-          }
-        });
-        // TODO: optimize
-        const expiredIntersects = this._intersects.filter(intersect => !newObjects.find(val => val.object === intersect.object && val.instanceId === intersect.instanceId));
-        if (expiredIntersects.length) {
-          this.onPointerLeave(expiredIntersects)
-        }
       }
 
       // save internal intersect list
