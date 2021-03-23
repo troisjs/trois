@@ -19,9 +19,10 @@ export default function useThree() {
     alpha: false,
     autoClear: true,
     orbit_ctrl: false,
-    mouse_move: false,
-    mouse_raycast: false,
-    mouse_over: false,
+    // mouse_move: false,
+    // mouse_raycast: false,
+    // mouse_over: false,
+    use_pointer: true,
     click: false,
     resize: true,
     width: 0,
@@ -41,7 +42,7 @@ export default function useThree() {
   let beforeRenderCallbacks = [];
 
   // mouse tracking
-  const mouse = new Vector2();
+  const mouse = new Vector2(Infinity, Infinity);
   const mouseV3 = new Vector3();
   const mousePlane = new Plane(new Vector3(0, 0, 1), 0);
   const raycaster = new Raycaster();
@@ -59,6 +60,7 @@ export default function useThree() {
     scene: null,
     size,
     mouse, mouseV3,
+    raycaster,
     init,
     dispose,
     render,
@@ -109,15 +111,17 @@ export default function useThree() {
       setSize(conf.width | 300, conf.height | 150);
     }
 
-    conf.mouse_move = conf.mouse_move || conf.mouse_over;
-    if (conf.mouse_move) {
-      if (conf.mouse_move === 'body') {
+    // conf.mouse_move = conf.mouse_move || conf.mouse_over;
+    if (conf.use_pointer) {
+      if (conf.use_pointer === true) {
         obj.mouse_move_element = document.body;
       } else {
         obj.mouse_move_element = obj.renderer.domElement;
       }
       obj.mouse_move_element.addEventListener('mousemove', onMousemove);
       obj.mouse_move_element.addEventListener('mouseleave', onMouseleave);
+      obj.mouse_move_element.addEventListener('touchstart', onTouchstart);
+      obj.mouse_move_element.addEventListener('touchmove', onTouchmove)
     }
 
     if (conf.click) {
@@ -258,36 +262,50 @@ export default function useThree() {
    * mouse change
    */
   function onMousechange(e) {
-    if (conf.mouse_over || conf.mouse_raycast) {
-      raycaster.setFromCamera(mouse, obj.camera);
+    // if (conf.mouse_over || conf.mouse_raycast) {
+    //   raycaster.setFromCamera(mouse, obj.camera);
 
-      if (conf.mouse_raycast) {
-        // get mouse 3d position
-        obj.camera.getWorldDirection(mousePlane.normal);
-        mousePlane.normal.normalize();
-        raycaster.ray.intersectPlane(mousePlane, mouseV3);
-      }
+    //   if (conf.mouse_raycast) {
+    //     // get mouse 3d position
+    //     obj.camera.getWorldDirection(mousePlane.normal);
+    //     mousePlane.normal.normalize();
+    //     raycaster.ray.intersectPlane(mousePlane, mouseV3);
+    //   }
 
-      if (conf.mouse_over) {
-        const onObjects = raycaster.intersectObjects(intersectObjects);
-        const offObjects = [...intersectObjects];
-        for (let i = 0; i < onObjects.length; i++) {
-          const o = onObjects[i].object;
-          if (!o.hover && o.onHover) {
-            o.hover = true;
-            o.onHover(true);
-          }
-          offObjects.splice(offObjects.indexOf(o), 1);
-        }
-        for (let i = 0; i < offObjects.length; i++) {
-          const o = offObjects[i];
-          if (o.hover && o.onHover) {
-            o.hover = false;
-            o.onHover(false);
-          }
-        }
-      }
-    }
+    //   if (conf.mouse_over) {
+    //     const onObjects = raycaster.intersectObjects(intersectObjects);
+    //     const offObjects = [...intersectObjects];
+    //     for (let i = 0; i < onObjects.length; i++) {
+    //       const o = onObjects[i].object;
+    //       if (!o.hover && o.onHover) {
+    //         o.hover = true;
+    //         o.onHover(true);
+    //       }
+    //       offObjects.splice(offObjects.indexOf(o), 1);
+    //     }
+    //     for (let i = 0; i < offObjects.length; i++) {
+    //       const o = offObjects[i];
+    //       if (o.hover && o.onHover) {
+    //         o.hover = false;
+    //         o.onHover(false);
+    //       }
+    //     }
+    //   }
+    // }
+  }
+
+  /**
+   * touch start
+   */
+  function onTouchstart(evt) {
+    console.log('TODO: touchstart', evt)
+  }
+
+  /**
+   * touch move
+   */
+  function onTouchmove(evt) {
+    console.log('TODO: touchmove', evt)
   }
 
   /**
