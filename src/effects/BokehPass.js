@@ -37,8 +37,7 @@ export default {
       height: this.three.size.height,
     };
     const pass = new BokehPass(this.three.scene, this.three.camera, params);
-    this.passes.push(pass);
-    this.pass = pass;
+    this.completePass(pass);
   },
   __hmrId: 'BokehPass',
 };

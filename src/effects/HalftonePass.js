@@ -22,8 +22,7 @@ export default {
       });
     });
 
-    this.passes.push(pass);
-    this.pass = pass;
+    this.completePass(pass);
   },
   __hmrId: 'HalftonePass',
 };

@@ -6,8 +6,7 @@ export default {
   mounted() {
     // three size is not set yet, but this pass will be resized by effect composer
     const pass = new SMAAPass(this.three.size.width, this.three.size.height);
-    this.passes.push(pass);
-    this.pass = pass;
+    this.completePass(pass);
   },
   __hmrId: 'SMAAPass',
 };
