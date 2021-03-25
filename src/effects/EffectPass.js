@@ -1,5 +1,6 @@
 export default {
   inject: ['three', 'passes'],
+  events: ['ready'],
   beforeMount() {
     if (!this.passes) {
       console.error('Missing parent EffectComposer');
@@ -7,6 +8,13 @@ export default {
   },
   unmounted() {
     if (this.pass.dispose) this.pass.dispose();
+  },
+  methods: {
+    completePass(pass) {
+      this.passes.push(pass);
+      this.pass = pass;
+      this.$emit('ready', pass);
+    }
   },
   render() {
     return [];

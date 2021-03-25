@@ -17,8 +17,7 @@ export default {
   mounted() {
     const size = new Vector2(this.three.size.width, this.three.size.height);
     const pass = new UnrealBloomPass(size, this.strength, this.radius, this.threshold);
-    this.passes.push(pass);
-    this.pass = pass;
+    this.completePass(pass);
   },
   __hmrId: 'UnrealBloomPass',
 };

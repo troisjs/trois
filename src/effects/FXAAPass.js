@@ -6,8 +6,7 @@ export default {
   extends: EffectPass,
   mounted() {
     const pass = new ShaderPass(FXAAShader);
-    this.passes.push(pass);
-    this.pass = pass;
+    this.completePass(pass);
 
     // resize will be called in three init
     this.three.onAfterResize(this.resize);
