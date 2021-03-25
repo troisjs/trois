@@ -4,7 +4,7 @@ import { bindProp } from '../tools/index.js';
 export default {
   name: 'Object3D',
   inject: ['three', 'scene', 'rendererComponent'],
-  emits: ['created', 'ready'],
+  emits: ['created', 'ready', 'pointerEnter', 'pointerOver', 'pointerLeave'],
   props: {
     position: { type: Object, default: { x: 0, y: 0, z: 0 } },
     rotation: { type: Object, default: { x: 0, y: 0, z: 0 } },
@@ -12,11 +12,12 @@ export default {
     lookAt: { type: Object, default: null },
     onPointerEnter: { type: Function, default: null },
     onPointerOver: { type: Function, default: null },
-    onPointerLeave: { type: Function, default: null }
+    onPointerLeave: { type: Function, default: null },
+    usePointerEvents: { type: Boolean, default: false }
   },
-  data(){
+  data() {
     return {
-      pointerIsOver: null
+      pointerOver: null
     }
   },
   // can't use setup because it will not be used in sub components
@@ -60,7 +61,44 @@ export default {
       this.three.raycaster.setFromCamera(this.three.mouse, this.three.camera)
       const intersects = this.three.raycaster.intersectObjects([this.o3d])
       if (intersects.length) {
-        this.onPointerEnter(intersects[0])
+        // pass single intersection if we only have one, for convenience
+        const toPass = intersects.length === 1 ? intersects[0] : intersects;
+
+        // pointer is newly over o3d
+        if (!this.pointerOver) {
+          this.pointerOver = true;
+
+          if (this.onPointerEnter) {
+
+            this.onPointerEnter({ object: this.o3d, intersects: toPass });
+
+            if (this.usePointerEvents) {
+              this.$emit('pointerEnter', toPass);
+            }
+          }
+        }
+        // pointer is still over o3d
+        else if (this.onPointerOver) {
+          this.onPointerOver({ object: this.o3d, intersects: toPass });
+
+          if (this.usePointerEvents) {
+            this.$emit('pointerOver', toPass);
+          }
+        }
+      } else {
+        // pointer is not over o3d
+
+        // pointer has just left o3d
+        if (this.pointerOver) {
+          this.pointerOver = false;
+          if (this.onPointerLeave) {
+            this.onPointerLeave({ object: this.o3d });
+          }
+
+          if (this.usePointerEvents) {
+            this.$emit('pointerLeave');
+          }
+        }
       }
     }
   },

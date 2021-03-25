@@ -114,9 +114,11 @@ export default function useThree() {
     // conf.mouse_move = conf.mouse_move || conf.mouse_over;
     if (conf.use_pointer) {
       if (conf.use_pointer === true) {
-        obj.mouse_move_element = document.body;
-      } else {
+        // use renderer as mousemove by default
         obj.mouse_move_element = obj.renderer.domElement;
+      } else {
+        // use custom element as mousemove element
+        obj.mouse_move_element = conf.use_pointer;
       }
       obj.mouse_move_element.addEventListener('mousemove', onMousemove);
       obj.mouse_move_element.addEventListener('mouseleave', onMouseleave);
@@ -223,9 +225,9 @@ export default function useThree() {
   /**
    */
   function updateMouse(e) {
-    const rect = e.target.getBoundingClientRect();
-    mouse.x = ((e.clientX - rect.left) / size.width) * 2 - 1;
-    mouse.y = -((e.clientY - rect.top) / size.height) * 2 + 1;
+    const rect = obj.mouse_move_element.getBoundingClientRect();
+    mouse.x = ((e.x - rect.left) / size.width) * 2 - 1;
+    mouse.y = -((e.y - rect.top) / size.height) * 2 + 1;
   }
 
   /**
