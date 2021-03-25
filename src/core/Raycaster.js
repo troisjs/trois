@@ -138,10 +138,11 @@ export default {
       this.pointer.y = - ((evt.y - canvasTop) / this.three.size.height) * 2 + 1;
     },
     onTouchMove(evt) {
-      const touch = evt.touches[0]
-      const { top: canvasTop, left: canvasLeft } = this.three.mouse_move_element.getBoundingClientRect()
-      this.pointer.x = ((touch.x - canvasLeft) / this.three.size.width) * 2 - 1
-      this.pointer.y = -((touch.y - canvasTop) / this.three.size.height) * 2 + 1
+      console.log('TODO: handle touch')
+      // const touch = evt.touches[0]
+      // const { top: canvasTop, left: canvasLeft } = this.three.mouse_move_element.getBoundingClientRect()
+      // this.pointer.x = ((touch.x - canvasLeft) / this.three.size.width) * 2 - 1
+      // this.pointer.y = -((touch.y - canvasTop) / this.three.size.height) * 2 + 1
     }
   },
   render() {
