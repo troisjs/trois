@@ -1,3 +1,4 @@
+import { Vector2 } from 'three';
 import { watch } from 'vue';
 import { bindProp } from '../tools/index.js';
 
@@ -13,7 +14,8 @@ export default {
     onPointerEnter: { type: Function, default: null },
     onPointerOver: { type: Function, default: null },
     onPointerLeave: { type: Function, default: null },
-    usePointerEvents: { type: Boolean, default: false }
+    usePointerEvents: { type: Boolean, default: false },
+    pointerObjects: { type: [Boolean, Array], default: null }
   },
   data() {
     return {
@@ -24,6 +26,12 @@ export default {
   // setup() {},
   unmounted() {
     if (this._parent) this._parent.remove(this.o3d);
+
+    // teardown listeners
+    this.three.offBeforeRender(this.pointerHandler);
+    if (this.three.mouse_move_element) {
+      this.three.mouse_move_element.removeEventListener('mouseleave', this.renderElementLeaveHandler)
+    }
   },
   methods: {
     initObject3D(o3d) {
@@ -39,7 +47,12 @@ export default {
       watch(() => this.lookAt, (v) => { this.o3d.lookAt(v.x, v.y, v.z); }, { deep: true });
 
       if (this.onPointerEnter || this.onPointerOver || this.onPointerLeave) {
-        this.three.onBeforeRender(this.pointerHandler)
+        this.three.onBeforeRender(this.pointerHandler);
+      }
+      if (this.onPointerLeave) {
+        // we need to wait a tick so the mouse_move_element is created
+        // TODO: more robust fix
+        this.$nextTick(() => this.three.mouse_move_element.addEventListener('mouseleave', this.renderElementLeaveHandler));
       }
 
       // find first viable parent
@@ -58,19 +71,40 @@ export default {
     add(o) { this.o3d.add(o); },
     remove(o) { this.o3d.remove(o); },
     pointerHandler() {
-      this.three.raycaster.setFromCamera(this.three.mouse, this.three.camera)
-      const intersects = this.three.raycaster.intersectObjects([this.o3d])
-      if (intersects.length) {
-        // pass single intersection if we only have one, for convenience
-        const toPass = intersects.length === 1 ? intersects[0] : intersects;
+      this.three.raycaster.setFromCamera(this.three.mouse, this.three.camera);
 
+      // determine what we're raycasting against 
+      let objectsToCastAgainst = this.pointerObjects;
+      if (objectsToCastAgainst) {
+        // cast against all objects in scene if prop is `true`
+        if (objectsToCastAgainst === true) {
+          objectsToCastAgainst = this.three.scene.children;
+        }
+      } else {
+        // default: just cast against this object
+        objectsToCastAgainst = [this.o3d];
+      }
+
+      // find all intersects
+      const intersects = this.three.raycaster.intersectObjects(objectsToCastAgainst);
+      // determine if the first intersect is this object
+      const match = intersects.length &&
+        intersects[0].object.uuid === this.o3d.uuid
+        ? intersects[0]
+        : null;
+
+      // if so, let's start the callback process
+      if (match) {
         // pointer is newly over o3d
         if (!this.pointerOver) {
           this.pointerOver = true;
 
           if (this.onPointerEnter) {
 
-            this.onPointerEnter({ object: this.o3d, intersects: toPass });
+            this.onPointerEnter({
+              object: this.o3d,
+              intersect: match
+            });
 
             if (this.usePointerEvents) {
               this.$emit('pointerEnter', toPass);
@@ -79,7 +113,10 @@ export default {
         }
         // pointer is still over o3d
         else if (this.onPointerOver) {
-          this.onPointerOver({ object: this.o3d, intersects: toPass });
+          this.onPointerOver({
+            object: this.o3d,
+            intersect: match
+          });
 
           if (this.usePointerEvents) {
             this.$emit('pointerOver', toPass);
@@ -100,6 +137,12 @@ export default {
           }
         }
       }
+    },
+    renderElementLeaveHandler() {
+      // since the mouse is off the renderer, we'll set its values to an unreachable number
+      this.three.mouse.x = this.three.mouse.y = Infinity;
+      // then run the normal pointer handler with these updated mouse values
+      this.pointerHandler();
     }
   },
   render() {
