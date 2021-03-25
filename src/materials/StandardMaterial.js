@@ -1,6 +1,6 @@
 import { MeshStandardMaterial } from 'three';
 import { watch } from 'vue';
-import { bindProp, bindProps, propsValues } from '../tools.js';
+import { bindProp, bindProps, propsValues } from '../tools';
 import Material, { wireframeProps } from './Material';
 
 const props = {

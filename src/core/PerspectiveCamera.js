@@ -1,6 +1,6 @@
 import { PerspectiveCamera } from 'three';
 import { watch } from 'vue';
-import { bindProp } from '../tools.js';
+import { bindProp } from '../tools';
 import Camera from './Camera.js';
 
 export default {

@@ -1,6 +1,6 @@
 import { MeshMatcapMaterial, TextureLoader } from 'three';
 // import { watch } from 'vue';
-import { propsValues, getMatcapUrl } from '../tools.js';
+import { propsValues, getMatcapUrl } from '../tools';
 import Material from './Material';
 
 export default {

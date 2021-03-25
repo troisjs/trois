@@ -1,5 +1,5 @@
 import { watch } from 'vue';
-import { bindProp } from '../tools.js';
+import { bindProp } from '../tools/index.js';
 
 export default {
   name: 'Object3D',
@@ -10,7 +10,9 @@ export default {
     rotation: { type: Object, default: { x: 0, y: 0, z: 0 } },
     scale: { type: Object, default: { x: 1, y: 1, z: 1 } },
     lookAt: { type: Object, default: null },
-    onPointerEnter: { type: Function, default: null }
+    onPointerEnter: { type: Function, default: null },
+    onPointerOver: { type: Function, default: null },
+    onPointerLeave: { type: Function, default: null }
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
@@ -30,8 +32,8 @@ export default {
       if (this.lookAt) this.o3d.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z);
       watch(() => this.lookAt, (v) => { this.o3d.lookAt(v.x, v.y, v.z); }, { deep: true });
 
-      if (this.onPointerEnter) {
-        this.three.onBeforeRender(this.raycastEnter)
+      if (this.onPointerEnter || this.onPointerOver || this.onPointerLeave) {
+        this.three.onBeforeRender(this.pointerHandler)
       }
 
       // find first viable parent
@@ -49,7 +51,7 @@ export default {
     },
     add(o) { this.o3d.add(o); },
     remove(o) { this.o3d.remove(o); },
-    raycastEnter() {
+    pointerHandler() {
       this.three.raycaster.setFromCamera(this.three.mouse, this.three.camera)
       const intersects = this.three.raycaster.intersectObjects([this.o3d])
       if (intersects.length) {

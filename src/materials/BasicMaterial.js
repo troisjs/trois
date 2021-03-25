@@ -1,5 +1,5 @@
 import { MeshBasicMaterial } from 'three';
-import { bindProps, propsValues } from '../tools.js';
+import { bindProps, propsValues } from '../tools';
 import Material, { wireframeProps } from './Material';
 
 export default {

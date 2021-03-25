@@ -3,7 +3,7 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { watch } from 'vue';
 import EffectPass from './EffectPass.js';
 import TiltShift from '../shaders/TiltShift.js';
-import { bindProp } from '../tools.js';
+import { bindProp } from '../tools';
 
 export default {
   extends: EffectPass,

@@ -6,7 +6,7 @@ import {
   WebGLCubeRenderTarget,
 } from 'three';
 import Mesh from './Mesh.js';
-import { bindProp } from '../tools.js';
+import { bindProp } from '../tools';
 
 export default {
   extends: Mesh,
