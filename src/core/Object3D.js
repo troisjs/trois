@@ -14,6 +14,11 @@ export default {
     onPointerOver: { type: Function, default: null },
     onPointerLeave: { type: Function, default: null }
   },
+  data(){
+    return {
+      pointerIsOver: null
+    }
+  },
   // can't use setup because it will not be used in sub components
   // setup() {},
   unmounted() {
@@ -55,8 +60,6 @@ export default {
       this.three.raycaster.setFromCamera(this.three.mouse, this.three.camera)
       const intersects = this.three.raycaster.intersectObjects([this.o3d])
       if (intersects.length) {
-        console.log(intersects[0].distance)
-
         this.onPointerEnter(intersects[0])
       }
     }
