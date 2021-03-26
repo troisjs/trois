@@ -1,7 +1,7 @@
 ## TODO
 - [X] Document raycaster component
 - [X] Document new events/props on Object3D
-- [ ] Click events on Raycaster
+- [X] Click events on Raycaster
 - [X] Click events on Object3D
 
 ## Changelog
@@ -17,6 +17,7 @@ See [here](https://troisjs-instancedcolors.netlify.app/) for an example ([source
         :onPointerOver="callback that accepts an array of all new intersections, like onMouseEnter" 
         :onPointerLeave="callback that accepts an array of all newly-ended intersections, like onMouseLeave" 
         :onPointerOver="callback that accepts array of all current intersections"
+        :onClick="callback that accepts array of currently intersected objects"
 
         :onBeforeRender="callback that fires every frame - optional, accepts the created raycaster. setting this property assumes the user is implementing all raycaster functionality and nullifies all other props and built-in functionality."
         :scene="THREE scene - optional, defaults to current scene"

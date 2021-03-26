@@ -20,6 +20,10 @@ export default {
       type: Function,
       default: null
     },
+    onClick: {
+      type: Function,
+      default: null
+    },
     scene: {
       type: Object,
       default: null
@@ -71,6 +75,9 @@ export default {
     // add event listeners
     window.addEventListener('mousemove', this.onMouseMove);
     window.addEventListener('touchmove', this.onTouchMove);
+    if (this.onClick) {
+      window.addEventListener('click', this.clickHandler);
+    }
     // TODO: touch
   },
   methods: {
@@ -106,7 +113,7 @@ export default {
         // TODO: optimize
         const expiredIntersects = this._intersects.filter(intersect => !newObjects.find(val => val.object === intersect.object && val.instanceId === intersect.instanceId));
         if (expiredIntersects.length) {
-          this.onPointerLeave(expiredIntersects)
+          this.onPointerLeave(expiredIntersects);
         }
       }
 
@@ -138,6 +145,12 @@ export default {
       this.pointer.x = ((evt.x - canvasLeft) / this.three.size.width) * 2 - 1;
       this.pointer.y = - ((evt.y - canvasTop) / this.three.size.height) * 2 + 1;
     },
+    clickHandler(evt) {
+      // if we have any intersects, fire onclick method
+      if (this._intersects && this._intersects.length) {
+        this.onClick(this._intersects);
+      }
+    }
   },
   render() {
     return this.$slots.default ? this.$slots.default() : [];
@@ -145,6 +158,7 @@ export default {
   unmounted() {
     window.removeEventListener('mousemove', this.onMouseMove);
     window.removeEventListener('touchstart', this.onTouchMove);
+    window.removeEventListener('click', this.clickHandler);
 
     // TODO: touch
   },
