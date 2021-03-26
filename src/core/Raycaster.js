@@ -3,7 +3,6 @@ import { Raycaster, Vector2 } from 'three'
 export default {
   name: 'Raycaster',
   inject: ['three'],
-  // emits: ['created', 'ready'],
   props: {
     onBeforeRender: {
       type: Function,
@@ -48,7 +47,7 @@ export default {
   },
   mounted() {
     // add update method
-    this.three.onBeforeRender(this.update)
+    this.three.onBeforeRender(this.update);
 
     // if we have a custom onBeforeRender method, assume 
     // the user is handling everything and exit setup
@@ -56,21 +55,21 @@ export default {
 
 
     // prep non-reactive list of intersections
-    this._intersects = []
+    this._intersects = [];
 
     // save camera if we don't already have one
     if (!this.camera) {
-      let parent = this.$parent
+      let parent = this.$parent;
       while (parent && !this.raycasterCamera) {
-        this.raycasterCamera = parent.camera
-        parent = parent.$parent
+        this.raycasterCamera = parent.camera;
+        parent = parent.$parent;
       }
     }
 
     // add event listeners
-    window.addEventListener('mousemove', this.onMouseMove)
-    window.addEventListener('touchstart', this.onTouchMove)
-    window.addEventListener('touchmove', this.onTouchMove)
+    window.addEventListener('mousemove', this.onMouseMove);
+    window.addEventListener('touchmove', this.onTouchMove);
+    // TODO: touch
   },
   methods: {
     update() {
@@ -120,38 +119,32 @@ export default {
         // TODO: optimize
         const newIntersects = intersects.filter(intersect => !old.find(val => val.object === intersect.object && val.instanceId === intersect.instanceId));
         if (newIntersects.length) {
-          this.onPointerEnter(newIntersects)
+          this.onPointerEnter(newIntersects);
         }
       }
 
       // capture current intersects
       if (this.onPointerOver) {
-        this.onPointerOver(intersects)
+        this.onPointerOver(intersects);
       }
 
       // save internal intersect list
       this._intersects = intersects;
     },
     onMouseMove(evt) {
-      const { top: canvasTop, left: canvasLeft } = this.three.mouse_move_element.getBoundingClientRect()
+      const { top: canvasTop, left: canvasLeft } = this.three.mouse_move_element.getBoundingClientRect();
       this.pointer.x = ((evt.x - canvasLeft) / this.three.size.width) * 2 - 1;
       this.pointer.y = - ((evt.y - canvasTop) / this.three.size.height) * 2 + 1;
     },
-    onTouchMove(evt) {
-      console.log('TODO: handle touch')
-      // const touch = evt.touches[0]
-      // const { top: canvasTop, left: canvasLeft } = this.three.mouse_move_element.getBoundingClientRect()
-      // this.pointer.x = ((touch.x - canvasLeft) / this.three.size.width) * 2 - 1
-      // this.pointer.y = -((touch.y - canvasTop) / this.three.size.height) * 2 + 1
-    }
   },
   render() {
     return this.$slots.default ? this.$slots.default() : [];
   },
   unmounted() {
-    window.removeEventListener('mousemove', this.onMouseMove)
-    window.removeEventListener('touchstart', this.onTouchMove)
-    window.removeEventListener('touchmove', this.onTouchMove)
+    window.removeEventListener('mousemove', this.onMouseMove);
+    window.removeEventListener('touchstart', this.onTouchMove);
+
+    // TODO: touch
   },
   __hmrId: 'Raycaster',
 };

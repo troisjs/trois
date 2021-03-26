@@ -122,8 +122,7 @@ export default function useThree() {
       }
       obj.mouse_move_element.addEventListener('mousemove', onMousemove);
       obj.mouse_move_element.addEventListener('mouseleave', onMouseleave);
-      obj.mouse_move_element.addEventListener('touchstart', onTouchstart);
-      obj.mouse_move_element.addEventListener('touchmove', onTouchmove)
+      // TODO: touch
     }
 
     if (conf.click) {
@@ -248,66 +247,14 @@ export default function useThree() {
    */
   function onMousemove(e) {
     updateMouse(e);
-    onMousechange(e);
   }
 
   /**
    * mouseleave listener
    */
   function onMouseleave(e) {
-    // mouse.x = 0;
-    // mouse.y = 0;
-    onMousechange(e);
-  }
-
-  /**
-   * mouse change
-   */
-  function onMousechange(e) {
-    // if (conf.mouse_over || conf.mouse_raycast) {
-    //   raycaster.setFromCamera(mouse, obj.camera);
-
-    //   if (conf.mouse_raycast) {
-    //     // get mouse 3d position
-    //     obj.camera.getWorldDirection(mousePlane.normal);
-    //     mousePlane.normal.normalize();
-    //     raycaster.ray.intersectPlane(mousePlane, mouseV3);
-    //   }
-
-    //   if (conf.mouse_over) {
-    //     const onObjects = raycaster.intersectObjects(intersectObjects);
-    //     const offObjects = [...intersectObjects];
-    //     for (let i = 0; i < onObjects.length; i++) {
-    //       const o = onObjects[i].object;
-    //       if (!o.hover && o.onHover) {
-    //         o.hover = true;
-    //         o.onHover(true);
-    //       }
-    //       offObjects.splice(offObjects.indexOf(o), 1);
-    //     }
-    //     for (let i = 0; i < offObjects.length; i++) {
-    //       const o = offObjects[i];
-    //       if (o.hover && o.onHover) {
-    //         o.hover = false;
-    //         o.onHover(false);
-    //       }
-    //     }
-    //   }
-    // }
-  }
-
-  /**
-   * touch start
-   */
-  function onTouchstart(evt) {
-    console.log('TODO: touchstart', evt)
-  }
-
-  /**
-   * touch move
-   */
-  function onTouchmove(evt) {
-    console.log('TODO: touchmove', evt)
+    mouse.x = Infinity;
+    mouse.y = Infinity;
   }
 
   /**
