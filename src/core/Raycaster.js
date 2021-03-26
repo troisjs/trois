@@ -64,6 +64,8 @@ export default {
         this.raycasterCamera = parent.camera;
         parent = parent.$parent;
       }
+    } else {
+      this.raycasterCamera = this.camera;
     }
 
     // add event listeners
