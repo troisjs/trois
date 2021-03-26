@@ -5,7 +5,7 @@ import { bindProp } from '../tools/index.js';
 export default {
   name: 'Object3D',
   inject: ['three', 'scene', 'rendererComponent'],
-  emits: ['created', 'ready', 'pointerEnter', 'pointerOver', 'pointerLeave'],
+  emits: ['created', 'ready', 'pointerEnter', 'pointerOver', 'pointerLeave', 'click'],
   props: {
     position: { type: Object, default: { x: 0, y: 0, z: 0 } },
     rotation: { type: Object, default: { x: 0, y: 0, z: 0 } },
@@ -14,6 +14,7 @@ export default {
     onPointerEnter: { type: Function, default: null },
     onPointerOver: { type: Function, default: null },
     onPointerLeave: { type: Function, default: null },
+    onClick: { type: Function, default: null },
     usePointerEvents: { type: Boolean, default: false },
     pointerObjects: { type: [Boolean, Array], default: null }
   },
@@ -46,13 +47,21 @@ export default {
       if (this.lookAt) this.o3d.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z);
       watch(() => this.lookAt, (v) => { this.o3d.lookAt(v.x, v.y, v.z); }, { deep: true });
 
-      if (this.onPointerEnter || this.onPointerOver || this.onPointerLeave) {
+      if (this.usePointerEvents
+        || this.onPointerEnter
+        || this.onPointerOver
+        || this.onPointerLeave
+        || this.onClick) {
         this.three.onBeforeRender(this.pointerHandler);
       }
       if (this.onPointerLeave) {
         // we need to wait a tick so the mouse_move_element is created
         // TODO: more robust fix
         this.$nextTick(() => this.three.mouse_move_element.addEventListener('mouseleave', this.renderElementLeaveHandler));
+      }
+      if (this.onClick) {
+        window.addEventListener('click', this.clickHandler);
+        // TODO: touch
       }
 
       // find first viable parent
@@ -143,6 +152,21 @@ export default {
               object: this.o3d
             });
           }
+        }
+      }
+    },
+    clickHandler(evt) {
+      if (this.pointerOver) {
+        // cast a ray so we can provide hit info
+        this.three.raycaster.setFromCamera(this.three.mouse, this.three.camera);
+        const [intersect] = this.three.raycaster.intersectObjects([this.o3d]);
+
+        // callbacks and events
+        if (this.onClick) {
+          this.onClick({ object: this.o3d, intersect });
+        }
+        if (this.usePointerEvents) {
+          this.$emit('click', { object: this.o3d, intersect });
         }
       }
     },
