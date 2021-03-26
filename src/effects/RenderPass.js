@@ -11,8 +11,7 @@ export default {
       console.error('Missing Camera');
     }
     const pass = new RenderPass(this.three.scene, this.three.camera);
-    this.passes.push(pass);
-    this.pass = pass;
+    this.completePass(pass);
   },
   __hmrId: 'RenderPass',
 };

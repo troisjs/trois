@@ -39,6 +39,10 @@ export default {
     this.pass.setSize = (width, height) => {
       uniforms.texSize.value.set(width, height);
     };
+
+    // emit ready event with two passes - do so manually in this file instead
+    // of calling `completePass` like in other effect types
+    this.$emit('ready', [this.pass, this.pass1])
   },
   methods: {
     updateFocusLine() {

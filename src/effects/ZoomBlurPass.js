@@ -10,12 +10,13 @@ export default {
     strength: { type: Number, default: 0.5 },
   },
   mounted() {
-    this.pass = new ShaderPass(ZoomBlur);
-    this.passes.push(this.pass);
+    const pass = new ShaderPass(ZoomBlur);
 
-    const uniforms = this.uniforms = this.pass.uniforms;
+    const uniforms = this.uniforms = pass.uniforms;
     bindProp(this, 'center', uniforms.center, 'value');
     bindProp(this, 'strength', uniforms.strength, 'value');
+
+    this.completePass(pass);
   },
   __hmrId: 'ZoomBlurPass',
 };
