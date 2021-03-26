@@ -28,7 +28,7 @@ See [here](https://troisjs-instancedcolors.netlify.app/) for an example ([source
 
 ### Object3D additions
 
-New Object3D props (all optional):
+See [here](https://troisjs-pointer-tester-demo.netlify.app/) for an example ([source](https://github.com/SaFrMo/trois-examples/blob/pointer-tester-demo/src/components/PointerTester.vue)). New Object3D props (all optional):
 
 * `onPointerEnter`: Function, accepts an object with properties `{ object, intersect }`, containing the object being hovered and the actual intersection.
 * `onPointerOver`: Function, accepts an object with properties `{ object, intersect }`, containing the object being hovered and the actual intersection.
