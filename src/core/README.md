@@ -1,6 +1,6 @@
 ## TODO
 - [X] Document raycaster component
-- [ ] Document new events/props on Object3D
+- [X] Document new events/props on Object3D
 - [ ] Click events on Raycaster
 - [ ] Click events on Object3D
 
@@ -26,10 +26,19 @@ See [here](https://troisjs-instancedcolors.netlify.app/) for an example ([source
 </Camera>
 ```
 
+### Object3D additions
 
-### Deprecations
+New Object3D props (all optional):
 
-* `mouseMove`, `mouseRaycast`, and `mouseOver` are all no longer used on the renderer.
+* `onPointerEnter`: Function, accepts an object with properties `{ object, intersect }`, containing the object being hovered and the actual intersection.
+* `onPointerOver`: Function, accepts an object with properties `{ object, intersect }`, containing the object being hovered and the actual intersection.
+* `onPointerLeave`: : Function, accepts an object with properties `{ object }`, containing the object no longer being hvoered.
+* `usePointerEvents`: Boolean, default false. If set to `true`, this object will emit `pointerEnter`, `pointerOver`, and `pointerLeave` events, all with the same arguments as the props. Function props are preferred over events to avoid the extra overhead of event emitting, but this option is provided if the user prefers events.
+* `pointerObjects`: Array of objects to cast against. Defaults to just the given object. Set to `true` (ie, `<Object3D pointer-objects>`) to cast against all scene children.
+
+### Deprecations and Other Notes
+
+* `mouseMove`, `mouseRaycast`, `mouseOver`, and `click` are all no longer used on the renderer.
 * `usePointer` on the `Renderer` is `true` by default. Switch to `false` to prevent mouse event handling on the renderer element. Example:
     ```html
     <!-- Do not listen to mousemove events - marginal performance improvement -->

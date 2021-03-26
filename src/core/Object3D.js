@@ -107,7 +107,10 @@ export default {
             });
 
             if (this.usePointerEvents) {
-              this.$emit('pointerEnter', toPass);
+              this.$emit('pointerEnter', {
+                object: this.o3d,
+                intersect: match
+              });
             }
           }
         }
@@ -119,7 +122,10 @@ export default {
           });
 
           if (this.usePointerEvents) {
-            this.$emit('pointerOver', toPass);
+            this.$emit('pointerOver', {
+              object: this.o3d,
+              intersect: match
+            });
           }
         }
       } else {
@@ -133,7 +139,9 @@ export default {
           }
 
           if (this.usePointerEvents) {
-            this.$emit('pointerLeave');
+            this.$emit('pointerLeave', {
+              object: this.o3d
+            });
           }
         }
       }
