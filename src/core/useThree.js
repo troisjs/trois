@@ -23,7 +23,7 @@ export default function useThree() {
     // mouse_raycast: false,
     // mouse_over: false,
     use_pointer: true,
-    click: false,
+    // click: false,
     resize: true,
     width: 0,
     height: 0,
@@ -114,7 +114,7 @@ export default function useThree() {
     // conf.mouse_move = conf.mouse_move || conf.mouse_over;
     if (conf.use_pointer) {
       if (conf.use_pointer === true) {
-        // use renderer as mousemove by default
+        // use renderer element as mousemove by default
         obj.mouse_move_element = obj.renderer.domElement;
       } else {
         // use custom element as mousemove element
@@ -125,9 +125,9 @@ export default function useThree() {
       // TODO: touch
     }
 
-    if (conf.click) {
-      obj.renderer.domElement.addEventListener('click', onClick);
-    }
+    // if (conf.click) {
+    //   obj.renderer.domElement.addEventListener('click', onClick);
+    // }
 
     afterInitCallbacks.forEach(c => c());
 
@@ -216,7 +216,8 @@ export default function useThree() {
       obj.mouse_move_element.removeEventListener('mousemove', onMousemove);
       obj.mouse_move_element.removeEventListener('mouseleave', onMouseleave);
     }
-    obj.renderer.domElement.removeEventListener('click', onClick);
+    // obj.renderer.domElement.removeEventListener('click', onClick);
+    // TODO: touch
     if (obj.orbitCtrl) obj.orbitCtrl.dispose();
     this.renderer.dispose();
   }
@@ -232,15 +233,15 @@ export default function useThree() {
   /**
    * click listener
    */
-  function onClick(e) {
-    updateMouse(e);
-    raycaster.setFromCamera(mouse, obj.camera);
-    const objects = raycaster.intersectObjects(intersectObjects);
-    for (let i = 0; i < objects.length; i++) {
-      const o = objects[i].object;
-      if (o.onClick) o.onClick(e);
-    }
-  }
+  // function onClick(e) {
+  //   updateMouse(e);
+  //   raycaster.setFromCamera(mouse, obj.camera);
+  //   const objects = raycaster.intersectObjects(intersectObjects);
+  //   for (let i = 0; i < objects.length; i++) {
+  //     const o = objects[i].object;
+  //     if (o.onClick) o.onClick(e);
+  //   }
+  // }
 
   /**
    * mousemove listener
