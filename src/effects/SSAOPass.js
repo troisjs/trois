@@ -8,8 +8,8 @@ export default {
     camera: null,
     options: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
   mounted() {
     const pass = new SSAOPass(
@@ -18,22 +18,12 @@ export default {
       this.three.size.width,
       this.three.size.height
     );
-    this.completePass(pass);
 
-    for (let key of Object.keys(this.options)) {
-      this.pass[key] = this.options[key];
+    for (const key of Object.keys(this.options)) {
+      pass[key] = this.options[key];
     }
-    // resize will be called in three init
-    this.three.onAfterResize(this.resize);
-  },
-  unmounted() {
-    this.three.offAfterResize(this.resize);
-  },
-  methods: {
-    resize() {
-      this.pass.width = this.three.size.width
-      this.pass.height = this.three.size.height
-    },
+
+    this.completePass(pass);
   },
   __hmrId: 'SSAOPass',
 };
