@@ -1,6 +1,6 @@
 import { ShaderMaterial } from 'three';
 import { watch } from 'vue';
-import { propsValues, defaultFragmentShader, defaultVertexShader } from '../tools.js';
+import { propsValues, defaultFragmentShader, defaultVertexShader } from '../tools';
 
 export default {
   inject: ['three', 'mesh'],

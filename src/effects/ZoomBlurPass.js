@@ -1,7 +1,7 @@
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import EffectPass from './EffectPass.js';
 import ZoomBlur from '../shaders/ZoomBlur.js';
-import { bindProp } from '../tools.js';
+import { bindProp } from '../tools';
 
 export default {
   extends: EffectPass,

@@ -1,6 +1,6 @@
 import { watch } from 'vue';
 import Object3D from '../core/Object3D.js';
-import { bindProp, setFromProp } from '../tools.js';
+import { bindProp, setFromProp } from '../tools';
 
 export default {
   extends: Object3D,

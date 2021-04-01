@@ -1,8 +1,10 @@
 import { OrthographicCamera } from 'three';
 import { watch } from 'vue';
-import { bindProp } from '../tools.js';
+import { bindProp } from '../tools';
+import Camera from './Camera.js';
 
 export default {
+  extends: Camera,
   name: 'OrthographicCamera',
   inject: ['three'],
   props: {
@@ -28,6 +30,5 @@ export default {
 
     this.three.camera = this.camera;
   },
-  render() { return []; },
   __hmrId: 'OrthographicCamera',
 };

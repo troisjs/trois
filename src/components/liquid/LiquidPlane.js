@@ -1,7 +1,7 @@
 import { DoubleSide, Mesh, MeshStandardMaterial, PlaneGeometry } from 'three';
 import { watch } from 'vue';
 import Object3D from '../../core/Object3D.js';
-import { bindProps } from '../../tools.js';
+import { bindProps } from '../../tools';
 import LiquidEffect from './LiquidEffect.js';
 
 export default {

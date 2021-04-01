@@ -1,6 +1,6 @@
 import { ClampToEdgeWrapping, LinearFilter, LinearMipmapLinearFilter, TextureLoader, UVMapping } from 'three';
 import { watch } from 'vue';
-import { bindProp } from '../tools.js';
+import { bindProp } from '../tools';
 
 export default {
   inject: ['material'],

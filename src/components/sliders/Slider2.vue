@@ -13,7 +13,7 @@ import OrthographicCamera from '../../core/OrthographicCamera.js';
 import Renderer from '../../core/Renderer.js';
 import Scene from '../../core/Scene.js';
 
-import { lerp, lerpv2 } from '../../tools.js';
+import { lerp, lerpv2 } from '../../tools';
 import ZoomBlurImage from './ZoomBlurImage.js';
 import useTextures from '../../use/useTextures.js';
 

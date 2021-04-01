@@ -1,5 +1,5 @@
 import { MeshPhysicalMaterial } from 'three';
-import { propsValues } from '../tools.js';
+import { propsValues } from '../tools';
 import StandardMaterial from './StandardMaterial';
 
 export default {

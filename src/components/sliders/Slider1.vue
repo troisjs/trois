@@ -14,7 +14,7 @@ import Camera from '../../core/PerspectiveCamera.js';
 import Renderer from '../../core/Renderer.js';
 import Scene from '../../core/Scene.js';
 
-import { lerp } from '../../tools.js';
+import { lerp } from '../../tools';
 import AnimatedPlane from './AnimatedPlane.js';
 import useTextures from '../../use/useTextures';
 

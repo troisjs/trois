@@ -19,10 +19,11 @@ export default function useThree() {
     alpha: false,
     autoClear: true,
     orbit_ctrl: false,
-    mouse_move: false,
-    mouse_raycast: false,
-    mouse_over: false,
-    click: false,
+    // mouse_move: false,
+    // mouse_raycast: false,
+    // mouse_over: false,
+    use_pointer: true,
+    // click: false,
     resize: true,
     width: 0,
     height: 0,
@@ -41,7 +42,7 @@ export default function useThree() {
   let beforeRenderCallbacks = [];
 
   // mouse tracking
-  const mouse = new Vector2();
+  const mouse = new Vector2(Infinity, Infinity);
   const mouseV3 = new Vector3();
   const mousePlane = new Plane(new Vector3(0, 0, 1), 0);
   const raycaster = new Raycaster();
@@ -59,6 +60,7 @@ export default function useThree() {
     scene: null,
     size,
     mouse, mouseV3,
+    raycaster,
     init,
     dispose,
     render,
@@ -109,20 +111,23 @@ export default function useThree() {
       setSize(conf.width | 300, conf.height | 150);
     }
 
-    conf.mouse_move = conf.mouse_move || conf.mouse_over;
-    if (conf.mouse_move) {
-      if (conf.mouse_move === 'body') {
-        obj.mouse_move_element = document.body;
-      } else {
+    // conf.mouse_move = conf.mouse_move || conf.mouse_over;
+    if (conf.use_pointer) {
+      if (conf.use_pointer === true) {
+        // use renderer element as mousemove by default
         obj.mouse_move_element = obj.renderer.domElement;
+      } else {
+        // use custom element as mousemove element
+        obj.mouse_move_element = conf.use_pointer;
       }
       obj.mouse_move_element.addEventListener('mousemove', onMousemove);
       obj.mouse_move_element.addEventListener('mouseleave', onMouseleave);
+      // TODO: touch
     }
 
-    if (conf.click) {
-      obj.renderer.domElement.addEventListener('click', onClick);
-    }
+    // if (conf.click) {
+    //   obj.renderer.domElement.addEventListener('click', onClick);
+    // }
 
     afterInitCallbacks.forEach(c => c());
 
@@ -211,7 +216,8 @@ export default function useThree() {
       obj.mouse_move_element.removeEventListener('mousemove', onMousemove);
       obj.mouse_move_element.removeEventListener('mouseleave', onMouseleave);
     }
-    obj.renderer.domElement.removeEventListener('click', onClick);
+    // obj.renderer.domElement.removeEventListener('click', onClick);
+    // TODO: touch
     if (obj.orbitCtrl) obj.orbitCtrl.dispose();
     this.renderer.dispose();
   }
@@ -219,75 +225,37 @@ export default function useThree() {
   /**
    */
   function updateMouse(e) {
-    const rect = e.target.getBoundingClientRect();
-    mouse.x = ((e.clientX - rect.left) / size.width) * 2 - 1;
-    mouse.y = -((e.clientY - rect.top) / size.height) * 2 + 1;
+    const rect = obj.mouse_move_element.getBoundingClientRect();
+    mouse.x = ((e.x - rect.left) / size.width) * 2 - 1;
+    mouse.y = -((e.y - rect.top) / size.height) * 2 + 1;
   }
 
   /**
    * click listener
    */
-  function onClick(e) {
-    updateMouse(e);
-    raycaster.setFromCamera(mouse, obj.camera);
-    const objects = raycaster.intersectObjects(intersectObjects);
-    for (let i = 0; i < objects.length; i++) {
-      const o = objects[i].object;
-      if (o.onClick) o.onClick(e);
-    }
-  }
+  // function onClick(e) {
+  //   updateMouse(e);
+  //   raycaster.setFromCamera(mouse, obj.camera);
+  //   const objects = raycaster.intersectObjects(intersectObjects);
+  //   for (let i = 0; i < objects.length; i++) {
+  //     const o = objects[i].object;
+  //     if (o.onClick) o.onClick(e);
+  //   }
+  // }
 
   /**
    * mousemove listener
    */
   function onMousemove(e) {
     updateMouse(e);
-    onMousechange(e);
   }
 
   /**
    * mouseleave listener
    */
   function onMouseleave(e) {
-    // mouse.x = 0;
-    // mouse.y = 0;
-    onMousechange(e);
-  }
-
-  /**
-   * mouse change
-   */
-  function onMousechange(e) {
-    if (conf.mouse_over || conf.mouse_raycast) {
-      raycaster.setFromCamera(mouse, obj.camera);
-
-      if (conf.mouse_raycast) {
-        // get mouse 3d position
-        obj.camera.getWorldDirection(mousePlane.normal);
-        mousePlane.normal.normalize();
-        raycaster.ray.intersectPlane(mousePlane, mouseV3);
-      }
-
-      if (conf.mouse_over) {
-        const onObjects = raycaster.intersectObjects(intersectObjects);
-        const offObjects = [...intersectObjects];
-        for (let i = 0; i < onObjects.length; i++) {
-          const o = onObjects[i].object;
-          if (!o.hover && o.onHover) {
-            o.hover = true;
-            o.onHover(true);
-          }
-          offObjects.splice(offObjects.indexOf(o), 1);
-        }
-        for (let i = 0; i < offObjects.length; i++) {
-          const o = offObjects[i];
-          if (o.hover && o.onHover) {
-            o.hover = false;
-            o.onHover(false);
-          }
-        }
-      }
-    }
+    mouse.x = Infinity;
+    mouse.y = Infinity;
   }
 
   /**

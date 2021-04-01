@@ -1,6 +1,6 @@
 import { InstancedMesh } from 'three';
 import Object3D from '../core/Object3D.js';
-import { bindProp } from '../tools.js';
+import { bindProp } from '../tools';
 
 export default {
   extends: Object3D,
