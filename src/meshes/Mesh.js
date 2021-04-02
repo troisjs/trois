@@ -1,14 +1,19 @@
 import { watch } from 'vue';
 import { Mesh } from 'three';
 import Object3D from '../core/Object3D.js';
+import { bindProp } from '../tools';
 
 export default {
-  extends: Object3D,
   name: 'Mesh',
+  extends: Object3D,
   props: {
     castShadow: Boolean,
     receiveShadow: Boolean,
-    onHover: Function,
+    onPointerEnter: Function,
+    onPointerOver: Function,
+    onPointerLeave: Function,
+    onPointerDown: Function,
+    onPointerUp: Function,
     onClick: Function,
   },
   // can't use setup because it will not be used in sub components
@@ -24,19 +29,17 @@ export default {
   methods: {
     initMesh() {
       this.mesh = new Mesh(this.geometry, this.material);
+      this.mesh.component = this;
 
-      ['castShadow', 'receiveShadow'].forEach(p => {
-        this.mesh[p] = this[p];
-        watch(() => this[p], () => { this.mesh[p] = this[p]; });
-      });
+      bindProp(this, 'castShadow', this.mesh);
+      bindProp(this, 'receiveShadow', this.mesh);
 
-      if (this.onHover) {
-        this.mesh.onHover = (over) => { this.onHover({ component: this, over }); };
-        this.three.addIntersectObject(this.mesh);
-      }
-
-      if (this.onClick) {
-        this.mesh.onClick = (e) => { this.onClick({ component: this, event: e }); };
+      if (this.onPointerEnter ||
+        this.onPointerOver ||
+        this.onPointerLeave ||
+        this.onPointerDown ||
+        this.onPointerUp ||
+        this.onClick) {
         this.three.addIntersectObject(this.mesh);
       }
 

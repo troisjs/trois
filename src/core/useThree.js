@@ -1,12 +1,10 @@
 import {
-  Plane,
-  Raycaster,
-  Vector2,
-  Vector3,
   WebGLRenderer,
 } from 'three';
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+import usePointer from './usePointer';
 
 /**
  * Three.js helper
@@ -19,14 +17,10 @@ export default function useThree() {
     alpha: false,
     autoClear: true,
     orbit_ctrl: false,
-    // mouse_move: false,
-    // mouse_raycast: false,
-    // mouse_over: false,
-    use_pointer: true,
-    // click: false,
-    resize: true,
-    width: 0,
-    height: 0,
+    use_pointer: false,
+    resize: false,
+    width: 300,
+    height: 150,
   };
 
   // size
@@ -41,26 +35,16 @@ export default function useThree() {
   let afterResizeCallbacks = [];
   let beforeRenderCallbacks = [];
 
-  // mouse tracking
-  const mouse = new Vector2(Infinity, Infinity);
-  const mouseV3 = new Vector3();
-  const mousePlane = new Plane(new Vector3(0, 0, 1), 0);
-  const raycaster = new Raycaster();
-
-  // raycast objects
-  const intersectObjects = [];
-
   // returned object
   const obj = {
     conf,
     renderer: null,
     camera: null,
     cameraCtrl: null,
-    materials: {},
     scene: null,
+    pointer: null,
+    intersectObjects: [],
     size,
-    mouse, mouseV3,
-    raycaster,
     init,
     dispose,
     render,
@@ -95,6 +79,15 @@ export default function useThree() {
     obj.renderer = new WebGLRenderer({ canvas: conf.canvas, antialias: conf.antialias, alpha: conf.alpha });
     obj.renderer.autoClear = conf.autoClear;
 
+    if (conf.resize) {
+      onResize();
+      window.addEventListener('resize', onResize);
+    } else {
+      setSize(conf.width, conf.height);
+    }
+
+    initPointer();
+
     if (conf.orbit_ctrl) {
       obj.orbitCtrl = new OrbitControls(obj.camera, obj.renderer.domElement);
       if (conf.orbit_ctrl instanceof Object) {
@@ -104,35 +97,22 @@ export default function useThree() {
       }
     }
 
-    if (conf.resize) {
-      onResize();
-      window.addEventListener('resize', onResize);
-    } else {
-      setSize(conf.width | 300, conf.height | 150);
-    }
-
-    // conf.mouse_move = conf.mouse_move || conf.mouse_over;
-    if (conf.use_pointer) {
-      if (conf.use_pointer === true) {
-        // use renderer element as mousemove by default
-        obj.mouse_move_element = obj.renderer.domElement;
-      } else {
-        // use custom element as mousemove element
-        obj.mouse_move_element = conf.use_pointer;
-      }
-      obj.mouse_move_element.addEventListener('mousemove', onMousemove);
-      obj.mouse_move_element.addEventListener('mouseleave', onMouseleave);
-      // TODO: touch
-    }
-
-    // if (conf.click) {
-    //   obj.renderer.domElement.addEventListener('click', onClick);
-    // }
-
     afterInitCallbacks.forEach(c => c());
 
     return true;
   };
+
+  function initPointer() {
+    obj.pointer = usePointer({
+      camera: obj.camera,
+      domElement: obj.renderer.domElement,
+      intersectObjects: obj.intersectObjects,
+    });
+
+    if (conf.use_pointer || obj.intersectObjects.length) {
+      obj.pointer.addListeners();
+    }
+  }
 
   /**
    * add after init callback
@@ -191,8 +171,12 @@ export default function useThree() {
    * add intersect object
    */
   function addIntersectObject(o) {
-    if (intersectObjects.indexOf(o) === -1) {
-      intersectObjects.push(o);
+    if (obj.intersectObjects.indexOf(o) === -1) {
+      obj.intersectObjects.push(o);
+    }
+    // add listeners if needed
+    if (obj.pointer && !obj.pointer.listeners) {
+      obj.pointer.addListeners();
     }
   }
 
@@ -200,9 +184,13 @@ export default function useThree() {
    * remove intersect object
    */
   function removeIntersectObject(o) {
-    const i = intersectObjects.indexOf(o);
+    const i = obj.intersectObjects.indexOf(o);
     if (i !== -1) {
-      intersectObjects.splice(i, 1);
+      obj.intersectObjects.splice(i, 1);
+    }
+    // remove listeners if needed
+    if (obj.pointer && !conf.use_pointer && obj.intersectObjects.length === 0) {
+      obj.pointer.removeListeners();
     }
   }
 
@@ -212,50 +200,9 @@ export default function useThree() {
   function dispose() {
     beforeRenderCallbacks = [];
     window.removeEventListener('resize', onResize);
-    if (obj.mouse_move_element) {
-      obj.mouse_move_element.removeEventListener('mousemove', onMousemove);
-      obj.mouse_move_element.removeEventListener('mouseleave', onMouseleave);
-    }
-    // obj.renderer.domElement.removeEventListener('click', onClick);
-    // TODO: touch
+    if (obj.pointer) obj.pointer.removeListeners();
     if (obj.orbitCtrl) obj.orbitCtrl.dispose();
-    this.renderer.dispose();
-  }
-
-  /**
-   */
-  function updateMouse(e) {
-    const rect = obj.mouse_move_element.getBoundingClientRect();
-    mouse.x = ((e.x - rect.left) / size.width) * 2 - 1;
-    mouse.y = -((e.y - rect.top) / size.height) * 2 + 1;
-  }
-
-  /**
-   * click listener
-   */
-  // function onClick(e) {
-  //   updateMouse(e);
-  //   raycaster.setFromCamera(mouse, obj.camera);
-  //   const objects = raycaster.intersectObjects(intersectObjects);
-  //   for (let i = 0; i < objects.length; i++) {
-  //     const o = objects[i].object;
-  //     if (o.onClick) o.onClick(e);
-  //   }
-  // }
-
-  /**
-   * mousemove listener
-   */
-  function onMousemove(e) {
-    updateMouse(e);
-  }
-
-  /**
-   * mouseleave listener
-   */
-  function onMouseleave(e) {
-    mouse.x = Infinity;
-    mouse.y = Infinity;
+    obj.renderer.dispose();
   }
 
   /**
