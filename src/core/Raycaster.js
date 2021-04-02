@@ -9,6 +9,7 @@ export default {
     onPointerMove: { type: Function, default: () => {} },
     onPointerLeave: { type: Function, default: () => {} },
     onClick: { type: Function, default: () => {} },
+    intersectMode: { type: String, default: 'move' },
   },
   mounted() {
     this.rendererComponent.onMounted(() => {
@@ -23,10 +24,17 @@ export default {
         onIntersectClick: this.onClick,
       });
       this.pointer.addListeners();
+
+      if (this.intersectMode === 'frame') {
+        this.three.onBeforeRender(this.pointer.intersect);
+      }
     });
   },
   unmounted() {
-    if (this.pointer) this.pointer.removeListeners();
+    if (this.pointer) {
+      this.pointer.removeListeners();
+      this.three.offBeforeRender(this.pointer.intersect);
+    }
   },
   methods: {
     getIntersectObjects() {
