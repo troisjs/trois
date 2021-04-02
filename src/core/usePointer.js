@@ -1,4 +1,4 @@
-import { Vector2, Vector3 } from 'three';
+import { InstancedMesh, Vector2, Vector3 } from 'three';
 import useRaycaster from './useRaycaster';
 
 export default function usePointer(options) {
@@ -54,7 +54,7 @@ export default function usePointer(options) {
     position.x = x - rect.left;
     position.y = y - rect.top;
     positionN.x = (position.x / rect.width) * 2 - 1;
-    positionN.y = (position.y / rect.height) * 2 - 1;
+    positionN.y = -(position.y / rect.height) * 2 + 1;
     raycaster.updatePosition(positionN);
   };
 
@@ -67,21 +67,31 @@ export default function usePointer(options) {
     if (intersectObjects.length) {
       const intersects = raycaster.intersect(positionN, intersectObjects);
       const offObjects = [...intersectObjects];
+      const iMeshes = [];
 
       intersects.forEach(intersect => {
         const { object } = intersect;
         const { component } = object;
+
+        // only once for InstancedMesh
+        if (object instanceof InstancedMesh) {
+          if (iMeshes.indexOf(object) !== -1) return;
+          iMeshes.push(object);
+        }
+
         if (!object.over) {
           object.over = true;
           if (component.onPointerOver) component.onPointerOver({ over: true, component, intersect });
           if (component.onPointerEnter) component.onPointerEnter({ component, intersect });
         }
+        if (component.onPointerMove) component.onPointerMove({ component, intersect });
+
         offObjects.splice(offObjects.indexOf(object), 1);
       });
 
       offObjects.forEach(object => {
         const { component } = object;
-        if (object.over && component.onPointerOver) {
+        if (object.over) {
           object.over = false;
           if (component.onPointerOver) component.onPointerOver({ over: false, component });
           if (component.onPointerLeave) component.onPointerLeave({ component });

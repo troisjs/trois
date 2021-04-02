@@ -3,18 +3,23 @@ import { Mesh } from 'three';
 import Object3D from '../core/Object3D.js';
 import { bindProp } from '../tools';
 
+export const pointerProps = {
+  onPointerEnter: Function,
+  onPointerOver: Function,
+  onPointerMove: Function,
+  onPointerLeave: Function,
+  onPointerDown: Function,
+  onPointerUp: Function,
+  onClick: Function,
+};
+
 export default {
   name: 'Mesh',
   extends: Object3D,
   props: {
     castShadow: Boolean,
     receiveShadow: Boolean,
-    onPointerEnter: Function,
-    onPointerOver: Function,
-    onPointerLeave: Function,
-    onPointerDown: Function,
-    onPointerUp: Function,
-    onClick: Function,
+    ...pointerProps,
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
@@ -36,6 +41,7 @@ export default {
 
       if (this.onPointerEnter ||
         this.onPointerOver ||
+        this.onPointerMove ||
         this.onPointerLeave ||
         this.onPointerDown ||
         this.onPointerUp ||

@@ -1,6 +1,7 @@
 import { InstancedMesh } from 'three';
-import Object3D from '../core/Object3D.js';
+import Object3D from '../core/Object3D';
 import { bindProp } from '../tools';
+import { pointerProps } from './Mesh';
 
 export default {
   extends: Object3D,
@@ -8,6 +9,7 @@ export default {
     castShadow: Boolean,
     receiveShadow: Boolean,
     count: Number,
+    ...pointerProps,
   },
   provide() {
     return {
@@ -25,9 +27,20 @@ export default {
   methods: {
     initMesh() {
       this.mesh = new InstancedMesh(this.geometry, this.material, this.count);
+      this.mesh.component = this;
 
       bindProp(this, 'castShadow', this.mesh);
       bindProp(this, 'receiveShadow', this.mesh);
+
+      if (this.onPointerEnter ||
+        this.onPointerOver ||
+        this.onPointerMove ||
+        this.onPointerLeave ||
+        this.onPointerDown ||
+        this.onPointerUp ||
+        this.onClick) {
+        this.three.addIntersectObject(this.mesh);
+      }
 
       this.initObject3D(this.mesh);
     },
@@ -40,6 +53,11 @@ export default {
       this.material.instancingColor = true;
       if (this.mesh) this.mesh.material = material;
     },
+  },
+  unmounted() {
+    if (this.mesh) {
+      this.three.removeIntersectObject(this.mesh);
+    }
   },
   __hmrId: 'InstancedMesh',
 };
