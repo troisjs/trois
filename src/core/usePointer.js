@@ -8,18 +8,17 @@ export default function usePointer(options) {
     intersectObjects,
     touch = true,
     resetOnEnd = false,
-    resetPosition = new Vector2(),
-    resetPositionV3 = new Vector3(),
-    // onEnter = () => {},
-    // onLeave = () => {},
-    // onMove = () => {},
-    // onDown = () => {},
-    // onUp = () => {},
-    // onClick = () => {},
+    resetPosition = new Vector2(Infinity, Infinity),
+    resetPositionV3 = new Vector3(Infinity, Infinity, Infinity),
+    onIntersectEnter = () => {},
+    onIntersectOver = () => {},
+    onIntersectMove = () => {},
+    onIntersectLeave = () => {},
+    onIntersectClick = () => {},
   } = options;
 
   const position = resetPosition.clone();
-  const positionN = new Vector2();
+  const positionN = new Vector2(Infinity, Infinity);
 
   const raycaster = useRaycaster({ camera });
   const positionV3 = raycaster.position;
@@ -28,9 +27,11 @@ export default function usePointer(options) {
     position,
     positionN,
     positionV3,
+    intersectObjects,
     listeners: false,
     addListeners,
     removeListeners,
+    intersect,
   };
 
   return obj;
@@ -58,12 +59,7 @@ export default function usePointer(options) {
     raycaster.updatePosition(positionN);
   };
 
-  function pointerEnter(event) {
-    updatePosition(event);
-    // onEnter();
-  };
-
-  function pointerChange() {
+  function intersect() {
     if (intersectObjects.length) {
       const intersects = raycaster.intersect(positionN, intersectObjects);
       const offObjects = [...intersectObjects];
@@ -81,10 +77,17 @@ export default function usePointer(options) {
 
         if (!object.over) {
           object.over = true;
-          if (component.onPointerOver) component.onPointerOver({ over: true, component, intersect });
-          if (component.onPointerEnter) component.onPointerEnter({ component, intersect });
+          const overEvent = { type: 'pointerover', over: true, component, intersect };
+          const enterEvent = { ...overEvent, type: 'pointerenter' };
+          onIntersectOver(overEvent);
+          onIntersectEnter(enterEvent);
+          if (component.onPointerOver) component.onPointerOver(overEvent);
+          if (component.onPointerEnter) component.onPointerEnter(enterEvent);
         }
-        if (component.onPointerMove) component.onPointerMove({ component, intersect });
+
+        const moveEvent = { type: 'pointermove', component, intersect };
+        onIntersectMove(moveEvent);
+        if (component.onPointerMove) component.onPointerMove(moveEvent);
 
         offObjects.splice(offObjects.indexOf(object), 1);
       });
@@ -93,34 +96,50 @@ export default function usePointer(options) {
         const { component } = object;
         if (object.over) {
           object.over = false;
-          if (component.onPointerOver) component.onPointerOver({ over: false, component });
-          if (component.onPointerLeave) component.onPointerLeave({ component });
+          const overEvent = { type: 'pointerover', over: false, component };
+          const leaveEvent = { ...overEvent, type: 'pointerleave' };
+          onIntersectOver(overEvent);
+          onIntersectLeave(leaveEvent);
+          if (component.onPointerOver) component.onPointerOver(overEvent);
+          if (component.onPointerLeave) component.onPointerLeave(leaveEvent);
         }
       });
     }
   };
 
+  function pointerEnter(event) {
+    updatePosition(event);
+  };
+
   function pointerMove(event) {
     updatePosition(event);
-    pointerChange();
-    // onMove();
+    intersect();
   };
 
   function pointerClick(event) {
     updatePosition(event);
     if (intersectObjects.length) {
       const intersects = raycaster.intersect(positionN, intersectObjects);
+      const iMeshes = [];
       intersects.forEach(intersect => {
         const { object } = intersect;
         const { component } = object;
-        if (component.onClick) component.onClick({ component, intersect });
+
+        // only once for InstancedMesh
+        if (object instanceof InstancedMesh) {
+          if (iMeshes.indexOf(object) !== -1) return;
+          iMeshes.push(object);
+        }
+
+        const event = { type: 'click', component, intersect };
+        onIntersectClick(event);
+        if (component.onClick) component.onClick(event);
       });
     }
   };
 
-  function pointerLeave(event) {
+  function pointerLeave() {
     if (resetOnEnd) reset();
-    // onLeave();
   };
 
   function addListeners() {
@@ -140,6 +159,7 @@ export default function usePointer(options) {
     domElement.removeEventListener('mouseenter', pointerEnter);
     domElement.removeEventListener('mousemove', pointerMove);
     domElement.removeEventListener('mouseleave', pointerLeave);
+    domElement.removeEventListener('click', pointerClick);
 
     domElement.removeEventListener('touchstart', pointerEnter);
     domElement.removeEventListener('touchmove', pointerMove);

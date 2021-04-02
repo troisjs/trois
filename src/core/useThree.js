@@ -1,9 +1,5 @@
-import {
-  WebGLRenderer,
-} from 'three';
-
+import { WebGLRenderer } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-
 import usePointer from './usePointer';
 
 /**
@@ -17,7 +13,7 @@ export default function useThree() {
     alpha: false,
     autoClear: true,
     orbit_ctrl: false,
-    use_pointer: false,
+    pointer: false,
     resize: false,
     width: 300,
     height: 150,
@@ -35,6 +31,8 @@ export default function useThree() {
   let afterResizeCallbacks = [];
   let beforeRenderCallbacks = [];
 
+  const intersectObjects = [];
+
   // returned object
   const obj = {
     conf,
@@ -43,7 +41,6 @@ export default function useThree() {
     cameraCtrl: null,
     scene: null,
     pointer: null,
-    intersectObjects: [],
     size,
     init,
     dispose,
@@ -103,13 +100,18 @@ export default function useThree() {
   };
 
   function initPointer() {
-    obj.pointer = usePointer({
+    let pointerConf = {
       camera: obj.camera,
       domElement: obj.renderer.domElement,
-      intersectObjects: obj.intersectObjects,
-    });
+      intersectObjects,
+    };
 
-    if (conf.use_pointer || obj.intersectObjects.length) {
+    if (conf.pointer && conf.pointer instanceof Object) {
+      pointerConf = { ...pointerConf, ...conf.pointer };
+    }
+
+    obj.pointer = usePointer(pointerConf);
+    if (conf.pointer || intersectObjects.length) {
       obj.pointer.addListeners();
     }
   }
@@ -154,6 +156,7 @@ export default function useThree() {
    */
   function render() {
     if (obj.orbitCtrl) obj.orbitCtrl.update();
+    // if (obj.pointer) obj.pointer.intersect();
     beforeRenderCallbacks.forEach(c => c());
     obj.renderer.render(obj.scene, obj.camera);
   }
@@ -163,6 +166,7 @@ export default function useThree() {
    */
   function renderC() {
     if (obj.orbitCtrl) obj.orbitCtrl.update();
+    // if (obj.pointer) obj.pointer.intersect();
     beforeRenderCallbacks.forEach(c => c());
     obj.composer.render();
   }
@@ -171,8 +175,8 @@ export default function useThree() {
    * add intersect object
    */
   function addIntersectObject(o) {
-    if (obj.intersectObjects.indexOf(o) === -1) {
-      obj.intersectObjects.push(o);
+    if (intersectObjects.indexOf(o) === -1) {
+      intersectObjects.push(o);
     }
     // add listeners if needed
     if (obj.pointer && !obj.pointer.listeners) {
@@ -184,18 +188,18 @@ export default function useThree() {
    * remove intersect object
    */
   function removeIntersectObject(o) {
-    const i = obj.intersectObjects.indexOf(o);
+    const i = intersectObjects.indexOf(o);
     if (i !== -1) {
-      obj.intersectObjects.splice(i, 1);
+      intersectObjects.splice(i, 1);
     }
     // remove listeners if needed
-    if (obj.pointer && !conf.use_pointer && obj.intersectObjects.length === 0) {
+    if (obj.pointer && !conf.use_pointer && intersectObjects.length === 0) {
       obj.pointer.removeListeners();
     }
   }
 
   /**
-   * remove listeners
+   * remove listeners and dispose
    */
   function dispose() {
     beforeRenderCallbacks = [];
