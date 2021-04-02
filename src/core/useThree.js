@@ -113,6 +113,11 @@ export default function useThree() {
     obj.pointer = usePointer(pointerConf);
     if (conf.pointer || intersectObjects.length) {
       obj.pointer.addListeners();
+      if (conf.pointer.intersectMode === 'frame') {
+        onBeforeRender(() => {
+          obj.pointer.intersect();
+        });
+      }
     }
   }
 
@@ -156,7 +161,6 @@ export default function useThree() {
    */
   function render() {
     if (obj.orbitCtrl) obj.orbitCtrl.update();
-    // if (obj.pointer) obj.pointer.intersect();
     beforeRenderCallbacks.forEach(c => c());
     obj.renderer.render(obj.scene, obj.camera);
   }
@@ -166,7 +170,6 @@ export default function useThree() {
    */
   function renderC() {
     if (obj.orbitCtrl) obj.orbitCtrl.update();
-    // if (obj.pointer) obj.pointer.intersect();
     beforeRenderCallbacks.forEach(c => c());
     obj.composer.render();
   }
