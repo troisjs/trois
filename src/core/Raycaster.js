@@ -8,7 +8,7 @@ export default {
     onPointerOver: { type: Function, default: () => {} },
     onPointerMove: { type: Function, default: () => {} },
     onPointerLeave: { type: Function, default: () => {} },
-    onPointerClick: { type: Function, default: () => {} },
+    onClick: { type: Function, default: () => {} },
   },
   mounted() {
     this.rendererComponent.onMounted(() => {
@@ -20,7 +20,7 @@ export default {
         onIntersectOver: this.onPointerOver,
         onIntersectMove: this.onPointerMove,
         onIntersectLeave: this.onPointerLeave,
-        onIntersectClick: this.onPointerClick,
+        onIntersectClick: this.onClick,
       });
       this.pointer.addListeners();
     });
