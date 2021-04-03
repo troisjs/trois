@@ -77,9 +77,8 @@ export default {
     if (this.mesh) {
       this.three.removeIntersectObject(this.mesh);
     }
-    // for predefined mesh (geometry and material are not unmounted)
+    // for predefined mesh (geometry is not unmounted)
     if (this.geometry) this.geometry.dispose();
-    if (this.material) this.material.dispose();
   },
   __hmrId: 'Mesh',
 };
