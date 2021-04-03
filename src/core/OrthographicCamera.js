@@ -1,9 +1,9 @@
+import { defineComponent, watch } from 'vue';
 import { OrthographicCamera } from 'three';
-import { watch } from 'vue';
 import { bindProp } from '../tools';
 import Camera from './Camera.js';
 
-export default {
+export default defineComponent({
   extends: Camera,
   name: 'OrthographicCamera',
   inject: ['three'],
@@ -31,4 +31,4 @@ export default {
     this.three.camera = this.camera;
   },
   __hmrId: 'OrthographicCamera',
-};
+});

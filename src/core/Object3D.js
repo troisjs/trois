@@ -1,7 +1,7 @@
-import { watch } from 'vue';
+import { defineComponent, watch } from 'vue';
 import { bindProp } from '../tools';
 
-export default {
+export default defineComponent({
   name: 'Object3D',
   inject: ['three', 'scene', 'rendererComponent'],
   emits: ['created', 'ready'],
@@ -65,4 +65,4 @@ export default {
     return this.$slots.default ? this.$slots.default() : [];
   },
   __hmrId: 'Object3D',
-};
+});

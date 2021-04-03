@@ -1,6 +1,7 @@
+import { defineComponent } from 'vue';
 import usePointer from './usePointer';
 
-export default {
+export default defineComponent({
   name: 'Raycaster',
   inject: ['three', 'rendererComponent'],
   props: {
@@ -45,4 +46,4 @@ export default {
     return [];
   },
   __hmrId: 'Raycaster',
-};
+});

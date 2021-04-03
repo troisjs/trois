@@ -1,7 +1,7 @@
+import { defineComponent, watch } from 'vue';
 import { Scene, Color } from 'three';
-import { watch } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'Scene',
   inject: ['three'],
   props: {
@@ -32,4 +32,4 @@ export default {
     return this.$slots.default ? this.$slots.default() : [];
   },
   __hmrId: 'Scene',
-};
+});

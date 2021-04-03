@@ -1,7 +1,7 @@
-import { h } from 'vue';
+import { defineComponent, h } from 'vue';
 import useThree from './useThree';
 
-export default {
+export default defineComponent({
   name: 'Renderer',
   props: {
     antialias: Boolean,
@@ -77,4 +77,4 @@ export default {
     return h('canvas', {}, this.$slots.default());
   },
   __hmrId: 'Renderer',
-};
+});
