@@ -1,4 +1,5 @@
 import { defineComponent, h } from 'vue';
+import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 import useThree from './useThree';
 
 export default defineComponent({
@@ -13,6 +14,7 @@ export default defineComponent({
     shadow: Boolean,
     width: String,
     height: String,
+    xr: Boolean,
   },
   setup() {
     return {
@@ -44,8 +46,16 @@ export default defineComponent({
     if (this.three.init(params)) {
       this.renderer = this.three.renderer;
       this.renderer.shadowMap.enabled = this.shadow;
-      if (this.three.composer) this.animateC();
-      else this.animate();
+
+      if (this.xr) {
+        this.renderer.domElement.parentNode.appendChild(VRButton.createButton(this.renderer));
+        this.renderer.xr.enabled = true;
+        if (this.three.composer) this.renderer.setAnimationLoop(this.animateXRC);
+        else this.renderer.setAnimationLoop(this.animateXR);
+      } else {
+        if (this.three.composer) this.animateC();
+        else this.animate();
+      }
     };
 
     this.onMountedCallbacks.forEach(c => c());
@@ -72,6 +82,8 @@ export default defineComponent({
       if (this.raf) requestAnimationFrame(this.animateC);
       this.three.renderC();
     },
+    animateXR() { this.three.render(); },
+    animateXRC() { this.three.renderC(); },
   },
   render() {
     return h('canvas', {}, this.$slots.default());
