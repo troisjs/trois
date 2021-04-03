@@ -1,6 +1,6 @@
-import { watch } from 'vue';
+import { defineComponent, watch } from 'vue';
 
-export default {
+export default defineComponent({
   inject: ['mesh'],
   props: {
     rotateX: Number,
@@ -46,4 +46,4 @@ export default {
     },
   },
   render() { return []; },
-};
+});

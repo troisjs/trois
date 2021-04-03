@@ -1,3 +1,4 @@
+import { defineComponent } from 'vue';
 import { ConeGeometry } from 'three';
 import Geometry from './Geometry.js';
 
@@ -15,7 +16,7 @@ export function createGeometry(comp) {
   return new ConeGeometry(comp.radius, comp.height, comp.radialSegments, comp.heightSegments, comp.openEnded, comp.thetaStart, comp.thetaLength);
 };
 
-export default {
+export default defineComponent({
   extends: Geometry,
   props,
   methods: {
@@ -23,5 +24,4 @@ export default {
       this.geometry = createGeometry(this);
     },
   },
-};
-
+});

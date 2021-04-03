@@ -1,3 +1,4 @@
+import { defineComponent } from 'vue';
 import { BoxGeometry } from 'three';
 import Geometry from './Geometry.js';
 
@@ -19,7 +20,7 @@ export function createGeometry(comp) {
   }
 };
 
-export default {
+export default defineComponent({
   extends: Geometry,
   props,
   methods: {
@@ -27,4 +28,4 @@ export default {
       this.geometry = createGeometry(this);
     },
   },
-};
+});

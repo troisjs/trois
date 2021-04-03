@@ -1,3 +1,4 @@
+import { defineComponent } from 'vue';
 import { TorusKnotGeometry } from 'three';
 import Geometry from './Geometry.js';
 
@@ -14,7 +15,7 @@ export function createGeometry(comp) {
   return new TorusKnotGeometry(comp.radius, comp.tube, comp.tubularSegments, comp.radialSegments, comp.p, comp.q);
 };
 
-export default {
+export default defineComponent({
   extends: Geometry,
   props,
   methods: {
@@ -22,4 +23,4 @@ export default {
       this.geometry = createGeometry(this);
     },
   },
-};
+});

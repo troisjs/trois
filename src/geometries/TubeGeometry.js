@@ -1,3 +1,4 @@
+import { defineComponent } from 'vue';
 import { CatmullRomCurve3, Curve, TubeGeometry, Vector3 } from 'three';
 import Geometry from './Geometry.js';
 
@@ -22,7 +23,7 @@ export function createGeometry(comp) {
   return new TubeGeometry(curve, comp.tubularSegments, comp.radius, comp.radiusSegments, comp.closed);
 };
 
-export default {
+export default defineComponent({
   extends: Geometry,
   props,
   methods: {
@@ -34,7 +35,7 @@ export default {
       updateTubeGeometryPoints(this.geometry, points);
     },
   },
-};
+});
 
 export function updateTubeGeometryPoints(tube, points) {
   const curve = new CatmullRomCurve3(points);

@@ -1,3 +1,4 @@
+import { defineComponent } from 'vue';
 import { TetrahedronGeometry } from 'three';
 import Geometry from './Geometry.js';
 
@@ -10,7 +11,7 @@ export function createGeometry(comp) {
   return new TetrahedronGeometry(comp.radius, comp.detail);
 };
 
-export default {
+export default defineComponent({
   extends: Geometry,
   props,
   methods: {
@@ -18,4 +19,4 @@ export default {
       this.geometry = createGeometry(this);
     },
   },
-};
+});
