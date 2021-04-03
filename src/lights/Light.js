@@ -15,7 +15,7 @@ export default {
   // can't use setup because it will not be used in sub components
   // setup() {},
   unmounted() {
-    if (this.light.target) this.$parent.remove(this.light.target);
+    if (this.light.target) this.removeFromParent(this.light.target);
   },
   methods: {
     initLight() {
@@ -40,7 +40,7 @@ export default {
       });
 
       this.initObject3D(this.light);
-      if (this.light.target) this.$parent.add(this.light.target);
+      if (this.light.target) this.addToParent(this.light.target);
     },
   },
   __hmrId: 'Light',

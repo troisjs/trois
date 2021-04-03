@@ -14,7 +14,7 @@ export default {
   // can't use setup because it will not be used in sub components
   // setup() {},
   unmounted() {
-    if (this._parent) this._parent.remove(this.o3d);
+    this.removeFromParent();
   },
   methods: {
     initObject3D(o3d) {
@@ -29,18 +29,33 @@ export default {
       if (this.lookAt) this.o3d.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z);
       watch(() => this.lookAt, (v) => { this.o3d.lookAt(v.x, v.y, v.z); }, { deep: true });
 
-      // find first viable parent
+      this._parent = this.getParent();
+      if (this.addToParent()) this.$emit('ready', this);
+      else console.error('Missing parent (Scene, Group...)');
+    },
+    getParent() {
       let parent = this.$parent;
       while (parent) {
-        if (parent.add) {
-          parent.add(this.o3d);
-          this._parent = parent;
-          break;
-        }
+        if (parent.add) return parent;
         parent = parent.$parent;
       }
-      if (!this._parent) console.error('Missing parent (Scene, Group...)');
-      else this.$emit('ready', this);
+      return false;
+    },
+    addToParent(o) {
+      const o3d = o || this.o3d;
+      if (this._parent) {
+        this._parent.add(o3d);
+        return true;
+      }
+      return false;
+    },
+    removeFromParent(o) {
+      const o3d = o || this.o3d;
+      if (this._parent) {
+        this._parent.remove(o3d);
+        return true;
+      }
+      return false;
     },
     add(o) { this.o3d.add(o); },
     remove(o) { this.o3d.remove(o); },

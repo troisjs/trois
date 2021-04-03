@@ -23,13 +23,13 @@ export default {
 
     if (this.helper) {
       this.lightHelper = new RectAreaLightHelper(this.light);
-      this.$parent.add(this.lightHelper);
+      this.addToParent(this.lightHelper);
     }
 
     this.initLight();
   },
   unmounted() {
-    if (this.lightHelper) this.$parent.remove(this.lightHelper);
+    if (this.lightHelper) this.removeFromParent(this.lightHelper);
   },
   __hmrId: 'RectAreaLight',
 };
