@@ -23,7 +23,7 @@ export default {
 
     if (this.helper) {
       this.lightHelper = new RectAreaLightHelper(this.light);
-      this.addToParent(this.lightHelper);
+      this.light.add(this.lightHelper);
     }
 
     this.initLight();
