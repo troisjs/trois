@@ -20,6 +20,7 @@ const external = [
   'three/examples/jsm/postprocessing/RenderPass.js',
   'three/examples/jsm/postprocessing/Pass.js',
   'three/examples/jsm/postprocessing/SAOPass.js',
+  'three/examples/jsm/postprocessing/SSAOPass.js',
   'three/examples/jsm/postprocessing/SMAAPass.js',
   'three/examples/jsm/postprocessing/ShaderPass.js',
   'three/examples/jsm/postprocessing/UnrealBloomPass.js',
@@ -28,18 +29,18 @@ const external = [
 ];
 
 const cdnReplaces = {
-  'from \'vue\'': 'from \'https://unpkg.com/vue@3.0.7/dist/vue.esm-browser.prod.js\'',
-  'from \'three\'': 'from \'https://unpkg.com/three@0.126.1/build/three.module.js\'',
-  'from \'three/examples': 'from \'https://unpkg.com/three@0.126.1/examples',
+  'from \'vue\'': 'from \'https://unpkg.com/vue@3.0.11/dist/vue.esm-browser.prod.js\'',
+  'from \'three\'': 'from \'https://unpkg.com/three@0.127.0/build/three.module.js\'',
+  'from \'three/examples': 'from \'https://unpkg.com/three@0.127.0/examples',
   delimiters: ['', ''],
 };
 
 const plugins = [
   vue(),
-  buble({
-    transforms: { asyncAwait: false, forOf: false },
-    objectAssign: 'Object.assign',
-  }),
+  // buble({
+  //   transforms: { asyncAwait: false, forOf: false },
+  //   objectAssign: 'Object.assign',
+  // }),
 ];
 
 export default [
