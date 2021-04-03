@@ -196,7 +196,7 @@ export default function useThree() {
       intersectObjects.splice(i, 1);
     }
     // remove listeners if needed
-    if (obj.pointer && !conf.use_pointer && intersectObjects.length === 0) {
+    if (obj.pointer && !conf.pointer && intersectObjects.length === 0) {
       obj.pointer.removeListeners();
     }
   }
