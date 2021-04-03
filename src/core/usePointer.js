@@ -10,6 +10,9 @@ export default function usePointer(options) {
     resetOnEnd = false,
     resetPosition = new Vector2(Infinity, Infinity),
     resetPositionV3 = new Vector3(Infinity, Infinity, Infinity),
+    onEnter = () => {},
+    onMove = () => {},
+    onLeave = () => {},
     onIntersectEnter = () => {},
     onIntersectOver = () => {},
     onIntersectMove = () => {},
@@ -81,13 +84,13 @@ export default function usePointer(options) {
           const enterEvent = { ...overEvent, type: 'pointerenter' };
           onIntersectOver(overEvent);
           onIntersectEnter(enterEvent);
-          if (component.onPointerOver) component.onPointerOver(overEvent);
-          if (component.onPointerEnter) component.onPointerEnter(enterEvent);
+          component.onPointerOver?.(overEvent);
+          component.onPointerEnter?.(enterEvent);
         }
 
         const moveEvent = { type: 'pointermove', component, intersect };
         onIntersectMove(moveEvent);
-        if (component.onPointerMove) component.onPointerMove(moveEvent);
+        component.onPointerMove?.(moveEvent);
 
         offObjects.splice(offObjects.indexOf(object), 1);
       });
@@ -100,8 +103,8 @@ export default function usePointer(options) {
           const leaveEvent = { ...overEvent, type: 'pointerleave' };
           onIntersectOver(overEvent);
           onIntersectLeave(leaveEvent);
-          if (component.onPointerOver) component.onPointerOver(overEvent);
-          if (component.onPointerLeave) component.onPointerLeave(leaveEvent);
+          component.onPointerOver?.(overEvent);
+          component.onPointerLeave?.(leaveEvent);
         }
       });
     }
@@ -109,10 +112,12 @@ export default function usePointer(options) {
 
   function pointerEnter(event) {
     updatePosition(event);
+    onEnter({ type: 'pointerenter', position, positionN, positionV3 });
   };
 
   function pointerMove(event) {
     updatePosition(event);
+    onMove({ type: 'pointermove', position, positionN, positionV3 });
     intersect();
   };
 
@@ -133,13 +138,14 @@ export default function usePointer(options) {
 
         const event = { type: 'click', component, intersect };
         onIntersectClick(event);
-        if (component.onClick) component.onClick(event);
+        component.onClick?.(event);
       });
     }
   };
 
   function pointerLeave() {
     if (resetOnEnd) reset();
+    onLeave({ type: 'pointerleave' });
   };
 
   function addListeners() {
