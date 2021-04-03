@@ -1,6 +1,5 @@
-import { defineComponent } from 'vue';
+import { geometryComponent } from './Geometry.js';
 import { CylinderGeometry } from 'three';
-import Geometry from './Geometry.js';
 
 export const props = {
   radiusTop: { type: Number, default: 1 },
@@ -17,12 +16,4 @@ export function createGeometry(comp) {
   return new CylinderGeometry(comp.radiusTop, comp.radiusBottom, comp.height, comp.radialSegments, comp.heightSegments, comp.openEnded, comp.thetaStart, comp.thetaLength);
 };
 
-export default defineComponent({
-  extends: Geometry,
-  props,
-  methods: {
-    createGeometry() {
-      this.geometry = createGeometry(this);
-    },
-  },
-});
+export default geometryComponent('CylinderGeometry', props, createGeometry);

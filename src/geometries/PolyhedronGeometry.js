@@ -1,6 +1,5 @@
-import { defineComponent } from 'vue';
+import { geometryComponent } from './Geometry.js';
 import { PolyhedronGeometry } from 'three';
-import Geometry from './Geometry.js';
 
 export const props = {
   vertices: Array,
@@ -13,12 +12,4 @@ export function createGeometry(comp) {
   return new PolyhedronGeometry(comp.vertices, comp.indices, comp.radius, comp.detail);
 };
 
-export default defineComponent({
-  extends: Geometry,
-  props,
-  methods: {
-    createGeometry() {
-      this.geometry = createGeometry(this);
-    },
-  },
-});
+export default geometryComponent('PolyhedronGeometry', props, createGeometry);

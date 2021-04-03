@@ -1,6 +1,5 @@
-import { defineComponent } from 'vue';
+import { geometryComponent } from './Geometry.js';
 import { DodecahedronGeometry } from 'three';
-import Geometry from './Geometry.js';
 
 export const props = {
   radius: { type: Number, default: 1 },
@@ -11,12 +10,4 @@ export function createGeometry(comp) {
   return new DodecahedronGeometry(comp.radius, comp.detail);
 };
 
-export default defineComponent({
-  extends: Geometry,
-  props,
-  methods: {
-    createGeometry() {
-      this.geometry = createGeometry(this);
-    },
-  },
-});
+export default geometryComponent('DodecahedronGeometry', props, createGeometry);

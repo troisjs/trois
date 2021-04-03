@@ -1,6 +1,5 @@
-import { defineComponent } from 'vue';
+import { geometryComponent } from './Geometry.js';
 import { LatheGeometry } from 'three';
-import Geometry from './Geometry.js';
 
 export const props = {
   points: Array,
@@ -13,12 +12,4 @@ export function createGeometry(comp) {
   return new LatheGeometry(comp.points, comp.segments, comp.phiStart, comp.phiLength);
 };
 
-export default defineComponent({
-  extends: Geometry,
-  props,
-  methods: {
-    createGeometry() {
-      this.geometry = createGeometry(this);
-    },
-  },
-});
+export default geometryComponent('LatheGeometry', props, createGeometry);

@@ -1,6 +1,5 @@
-import { defineComponent } from 'vue';
+import { geometryComponent } from './Geometry.js';
 import { TorusGeometry } from 'three';
-import Geometry from './Geometry.js';
 
 export const props = {
   radius: { type: Number, default: 1 },
@@ -14,12 +13,4 @@ export function createGeometry(comp) {
   return new TorusGeometry(comp.radius, comp.tube, comp.radialSegments, comp.tubularSegments, comp.arc);
 };
 
-export default defineComponent({
-  extends: Geometry,
-  props,
-  methods: {
-    createGeometry() {
-      this.geometry = createGeometry(this);
-    },
-  },
-});
+export default geometryComponent('TorusGeometry', props, createGeometry);

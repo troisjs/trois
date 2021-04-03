@@ -1,6 +1,5 @@
-import { defineComponent } from 'vue';
+import { geometryComponent } from './Geometry.js';
 import { RingGeometry } from 'three';
-import Geometry from './Geometry.js';
 
 export const props = {
   innerRadius: { type: Number, default: 0.5 },
@@ -15,12 +14,4 @@ export function createGeometry(comp) {
   return new RingGeometry(comp.innerRadius, comp.outerRadius, comp.thetaSegments, comp.phiSegments, comp.thetaStart, comp.thetaLength);
 };
 
-export default defineComponent({
-  extends: Geometry,
-  props,
-  methods: {
-    createGeometry() {
-      this.geometry = createGeometry(this);
-    },
-  },
-});
+export default geometryComponent('RingGeometry', props, createGeometry);

@@ -1,6 +1,6 @@
 import { defineComponent, watch } from 'vue';
 
-export default defineComponent({
+const Geometry = defineComponent({
   inject: ['mesh'],
   props: {
     rotateX: Number,
@@ -47,3 +47,18 @@ export default defineComponent({
   },
   render() { return []; },
 });
+
+export default Geometry;
+
+export function geometryComponent(name, props, createGeometry) {
+  return defineComponent({
+    name,
+    extends: Geometry,
+    props,
+    methods: {
+      createGeometry() {
+        this.geometry = createGeometry(this);
+      },
+    },
+  });
+};
