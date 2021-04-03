@@ -1,5 +1,5 @@
 import { watch } from 'vue';
-import { bindProp } from '../tools/index.js';
+import { bindProp } from '../tools';
 
 export default {
   name: 'Object3D',
@@ -10,11 +10,12 @@ export default {
     rotation: { type: Object, default: { x: 0, y: 0, z: 0 } },
     scale: { type: Object, default: { x: 1, y: 1, z: 1 } },
     lookAt: { type: Object, default: null },
+    autoRemove: { type: Boolean, default: true },
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
   unmounted() {
-    this.removeFromParent();
+    if (this.autoRemove) this.removeFromParent();
   },
   methods: {
     initObject3D(o3d) {
