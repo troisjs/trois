@@ -1,3 +1,4 @@
+import { defineComponent } from 'vue';
 import {
   CubeCamera,
   LinearMipmapLinearFilter,
@@ -6,7 +7,7 @@ import {
 } from 'three';
 import Mesh from './Mesh.js';
 
-export default {
+export default defineComponent({
   extends: Mesh,
   props: {
     cubeRTSize: { type: Number, default: 256 },
@@ -39,4 +40,4 @@ export default {
     },
   },
   __hmrId: 'MirrorMesh',
-};
+});

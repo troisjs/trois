@@ -1,7 +1,8 @@
+import { defineComponent } from 'vue';
 import Mesh from './Mesh.js';
 import { props, createGeometry, updateTubeGeometryPoints } from '../geometries/TubeGeometry.js';
 
-export default {
+export default defineComponent({
   extends: Mesh,
   props,
   created() {
@@ -18,4 +19,4 @@ export default {
     },
   },
   __hmrId: 'Tube',
-};
+});

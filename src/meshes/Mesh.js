@@ -1,5 +1,5 @@
-import { watch } from 'vue';
-import { Mesh } from 'three';
+import { defineComponent, watch } from 'vue';
+import { Mesh as TMesh } from 'three';
 import Object3D from '../core/Object3D.js';
 import { bindProp } from '../tools';
 
@@ -13,7 +13,7 @@ export const pointerProps = {
   onClick: Function,
 };
 
-export default {
+const Mesh = defineComponent({
   name: 'Mesh',
   extends: Object3D,
   props: {
@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     initMesh() {
-      this.mesh = new Mesh(this.geometry, this.material);
+      this.mesh = new TMesh(this.geometry, this.material);
       this.mesh.component = this;
 
       bindProp(this, 'castShadow', this.mesh);
@@ -81,4 +81,24 @@ export default {
     if (this.geometry) this.geometry.dispose();
   },
   __hmrId: 'Mesh',
+});
+
+export default Mesh;
+
+export function meshComponent(name, props, createGeometry) {
+  return defineComponent({
+    name,
+    extends: Mesh,
+    props,
+    created() {
+      this.createGeometry();
+      this.addGeometryWatchers(props);
+    },
+    methods: {
+      createGeometry() {
+        this.geometry = createGeometry(this);
+      },
+    },
+    __hmrId: name,
+  });
 };

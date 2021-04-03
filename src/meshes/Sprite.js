@@ -1,7 +1,8 @@
+import { defineComponent } from 'vue';
 import { Sprite, SpriteMaterial, TextureLoader } from 'three';
 import Object3D from '../core/Object3D.js';
 
-export default {
+export default defineComponent({
   extends: Object3D,
   emits: ['loaded'],
   props: {
@@ -50,4 +51,4 @@ export default {
     },
   },
   __hmrId: 'Sprite',
-};
+});

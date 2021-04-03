@@ -1,3 +1,4 @@
+import { defineComponent } from 'vue';
 import {
   CubeCamera,
   CubeRefractionMapping,
@@ -8,7 +9,7 @@ import {
 import Mesh from './Mesh.js';
 import { bindProp } from '../tools';
 
-export default {
+export default defineComponent({
   extends: Mesh,
   props: {
     cubeRTSize: { type: Number, default: 256 },
@@ -44,4 +45,4 @@ export default {
     },
   },
   __hmrId: 'RefractionMesh',
-};
+});

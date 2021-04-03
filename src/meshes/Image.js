@@ -1,8 +1,8 @@
+import { defineComponent, watch } from 'vue';
 import { DoubleSide, MeshBasicMaterial, PlaneGeometry, TextureLoader } from 'three';
-import { watch } from 'vue';
 import Mesh from './Mesh.js';
 
-export default {
+export default defineComponent({
   emits: ['loaded'],
   extends: Mesh,
   props: {
@@ -66,4 +66,4 @@ export default {
     },
   },
   __hmrId: 'Image',
-};
+});

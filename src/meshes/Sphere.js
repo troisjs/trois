@@ -1,17 +1,4 @@
-import Mesh from './Mesh.js';
+import { meshComponent } from './Mesh.js';
 import { props, createGeometry } from '../geometries/SphereGeometry.js';
 
-export default {
-  extends: Mesh,
-  props,
-  created() {
-    this.createGeometry();
-    this.addGeometryWatchers(props);
-  },
-  methods: {
-    createGeometry() {
-      this.geometry = createGeometry(this);
-    },
-  },
-  __hmrId: 'Sphere',
-};
+export default meshComponent('Sphere', props, createGeometry);

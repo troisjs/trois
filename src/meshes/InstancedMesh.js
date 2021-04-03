@@ -1,9 +1,10 @@
+import { defineComponent } from 'vue';
 import { InstancedMesh } from 'three';
 import Object3D from '../core/Object3D';
 import { bindProp } from '../tools';
 import { pointerProps } from './Mesh';
 
-export default {
+export default defineComponent({
   extends: Object3D,
   props: {
     castShadow: Boolean,
@@ -60,4 +61,4 @@ export default {
     }
   },
   __hmrId: 'InstancedMesh',
-};
+});

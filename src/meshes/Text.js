@@ -1,13 +1,25 @@
+import { defineComponent, watch } from 'vue';
 import { FontLoader, TextGeometry } from 'three';
-import { watch } from 'vue';
 import Mesh from './Mesh.js';
-import TextProps from './TextProps.js';
 
-export default {
+const props = {
+  text: String,
+  fontSrc: String,
+  size: { type: Number, default: 80 },
+  height: { type: Number, default: 5 },
+  depth: { type: Number, default: 1 },
+  curveSegments: { type: Number, default: 12 },
+  bevelEnabled: { type: Boolean, default: false },
+  bevelThickness: { type: Number, default: 10 },
+  bevelSize: { type: Number, default: 8 },
+  bevelOffset: { type: Number, default: 0 },
+  bevelSegments: { type: Number, default: 5 },
+  align: { type: [Boolean, String], default: false },
+};
+
+export default defineComponent({
   extends: Mesh,
-  props: {
-    ...TextProps,
-  },
+  props,
   data() {
     return {
       loading: true,
@@ -54,4 +66,4 @@ export default {
       }
     },
   },
-};
+});
