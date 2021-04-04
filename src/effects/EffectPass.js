@@ -1,4 +1,6 @@
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   inject: ['three', 'passes'],
   emits: ['ready'],
   beforeMount() {
@@ -20,4 +22,4 @@ export default {
     return [];
   },
   __hmrId: 'EffectPass',
-};
+});

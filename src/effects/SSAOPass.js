@@ -1,7 +1,8 @@
+import { defineComponent } from 'vue';
 import { SSAOPass } from 'three/examples/jsm/postprocessing/SSAOPass.js';
 import EffectPass from './EffectPass.js';
 
-export default {
+export default defineComponent({
   extends: EffectPass,
   props: {
     scene: null,
@@ -26,4 +27,4 @@ export default {
     this.completePass(pass);
   },
   __hmrId: 'SSAOPass',
-};
+});

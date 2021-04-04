@@ -1,7 +1,8 @@
+import { defineComponent } from 'vue';
 import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
 import EffectPass from './EffectPass.js';
 
-export default {
+export default defineComponent({
   extends: EffectPass,
   mounted() {
     // three size is not set yet, but this pass will be resized by effect composer
@@ -9,4 +10,4 @@ export default {
     this.completePass(pass);
   },
   __hmrId: 'SMAAPass',
-};
+});

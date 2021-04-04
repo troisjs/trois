@@ -1,7 +1,8 @@
+import { defineComponent } from 'vue';
 import { BokehPass } from 'three/examples/jsm/postprocessing/BokehPass.js';
 import EffectPass from './EffectPass.js';
 
-export default {
+export default defineComponent({
   extends: EffectPass,
   props: {
     focus: {
@@ -40,4 +41,4 @@ export default {
     this.completePass(pass);
   },
   __hmrId: 'BokehPass',
-};
+});

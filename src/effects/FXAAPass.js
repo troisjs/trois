@@ -1,8 +1,9 @@
+import { defineComponent } from 'vue';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader.js';
 import EffectPass from './EffectPass.js';
 
-export default {
+export default defineComponent({
   extends: EffectPass,
   mounted() {
     const pass = new ShaderPass(FXAAShader);
@@ -22,4 +23,4 @@ export default {
     },
   },
   __hmrId: 'FXAAPass',
-};
+});

@@ -1,9 +1,10 @@
+import { defineComponent } from 'vue';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import EffectPass from './EffectPass.js';
 import ZoomBlur from '../shaders/ZoomBlur.js';
 import { bindProp } from '../tools';
 
-export default {
+export default defineComponent({
   extends: EffectPass,
   props: {
     center: { type: Object, default: { x: 0.5, y: 0.5 } },
@@ -19,4 +20,4 @@ export default {
     this.completePass(pass);
   },
   __hmrId: 'ZoomBlurPass',
-};
+});

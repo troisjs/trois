@@ -1,11 +1,11 @@
+import { defineComponent, watch } from 'vue';
 import { Vector2 } from 'three';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
-import { watch } from 'vue';
 import EffectPass from './EffectPass.js';
 import TiltShift from '../shaders/TiltShift.js';
 import { bindProp } from '../tools';
 
-export default {
+export default defineComponent({
   extends: EffectPass,
   props: {
     blurRadius: { type: Number, default: 10 },
@@ -54,4 +54,4 @@ export default {
     },
   },
   __hmrId: 'TiltShiftPass',
-};
+});

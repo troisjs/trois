@@ -1,6 +1,7 @@
+import { defineComponent } from 'vue';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 
-export default {
+export default defineComponent({
   setup() {
     return {
       passes: [],
@@ -37,4 +38,4 @@ export default {
     return this.$slots.default();
   },
   __hmrId: 'EffectComposer',
-};
+});

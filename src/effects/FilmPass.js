@@ -1,25 +1,14 @@
+import { defineComponent } from 'vue';
 import { FilmPass } from 'three/examples/jsm/postprocessing/FilmPass.js';
 import EffectPass from './EffectPass.js';
 
-export default {
+export default defineComponent({
   extends: EffectPass,
   props: {
-    noiseIntensity: {
-      type: Number,
-      default: 0.5,
-    },
-    scanlinesIntensity: {
-      type: Number,
-      default: 0.05,
-    },
-    scanlinesCount: {
-      type: Number,
-      default: 4096,
-    },
-    grayscale: {
-      type: Number,
-      default: 0,
-    },
+    noiseIntensity: { type: Number, default: 0.5 },
+    scanlinesIntensity: { type: Number, default: 0.05 },
+    scanlinesCount: { type: Number, default: 4096 },
+    grayscale: { type: Number, default: 0 },
   },
   watch: {
     noiseIntensity() { this.pass.uniforms.nIntensity.value = this.noiseIntensity; },
@@ -32,4 +21,4 @@ export default {
     this.completePass(pass);
   },
   __hmrId: 'FilmPass',
-};
+});

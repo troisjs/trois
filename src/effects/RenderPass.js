@@ -1,7 +1,8 @@
+import { defineComponent } from 'vue';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import EffectPass from './EffectPass.js';
 
-export default {
+export default defineComponent({
   extends: EffectPass,
   mounted() {
     if (!this.three.scene) {
@@ -14,4 +15,4 @@ export default {
     this.completePass(pass);
   },
   __hmrId: 'RenderPass',
-};
+});

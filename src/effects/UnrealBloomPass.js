@@ -1,8 +1,9 @@
+import { defineComponent } from 'vue';
 import { Vector2 } from 'three';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import EffectPass from './EffectPass.js';
 
-export default {
+export default defineComponent({
   extends: EffectPass,
   props: {
     strength: { type: Number, default: 1.5 },
@@ -20,4 +21,4 @@ export default {
     this.completePass(pass);
   },
   __hmrId: 'UnrealBloomPass',
-};
+});

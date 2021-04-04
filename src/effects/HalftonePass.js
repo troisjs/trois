@@ -1,8 +1,8 @@
+import { defineComponent, watch } from 'vue';
 import { HalftonePass } from 'three/examples/jsm/postprocessing/HalftonePass.js';
-import { watch } from 'vue';
 import EffectPass from './EffectPass.js';
 
-export default {
+export default defineComponent({
   extends: EffectPass,
   props: {
     shape: { type: Number, default: 1 },
@@ -25,4 +25,4 @@ export default {
     this.completePass(pass);
   },
   __hmrId: 'HalftonePass',
-};
+});
