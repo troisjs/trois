@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue';
 import { Object3D } from 'three';
 import { gsap, Power4 } from 'gsap';
 
@@ -18,7 +19,7 @@ import { lerp } from '../../tools';
 import AnimatedPlane from './AnimatedPlane.js';
 import useTextures from '../../use/useTextures';
 
-export default {
+export default defineComponent({
   components: { Camera, Renderer, Scene },
   props: {
     images: Array,
@@ -161,5 +162,5 @@ export default {
       this.plane2.o3d.position.z = progress - 1;
     },
   },
-};
+});
 </script>

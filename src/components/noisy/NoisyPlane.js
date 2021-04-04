@@ -1,10 +1,10 @@
+import { defineComponent, watch } from 'vue';
 import { ObjectSpaceNormalMap, ShaderMaterial, Vector2, WebGLRenderTarget } from 'three';
 import { Pass } from 'three/examples/jsm/postprocessing/Pass.js';
-import { watch } from 'vue';
 import Plane from '../../meshes/Plane.js';
 import snoise3 from '../../glsl/snoise3.glsl.js';
 
-export default {
+export default defineComponent({
   extends: Plane,
   props: {
     timeCoef: { type: Number, default: 0.001 },
@@ -126,4 +126,4 @@ export default {
     },
   },
   __hmrId: 'NoisyPlane',
-};
+});

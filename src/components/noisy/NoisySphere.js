@@ -1,8 +1,8 @@
-import { watch } from 'vue';
+import { defineComponent, watch } from 'vue';
 import Sphere from '../../meshes/Sphere.js';
 import snoise4 from '../../glsl/snoise4.glsl.js';
 
-export default {
+export default defineComponent({
   extends: Sphere,
   props: {
     radius: { type: Number, default: 20 },
@@ -65,4 +65,4 @@ export default {
     },
   },
   __hmrId: 'NoisySphere',
-};
+});

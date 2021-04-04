@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue';
 import { Vector2 } from 'three';
 import { gsap, Power4 } from 'gsap';
 
@@ -17,7 +18,7 @@ import { lerp, lerpv2 } from '../../tools';
 import ZoomBlurImage from './ZoomBlurImage.js';
 import useTextures from '../../use/useTextures.js';
 
-export default {
+export default defineComponent({
   components: { OrthographicCamera, Renderer, Scene },
   props: {
     images: Array,
@@ -154,5 +155,5 @@ export default {
       this.image2.uStrength.value = -1 + progress;
     },
   },
-};
+});
 </script>

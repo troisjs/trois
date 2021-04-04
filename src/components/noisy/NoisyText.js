@@ -1,8 +1,8 @@
-import { watch } from 'vue';
+import { defineComponent, watch } from 'vue';
 import Text from '../../meshes/Text.js';
 import snoise2 from '../../glsl/snoise2.glsl.js';
 
-export default {
+export default defineComponent({
   extends: Text,
   props: {
     timeCoef: { type: Number, default: 0.001 },
@@ -62,4 +62,4 @@ export default {
     },
   },
   __hmrId: 'NoisyText',
-};
+});

@@ -1,9 +1,9 @@
+import { defineComponent, watch } from 'vue';
 import { DoubleSide, MeshBasicMaterial, PlaneGeometry } from 'three';
-import { watch } from 'vue';
 import Image from '../../meshes/Image.js';
 import snoise2 from '../../glsl/snoise2.glsl.js';
 
-export default {
+export default defineComponent({
   extends: Image,
   props: {
     widthSegments: { type: Number, default: 20 },
@@ -86,4 +86,4 @@ export default {
     },
   },
   __hmrId: 'NoisyImage',
-};
+});

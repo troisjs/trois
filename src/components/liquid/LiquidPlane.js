@@ -1,10 +1,10 @@
+import { defineComponent, watch } from 'vue';
 import { DoubleSide, Mesh, MeshStandardMaterial, PlaneGeometry } from 'three';
-import { watch } from 'vue';
 import Object3D from '../../core/Object3D.js';
 import { bindProps } from '../../tools';
 import LiquidEffect from './LiquidEffect.js';
 
-export default {
+export default defineComponent({
   extends: Object3D,
   props: {
     width: { type: Number, default: 10 },
@@ -51,4 +51,4 @@ export default {
       this.liquidEffect.update();
     },
   },
-};
+});
