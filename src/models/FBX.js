@@ -1,7 +1,8 @@
+import { defineComponent } from 'vue';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import Model from './Model.js';
 
-export default {
+export default defineComponent({
   extends: Model,
   props: {
     src: String,
@@ -12,4 +13,4 @@ export default {
       this.onLoad(fbx);
     }, this.onProgress, this.onError);
   },
-};
+});

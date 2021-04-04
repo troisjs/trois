@@ -1,7 +1,8 @@
+import { defineComponent } from 'vue';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import Model from './Model.js';
 
-export default {
+export default defineComponent({
   extends: Model,
   props: {
     src: String,
@@ -12,4 +13,4 @@ export default {
       this.onLoad(gltf.scene);
     }, this.onProgress, this.onError);
   },
-};
+});

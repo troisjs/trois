@@ -1,6 +1,7 @@
+import { defineComponent } from 'vue';
 import Object3D from '../core/Object3D.js';
 
-export default {
+export default defineComponent({
   extends: Object3D,
   emits: ['load', 'progress', 'error'],
   data() {
@@ -21,4 +22,4 @@ export default {
       this.$emit('error', error);
     },
   },
-};
+});
