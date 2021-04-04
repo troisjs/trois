@@ -1,6 +1,6 @@
 // import commonjs from '@rollup/plugin-commonjs';
 import vue from 'rollup-plugin-vue';
-import buble from '@rollup/plugin-buble';
+// import buble from '@rollup/plugin-buble';
 import { terser } from "rollup-plugin-terser";
 import replace from '@rollup/plugin-replace';
 
@@ -25,6 +25,7 @@ const external = [
   'three/examples/jsm/postprocessing/ShaderPass.js',
   'three/examples/jsm/postprocessing/UnrealBloomPass.js',
   'three/examples/jsm/shaders/FXAAShader.js',
+  'three/examples/jsm/webxr/VRButton.js',
   'vue',
 ];
 
