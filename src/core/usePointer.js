@@ -8,8 +8,8 @@ export default function usePointer(options) {
     intersectObjects,
     touch = true,
     resetOnEnd = false,
-    resetPosition = new Vector2(Infinity, Infinity),
-    resetPositionV3 = new Vector3(Infinity, Infinity, Infinity),
+    resetPosition = new Vector2(0, 0),
+    resetPositionV3 = new Vector3(0, 0, 0),
     onEnter = () => {},
     onMove = () => {},
     onLeave = () => {},
@@ -21,7 +21,7 @@ export default function usePointer(options) {
   } = options;
 
   const position = resetPosition.clone();
-  const positionN = new Vector2(Infinity, Infinity);
+  const positionN = new Vector2(0, 0);
 
   const raycaster = useRaycaster({ camera });
   const positionV3 = raycaster.position;
