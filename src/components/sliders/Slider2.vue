@@ -1,5 +1,5 @@
 <template>
-  <Renderer ref="renderer" antialias resize mouse-move>
+  <Renderer ref="renderer" antialias resize pointer>
     <OrthographicCamera ref="camera" :position="{ z: 10 }" />
     <Scene ref="scene" />
   </Renderer>
@@ -85,8 +85,8 @@ export default defineComponent({
       scene.add(this.image2.mesh);
     },
     animate() {
-      const { mouse } = this.three;
-      this.center.copy(mouse).divideScalar(2).addScalar(0.5);
+      const { positionN } = this.three.pointer;
+      this.center.copy(positionN).divideScalar(2).addScalar(0.5);
       lerpv2(this.image1.uCenter.value, this.center, 0.1);
       lerpv2(this.image2.uCenter.value, this.center, 0.1);
 
