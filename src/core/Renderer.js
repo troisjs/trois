@@ -1,5 +1,4 @@
 import { defineComponent, h } from 'vue';
-import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 import useThree from './useThree';
 
 export default defineComponent({
@@ -47,10 +46,7 @@ export default defineComponent({
       this.renderer = this.three.renderer;
       this.renderer.shadowMap.enabled = this.shadow;
 
-      this.pointer = this.three.pointer;
-
       if (this.xr) {
-        this.renderer.domElement.parentNode.appendChild(VRButton.createButton(this.renderer));
         this.renderer.xr.enabled = true;
         if (this.three.composer) this.renderer.setAnimationLoop(this.animateXRC);
         else this.renderer.setAnimationLoop(this.animateXR);
