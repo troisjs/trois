@@ -47,6 +47,8 @@ export default defineComponent({
       this.renderer = this.three.renderer;
       this.renderer.shadowMap.enabled = this.shadow;
 
+      this.pointer = this.three.pointer;
+
       if (this.xr) {
         this.renderer.domElement.parentNode.appendChild(VRButton.createButton(this.renderer));
         this.renderer.xr.enabled = true;
