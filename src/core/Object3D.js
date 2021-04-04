@@ -11,6 +11,7 @@ export default defineComponent({
     scale: { type: Object, default: { x: 1, y: 1, z: 1 } },
     lookAt: { type: Object, default: null },
     autoRemove: { type: Boolean, default: true },
+    userData: { type: Object, default: () => ({}) },
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
@@ -20,6 +21,7 @@ export default defineComponent({
   methods: {
     initObject3D(o3d) {
       this.o3d = o3d;
+      this.o3d.userData = this.userData;
       this.$emit('created', this.o3d);
 
       bindProp(this, 'position', this.o3d);
