@@ -1,7 +1,8 @@
+import { defineComponent } from 'vue';
 import { Color, ShaderMaterial as TShaderMaterial, UniformsUtils } from 'three';
 import SubsurfaceScatteringShader from './SubsurfaceScatteringShader.js';
 
-export default {
+export default defineComponent({
   inject: ['three', 'mesh'],
   props: {
     color: { type: String, default: '#ffffff' },
@@ -51,4 +52,4 @@ export default {
     return [];
   },
   __hmrId: 'SubSurfaceMaterial',
-};
+});

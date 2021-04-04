@@ -1,9 +1,9 @@
+import { defineComponent, watch } from 'vue';
 import { MeshPhongMaterial } from 'three';
-import { watch } from 'vue';
 import { bindProps, propsValues } from '../tools';
 import Material, { wireframeProps } from './Material';
 
-export default {
+export default defineComponent({
   extends: Material,
   props: {
     emissive: { type: [Number, String], default: 0 },
@@ -33,4 +33,4 @@ export default {
     },
   },
   __hmrId: 'PhongMaterial',
-};
+});

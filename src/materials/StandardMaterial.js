@@ -1,5 +1,5 @@
+import { defineComponent, watch } from 'vue';
 import { MeshStandardMaterial } from 'three';
-import { watch } from 'vue';
 import { bindProp, bindProps, propsValues } from '../tools';
 import Material, { wireframeProps } from './Material';
 
@@ -19,7 +19,7 @@ const props = {
   flatShading: Boolean,
 };
 
-export default {
+export default defineComponent({
   extends: Material,
   props: {
     ...props,
@@ -46,4 +46,4 @@ export default {
     },
   },
   __hmrId: 'StandardMaterial',
-};
+});

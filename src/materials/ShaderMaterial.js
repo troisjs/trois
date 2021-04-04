@@ -1,8 +1,8 @@
+import { defineComponent, watch } from 'vue';
 import { ShaderMaterial } from 'three';
-import { watch } from 'vue';
 import { propsValues, defaultFragmentShader, defaultVertexShader } from '../tools';
 
-export default {
+export default defineComponent({
   inject: ['three', 'mesh'],
   props: {
     uniforms: { type: Object, default: () => { return {}; } },
@@ -37,4 +37,4 @@ export default {
     return this.$slots.default ? this.$slots.default() : [];
   },
   __hmrId: 'ShaderMaterial',
-};
+});

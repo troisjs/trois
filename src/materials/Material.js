@@ -1,7 +1,7 @@
-import { watch } from 'vue';
+import { defineComponent, watch } from 'vue';
 import { FrontSide } from 'three';
 
-export default {
+export default defineComponent({
   inject: ['three', 'mesh'],
   props: {
     color: { type: [String, Number], default: '#ffffff' },
@@ -52,7 +52,7 @@ export default {
     return this.$slots.default ? this.$slots.default() : [];
   },
   __hmrId: 'Material',
-};
+});
 
 export const wireframeProps = {
   wireframe: { type: Boolean, default: false },

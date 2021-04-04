@@ -1,7 +1,7 @@
+import { defineComponent, watch } from 'vue';
 import { CubeTextureLoader, CubeRefractionMapping } from 'three';
-import { watch } from 'vue';
 
-export default {
+export default defineComponent({
   inject: ['material'],
   emits: ['loaded'],
   props: {
@@ -49,4 +49,4 @@ export default {
   render() {
     return [];
   },
-};
+});

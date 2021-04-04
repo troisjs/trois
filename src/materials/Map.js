@@ -1,6 +1,7 @@
+import { defineComponent } from 'vue';
 import Texture from './Texture.js';
 
-export default {
+export default defineComponent({
   extends: Texture,
   inject: ['material'],
   created() {
@@ -16,4 +17,4 @@ export default {
     },
   },
   __hmrId: 'Map',
-};
+});

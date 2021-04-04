@@ -1,8 +1,8 @@
+import { defineComponent, watch } from 'vue';
 import { ClampToEdgeWrapping, LinearFilter, LinearMipmapLinearFilter, TextureLoader, UVMapping } from 'three';
-import { watch } from 'vue';
 import { bindProp } from '../tools';
 
-export default {
+export default defineComponent({
   inject: ['material'],
   emits: ['loaded'],
   props: {
@@ -57,4 +57,4 @@ export default {
     },
   },
   render() { return []; },
-};
+});

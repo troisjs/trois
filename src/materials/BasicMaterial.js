@@ -1,8 +1,9 @@
+import { defineComponent } from 'vue';
 import { MeshBasicMaterial } from 'three';
 import { bindProps, propsValues } from '../tools';
 import Material, { wireframeProps } from './Material';
 
-export default {
+export default defineComponent({
   extends: Material,
   props: {
     ...wireframeProps,
@@ -16,4 +17,4 @@ export default {
     },
   },
   __hmrId: 'BasicMaterial',
-};
+});

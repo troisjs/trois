@@ -1,8 +1,9 @@
+import { defineComponent } from 'vue';
 import { MeshPhysicalMaterial } from 'three';
 import { propsValues } from '../tools';
 import StandardMaterial from './StandardMaterial';
 
-export default {
+export default defineComponent({
   extends: StandardMaterial,
   props: {
     flatShading: Boolean,
@@ -16,4 +17,4 @@ export default {
     },
   },
   __hmrId: 'PhysicalMaterial',
-};
+});

@@ -1,9 +1,9 @@
+import { defineComponent } from 'vue';
 import { MeshMatcapMaterial, TextureLoader } from 'three';
-// import { watch } from 'vue';
 import { propsValues, getMatcapUrl } from '../tools';
 import Material from './Material';
 
-export default {
+export default defineComponent({
   extends: Material,
   props: {
     src: String,
@@ -22,4 +22,4 @@ export default {
     },
   },
   __hmrId: 'MatcapMaterial',
-};
+});
