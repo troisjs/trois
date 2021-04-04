@@ -1,6 +1,7 @@
 dist
 docs
 screenshots
+temp
 .eslintrc.js
 .gitignore
 index.html
