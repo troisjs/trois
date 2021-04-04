@@ -1,8 +1,8 @@
+import { defineComponent, watch } from 'vue';
 import { HemisphereLight } from 'three';
-import { watch } from 'vue';
 import Light from './Light.js';
 
-export default {
+export default defineComponent({
   extends: Light,
   props: {
     groundColor: { type: String, default: '#444444' },
@@ -13,4 +13,4 @@ export default {
     this.initLight();
   },
   __hmrId: 'HemisphereLight',
-};
+});

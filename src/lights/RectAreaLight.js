@@ -1,10 +1,10 @@
+import { defineComponent, watch } from 'vue';
 import { RectAreaLight } from 'three';
 import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js';
-import { watch } from 'vue';
 import Light from './Light.js';
 
-export default {
+export default defineComponent({
   extends: Light,
   props: {
     width: { type: Number, default: 10 },
@@ -32,4 +32,4 @@ export default {
     if (this.lightHelper) this.removeFromParent(this.lightHelper);
   },
   __hmrId: 'RectAreaLight',
-};
+});

@@ -1,8 +1,8 @@
+import { defineComponent, watch } from 'vue';
 import { SpotLight } from 'three';
-import { watch } from 'vue';
 import Light from './Light.js';
 
-export default {
+export default defineComponent({
   extends: Light,
   props: {
     angle: { type: Number, default: Math.PI / 3 },
@@ -21,4 +21,4 @@ export default {
     this.initLight();
   },
   __hmrId: 'SpotLight',
-};
+});

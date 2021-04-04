@@ -1,7 +1,8 @@
+import { defineComponent } from 'vue';
 import { PointLight } from 'three';
 import Light from './Light.js';
 
-export default {
+export default defineComponent({
   extends: Light,
   props: {
     distance: {
@@ -18,4 +19,4 @@ export default {
     this.initLight();
   },
   __hmrId: 'PointLight',
-};
+});
