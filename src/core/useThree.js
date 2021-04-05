@@ -49,7 +49,7 @@ export default function useThree() {
     setSize,
     onAfterInit,
     onAfterResize, offAfterResize,
-    onBeforeRender, offBeforeRender,
+    // onBeforeRender, offBeforeRender,
     addIntersectObject, removeIntersectObject,
   };
 
@@ -209,7 +209,7 @@ export default function useThree() {
     window.removeEventListener('resize', onResize);
     if (obj.pointer) obj.pointer.removeListeners();
     if (obj.orbitCtrl) obj.orbitCtrl.dispose();
-    obj.renderer.dispose();
+    if (obj.renderer) obj.renderer.dispose();
   }
 
   /**

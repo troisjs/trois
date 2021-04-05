@@ -20,6 +20,8 @@ export default defineComponent({
       three: useThree(),
       raf: true,
       onMountedCallbacks: [],
+      beforeRenderCallbacks: [],
+      afterRenderCallbacks: [],
     };
   },
   provide() {
@@ -46,13 +48,13 @@ export default defineComponent({
       this.renderer = this.three.renderer;
       this.renderer.shadowMap.enabled = this.shadow;
 
+      this._render = this.three.composer ? this.three.renderC : this.three.render;
+
       if (this.xr) {
         this.renderer.xr.enabled = true;
-        if (this.three.composer) this.renderer.setAnimationLoop(this.animateXRC);
-        else this.renderer.setAnimationLoop(this.animateXR);
+        this.renderer.setAnimationLoop(this.render);
       } else {
-        if (this.three.composer) this.animateC();
-        else this.animate();
+        requestAnimationFrame(this.renderLoop);
       }
     };
 
@@ -63,25 +65,36 @@ export default defineComponent({
     this.three.dispose();
   },
   methods: {
-    onMounted(callback) {
-      this.onMountedCallbacks.push(callback);
+    onMounted(cb) {
+      this.onMountedCallbacks.push(cb);
     },
-    onBeforeRender(callback) {
-      this.three.onBeforeRender(callback);
+    onBeforeRender(cb) {
+      this.beforeRenderCallbacks.push(cb);
     },
-    onAfterResize(callback) {
-      this.three.onAfterResize(callback);
+    offBeforeRender(cb) {
+      this.beforeRenderCallbacks = this.beforeRenderCallbacks.filter(c => c !== cb);
     },
-    animate() {
-      if (this.raf) requestAnimationFrame(this.animate);
-      this.three.render();
+    onAfterRender(cb) {
+      this.afterRenderCallbacks.push(cb);
     },
-    animateC() {
-      if (this.raf) requestAnimationFrame(this.animateC);
-      this.three.renderC();
+    offAfterRender(cb) {
+      this.afterRenderCallbacks = this.afterRenderCallbacks.filter(c => c !== cb);
     },
-    animateXR() { this.three.render(); },
-    animateXRC() { this.three.renderC(); },
+    onAfterResize(cb) {
+      this.three.onAfterResize(cb);
+    },
+    offAfterResize(cb) {
+      this.three.offAfterResize(cb);
+    },
+    render(time) {
+      this.beforeRenderCallbacks.forEach(c => c({ time }));
+      this._render();
+      this.afterRenderCallbacks.forEach(c => c({ time }));
+    },
+    renderLoop(time) {
+      if (this.raf) requestAnimationFrame(this.renderLoop);
+      this.render(time);
+    },
   },
   render() {
     return h('canvas', {}, this.$slots.default());

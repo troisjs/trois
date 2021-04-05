@@ -30,10 +30,10 @@ export default defineComponent({
     watch(() => this.displacementScale, (value) => { this.material.displacementScale = value; });
 
     this.startTime = Date.now();
-    this.three.onBeforeRender(this.update);
+    this.rendererComponent.onBeforeRender(this.update);
   },
   unmounted() {
-    this.three.offBeforeRender(this.update);
+    this.rendererComponent.offBeforeRender(this.update);
     this.fsQuad.dispose();
     this.dispRT.dispose();
     this.dispMat.dispose();

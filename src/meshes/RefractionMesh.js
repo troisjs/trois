@@ -20,11 +20,11 @@ export default defineComponent({
   },
   mounted() {
     this.initMirrorMesh();
-    if (this.autoUpdate) this.three.onBeforeRender(this.updateCubeRT);
+    if (this.autoUpdate) this.rendererComponent.onBeforeRender(this.updateCubeRT);
     else this.rendererComponent.onMounted(this.updateCubeRT);
   },
   unmounted() {
-    this.three.offBeforeRender(this.updateCubeRT);
+    this.rendererComponent.offBeforeRender(this.updateCubeRT);
     if (this.cubeCamera) this.removeFromParent(this.cubeCamera);
   },
   methods: {

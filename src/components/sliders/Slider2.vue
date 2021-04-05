@@ -36,7 +36,8 @@ export default defineComponent({
     };
   },
   mounted() {
-    this.three = this.$refs.renderer.three;
+    this.renderer = this.$refs.renderer;
+    this.three = this.renderer.three;
 
     if (this.images.length < 2) {
       console.error('This slider needs at least 2 images.');
@@ -69,8 +70,8 @@ export default defineComponent({
       if (this.events.click) domElement.addEventListener('click', this.onClick);
       if (this.events.wheel) domElement.addEventListener('wheel', this.onWheel);
       if (this.events.keyup) document.addEventListener('keyup', this.onKeyup);
-      this.three.onBeforeRender(this.animate);
-      this.three.onAfterResize(this.onResize);
+      this.renderer.onBeforeRender(this.animate);
+      this.renderer.onAfterResize(this.onResize);
     },
     initScene() {
       const scene = this.$refs.scene.scene;

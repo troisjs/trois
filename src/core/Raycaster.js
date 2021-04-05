@@ -27,14 +27,14 @@ export default defineComponent({
       this.pointer.addListeners();
 
       if (this.intersectMode === 'frame') {
-        this.three.onBeforeRender(this.pointer.intersect);
+        this.rendererComponent.onBeforeRender(this.pointer.intersect);
       }
     });
   },
   unmounted() {
     if (this.pointer) {
       this.pointer.removeListeners();
-      this.three.offBeforeRender(this.pointer.intersect);
+      this.rendererComponent.offBeforeRender(this.pointer.intersect);
     }
   },
   methods: {
