@@ -1,6 +1,7 @@
 import { WebGLRenderer } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import usePointer from './usePointer';
+import Stats from 'stats.js';
 
 /**
  * Three.js helper
@@ -17,6 +18,7 @@ export default function useThree() {
     resize: false,
     width: 300,
     height: 150,
+    stats: false,
   };
 
   // size
@@ -41,6 +43,7 @@ export default function useThree() {
     cameraCtrl: null,
     scene: null,
     pointer: null,
+    stats: null,
     size,
     init,
     dispose,
@@ -91,6 +94,18 @@ export default function useThree() {
         Object.entries(conf.orbit_ctrl).forEach(([key, value]) => {
           obj.orbitCtrl[key] = value;
         });
+      }
+    }
+
+    if (conf.stats){
+      obj.stats = new Stats();
+      if (typeof conf.stats === 'function'){
+        // if stats option is function, assume user is handling setup
+        conf.stats(obj.stats);
+      } else {
+        // otherwise, add default FPS monitor
+        obj.stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+        document.body.appendChild(obj.stats.dom);
       }
     }
 
@@ -160,9 +175,15 @@ export default function useThree() {
    * default render
    */
   function render() {
+    if (obj.stats){
+      obj.stats.begin();
+    }
     if (obj.orbitCtrl) obj.orbitCtrl.update();
     beforeRenderCallbacks.forEach(c => c());
     obj.renderer.render(obj.scene, obj.camera);
+    if (obj.stats){
+      obj.stats.end();
+    }
   }
 
   /**

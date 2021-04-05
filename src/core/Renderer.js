@@ -14,6 +14,7 @@ export default defineComponent({
     width: String,
     height: String,
     xr: Boolean,
+    stats: { type: [Boolean, Function], default: false },
   },
   setup() {
     return {
@@ -40,6 +41,7 @@ export default defineComponent({
       resize: this.resize,
       width: this.width,
       height: this.height,
+      stats: this.stats,
     };
 
     if (this.three.init(params)) {

@@ -42,5 +42,8 @@
   "bugs": {
     "url": "https://github.com/troisjs/trois/issues"
   },
-  "homepage": "https://github.com/troisjs/trois"
+  "homepage": "https://github.com/troisjs/trois",
+  "dependencies": {
+    "stats.js": "0.17.0"
+  }
 }
