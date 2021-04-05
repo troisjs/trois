@@ -52,11 +52,8 @@ export const TroisJSVuePlugin = {
       'TorusKnot', 'TorusKnotGeometry',
       'Tube', 'TubeGeometry',
 
-      'Gem',
       'Image',
       'InstancedMesh',
-      'MirrorMesh',
-      'RefractionMesh',
       'Sprite',
 
       'FBXModel',
