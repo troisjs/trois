@@ -6,6 +6,7 @@ export { default as DodecahedronGeometry } from './DodecahedronGeometry.js';
 export { default as IcosahedronGeometry } from './IcosahedronGeometry.js';
 export { default as LatheGeometry } from './LatheGeometry.js';
 export { default as OctahedronGeometry } from './OctahedronGeometry.js';
+export { default as PlaneGeometry } from './PlaneGeometry.js';
 export { default as PolyhedronGeometry } from './PolyhedronGeometry.js';
 export { default as RingGeometry } from './RingGeometry.js';
 export { default as SphereGeometry } from './SphereGeometry.js';

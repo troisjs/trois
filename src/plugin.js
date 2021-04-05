@@ -42,7 +42,7 @@ export const TroisJSVuePlugin = {
       'Icosahedron', 'IcosahedronGeometry',
       'Lathe', 'LatheGeometry',
       'Octahedron', 'OctahedronGeometry',
-      'Plane',
+      'Plane', 'PlaneGeometry',
       'Polyhedron', 'PolyhedronGeometry',
       'Ring', 'RingGeometry',
       'Sphere', 'SphereGeometry',
