@@ -2,7 +2,7 @@ import Stats from 'stats.js';
 
 export default {
   props: {
-    noSetup: { type: Boolean, default: false }
+    noSetup: { type: Boolean, default: false },
   },
   emits: ['created'],
   inject: ['rendererComponent'],
@@ -31,7 +31,7 @@ export default {
       if (this.stats) {
         this.stats.end();
       }
-    }
+    },
   },
   unmounted() {
     if (this.stats && this.stats.dom) {
