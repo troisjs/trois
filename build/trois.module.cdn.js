@@ -1,6 +1,5 @@
 import { defineComponent, h, toRef, watch, createApp as createApp$1 } from 'https://unpkg.com/vue@3.0.11/dist/vue.esm-browser.prod.js';
-import { VRButton } from 'https://unpkg.com/three@0.127.0/examples/jsm/webxr/VRButton.js';
-import { Vector3, Raycaster as Raycaster$1, Plane as Plane$1, Vector2, InstancedMesh as InstancedMesh$1, WebGLRenderer, OrthographicCamera as OrthographicCamera$1, PerspectiveCamera as PerspectiveCamera$1, Group as Group$1, Scene as Scene$1, Color, BoxGeometry as BoxGeometry$1, CircleGeometry as CircleGeometry$1, ConeGeometry as ConeGeometry$1, CylinderGeometry as CylinderGeometry$1, DodecahedronGeometry as DodecahedronGeometry$1, IcosahedronGeometry as IcosahedronGeometry$1, LatheGeometry as LatheGeometry$1, OctahedronGeometry as OctahedronGeometry$1, PolyhedronGeometry as PolyhedronGeometry$1, RingGeometry as RingGeometry$1, SphereGeometry as SphereGeometry$1, TetrahedronGeometry as TetrahedronGeometry$1, TorusGeometry as TorusGeometry$1, TorusKnotGeometry as TorusKnotGeometry$1, TubeGeometry as TubeGeometry$1, Curve, CatmullRomCurve3, AmbientLight as AmbientLight$1, DirectionalLight as DirectionalLight$1, HemisphereLight as HemisphereLight$1, PointLight as PointLight$1, RectAreaLight as RectAreaLight$1, SpotLight as SpotLight$1, FrontSide, MeshBasicMaterial, MeshLambertMaterial, TextureLoader, MeshMatcapMaterial, MeshPhongMaterial, MeshStandardMaterial, MeshPhysicalMaterial, ShaderMaterial as ShaderMaterial$1, ShaderChunk, UniformsUtils, ShaderLib, MeshToonMaterial, UVMapping, ClampToEdgeWrapping, LinearFilter, LinearMipmapLinearFilter, CubeTextureLoader, CubeRefractionMapping, Mesh as Mesh$1, PlaneGeometry, FontLoader, TextGeometry, WebGLCubeRenderTarget, RGBFormat, CubeCamera, BackSide, DoubleSide, SpriteMaterial, Sprite as Sprite$1 } from 'https://unpkg.com/three@0.127.0/build/three.module.js';
+import { Vector3, Raycaster as Raycaster$1, Plane as Plane$1, Vector2, InstancedMesh as InstancedMesh$1, WebGLRenderer, OrthographicCamera as OrthographicCamera$1, PerspectiveCamera as PerspectiveCamera$1, Group as Group$1, Scene as Scene$1, Color, BoxGeometry as BoxGeometry$1, CircleGeometry as CircleGeometry$1, ConeGeometry as ConeGeometry$1, CylinderGeometry as CylinderGeometry$1, DodecahedronGeometry as DodecahedronGeometry$1, IcosahedronGeometry as IcosahedronGeometry$1, LatheGeometry as LatheGeometry$1, OctahedronGeometry as OctahedronGeometry$1, PlaneGeometry as PlaneGeometry$1, PolyhedronGeometry as PolyhedronGeometry$1, RingGeometry as RingGeometry$1, SphereGeometry as SphereGeometry$1, TetrahedronGeometry as TetrahedronGeometry$1, TorusGeometry as TorusGeometry$1, TorusKnotGeometry as TorusKnotGeometry$1, TubeGeometry as TubeGeometry$1, Curve, CatmullRomCurve3, AmbientLight as AmbientLight$1, DirectionalLight as DirectionalLight$1, HemisphereLight as HemisphereLight$1, PointLight as PointLight$1, RectAreaLight as RectAreaLight$1, SpotLight as SpotLight$1, FrontSide, MeshBasicMaterial, MeshLambertMaterial, TextureLoader, MeshMatcapMaterial, MeshPhongMaterial, MeshStandardMaterial, MeshPhysicalMaterial, ShaderMaterial as ShaderMaterial$1, ShaderChunk, UniformsUtils, ShaderLib, MeshToonMaterial, UVMapping, ClampToEdgeWrapping, LinearFilter, LinearMipmapLinearFilter, CubeTextureLoader, CubeRefractionMapping, Mesh as Mesh$1, FontLoader, TextGeometry, DoubleSide, SpriteMaterial, Sprite as Sprite$1 } from 'https://unpkg.com/three@0.127.0/build/three.module.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.127.0/examples/jsm/controls/OrbitControls.js';
 import { RectAreaLightUniformsLib } from 'https://unpkg.com/three@0.127.0/examples/jsm/lights/RectAreaLightUniformsLib.js';
 import { RectAreaLightHelper } from 'https://unpkg.com/three@0.127.0/examples/jsm/helpers/RectAreaLightHelper.js';
@@ -256,7 +255,7 @@ function useThree() {
     setSize,
     onAfterInit,
     onAfterResize, offAfterResize,
-    onBeforeRender, offBeforeRender,
+    // onBeforeRender, offBeforeRender,
     addIntersectObject, removeIntersectObject,
   };
 
@@ -356,13 +355,6 @@ function useThree() {
   }
 
   /**
-   * remove before render callback
-   */
-  function offBeforeRender(callback) {
-    beforeRenderCallbacks = beforeRenderCallbacks.filter(c => c !== callback);
-  }
-
-  /**
    * default render
    */
   function render() {
@@ -415,7 +407,7 @@ function useThree() {
     window.removeEventListener('resize', onResize);
     if (obj.pointer) obj.pointer.removeListeners();
     if (obj.orbitCtrl) obj.orbitCtrl.dispose();
-    obj.renderer.dispose();
+    if (obj.renderer) obj.renderer.dispose();
   }
 
   /**
@@ -488,6 +480,8 @@ var Renderer = defineComponent({
       three: useThree(),
       raf: true,
       onMountedCallbacks: [],
+      beforeRenderCallbacks: [],
+      afterRenderCallbacks: [],
     };
   },
   provide() {
@@ -514,43 +508,54 @@ var Renderer = defineComponent({
       this.renderer = this.three.renderer;
       this.renderer.shadowMap.enabled = this.shadow;
 
+      this._render = this.three.composer ? this.three.renderC : this.three.render;
+
       if (this.xr) {
-        this.vrButton = VRButton.createButton(this.renderer);
-        this.renderer.domElement.parentNode.appendChild(this.vrButton);
         this.renderer.xr.enabled = true;
-        if (this.three.composer) this.renderer.setAnimationLoop(this.animateXRC);
-        else this.renderer.setAnimationLoop(this.animateXR);
+        this.renderer.setAnimationLoop(this.render);
       } else {
-        if (this.three.composer) this.animateC();
-        else this.animate();
+        requestAnimationFrame(this.renderLoop);
       }
     }
     this.onMountedCallbacks.forEach(c => c());
   },
   beforeUnmount() {
+    this.beforeRenderCallbacks = [];
+    this.afterRenderCallbacks = [];
     this.raf = false;
     this.three.dispose();
   },
   methods: {
-    onMounted(callback) {
-      this.onMountedCallbacks.push(callback);
+    onMounted(cb) {
+      this.onMountedCallbacks.push(cb);
     },
-    onBeforeRender(callback) {
-      this.three.onBeforeRender(callback);
+    onBeforeRender(cb) {
+      this.beforeRenderCallbacks.push(cb);
     },
-    onAfterResize(callback) {
-      this.three.onAfterResize(callback);
+    offBeforeRender(cb) {
+      this.beforeRenderCallbacks = this.beforeRenderCallbacks.filter(c => c !== cb);
     },
-    animate() {
-      if (this.raf) requestAnimationFrame(this.animate);
-      this.three.render();
+    onAfterRender(cb) {
+      this.afterRenderCallbacks.push(cb);
     },
-    animateC() {
-      if (this.raf) requestAnimationFrame(this.animateC);
-      this.three.renderC();
+    offAfterRender(cb) {
+      this.afterRenderCallbacks = this.afterRenderCallbacks.filter(c => c !== cb);
     },
-    animateXR() { this.three.render(); },
-    animateXRC() { this.three.renderC(); },
+    onAfterResize(cb) {
+      this.three.onAfterResize(cb);
+    },
+    offAfterResize(cb) {
+      this.three.offAfterResize(cb);
+    },
+    render(time) {
+      this.beforeRenderCallbacks.forEach(c => c({ time }));
+      this._render();
+      this.afterRenderCallbacks.forEach(c => c({ time }));
+    },
+    renderLoop(time) {
+      if (this.raf) requestAnimationFrame(this.renderLoop);
+      this.render(time);
+    },
   },
   render() {
     return h('canvas', {}, this.$slots.default());
@@ -712,6 +717,7 @@ var Object3D = defineComponent({
     scale: { type: Object, default: { x: 1, y: 1, z: 1 } },
     lookAt: { type: Object, default: null },
     autoRemove: { type: Boolean, default: true },
+    userData: { type: Object, default: () => ({}) },
   },
   // can't use setup because it will not be used in sub components
   // setup() {},
@@ -721,6 +727,7 @@ var Object3D = defineComponent({
   methods: {
     initObject3D(o3d) {
       this.o3d = o3d;
+      this.o3d.userData = this.userData;
       this.$emit('created', this.o3d);
 
       bindProp(this, 'position', this.o3d);
@@ -837,14 +844,14 @@ var Raycaster = defineComponent({
       this.pointer.addListeners();
 
       if (this.intersectMode === 'frame') {
-        this.three.onBeforeRender(this.pointer.intersect);
+        this.rendererComponent.onBeforeRender(this.pointer.intersect);
       }
     });
   },
   unmounted() {
     if (this.pointer) {
       this.pointer.removeListeners();
-      this.three.offBeforeRender(this.pointer.intersect);
+      this.rendererComponent.offBeforeRender(this.pointer.intersect);
     }
   },
   methods: {
@@ -1024,18 +1031,30 @@ function createGeometry$8(comp) {
 var OctahedronGeometry = geometryComponent('OctahedronGeometry', props$a, createGeometry$8);
 
 const props$9 = {
+  width: { type: Number, default: 1 },
+  height: { type: Number, default: 1 },
+  widthSegments: { type: Number, default: 1 },
+  heightSegments: { type: Number, default: 1 },
+};
+
+function createGeometry$7(comp) {
+  return new PlaneGeometry$1(comp.width, comp.height, comp.widthSegments, comp.heightSegments);
+}
+var PlaneGeometry = geometryComponent('PlaneGeometry', props$9, createGeometry$7);
+
+const props$8 = {
   vertices: Array,
   indices: Array,
   radius: { type: Number, default: 1 },
   detail: { type: Number, default: 0 },
 };
 
-function createGeometry$7(comp) {
+function createGeometry$6(comp) {
   return new PolyhedronGeometry$1(comp.vertices, comp.indices, comp.radius, comp.detail);
 }
-var PolyhedronGeometry = geometryComponent('PolyhedronGeometry', props$9, createGeometry$7);
+var PolyhedronGeometry = geometryComponent('PolyhedronGeometry', props$8, createGeometry$6);
 
-const props$8 = {
+const props$7 = {
   innerRadius: { type: Number, default: 0.5 },
   outerRadius: { type: Number, default: 1 },
   thetaSegments: { type: Number, default: 8 },
@@ -1044,33 +1063,33 @@ const props$8 = {
   thetaLength: { type: Number, default: Math.PI * 2 },
 };
 
-function createGeometry$6(comp) {
+function createGeometry$5(comp) {
   return new RingGeometry$1(comp.innerRadius, comp.outerRadius, comp.thetaSegments, comp.phiSegments, comp.thetaStart, comp.thetaLength);
 }
-var RingGeometry = geometryComponent('RingGeometry', props$8, createGeometry$6);
+var RingGeometry = geometryComponent('RingGeometry', props$7, createGeometry$5);
 
-const props$7 = {
+const props$6 = {
   radius: { type: Number, default: 1 },
   widthSegments: { type: Number, default: 12 },
   heightSegments: { type: Number, default: 12 },
 };
 
-function createGeometry$5(comp) {
+function createGeometry$4(comp) {
   return new SphereGeometry$1(comp.radius, comp.widthSegments, comp.heightSegments);
 }
-var SphereGeometry = geometryComponent('SphereGeometry', props$7, createGeometry$5);
+var SphereGeometry = geometryComponent('SphereGeometry', props$6, createGeometry$4);
 
-const props$6 = {
+const props$5 = {
   radius: { type: Number, default: 1 },
   detail: { type: Number, default: 0 },
 };
 
-function createGeometry$4(comp) {
+function createGeometry$3(comp) {
   return new TetrahedronGeometry$1(comp.radius, comp.detail);
 }
-var TetrahedronGeometry = geometryComponent('TetrahedronGeometry', props$6, createGeometry$4);
+var TetrahedronGeometry = geometryComponent('TetrahedronGeometry', props$5, createGeometry$3);
 
-const props$5 = {
+const props$4 = {
   radius: { type: Number, default: 1 },
   tube: { type: Number, default: 0.4 },
   radialSegments: { type: Number, default: 8 },
@@ -1078,12 +1097,12 @@ const props$5 = {
   arc: { type: Number, default: Math.PI * 2 },
 };
 
-function createGeometry$3(comp) {
+function createGeometry$2(comp) {
   return new TorusGeometry$1(comp.radius, comp.tube, comp.radialSegments, comp.tubularSegments, comp.arc);
 }
-var TorusGeometry = geometryComponent('TorusGeometry', props$5, createGeometry$3);
+var TorusGeometry = geometryComponent('TorusGeometry', props$4, createGeometry$2);
 
-const props$4 = {
+const props$3 = {
   radius: { type: Number, default: 1 },
   tube: { type: Number, default: 0.4 },
   tubularSegments: { type: Number, default: 64 },
@@ -1092,12 +1111,12 @@ const props$4 = {
   q: { type: Number, default: 3 },
 };
 
-function createGeometry$2(comp) {
+function createGeometry$1(comp) {
   return new TorusKnotGeometry$1(comp.radius, comp.tube, comp.tubularSegments, comp.radialSegments, comp.p, comp.q);
 }
-var TorusKnotGeometry = geometryComponent('TorusKnotGeometry', props$4, createGeometry$2);
+var TorusKnotGeometry = geometryComponent('TorusKnotGeometry', props$3, createGeometry$1);
 
-const props$3 = {
+const props$2 = {
   points: Array,
   path: Curve,
   tubularSegments: { type: Number, default: 64 },
@@ -1106,7 +1125,7 @@ const props$3 = {
   closed: { type: Boolean, default: false },
 };
 
-function createGeometry$1(comp) {
+function createGeometry(comp) {
   let curve;
   if (comp.points) {
     curve = new CatmullRomCurve3(comp.points);
@@ -1119,10 +1138,10 @@ function createGeometry$1(comp) {
 }
 var TubeGeometry = defineComponent({
   extends: Geometry,
-  props: props$3,
+  props: props$2,
   methods: {
     createGeometry() {
-      this.geometry = createGeometry$1(this);
+      this.geometry = createGeometry(this);
     },
     // update points (without using prop, faster)
     updatePoints(points) {
@@ -1470,7 +1489,7 @@ var PhongMaterial = defineComponent({
   __hmrId: 'PhongMaterial',
 });
 
-const props$2 = {
+const props$1 = {
   aoMapIntensity: { type: Number, default: 1 },
   bumpScale: { type: Number, default: 1 },
   displacementBias: { type: Number, default: 0 },
@@ -1489,7 +1508,7 @@ const props$2 = {
 var StandardMaterial = defineComponent({
   extends: Material,
   props: {
-    ...props$2,
+    ...props$1,
     ...wireframeProps,
   },
   methods: {
@@ -1498,7 +1517,7 @@ var StandardMaterial = defineComponent({
     },
     addWatchers() {
       // TODO : use setProp, handle flatShading ?
-      Object.keys(props$2).forEach(p => {
+      Object.keys(props$1).forEach(p => {
         if (p === 'normalScale') return;
         watch(() => this[p], (value) => {
           if (p === 'emissive') {
@@ -1944,27 +1963,15 @@ var Lathe = meshComponent('Lathe', props$b, createGeometry$9);
 
 var Octahedron = meshComponent('Octahedron', props$a, createGeometry$8);
 
-const props$1 = {
-  width: { type: Number, default: 1 },
-  height: { type: Number, default: 1 },
-  widthSegments: { type: Number, default: 1 },
-  heightSegments: { type: Number, default: 1 },
-};
+var Plane = meshComponent('Plane', props$9, createGeometry$7);
 
-function createGeometry(comp) {
-  return new PlaneGeometry(comp.width, comp.height, comp.widthSegments, comp.heightSegments);
-}
-geometryComponent('PlaneGeometry', props$1, createGeometry);
+var Polyhedron = meshComponent('Polyhedron', props$8, createGeometry$6);
 
-var Plane = meshComponent('Plane', props$1, createGeometry);
+var Ring = meshComponent('Ring', props$7, createGeometry$5);
 
-var Polyhedron = meshComponent('Polyhedron', props$9, createGeometry$7);
+var Sphere = meshComponent('Sphere', props$6, createGeometry$4);
 
-var Ring = meshComponent('Ring', props$8, createGeometry$6);
-
-var Sphere = meshComponent('Sphere', props$7, createGeometry$5);
-
-var Tetrahedron = meshComponent('Tetrahedron', props$6, createGeometry$4);
+var Tetrahedron = meshComponent('Tetrahedron', props$5, createGeometry$3);
 
 const props = {
   text: String,
@@ -2032,20 +2039,20 @@ var Text = defineComponent({
   },
 });
 
-var Torus = meshComponent('Torus', props$5, createGeometry$3);
+var Torus = meshComponent('Torus', props$4, createGeometry$2);
 
-var TorusKnot = meshComponent('TorusKnot', props$4, createGeometry$2);
+var TorusKnot = meshComponent('TorusKnot', props$3, createGeometry$1);
 
 var Tube = defineComponent({
   extends: Mesh,
-  props: props$3,
+  props: props$2,
   created() {
     this.createGeometry();
-    this.addGeometryWatchers(props$3);
+    this.addGeometryWatchers(props$2);
   },
   methods: {
     createGeometry() {
-      this.geometry = createGeometry$1(this);
+      this.geometry = createGeometry(this);
     },
     // update curve points (without using prop, faster)
     updatePoints(points) {
@@ -2053,67 +2060,6 @@ var Tube = defineComponent({
     },
   },
   __hmrId: 'Tube',
-});
-
-var Gem = defineComponent({
-  extends: Mesh,
-  props: {
-    cubeRTSize: { type: Number, default: 256 },
-    cubeCameraNear: { type: Number, default: 0.1 },
-    cubeCameraFar: { type: Number, default: 2000 },
-    autoUpdate: Boolean,
-  },
-  mounted() {
-    this.initGem();
-    if (this.autoUpdate) this.three.onBeforeRender(this.updateCubeRT);
-    else this.rendererComponent.onMounted(this.updateCubeRT);
-  },
-  unmounted() {
-    this.three.offBeforeRender(this.updateCubeRT);
-    if (this.cubeCamera) this.removeFromParent(this.cubeCamera);
-    if (this.meshBack) this.removeFromParent(this.meshBack);
-    if (this.materialBack) this.materialBack.dispose();
-  },
-  methods: {
-    initGem() {
-      const cubeRT = new WebGLCubeRenderTarget(this.cubeRTSize, { format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter });
-      this.cubeCamera = new CubeCamera(this.cubeCameraNear, this.cubeCameraFar, cubeRT);
-      bindProp(this, 'position', this.cubeCamera);
-      this.addToParent(this.cubeCamera);
-
-      this.material.side = FrontSide;
-      this.material.envMap = cubeRT.texture;
-      this.material.envMapIntensity = 10;
-      this.material.metalness = 0;
-      this.material.roughness = 0;
-      this.material.opacity = 0.75;
-      this.material.transparent = true;
-      this.material.premultipliedAlpha = true;
-      this.material.needsUpdate = true;
-
-      this.materialBack = this.material.clone();
-      this.materialBack.side = BackSide;
-      this.materialBack.envMapIntensity = 5;
-      this.materialBack.metalness = 1;
-      this.materialBack.roughness = 0;
-      this.materialBack.opacity = 0.5;
-
-      this.meshBack = new Mesh$1(this.geometry, this.materialBack);
-
-      bindProp(this, 'position', this.meshBack);
-      bindProp(this, 'rotation', this.meshBack);
-      bindProp(this, 'scale', this.meshBack);
-      this.addToParent(this.meshBack);
-    },
-    updateCubeRT() {
-      this.mesh.visible = false;
-      this.meshBack.visible = false;
-      this.cubeCamera.update(this.three.renderer, this.scene);
-      this.mesh.visible = true;
-      this.meshBack.visible = true;
-    },
-  },
-  __hmrId: 'Gem',
 });
 
 var Image = defineComponent({
@@ -2140,7 +2086,7 @@ var Image = defineComponent({
   },
   methods: {
     createGeometry() {
-      this.geometry = new PlaneGeometry(1, 1, 1, 1);
+      this.geometry = new PlaneGeometry$1(1, 1, 1, 1);
     },
     createMaterial() {
       this.material = new MeshBasicMaterial({ side: DoubleSide, map: this.loadTexture() });
@@ -2239,79 +2185,6 @@ var InstancedMesh = defineComponent({
     }
   },
   __hmrId: 'InstancedMesh',
-});
-
-var MirrorMesh = defineComponent({
-  extends: Mesh,
-  props: {
-    cubeRTSize: { type: Number, default: 256 },
-    cubeCameraNear: { type: Number, default: 0.1 },
-    cubeCameraFar: { type: Number, default: 2000 },
-    autoUpdate: Boolean,
-  },
-  mounted() {
-    this.initMirrorMesh();
-    if (this.autoUpdate) this.three.onBeforeRender(this.updateCubeRT);
-    else this.rendererComponent.onMounted(this.updateCubeRT);
-  },
-  unmounted() {
-    this.three.offBeforeRender(this.updateCubeRT);
-    if (this.cubeCamera) this.removeFromParent(this.cubeCamera);
-  },
-  methods: {
-    initMirrorMesh() {
-      const cubeRT = new WebGLCubeRenderTarget(this.cubeRTSize, { format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter });
-      this.cubeCamera = new CubeCamera(this.cubeCameraNear, this.cubeCameraFar, cubeRT);
-      this.addToParent(this.cubeCamera);
-
-      this.material.envMap = cubeRT.texture;
-      this.material.needsUpdate = true;
-    },
-    updateCubeRT() {
-      this.mesh.visible = false;
-      this.cubeCamera.update(this.three.renderer, this.scene);
-      this.mesh.visible = true;
-    },
-  },
-  __hmrId: 'MirrorMesh',
-});
-
-var RefractionMesh = defineComponent({
-  extends: Mesh,
-  props: {
-    cubeRTSize: { type: Number, default: 256 },
-    cubeCameraNear: { type: Number, default: 0.1 },
-    cubeCameraFar: { type: Number, default: 2000 },
-    refractionRatio: { type: Number, default: 0.98 },
-    autoUpdate: Boolean,
-  },
-  mounted() {
-    this.initMirrorMesh();
-    if (this.autoUpdate) this.three.onBeforeRender(this.updateCubeRT);
-    else this.rendererComponent.onMounted(this.updateCubeRT);
-  },
-  unmounted() {
-    this.three.offBeforeRender(this.updateCubeRT);
-    if (this.cubeCamera) this.removeFromParent(this.cubeCamera);
-  },
-  methods: {
-    initMirrorMesh() {
-      const cubeRT = new WebGLCubeRenderTarget(this.cubeRTSize, { mapping: CubeRefractionMapping, format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter });
-      this.cubeCamera = new CubeCamera(this.cubeCameraNear, this.cubeCameraFar, cubeRT);
-      bindProp(this, 'position', this.cubeCamera);
-      this.addToParent(this.cubeCamera);
-
-      this.material.envMap = cubeRT.texture;
-      this.material.refractionRatio = this.refractionRatio;
-      this.material.needsUpdate = true;
-    },
-    updateCubeRT() {
-      this.mesh.visible = false;
-      this.cubeCamera.update(this.three.renderer, this.scene);
-      this.mesh.visible = true;
-    },
-  },
-  __hmrId: 'RefractionMesh',
 });
 
 var Sprite = defineComponent({
@@ -2869,6 +2742,7 @@ var TROIS = /*#__PURE__*/Object.freeze({
   IcosahedronGeometry: IcosahedronGeometry,
   LatheGeometry: LatheGeometry,
   OctahedronGeometry: OctahedronGeometry,
+  PlaneGeometry: PlaneGeometry,
   PolyhedronGeometry: PolyhedronGeometry,
   RingGeometry: RingGeometry,
   SphereGeometry: SphereGeometry,
@@ -2911,11 +2785,8 @@ var TROIS = /*#__PURE__*/Object.freeze({
   Torus: Torus,
   TorusKnot: TorusKnot,
   Tube: Tube,
-  Gem: Gem,
   Image: Image,
   InstancedMesh: InstancedMesh,
-  MirrorMesh: MirrorMesh,
-  RefractionMesh: RefractionMesh,
   Sprite: Sprite,
   GLTFModel: GLTF,
   FBXModel: FBX,
@@ -2982,7 +2853,7 @@ const TroisJSVuePlugin = {
       'Icosahedron', 'IcosahedronGeometry',
       'Lathe', 'LatheGeometry',
       'Octahedron', 'OctahedronGeometry',
-      'Plane',
+      'Plane', 'PlaneGeometry',
       'Polyhedron', 'PolyhedronGeometry',
       'Ring', 'RingGeometry',
       'Sphere', 'SphereGeometry',
@@ -2992,11 +2863,8 @@ const TroisJSVuePlugin = {
       'TorusKnot', 'TorusKnotGeometry',
       'Tube', 'TubeGeometry',
 
-      'Gem',
       'Image',
       'InstancedMesh',
-      'MirrorMesh',
-      'RefractionMesh',
       'Sprite',
 
       'FBXModel',
@@ -3028,5 +2896,5 @@ function createApp(params) {
   return createApp$1(params).use(TroisJSVuePlugin);
 }
 
-export { AmbientLight, BasicMaterial, BokehPass, Box, BoxGeometry, PerspectiveCamera as Camera, Circle, CircleGeometry, Cone, ConeGeometry, CubeTexture, Cylinder, CylinderGeometry, DirectionalLight, Dodecahedron, DodecahedronGeometry, EffectComposer, FBX as FBXModel, FXAAPass, FilmPass, GLTF as GLTFModel, Gem, Group, HalftonePass, HemisphereLight, Icosahedron, IcosahedronGeometry, Image, InstancedMesh, LambertMaterial, Lathe, LatheGeometry, MatcapMaterial, Mesh, MirrorMesh, Object3D, Octahedron, OctahedronGeometry, OrthographicCamera, PerspectiveCamera, PhongMaterial, PhysicalMaterial, Plane, PointLight, Polyhedron, PolyhedronGeometry, Raycaster, RectAreaLight, RefractionMesh, RenderPass, Renderer, Ring, RingGeometry, SMAAPass, SSAOPass, Scene, ShaderMaterial, Sphere, SphereGeometry, SpotLight, Sprite, StandardMaterial, SubSurfaceMaterial, Tetrahedron, TetrahedronGeometry, Text, Texture, TiltShiftPass, ToonMaterial, Torus, TorusGeometry, TorusKnot, TorusKnotGeometry, TroisJSVuePlugin, Tube, TubeGeometry, UnrealBloomPass, ZoomBlurPass, bindProp, bindProps, createApp, getMatcapUrl, lerp, lerpv2, lerpv3, limit, propsValues, setFromProp };
+export { AmbientLight, BasicMaterial, BokehPass, Box, BoxGeometry, PerspectiveCamera as Camera, Circle, CircleGeometry, Cone, ConeGeometry, CubeTexture, Cylinder, CylinderGeometry, DirectionalLight, Dodecahedron, DodecahedronGeometry, EffectComposer, FBX as FBXModel, FXAAPass, FilmPass, GLTF as GLTFModel, Group, HalftonePass, HemisphereLight, Icosahedron, IcosahedronGeometry, Image, InstancedMesh, LambertMaterial, Lathe, LatheGeometry, MatcapMaterial, Mesh, Object3D, Octahedron, OctahedronGeometry, OrthographicCamera, PerspectiveCamera, PhongMaterial, PhysicalMaterial, Plane, PlaneGeometry, PointLight, Polyhedron, PolyhedronGeometry, Raycaster, RectAreaLight, RenderPass, Renderer, Ring, RingGeometry, SMAAPass, SSAOPass, Scene, ShaderMaterial, Sphere, SphereGeometry, SpotLight, Sprite, StandardMaterial, SubSurfaceMaterial, Tetrahedron, TetrahedronGeometry, Text, Texture, TiltShiftPass, ToonMaterial, Torus, TorusGeometry, TorusKnot, TorusKnotGeometry, TroisJSVuePlugin, Tube, TubeGeometry, UnrealBloomPass, ZoomBlurPass, bindProp, bindProps, createApp, getMatcapUrl, lerp, lerpv2, lerpv3, limit, propsValues, setFromProp };
 //# sourceMappingURL=trois.module.cdn.js.map

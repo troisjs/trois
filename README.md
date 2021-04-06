@@ -1,12 +1,25 @@
 # ✨ ThreeJS + VueJS 3 + ViteJS ⚡
+[![NPM Package][npm]][npm-url]
+[![Build Size][build-size]][build-size-url]
+[![NPM Downloads][npm-downloads]][npmtrends-url]
+[![Discord][discord]][discord-url]
 
-*Trois* is a french word, it means *Three*.
-
-<p>
+[npm]: https://img.shields.io/npm/v/troisjs
+[npm-url]: https://www.npmjs.com/package/troisjs
+[build-size]: https://badgen.net/bundlephobia/minzip/troisjs@0.1.19
+[build-size-url]: https://bundlephobia.com/result?p=troisjs@0.1.19
+[npm-downloads]: https://img.shields.io/npm/dw/troisjs
+[npmtrends-url]: https://www.npmtrends.com/troisjs
+[discord]: https://img.shields.io/discord/828384755778846772
+[discord-url]: https://discord.gg/q85DvHhh
+ 
+<p style="text-align:center;">
   <a href="https://troisjs.github.io/little-planet/"><img src="/screenshots/little-planet.jpg" width="30%" /></a>
+  <a href="https://troisjs.github.io/examples/physics/1.html"><img src="/screenshots/troisjs_10.jpg" width="30%" /></a>
+  <a href="https://troisjs.github.io/examples/physics/2.html"><img src="/screenshots/troisjs_11.jpg" width="30%" /></a>
   <a href="https://troisjs.github.io/examples/demos/3.html"><img src="/screenshots/troisjs_1.jpg" width="30%" /></a>
   <a href="https://troisjs.github.io/examples/demos/4.html"><img src="/screenshots/troisjs_3.jpg" width="30%" /></a>
-  <!-- <a href="https://troisjs.github.io/examples/demos/1.html"><img src="/screenshots/troisjs_4.jpg" width="30%" /></a> -->
+  <a href="https://troisjs.github.io/examples/demos/1.html"><img src="/screenshots/troisjs_4.jpg" width="30%" /></a>
   <a href="https://troisjs.github.io/examples/demos/2.html"><img src="/screenshots/troisjs_5.jpg" width="30%" /></a>
   <a href="https://troisjs.github.io/examples/materials/2.html"><img src="/screenshots/troisjs_2.jpg" width="30%" /></a>
   <a href="https://troisjs.github.io/examples/loop.html"><img src="/screenshots/troisjs_6.jpg" width="30%" /></a>
@@ -22,6 +35,8 @@
 I wanted to code something similar to *react-three-fiber* but for VueJS.
 
 I started from scratch, I will rewrite some of my [WebGL demos](https://codepen.io/collection/AGZywR) to see if this little toy can do the job.
+
+*Trois* is a french word, it means *Three*.
 
 ## Usage (CDN)
 
@@ -41,7 +56,7 @@ TroisJS is really simple and easy to use :
 </div>
 
 <script type="module">
-  import { createApp } from 'https://unpkg.com/troisjs@0.1.12/build/trois.module.cdn.min.js';
+  import { createApp } from 'https://unpkg.com/troisjs@0.2.3/build/trois.module.cdn.min.js';
   createApp({
     mounted() {
       const renderer = this.$refs.renderer;
@@ -102,6 +117,7 @@ Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects
     - [x] HalftonePass
     - [x] Renderpass
     - [x] SMAAPass
+    - [x] SSAOPass
     - [x] UnrealBloomPass
     - [x] TiltShiftPass
     - [x] ZoomBlurPass
