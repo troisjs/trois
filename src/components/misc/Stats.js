@@ -1,4 +1,5 @@
 import Stats from 'stats.js';
+import { inject } from 'vue';
 
 export default {
   props: {
