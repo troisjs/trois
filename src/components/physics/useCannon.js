@@ -28,6 +28,7 @@ export default function useCannon(options) {
     removeMesh,
     step,
   };
+  return obj;
 
   function addMesh(mesh) {
     const shape = getShape(mesh.geometry);
@@ -189,6 +190,4 @@ export default function useCannon(options) {
     iMatrix[index + 14] = position.z;
     iMatrix[index + 15] = 1;
   }
-
-  return obj;
 }

@@ -61,6 +61,8 @@ export default defineComponent({
     this.onMountedCallbacks.forEach(c => c());
   },
   beforeUnmount() {
+    this.beforeRenderCallbacks = [];
+    this.afterRenderCallbacks = [];
     this.raf = false;
     this.three.dispose();
   },
