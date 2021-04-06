@@ -84,13 +84,13 @@ export default function usePointer(options) {
           const enterEvent = { ...overEvent, type: 'pointerenter' };
           onIntersectOver(overEvent);
           onIntersectEnter(enterEvent);
-          component.onPointerOver?.(overEvent);
-          component.onPointerEnter?.(enterEvent);
+          if (component.onPointerOver) component.onPointerOver(overEvent);
+          if (component.onPointerEnter) component.onPointerEnter(enterEvent);
         }
 
         const moveEvent = { type: 'pointermove', component, intersect };
         onIntersectMove(moveEvent);
-        component.onPointerMove?.(moveEvent);
+        if (component.onPointerMove) component.onPointerMove(moveEvent);
 
         offObjects.splice(offObjects.indexOf(object), 1);
       });
@@ -103,8 +103,8 @@ export default function usePointer(options) {
           const leaveEvent = { ...overEvent, type: 'pointerleave' };
           onIntersectOver(overEvent);
           onIntersectLeave(leaveEvent);
-          component.onPointerOver?.(overEvent);
-          component.onPointerLeave?.(leaveEvent);
+          if (component.onPointerOver) component.onPointerOver(overEvent);
+          if (component.onPointerLeave) component.onPointerLeave(leaveEvent);
         }
       });
     }
@@ -138,7 +138,7 @@ export default function usePointer(options) {
 
         const event = { type: 'click', component, intersect };
         onIntersectClick(event);
-        component.onClick?.(event);
+        if (component.onClick) component.onClick(event);
       });
     }
   };
