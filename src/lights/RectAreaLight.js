@@ -28,8 +28,5 @@ export default defineComponent({
 
     this.initLight();
   },
-  unmounted() {
-    if (this.lightHelper) this.removeFromParent(this.lightHelper);
-  },
   __hmrId: 'RectAreaLight',
 });
