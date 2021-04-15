@@ -4,8 +4,8 @@
     "module": "esnext",
     // this enables stricter inference for data properties on `this`
     "strict": true,
-    "jsx": "preserve",
     "moduleResolution": "node",
   },
-  "include": ["src"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": [ "node_modules" ]
 }
