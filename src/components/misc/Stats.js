@@ -5,7 +5,7 @@ export default {
     noSetup: { type: Boolean, default: false },
   },
   emits: ['created'],
-  inject: ['rendererComponent'],
+  inject: ['renderer'],
   setup({ noSetup }) {
     const stats = new Stats();
     if (!noSetup) {
@@ -16,8 +16,8 @@ export default {
   },
   mounted() {
     if (!this.noSetup) {
-      this.rendererComponent.onBeforeRender(this.begin);
-      this.rendererComponent.onAfterRender(this.end);
+      this.renderer.onBeforeRender(this.begin);
+      this.renderer.onAfterRender(this.end);
     }
     this.$emit('created', { stats: this.stats });
   },
@@ -37,8 +37,8 @@ export default {
     if (this.stats && this.stats.dom) {
       this.stats.dom.parentElement.removeChild(this.stats.dom);
     }
-    this.rendererComponent.offBeforeRender(this.begin);
-    this.rendererComponent.offAfterRender(this.end);
+    this.renderer.offBeforeRender(this.begin);
+    this.renderer.offAfterRender(this.end);
   },
   render() {
     return this.$slots.default ? this.$slots.default() : [];

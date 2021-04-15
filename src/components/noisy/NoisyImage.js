@@ -29,10 +29,10 @@ export default defineComponent({
   },
   mounted() {
     this.startTime = Date.now();
-    this.rendererComponent.onBeforeRender(this.updateTime);
+    this.renderer.onBeforeRender(this.updateTime);
   },
   unmounted() {
-    this.rendererComponent.offBeforeRender(this.updateTime);
+    this.renderer.offBeforeRender(this.updateTime);
   },
   methods: {
     createGeometry() {

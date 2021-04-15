@@ -1,6 +1,6 @@
 import { defineComponent, watch } from 'vue';
 import { DoubleSide, Mesh, MeshStandardMaterial, PlaneGeometry } from 'three';
-import Object3D from '../../core/Object3D.js';
+import Object3D from '../../core/Object3D';
 import { bindProps } from '../../tools';
 import LiquidEffect from './LiquidEffect.js';
 
@@ -17,9 +17,9 @@ export default defineComponent({
   },
   mounted() {
     this.liquidEffect = new LiquidEffect(this.three.renderer);
-    this.rendererComponent.onMounted(() => {
-      this.liquidEffect.renderer = this.rendererComponent.renderer;
-      this.rendererComponent.onBeforeRender(this.update);
+    this.renderer.onMounted(() => {
+      this.liquidEffect.renderer = this.renderer.renderer;
+      this.renderer.onBeforeRender(this.update);
     });
 
     this.material = new MeshStandardMaterial({ color: this.color, side: DoubleSide, metalness: this.metalness, roughness: this.roughness,
@@ -44,7 +44,7 @@ export default defineComponent({
     this.initObject3D(this.mesh);
   },
   unmounted() {
-    this.rendererComponent.offBeforeRender(this.update);
+    this.renderer.offBeforeRender(this.update);
   },
   methods: {
     update() {

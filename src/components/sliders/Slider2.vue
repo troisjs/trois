@@ -10,7 +10,7 @@ import { defineComponent } from 'vue';
 import { Vector2 } from 'three';
 import { gsap, Power4 } from 'gsap';
 
-import OrthographicCamera from '../../core/OrthographicCamera.js';
+import OrthographicCamera from '../../core/OrthographicCamera';
 import Renderer from '../../core/Renderer.js';
 import Scene from '../../core/Scene.js';
 

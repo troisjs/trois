@@ -1,6 +1,6 @@
 import { defineComponent, watch } from 'vue';
 import { Mesh as TMesh } from 'three';
-import Object3D from '../core/Object3D.js';
+import Object3D from '../core/Object3D';
 import { bindProp } from '../tools';
 
 export const pointerProps = {

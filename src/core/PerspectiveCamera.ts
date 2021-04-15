@@ -1,7 +1,7 @@
 import { defineComponent, watch } from 'vue';
 import { PerspectiveCamera } from 'three';
 import { bindProp } from '../tools';
-import Camera from './Camera.js';
+import Camera from './Camera';
 
 export default defineComponent({
   extends: Camera,

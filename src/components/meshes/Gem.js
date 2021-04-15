@@ -21,11 +21,11 @@ export default defineComponent({
   },
   mounted() {
     this.initGem();
-    if (this.autoUpdate) this.rendererComponent.onBeforeRender(this.updateCubeRT);
-    else this.rendererComponent.onMounted(this.updateCubeRT);
+    if (this.autoUpdate) this.renderer.onBeforeRender(this.updateCubeRT);
+    else this.renderer.onMounted(this.updateCubeRT);
   },
   unmounted() {
-    this.rendererComponent.offBeforeRender(this.updateCubeRT);
+    this.renderer.offBeforeRender(this.updateCubeRT);
     if (this.cubeCamera) this.removeFromParent(this.cubeCamera);
     if (this.meshBack) this.removeFromParent(this.meshBack);
     if (this.materialBack) this.materialBack.dispose();

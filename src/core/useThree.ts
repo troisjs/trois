@@ -4,16 +4,16 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import usePointer, { IntersectObject, PointerConfigInterface, PointerInterface } from './usePointer'
 
-export interface ConfigInterface {
+export interface ThreeConfigInterface {
   canvas?: HTMLCanvasElement
   antialias: boolean
   alpha: boolean
   autoClear: boolean
   orbitCtrl: boolean | Record<string, unknown>
   pointer: boolean | PointerConfigInterface
-  resize: boolean | 'window'
-  width: number
-  height: number
+  resize: boolean | string
+  width?: number
+  height?: number
   [index:string]: any
 }
 
@@ -26,7 +26,7 @@ export interface SizeInterface {
 }
 
 export interface ThreeInterface {
-  conf: ConfigInterface
+  conf: ThreeConfigInterface
   renderer?: WebGLRenderer
   camera?: Camera
   cameraCtrl?: OrbitControls
@@ -34,7 +34,7 @@ export interface ThreeInterface {
   pointer?: PointerInterface
   size: SizeInterface
   composer?: EffectComposer
-  init(config: ConfigInterface): boolean
+  init(config: ThreeConfigInterface): boolean
   dispose(): void
   render(): void
   renderC(): void
@@ -51,7 +51,7 @@ export interface ThreeInterface {
  */
 export default function useThree(): ThreeInterface {
   // default conf
-  const conf: ConfigInterface = {
+  const conf: ThreeConfigInterface = {
     antialias: true,
     alpha: false,
     autoClear: true,
@@ -98,7 +98,7 @@ export default function useThree(): ThreeInterface {
   /**
    * init three
    */
-  function init(params: ConfigInterface) {
+  function init(params: ThreeConfigInterface) {
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
         conf[key] = value
@@ -122,7 +122,7 @@ export default function useThree(): ThreeInterface {
       onResize()
       window.addEventListener('resize', onResize)
     } else {
-      setSize(conf.width, conf.height)
+      setSize(conf.width!, conf.height!)
     }
 
     initPointer()

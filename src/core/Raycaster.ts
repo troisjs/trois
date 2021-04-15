@@ -3,7 +3,7 @@ import usePointer from './usePointer';
 
 export default defineComponent({
   name: 'Raycaster',
-  inject: ['three', 'rendererComponent'],
+  inject: ['three', 'renderer'],
   props: {
     onPointerEnter: { type: Function, default: () => {} },
     onPointerOver: { type: Function, default: () => {} },
@@ -13,7 +13,7 @@ export default defineComponent({
     intersectMode: { type: String, default: 'move' },
   },
   mounted() {
-    this.rendererComponent.onMounted(() => {
+    this.renderer.onMounted(() => {
       this.pointer = usePointer({
         camera: this.three.camera,
         domElement: this.three.renderer.domElement,
@@ -27,14 +27,14 @@ export default defineComponent({
       this.pointer.addListeners();
 
       if (this.intersectMode === 'frame') {
-        this.rendererComponent.onBeforeRender(this.pointer.intersect);
+        this.renderer.onBeforeRender(this.pointer.intersect);
       }
     });
   },
   unmounted() {
     if (this.pointer) {
       this.pointer.removeListeners();
-      this.rendererComponent.offBeforeRender(this.pointer.intersect);
+      this.renderer.offBeforeRender(this.pointer.intersect);
     }
   },
   methods: {

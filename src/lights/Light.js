@@ -1,5 +1,5 @@
 import { defineComponent, watch } from 'vue';
-import Object3D from '../core/Object3D.js';
+import Object3D from '../core/Object3D';
 import { bindProp, setFromProp } from '../tools';
 
 export default defineComponent({

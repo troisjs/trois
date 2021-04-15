@@ -3,7 +3,7 @@ import useCannon from './useCannon.js';
 // import { bindProp } from '../../tools';
 
 export default defineComponent({
-  inject: ['three', 'scene', 'rendererComponent'],
+  inject: ['three', 'scene', 'renderer'],
   props: {
     gravity: { type: Object, default: () => ({ x: 0, y: 0, z: -9.82 }) },
     broadphase: { type: String },
@@ -16,10 +16,10 @@ export default defineComponent({
     this.cannon = useCannon({ gravity: this.gravity, broadphase: this.broadphase });
   },
   mounted() {
-    this.rendererComponent.onBeforeRender(this.step);
+    this.renderer.onBeforeRender(this.step);
   },
   unmounted() {
-    this.rendererComponent.offBeforeRender(this.step);
+    this.renderer.offBeforeRender(this.step);
   },
   methods: {
     step() {

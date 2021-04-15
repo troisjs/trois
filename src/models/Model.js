@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue';
-import Object3D from '../core/Object3D.js';
+import Object3D from '../core/Object3D';
 
 export default defineComponent({
   extends: Object3D,

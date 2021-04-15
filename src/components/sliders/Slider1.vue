@@ -11,7 +11,7 @@ import { defineComponent } from 'vue';
 import { Object3D } from 'three';
 import { gsap, Power4 } from 'gsap';
 
-import Camera from '../../core/PerspectiveCamera.js';
+import Camera from '../../core/PerspectiveCamera';
 import Renderer from '../../core/Renderer.js';
 import Scene from '../../core/Scene.js';
 
