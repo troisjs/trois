@@ -1,2 +1,0 @@
-ren *.js *.ts
-pause
