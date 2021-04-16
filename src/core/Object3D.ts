@@ -61,8 +61,8 @@ export default defineComponent({
       }
       return false
     },
-    add(o) { this.o3d.add(o); },
-    remove(o) { this.o3d.remove(o); },
+    add(o: Object3D) { this.o3d.add(o) },
+    remove(o: Object3D) { this.o3d.remove(o) },
   },
   render() {
     return this.$slots.default ? this.$slots.default() : []

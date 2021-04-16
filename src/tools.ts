@@ -15,15 +15,15 @@ export function bindProps(src: any, props: string[], dst: string): void {
   })
 }
 
-export function bindProp(src: any, srcProp: string, dst: any, dstProp: string): void {
-  if (!dstProp) dstProp = srcProp
+export function bindProp(src: any, srcProp: string, dst: any, dstProp?: string): void {
+  const _dstProp = dstProp || srcProp
   const ref = toRef(src, srcProp)
   if (ref.value instanceof Object) {
-    setFromProp(dst[dstProp], ref.value)
-    watch(ref, (value) => { setFromProp(dst[dstProp], value) }, { deep: true })
+    setFromProp(dst[_dstProp], ref.value)
+    watch(ref, (value) => { setFromProp(dst[_dstProp], value) }, { deep: true })
   } else {
-    if (ref.value) dst[dstProp] = src[srcProp]
-    watch(ref, (value) => { dst[dstProp] = value })
+    if (ref.value) dst[_dstProp] = src[srcProp]
+    watch(ref, (value) => { dst[_dstProp] = value })
   }
 }
 
