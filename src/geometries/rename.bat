@@ -1,0 +1,2 @@
+ren *.js *.ts
+pause
