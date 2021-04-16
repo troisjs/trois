@@ -23,11 +23,12 @@ export default defineComponent({
     }
   },
   created() {
-    bindProp(this, 'position', this.camera);
+    bindProp(this, 'position', this.camera)
 
-    ['left', 'right', 'top', 'bottom', 'near', 'far', 'zoom'].forEach(p => {
+    const watchProps = ['left', 'right', 'top', 'bottom', 'near', 'far', 'zoom']
+    watchProps.forEach(p => {
       watch(() => this[p], () => {
-        this.camera[p] = this[p];
+        this.camera[p] = this[p]
         this.camera.updateProjectionMatrix()
       })
     })

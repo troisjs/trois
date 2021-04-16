@@ -49,5 +49,8 @@ module.exports = {
     // }],
     // 'vue/valid-template-root': 'off',
     'vue/no-multiple-template-root': 'off',
+
+    'no-empty-function': 'off',
+    '@typescript-eslint/no-empty-function': ['warn'],
   },
 }

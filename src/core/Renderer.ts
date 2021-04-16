@@ -18,6 +18,7 @@ export default defineComponent({
   },
   setup() {
     const renderer: null | WebGLRenderer = null
+    const _render: {(): void} = () => {}
 
     const onMountedCallbacks: {(): void}[] = []
     const beforeRenderCallbacks: {(): void}[] = []
@@ -27,6 +28,7 @@ export default defineComponent({
       three: useThree(),
       renderer,
       raf: true,
+      _render,
       onMountedCallbacks,
       beforeRenderCallbacks,
       afterRenderCallbacks,
@@ -64,7 +66,7 @@ export default defineComponent({
       } else {
         requestAnimationFrame(this.renderLoop)
       }
-    };
+    }
 
     this.onMountedCallbacks.forEach(c => c())
   },

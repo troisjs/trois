@@ -1,4 +1,4 @@
-import { Camera, Intersection, Plane, Raycaster, Vector2, Vector3 } from 'three';
+import { Camera, Intersection, Plane, Raycaster, Vector2, Vector3 } from 'three'
 import { IntersectObject } from './usePointer'
 
 export interface RaycasterInterface {

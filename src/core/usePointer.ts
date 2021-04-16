@@ -16,8 +16,8 @@ export interface PointerIntersectEventInterface {
   intersect?: Intersection
 }
 
+export type PointerCallbackType = (e: PointerEventInterface) => void
 export type PointerIntersectCallbackType = (e: PointerIntersectEventInterface) => void
-
 export type IntersectObject = Mesh | InstancedMesh
 
 export interface PointerConfigInterface {
@@ -29,15 +29,15 @@ export interface PointerConfigInterface {
   resetOnEnd?: boolean
   resetPosition?: Vector2
   resetPositionV3?: Vector3
-  onEnter?(e: PointerEventInterface): void
-  onMove?(e: PointerEventInterface): void
-  onLeave?(e: PointerEventInterface): void
-  onClick?(e: PointerEventInterface): void
-  onIntersectEnter: PointerIntersectCallbackType
-  onIntersectOver: PointerIntersectCallbackType
-  onIntersectMove: PointerIntersectCallbackType
-  onIntersectLeave: PointerIntersectCallbackType
-  onIntersectClick: PointerIntersectCallbackType
+  onEnter?: PointerCallbackType
+  onMove?: PointerCallbackType
+  onLeave?: PointerCallbackType
+  onClick?: PointerCallbackType
+  onIntersectEnter?: PointerIntersectCallbackType
+  onIntersectOver?: PointerIntersectCallbackType
+  onIntersectMove?: PointerIntersectCallbackType
+  onIntersectLeave?: PointerIntersectCallbackType
+  onIntersectClick?: PointerIntersectCallbackType
 }
 
 export interface PointerInterface {

@@ -73,9 +73,9 @@ export default function useThree(): ThreeInterface {
   // const afterInitCallbacks: void[] = []
   // let afterResizeCallbacks: void[] = []
   // let beforeRenderCallbacks: void[] = []
-  const afterInitCallbacks: {(): void;}[] = []
-  let afterResizeCallbacks: {(): void;}[] = []
-  let beforeRenderCallbacks: {(): void;}[] = []
+  const afterInitCallbacks: {(): void}[] = []
+  let afterResizeCallbacks: {(): void}[] = []
+  let beforeRenderCallbacks: {(): void}[] = []
 
   const intersectObjects: IntersectObject[] = []
 
@@ -294,7 +294,8 @@ export default function useThree(): ThreeInterface {
       size.wHeight = oCamera.top - oCamera.bottom
     } else {
       const wsize = getCameraSize()
-      size.wWidth = wsize[0]; size.wHeight = wsize[1]
+      size.wWidth = wsize[0]
+      size.wHeight = wsize[1]
     }
   }
 

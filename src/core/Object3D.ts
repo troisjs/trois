@@ -31,7 +31,7 @@ export default defineComponent({
 
       // TODO : fix lookat.x
       if (this.lookAt) this.o3d.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z)
-      watch(() => this.lookAt, (v) => { this.o3d.lookAt(v.x, v.y, v.z); }, { deep: true })
+      watch(() => this.lookAt, (v) => { this.o3d.lookAt(v.x, v.y, v.z) }, { deep: true })
 
       this._parent = this.getParent()
       if (this.addToParent()) this.$emit('ready', this)

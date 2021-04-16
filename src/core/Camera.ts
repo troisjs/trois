@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue'
-// import Object3D from '../core/Object3D';
+// import Object3D from '../core/Object3D'
 
 export default defineComponent({
   // TODO: eventually extend Object3D, for now: error 'injection "scene" not found'
