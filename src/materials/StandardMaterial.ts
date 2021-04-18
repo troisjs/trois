@@ -1,7 +1,7 @@
-import { defineComponent, watch } from 'vue';
-import { MeshStandardMaterial } from 'three';
-import { bindProp, bindProps, propsValues } from '../tools';
-import Material, { wireframeProps } from './Material';
+import { defineComponent, watch } from 'vue'
+import { MeshStandardMaterial } from 'three'
+import { bindProp, bindProps, propsValues } from '../tools'
+import Material, { wireframeProps } from './Material'
 
 const props = {
   aoMapIntensity: { type: Number, default: 1 },
@@ -13,11 +13,11 @@ const props = {
   envMapIntensity: { type: Number, default: 1 },
   lightMapIntensity: { type: Number, default: 1 },
   metalness: { type: Number, default: 0 },
-  normalScale: { type: Object, default: { x: 1, y: 1 } },
+  normalScale: { type: Object, default: () => ({ x: 1, y: 1 }) },
   roughness: { type: Number, default: 1 },
   refractionRatio: { type: Number, default: 0.98 },
   flatShading: Boolean,
-};
+}
 
 export default defineComponent({
   extends: Material,
@@ -27,23 +27,25 @@ export default defineComponent({
   },
   methods: {
     createMaterial() {
-      this.material = new MeshStandardMaterial(propsValues(this.$props, ['normalScale']));
-    },
-    addWatchers() {
+      const material = new MeshStandardMaterial(propsValues(this.$props, ['normalScale']))
+
       // TODO : use setProp, handle flatShading ?
       Object.keys(props).forEach(p => {
-        if (p === 'normalScale') return;
+        if (p === 'normalScale') return
         watch(() => this[p], (value) => {
           if (p === 'emissive') {
-            this.material[p].set(value);
+            material[p].set(value)
           } else {
-            this.material[p] = value;
+            material[p] = value
           }
-        });
-      });
-      bindProp(this, 'normalScale', this.material);
-      bindProps(this, Object.keys(wireframeProps), this.material);
+        })
+      })
+
+      bindProp(this, 'normalScale', material)
+      bindProps(this, Object.keys(wireframeProps), material)
+
+      return material
     },
   },
   __hmrId: 'StandardMaterial',
-});
+})

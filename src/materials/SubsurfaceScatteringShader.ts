@@ -11,14 +11,14 @@ import {
   ShaderChunk,
   ShaderLib,
   UniformsUtils,
-} from 'three';
+} from 'three'
 
-function replaceAll(string, find, replace) {
-  return string.split(find).join(replace);
+function replaceAll(string: string, find: string, replace: string) {
+  return string.split(find).join(replace)
 }
 
-const meshphongFragHead = ShaderChunk.meshphong_frag.slice(0, ShaderChunk.meshphong_frag.indexOf('void main() {'));
-const meshphongFragBody = ShaderChunk.meshphong_frag.slice(ShaderChunk.meshphong_frag.indexOf('void main() {'));
+const meshphongFragHead = ShaderChunk.meshphong_frag.slice(0, ShaderChunk.meshphong_frag.indexOf('void main() {'))
+const meshphongFragBody = ShaderChunk.meshphong_frag.slice(ShaderChunk.meshphong_frag.indexOf('void main() {'))
 
 const SubsurfaceScatteringShader = {
 
@@ -45,23 +45,23 @@ const SubsurfaceScatteringShader = {
 
     ${meshphongFragHead}
 
-    uniform float thicknessPower;
-    uniform float thicknessScale;
-    uniform float thicknessDistortion;
-    uniform float thicknessAmbient;
-    uniform float thicknessAttenuation;
-    uniform vec3 thicknessColor;
+    uniform float thicknessPower
+    uniform float thicknessScale
+    uniform float thicknessDistortion
+    uniform float thicknessAmbient
+    uniform float thicknessAttenuation
+    uniform vec3 thicknessColor
 
     void RE_Direct_Scattering(const in IncidentLight directLight, const in vec2 uv, const in GeometricContext geometry, inout ReflectedLight reflectedLight) {
       #ifdef USE_COLOR
-        vec3 thickness = vColor * thicknessColor;
+        vec3 thickness = vColor * thicknessColor
       #else
-        vec3 thickness = thicknessColor;
+        vec3 thickness = thicknessColor
       #endif
-      vec3 scatteringHalf = normalize(directLight.direction + (geometry.normal * thicknessDistortion));
-      float scatteringDot = pow(saturate(dot(geometry.viewDir, -scatteringHalf)), thicknessPower) * thicknessScale;
-      vec3 scatteringIllu = (scatteringDot + thicknessAmbient) * thickness;
-      reflectedLight.directDiffuse += scatteringIllu * thicknessAttenuation * directLight.color;
+      vec3 scatteringHalf = normalize(directLight.direction + (geometry.normal * thicknessDistortion))
+      float scatteringDot = pow(saturate(dot(geometry.viewDir, -scatteringHalf)), thicknessPower) * thicknessScale
+      vec3 scatteringIllu = (scatteringDot + thicknessAmbient) * thickness
+      reflectedLight.directDiffuse += scatteringIllu * thicknessAttenuation * directLight.color
     }
   ` + meshphongFragBody.replace(
     '#include <lights_fragment_begin>',
@@ -69,13 +69,13 @@ const SubsurfaceScatteringShader = {
       ShaderChunk.lights_fragment_begin,
       'RE_Direct( directLight, geometry, material, reflectedLight );',
       `
-        RE_Direct( directLight, geometry, material, reflectedLight );
+        RE_Direct( directLight, geometry, material, reflectedLight )
         #if defined( SUBSURFACE ) && defined( USE_UV )
-          RE_Direct_Scattering(directLight, vUv, geometry, reflectedLight);
+          RE_Direct_Scattering(directLight, vUv, geometry, reflectedLight)
         #endif
       `
     )
   ),
-};
+}
 
-export default SubsurfaceScatteringShader;
+export default SubsurfaceScatteringShader

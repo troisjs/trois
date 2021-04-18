@@ -1,7 +1,7 @@
-import { defineComponent, watch } from 'vue';
-import { MeshPhongMaterial } from 'three';
-import { bindProps, propsValues } from '../tools';
-import Material, { wireframeProps } from './Material';
+import { defineComponent, watch } from 'vue'
+import { MeshPhongMaterial } from 'three'
+import { bindProps, propsValues } from '../tools'
+import Material, { wireframeProps } from './Material'
 
 export default defineComponent({
   extends: Material,
@@ -16,21 +16,23 @@ export default defineComponent({
   },
   methods: {
     createMaterial() {
-      this.material = new MeshPhongMaterial(propsValues(this.$props));
-    },
-    addWatchers() {
+      const material = new MeshPhongMaterial(propsValues(this.$props))
+
       // TODO : handle flatShading ?
-      ['emissive', 'emissiveIntensity', 'reflectivity', 'shininess', 'specular'].forEach(p => {
+      const watchProps = ['emissive', 'emissiveIntensity', 'reflectivity', 'shininess', 'specular']
+      watchProps.forEach(p => {
         watch(() => this[p], (value) => {
           if (p === 'emissive' || p === 'specular') {
-            this.material[p].set(value);
+            material[p].set(value)
           } else {
-            this.material[p] = value;
+            material[p] = value
           }
-        });
-      });
-      bindProps(this, Object.keys(wireframeProps), this.material);
+        })
+      })
+      bindProps(this, Object.keys(wireframeProps), material)
+
+      return material
     },
   },
   __hmrId: 'PhongMaterial',
-});
+})
