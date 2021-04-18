@@ -1,6 +1,6 @@
 import { defineComponent } from 'vue'
 import { CatmullRomCurve3, Curve, TubeGeometry, Vector3 } from 'three'
-import Geometry from './Geometry.js'
+import Geometry from './Geometry'
 
 export const props = {
   points: Array,

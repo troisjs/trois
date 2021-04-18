@@ -1,4 +1,4 @@
-import { geometryComponent } from './Geometry.js'
+import { geometryComponent } from './Geometry'
 import { TetrahedronGeometry } from 'three'
 
 export const props = {
