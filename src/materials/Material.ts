@@ -53,7 +53,7 @@ export default defineComponent({
         this.material.needsUpdate = needsUpdate
       }
     },
-    setTexture(texture: Texture, key = 'map') {
+    setTexture(texture: Texture | null, key = 'map') {
       this.setProp(key, texture, true)
     },
     addWatchers() {
