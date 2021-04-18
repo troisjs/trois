@@ -9,7 +9,6 @@ interface MaterialInterface {
   mesh?: MeshInterface
   material?: Material
   createMaterial?(): Material
-  addWatchers?(m: Material): void
 }
 
 export default defineComponent({
@@ -41,8 +40,7 @@ export default defineComponent({
     if (this.createMaterial) {
       this.material = this.createMaterial()
       this.mesh.setMaterial(this.material)
-      this._addWatchers()
-      this.addWatchers?.(this.material)
+      this.addWatchers()
     }
   },
   unmounted() {
@@ -58,7 +56,7 @@ export default defineComponent({
     setTexture(texture: Texture, key = 'map') {
       this.setProp(key, texture, true)
     },
-    _addWatchers() {
+    addWatchers() {
       ['color', 'depthTest', 'depthWrite', 'fog', 'opacity', 'side', 'transparent'].forEach(p => {
         watch(() => this[p], (value) => {
           if (p === 'color') {
