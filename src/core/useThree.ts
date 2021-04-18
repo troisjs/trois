@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { createRenderer } from '@vue/runtime-core'
 import { Camera, OrthographicCamera, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
@@ -27,14 +28,14 @@ export interface SizeInterface {
 
 export interface ThreeInterface {
   conf: ThreeConfigInterface
-  renderer?: WebGLRenderer
+  renderer: WebGLRenderer
+  composer?: EffectComposer
   camera?: Camera
   cameraCtrl?: OrbitControls
   scene?: Scene
   pointer?: PointerInterface
   size: SizeInterface
-  composer?: EffectComposer
-  init(config: ThreeConfigInterface): boolean
+  init(): boolean
   dispose(): void
   render(): void
   renderC(): void
@@ -49,7 +50,7 @@ export interface ThreeInterface {
 /**
  * Three.js helper
  */
-export default function useThree(): ThreeInterface {
+export default function useThree(params: ThreeConfigInterface): ThreeInterface {
   // default conf
   const conf: ThreeConfigInterface = {
     antialias: true,
@@ -62,6 +63,12 @@ export default function useThree(): ThreeInterface {
     height: 150,
   }
 
+  if (params) {
+    Object.entries(params).forEach(([key, value]) => {
+      conf[key] = value
+    })
+  }
+
   // size
   const size: SizeInterface = {
     width: 1, height: 1,
@@ -70,9 +77,6 @@ export default function useThree(): ThreeInterface {
   }
 
   // handlers
-  // const afterInitCallbacks: void[] = []
-  // let afterResizeCallbacks: void[] = []
-  // let beforeRenderCallbacks: void[] = []
   const afterInitCallbacks: {(): void}[] = []
   let afterResizeCallbacks: {(): void}[] = []
   let beforeRenderCallbacks: {(): void}[] = []
@@ -82,6 +86,7 @@ export default function useThree(): ThreeInterface {
   // returned object
   const obj: ThreeInterface = {
     conf,
+    renderer: createRenderer(),
     size,
     init,
     dispose,
@@ -96,15 +101,18 @@ export default function useThree(): ThreeInterface {
   return obj
 
   /**
+   * create WebGLRenderer
+   */
+  function createRenderer(): WebGLRenderer {
+    const renderer = new WebGLRenderer({ canvas: conf.canvas, antialias: conf.antialias, alpha: conf.alpha })
+    renderer.autoClear = conf.autoClear
+    return renderer
+  }
+
+  /**
    * init three
    */
-  function init(params: ThreeConfigInterface) {
-    if (params) {
-      Object.entries(params).forEach(([key, value]) => {
-        conf[key] = value
-      })
-    }
-
+  function init() {
     if (!obj.scene) {
       console.error('Missing Scene')
       return false
@@ -115,14 +123,11 @@ export default function useThree(): ThreeInterface {
       return false
     }
 
-    obj.renderer = new WebGLRenderer({ canvas: conf.canvas, antialias: conf.antialias, alpha: conf.alpha })
-    obj.renderer.autoClear = conf.autoClear
-
     if (conf.resize) {
       onResize()
       window.addEventListener('resize', onResize)
-    } else {
-      setSize(conf.width!, conf.height!)
+    } else if (conf.width && conf.height) {
+      setSize(conf.width, conf.height)
     }
 
     initPointer()
@@ -142,6 +147,9 @@ export default function useThree(): ThreeInterface {
     return true
   }
 
+  /**
+   * init pointer
+   */
   function initPointer() {
     let pointerConf: PointerConfigInterface = {
       camera: obj.camera!,

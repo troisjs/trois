@@ -18,21 +18,20 @@ export default defineComponent({
   },
   setup(props) {
     const camera = new OrthographicCamera(props.left, props.right, props.top, props.bottom, props.near, props.far)
-    return {
-      camera,
-    }
-  },
-  created() {
-    bindProp(this, 'position', this.camera)
+
+    bindProp(this, 'position', camera)
 
     const watchProps = ['left', 'right', 'top', 'bottom', 'near', 'far', 'zoom']
     watchProps.forEach(p => {
-      watch(() => this[p], () => {
-        this.camera[p] = this[p]
-        this.camera.updateProjectionMatrix()
+      watch(() => props[p], (value) => {
+        camera[p] = value
+        camera.updateProjectionMatrix()
       })
     })
 
+    return { camera }
+  },
+  created() {
     this.three.camera = this.camera
   },
   __hmrId: 'OrthographicCamera',

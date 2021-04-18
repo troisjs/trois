@@ -1,6 +1,11 @@
-import { WebGLRenderer } from 'three'
-import { defineComponent, h } from 'vue'
+import { defineComponent } from 'vue'
 import useThree, { ThreeConfigInterface } from './useThree'
+
+interface RendererEventInterface {
+}
+
+// interface RendererEventListenerInterface {
+// }
 
 export default defineComponent({
   name: 'Renderer',
@@ -15,20 +20,38 @@ export default defineComponent({
     width: String,
     height: String,
     xr: Boolean,
+    onReady: Function,
+    onFrame: Function,
   },
-  setup() {
-    const renderer: null | WebGLRenderer = null
-    const _render: {(): void} = () => {}
+  setup(props) {
+    const canvas = document.createElement('canvas')
+    const config: ThreeConfigInterface = {
+      canvas,
+      antialias: props.antialias,
+      alpha: props.alpha,
+      autoClear: props.autoClear,
+      orbitCtrl: props.orbitCtrl,
+      pointer: props.pointer,
+      resize: props.resize,
+    }
+
+    if (props.width) config.width = parseInt(props.width)
+    if (props.height) config.height = parseInt(props.height)
+
+    const three = useThree(config)
+
+    const renderFn: {(): void} = () => {}
 
     const onMountedCallbacks: {(): void}[] = []
     const beforeRenderCallbacks: {(): void}[] = []
     const afterRenderCallbacks: {(): void}[] = []
 
     return {
-      three: useThree(),
-      renderer,
+      canvas,
+      three,
+      renderer: three.renderer,
+      renderFn,
       raf: true,
-      _render,
       onMountedCallbacks,
       beforeRenderCallbacks,
       afterRenderCallbacks,
@@ -41,24 +64,14 @@ export default defineComponent({
     }
   },
   mounted() {
-    const params: ThreeConfigInterface = {
-      canvas: this.$el,
-      antialias: this.antialias,
-      alpha: this.alpha,
-      autoClear: this.autoClear,
-      orbitCtrl: this.orbitCtrl,
-      pointer: this.pointer,
-      resize: this.resize,
-    }
+    // appendChild won't work on reload
+    this.$el.parentNode.insertBefore(this.canvas, this.$el)
 
-    if (this.width) params.width = parseInt(this.width)
-    if (this.height) params.height = parseInt(this.height)
-
-    if (this.three.init(params)) {
-      this.renderer = this.three.renderer
+    if (this.three.init()) {
+      this.onReady?.(this)
       this.renderer.shadowMap.enabled = this.shadow
 
-      this._render = this.three.composer ? this.three.renderC : this.three.render
+      this.renderFn = this.three.composer ? this.three.renderC : this.three.render
 
       if (this.xr) {
         this.renderer.xr.enabled = true
@@ -71,6 +84,7 @@ export default defineComponent({
     this.onMountedCallbacks.forEach(c => c())
   },
   beforeUnmount() {
+    this.canvas.remove()
     this.beforeRenderCallbacks = []
     this.afterRenderCallbacks = []
     this.raf = false
@@ -99,9 +113,11 @@ export default defineComponent({
       this.three.offAfterResize(cb)
     },
     render(time: number) {
-      this.beforeRenderCallbacks.forEach(c => c({ time }))
-      this._render()
-      this.afterRenderCallbacks.forEach(c => c({ time }))
+      const cbParams = { time, renderer: this }
+      this.beforeRenderCallbacks.forEach(cb => cb(cbParams))
+      this.onFrame?.(cbParams)
+      this.renderFn()
+      this.afterRenderCallbacks.forEach(cb => cb(cbParams))
     },
     renderLoop(time: number) {
       if (this.raf) requestAnimationFrame(this.renderLoop)
@@ -109,7 +125,8 @@ export default defineComponent({
     },
   },
   render() {
-    return h('canvas', {}, this.$slots.default ? this.$slots.default() : [])
+    // return h('canvas', {}, this.$slots.default ? this.$slots.default() : [])
+    return this.$slots.default ? this.$slots.default() : []
   },
   __hmrId: 'Renderer',
 })

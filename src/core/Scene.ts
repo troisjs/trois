@@ -21,7 +21,7 @@ export default defineComponent({
       scene: this.scene,
     }
   },
-  mounted() {
+  created() {
     if (!this.three.scene) {
       this.three.scene = this.scene
     }

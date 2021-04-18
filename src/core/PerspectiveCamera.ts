@@ -16,25 +16,25 @@ export default defineComponent({
     lookAt: { type: Object, default: null },
   },
   setup(props) {
-    return {
-      camera: new PerspectiveCamera(props.fov, props.aspect, props.near, props.far),
-    }
-  },
-  created() {
-    bindProp(this, 'position', this.camera)
+    const camera = new PerspectiveCamera(props.fov, props.aspect, props.near, props.far)
+
+    bindProp(props, 'position', camera)
 
     // TODO : fix lookAt x
-    if (this.lookAt) this.camera.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z)
-    watch(() => this.lookAt, (v) => { this.camera.lookAt(v.x, v.y, v.z) }, { deep: true })
+    if (props.lookAt) camera.lookAt(props.lookAt.x, props.lookAt.y, props.lookAt.z)
+    watch(() => props.lookAt, (v) => { camera.lookAt(v.x, v.y, v.z) }, { deep: true })
 
     const watchProps = ['aspect', 'far', 'fov', 'near']
     watchProps.forEach(p => {
-      watch(() => this[p], () => {
-        this.camera[p] = this[p]
-        this.camera.updateProjectionMatrix()
+      watch(() => props[p], (value) => {
+        camera[p] = value
+        camera.updateProjectionMatrix()
       })
     })
 
+    return { camera }
+  },
+  created() {
     this.three.camera = this.camera
   },
   __hmrId: 'PerspectiveCamera',
