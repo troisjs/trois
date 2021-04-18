@@ -26,7 +26,9 @@ export default defineComponent({
 
     const watchProps = ['aspect', 'far', 'fov', 'near']
     watchProps.forEach(p => {
+      // @ts-ignore
       watch(() => props[p], (value) => {
+        // @ts-ignore
         camera[p] = value
         camera.updateProjectionMatrix()
       })

@@ -6,6 +6,7 @@ import Camera from './Camera'
 export default defineComponent({
   extends: Camera,
   name: 'OrthographicCamera',
+  inject: ['three'],
   props: {
     left: { type: Number, default: -1 },
     right: { type: Number, default: 1 },
@@ -23,7 +24,9 @@ export default defineComponent({
 
     const watchProps = ['left', 'right', 'top', 'bottom', 'near', 'far', 'zoom']
     watchProps.forEach(p => {
+      // @ts-ignore
       watch(() => props[p], (value) => {
+        // @ts-ignore
         camera[p] = value
         camera.updateProjectionMatrix()
       })
