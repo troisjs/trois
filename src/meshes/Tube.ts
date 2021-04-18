@@ -1,6 +1,7 @@
 import { defineComponent } from 'vue'
 import Mesh from './Mesh'
-import { props, createGeometry, updateTubeGeometryPoints } from '../geometries/TubeGeometry.js'
+import { props, createGeometry, updateTubeGeometryPoints } from '../geometries/TubeGeometry'
+import { Vector3 } from 'three'
 
 export default defineComponent({
   extends: Mesh,
@@ -14,7 +15,7 @@ export default defineComponent({
       this.geometry = createGeometry(this)
     },
     // update curve points (without using prop, faster)
-    updatePoints(points) {
+    updatePoints(points: Vector3[]) {
       updateTubeGeometryPoints(this.geometry, points)
     },
   },
