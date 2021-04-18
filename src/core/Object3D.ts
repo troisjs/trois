@@ -29,12 +29,12 @@ export default defineComponent({
     initObject3D(o3d: Object3D) {
       this.o3d = o3d
 
-      o3d.userData = this.userData
       this.$emit('created', o3d)
 
       bindProp(this, 'position', o3d)
       bindProp(this, 'rotation', o3d)
       bindProp(this, 'scale', o3d)
+      bindProp(this, 'userData', o3d.userData)
 
       // TODO : fix lookat.x
       if (this.lookAt) o3d.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z)
