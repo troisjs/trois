@@ -6,7 +6,6 @@ import Camera from './Camera'
 export default defineComponent({
   extends: Camera,
   name: 'OrthographicCamera',
-  inject: ['three'],
   props: {
     left: { type: Number, default: -1 },
     right: { type: Number, default: 1 },

@@ -9,9 +9,14 @@ interface ThreeInterface {
 export default defineComponent({
   // TODO: eventually extend Object3D
   // extends: Object3D,
-  // inject: ['three'], // don't work with typescript, bug ?
+
+  // don't work with typescript, bug ?
+  // but works in sub components (injection, not typescript)
+  inject: ['three'],
+
   setup() {
-    // this works in sub component ??
+    // this works with typescript in sub component
+    // but setup is not called
     const three = inject('three') as ThreeInterface
     return { three }
   },

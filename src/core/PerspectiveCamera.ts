@@ -6,7 +6,6 @@ import Camera from './Camera'
 export default defineComponent({
   extends: Camera,
   name: 'PerspectiveCamera',
-  inject: ['three'],
   props: {
     aspect: { type: Number, default: 1 },
     far: { type: Number, default: 2000 },
