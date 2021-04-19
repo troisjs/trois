@@ -1,20 +1,22 @@
-import { defineComponent, watch } from 'vue'
+import { defineComponent, inject, watch } from 'vue'
 import { Scene, Color, Object3D } from 'three'
+import { ThreeInterface } from './useThree'
 
 export default defineComponent({
   name: 'Scene',
-  inject: ['three'],
+  // inject: ['three'],
   props: {
-    id: String,
+    // id: String,
     background: [String, Number],
   },
   setup(props) {
+    const three = inject('three') as ThreeInterface
     const scene = new Scene()
     if (props.background) {
       scene.background = new Color(props.background)
     }
     watch(() => props.background, (value) => { if (scene.background instanceof Color && value) scene.background.set(value) })
-    return { scene }
+    return { three, scene }
   },
   provide() {
     return {

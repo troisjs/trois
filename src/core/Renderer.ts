@@ -1,8 +1,8 @@
 import { WebGLRenderer } from 'three'
 import { defineComponent } from 'vue'
-import useThree, { ThreeConfigInterface, ThreeInterface } from './useThree'
+import useThree, { SizeInterface, ThreeConfigInterface, ThreeInterface } from './useThree'
 
-type CallbackType<T> = (e: T) => void
+type CallbackType<T> = (e?: T) => void
 
 interface EventInterface<T> {
   renderer: T
@@ -12,19 +12,31 @@ interface RenderEventInterface<T> extends EventInterface<T> {
   time: number
 }
 
-export interface RendererInterface {
+interface RendererSetupInterface {
   canvas: HTMLCanvasElement
   three: ThreeInterface
   renderer: WebGLRenderer
+  size: SizeInterface
   renderFn(): void
   raf: boolean
   onMountedCallbacks: CallbackType<EventInterface<this>>[]
   beforeRenderCallbacks: CallbackType<RenderEventInterface<this>>[]
   afterRenderCallbacks: CallbackType<RenderEventInterface<this>>[]
+  // pointerPosition?: Vector2
+  // pointerPositionN?: Vector2
+  // pointerPositionV3?: Vector3
 }
 
-type MountedCallbackType = CallbackType<EventInterface<RendererInterface>>
-type RenderCallbackType = CallbackType<RenderEventInterface<RendererInterface>>
+export interface RendererInterface extends RendererSetupInterface {
+  onMounted(cb: CallbackType<EventInterface<this>>): void
+  onBeforeRender(cb: CallbackType<RenderEventInterface<this>>): void
+  offBeforeRender(cb: CallbackType<RenderEventInterface<this>>): void
+  onAfterRender(cb: CallbackType<RenderEventInterface<this>>): void
+  offAfterRender(cb: CallbackType<RenderEventInterface<this>>): void
+}
+
+// type MountedCallbackType = CallbackType<EventInterface<RendererSetupInterface>>
+// type RenderCallbackType = CallbackType<RenderEventInterface<RendererSetupInterface>>
 
 export default defineComponent({
   name: 'Renderer',
@@ -42,7 +54,7 @@ export default defineComponent({
     onReady: Function,
     // onFrame: Function,
   },
-  setup(props): RendererInterface {
+  setup(props): RendererSetupInterface {
     const canvas = document.createElement('canvas')
     const config: ThreeConfigInterface = {
       canvas,
@@ -69,6 +81,7 @@ export default defineComponent({
       canvas,
       three,
       renderer: three.renderer,
+      size: three.size,
       renderFn,
       raf: true,
       onMountedCallbacks,
@@ -88,6 +101,13 @@ export default defineComponent({
 
     if (this.three.init()) {
       this.onReady?.(this)
+
+      // if (this.three.pointer) {
+      //   this.pointerPosition = this.three.pointer.position
+      //   this.pointerPositionN = this.three.pointer.positionN
+      //   this.pointerPositionV3 = this.three.pointer.positionV3
+      // }
+
       this.renderer.shadowMap.enabled = this.shadow
 
       this.renderFn = this.three.composer ? this.three.renderC : this.three.render

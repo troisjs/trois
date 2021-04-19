@@ -1,10 +1,6 @@
-import { Camera } from 'three'
 import { defineComponent, inject } from 'vue'
+import { ThreeInterface } from './useThree'
 // import Object3D from './Object3D'
-
-interface ThreeInterface {
-  camera?: Camera
-}
 
 export default defineComponent({
   // TODO: eventually extend Object3D
