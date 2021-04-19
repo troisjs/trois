@@ -3,11 +3,6 @@ import { ClampToEdgeWrapping, LinearFilter, LinearMipmapLinearFilter, RGBAFormat
 import { bindProp } from '../tools'
 import { MaterialInterface } from './Material'
 
-// interface MaterialInterface {
-//   uniforms: Record<string, unknown>
-//   setTexture(t: Texture | null, k: string): void
-// }
-
 export interface TexureInterface {
   material?: MaterialInterface
   texture?: Texture
@@ -22,7 +17,7 @@ export default defineComponent({
     onLoad: Function as PropType<(t: Texture) => void>,
     onProgress: Function as PropType<(e: ProgressEvent) => void>,
     onError: Function as PropType<(e: ErrorEvent) => void>,
-    format: { type: Number, default: RGBAFormat },
+    // format: { type: Number, default: RGBAFormat },
     mapping: { type: Number, default: UVMapping },
     wrapS: { type: Number, default: ClampToEdgeWrapping },
     wrapT: { type: Number, default: ClampToEdgeWrapping },
@@ -47,7 +42,7 @@ export default defineComponent({
     createTexture() {
       if (!this.src) return undefined
       const texture = new TextureLoader().load(this.src, this.onLoaded, this.onProgress, this.onError)
-      // don't use format. TextureLoader will automatically set format to THREE.RGBFormat for JPG images.
+      // use format ? TextureLoader will automatically set format to THREE.RGBFormat for JPG images.
       const wathProps = ['mapping', 'wrapS', 'wrapT', 'magFilter', 'minFilter', 'repeat', 'rotation', 'center']
       wathProps.forEach(prop => { bindProp(this, prop, texture) })
       return texture

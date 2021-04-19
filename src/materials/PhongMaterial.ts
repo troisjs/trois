@@ -21,10 +21,12 @@ export default defineComponent({
       // TODO : handle flatShading ?
       const watchProps = ['emissive', 'emissiveIntensity', 'reflectivity', 'shininess', 'specular']
       watchProps.forEach(p => {
+        // @ts-ignore
         watch(() => this[p], (value) => {
           if (p === 'emissive' || p === 'specular') {
             material[p].set(value)
           } else {
+            // @ts-ignore
             material[p] = value
           }
         })

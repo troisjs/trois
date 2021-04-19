@@ -10,7 +10,7 @@ export default defineComponent({
       type: Array as PropType<string[]>,
       default: () => ['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg'],
     },
-    format: { type: Number, default: RGBFormat },
+    // format: { type: Number, default: RGBFormat },
     mapping: { type: Number, default: CubeReflectionMapping },
   },
   created() {
