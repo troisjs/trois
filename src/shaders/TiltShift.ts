@@ -1,6 +1,6 @@
 // From https://github.com/evanw/glfx.js
-import { Vector2 } from 'three';
-import DefaultShader from './default';
+import { Vector2 } from 'three'
+import DefaultShader from './default'
 
 export default {
   uniforms: {
@@ -57,4 +57,4 @@ export default {
       gl_FragColor.rgb /= gl_FragColor.a + 0.00001;
     }
   `,
-};
+}

@@ -1,6 +1,6 @@
 import { defineComponent } from 'vue'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
-import Model from './Model.js'
+import Model from './Model'
 
 export default defineComponent({
   extends: Model,

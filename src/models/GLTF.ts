@@ -1,6 +1,6 @@
 import { defineComponent } from 'vue'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import Model from './Model.js'
+import Model from './Model'
 
 export default defineComponent({
   extends: Model,

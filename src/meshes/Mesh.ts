@@ -14,7 +14,7 @@ export const pointerProps = {
   onClick: Function,
 }
 
-interface MeshInterface {
+export interface MeshInterface {
   three?: ThreeInterface
   mesh?: TMesh
   geometry?: BufferGeometry

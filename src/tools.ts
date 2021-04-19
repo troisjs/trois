@@ -9,7 +9,7 @@ export function setFromProp(o: Record<string, unknown>, prop: Record<string, unk
   }
 }
 
-export function bindProps(src: any, props: string[], dst: string): void {
+export function bindProps(src: any, props: string[], dst: any): void {
   props.forEach(prop => {
     bindProp(src, prop, dst, prop)
   })
@@ -27,7 +27,7 @@ export function bindProp(src: any, srcProp: string, dst: any, dstProp?: string):
   }
 }
 
-export function propsValues(props: Record<string, unknown>, exclude: string[]): Record<string, unknown> {
+export function propsValues(props: Record<string, unknown>, exclude: string[] = []): Record<string, unknown> {
   const values: Record<string, unknown> = {}
   Object.entries(props).forEach(([key, value]) => {
     if (!exclude || (exclude && !exclude.includes(key))) {
@@ -62,8 +62,9 @@ export function limit(val: number, min: number, max: number): number {
 
 // from https://github.com/pmndrs/drei/blob/master/src/useMatcapTexture.tsx
 const MATCAP_ROOT = 'https://rawcdn.githack.com/emmelleppi/matcaps/9b36ccaaf0a24881a39062d05566c9e92be4aa0d'
+const DEFAULT_MATCAP = '0404E8_0404B5_0404CB_3333FC'
 
-export function getMatcapUrl(hash: string, format = 1024): string {
+export function getMatcapUrl(hash = DEFAULT_MATCAP, format = 1024): string {
   const fileName = `${hash}${getMatcapFormatString(format)}.png`
   return `${MATCAP_ROOT}/${format}/${fileName}`
 }

@@ -1,11 +1,30 @@
+import { WebGLRenderer } from 'three'
 import { defineComponent } from 'vue'
-import useThree, { ThreeConfigInterface } from './useThree'
+import useThree, { ThreeConfigInterface, ThreeInterface } from './useThree'
 
-interface RendererEventInterface {
+type CallbackType<T> = (e: T) => void
+
+interface EventInterface<T> {
+  renderer: T
 }
 
-// interface RendererEventListenerInterface {
-// }
+interface RenderEventInterface<T> extends EventInterface<T> {
+  time: number
+}
+
+export interface RendererInterface {
+  canvas: HTMLCanvasElement
+  three: ThreeInterface
+  renderer: WebGLRenderer
+  renderFn(): void
+  raf: boolean
+  onMountedCallbacks: CallbackType<EventInterface<this>>[]
+  beforeRenderCallbacks: CallbackType<RenderEventInterface<this>>[]
+  afterRenderCallbacks: CallbackType<RenderEventInterface<this>>[]
+}
+
+type MountedCallbackType = CallbackType<EventInterface<RendererInterface>>
+type RenderCallbackType = CallbackType<RenderEventInterface<RendererInterface>>
 
 export default defineComponent({
   name: 'Renderer',
@@ -21,9 +40,9 @@ export default defineComponent({
     height: String,
     xr: Boolean,
     onReady: Function,
-    onFrame: Function,
+    // onFrame: Function,
   },
-  setup(props) {
+  setup(props): RendererInterface {
     const canvas = document.createElement('canvas')
     const config: ThreeConfigInterface = {
       canvas,
@@ -81,7 +100,7 @@ export default defineComponent({
       }
     }
 
-    this.onMountedCallbacks.forEach(c => c())
+    this.onMountedCallbacks.forEach(c => c({ renderer: this }))
   },
   beforeUnmount() {
     this.canvas.remove()
@@ -115,7 +134,7 @@ export default defineComponent({
     render(time: number) {
       const cbParams = { time, renderer: this }
       this.beforeRenderCallbacks.forEach(cb => cb(cbParams))
-      this.onFrame?.(cbParams)
+      // this.onFrame?.(cbParams)
       this.renderFn()
       this.afterRenderCallbacks.forEach(cb => cb(cbParams))
     },
@@ -125,7 +144,6 @@ export default defineComponent({
     },
   },
   render() {
-    // return h('canvas', {}, this.$slots.default ? this.$slots.default() : [])
     return this.$slots.default ? this.$slots.default() : []
   },
   __hmrId: 'Renderer',
