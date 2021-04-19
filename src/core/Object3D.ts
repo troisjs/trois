@@ -2,7 +2,7 @@ import { Object3D } from 'three'
 import { ComponentPublicInstance, defineComponent, watch } from 'vue'
 import { bindProp } from '../tools'
 
-interface Object3DInterface {
+interface Object3DSetupInterface {
   o3d?: Object3D
   parent?: ComponentPublicInstance
 }
@@ -19,7 +19,7 @@ export default defineComponent({
     autoRemove: { type: Boolean, default: true },
     userData: { type: Object, default: () => ({}) },
   },
-  setup(): Object3DInterface {
+  setup(): Object3DSetupInterface {
     return {}
   },
   unmounted() {
