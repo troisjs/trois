@@ -1,13 +1,11 @@
-import { DirectionalLight, Light, SpotLight } from 'three'
+import { DirectionalLight, Light, LightShadow, SpotLight } from 'three'
 import { defineComponent, watch } from 'vue'
 import Object3D from '../core/Object3D'
 import { bindProp, setFromProp } from '../tools'
 
-interface LightInterface {
+interface LightSetupInterface {
   light?: Light
 }
-
-type LightWithTarget = SpotLight | DirectionalLight
 
 export default defineComponent({
   extends: Object3D,
@@ -19,40 +17,44 @@ export default defineComponent({
     shadowMapSize: { type: Object, default: () => ({ x: 512, y: 512 }) },
     shadowCamera: { type: Object, default: () => ({}) },
   },
-  setup(): LightInterface {
+  setup(): LightSetupInterface {
     return {}
   },
   unmounted() {
-    const light = this.light as LightWithTarget
-    if (light && light.target) this.removeFromParent(light.target)
+    if (this.light instanceof SpotLight || this.light instanceof DirectionalLight) {
+      this.removeFromParent(this.light.target)
+    }
   },
   methods: {
     initLight(light: Light) {
       this.light = light
 
-      const lightWithTarget = light as LightWithTarget
-      if (lightWithTarget.target) {
-        bindProp(this, 'target', lightWithTarget.target, 'position')
-      }
-
-      if (this.light?.shadow) {
-        this.light.castShadow = this.castShadow
-        setFromProp(this.light.shadow.mapSize, this.shadowMapSize)
-        setFromProp(this.light.shadow.camera, this.shadowCamera)
+      if (light instanceof LightShadow) {
+        light.castShadow = this.castShadow
+        // @ts-ignore
+        setFromProp(light.shadow.mapSize, this.shadowMapSize)
+        // @ts-ignore
+        setFromProp(light.shadow.camera, this.shadowCamera)
       }
 
       ['color', 'intensity', 'castShadow'].forEach(p => {
-        watch(() => this[p], () => {
+        // @ts-ignore
+        watch(() => this[p], (value) => {
           if (p === 'color') {
-            light.color.set(this.color)
+            light.color.set(value)
           } else {
+            // @ts-ignore
             light[p] = this[p]
           }
         })
       })
 
-      this.initObject3D(this.light)
-      if (lightWithTarget.target) this.addToParent(lightWithTarget.target)
+      this.initObject3D(light)
+
+      if (light instanceof SpotLight || light instanceof DirectionalLight) {
+        bindProp(this, 'target', light.target, 'position')
+        this.addToParent(light.target)
+      }
     },
   },
   __hmrId: 'Light',

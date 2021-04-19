@@ -17,9 +17,8 @@ export default defineComponent({
 
     const watchProps = ['width', 'height']
     watchProps.forEach(p => {
-      watch(() => this[p], () => {
-        light[p] = this[p]
-      })
+      // @ts-ignore
+      watch(() => this[p], () => { light[p] = this[p] })
     })
 
     if (this.helper) {

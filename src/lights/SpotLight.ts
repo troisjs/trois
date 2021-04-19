@@ -16,9 +16,8 @@ export default defineComponent({
 
     const watchProps = ['angle', 'decay', 'distance', 'penumbra']
     watchProps.forEach(p => {
-      watch(() => this[p], () => {
-        light[p] = this[p]
-      })
+      // @ts-ignore
+      watch(() => this[p], () => { light[p] = this[p] })
     })
 
     this.initLight(light)
