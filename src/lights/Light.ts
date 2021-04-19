@@ -44,7 +44,7 @@ export default defineComponent({
             light.color.set(value)
           } else {
             // @ts-ignore
-            light[p] = this[p]
+            light[p] = value
           }
         })
       })

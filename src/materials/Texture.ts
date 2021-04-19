@@ -1,13 +1,14 @@
 import { defineComponent, PropType, watch } from 'vue'
-import { ClampToEdgeWrapping, LinearFilter, LinearMipmapLinearFilter, Texture, TextureLoader, UVMapping } from 'three'
+import { ClampToEdgeWrapping, LinearFilter, LinearMipmapLinearFilter, RGBAFormat, ShaderMaterial, Texture, TextureLoader, UVMapping } from 'three'
 import { bindProp } from '../tools'
+import { MaterialInterface } from './Material'
 
-interface MaterialInterface {
-  uniforms: Record<string, unknown>
-  setTexture(t: Texture | null, k: string): void
-}
+// interface MaterialInterface {
+//   uniforms: Record<string, unknown>
+//   setTexture(t: Texture | null, k: string): void
+// }
 
-interface TexureInterface {
+export interface TexureInterface {
   material?: MaterialInterface
   texture?: Texture
 }
@@ -21,6 +22,7 @@ export default defineComponent({
     onLoad: Function as PropType<(t: Texture) => void>,
     onProgress: Function as PropType<(e: ProgressEvent) => void>,
     onError: Function as PropType<(e: ErrorEvent) => void>,
+    format: { type: Number, default: RGBAFormat },
     mapping: { type: Number, default: UVMapping },
     wrapS: { type: Number, default: ClampToEdgeWrapping },
     wrapT: { type: Number, default: ClampToEdgeWrapping },
@@ -43,24 +45,25 @@ export default defineComponent({
   },
   methods: {
     createTexture() {
-      if (!this.src) return false
-      this.texture = new TextureLoader().load(this.src, this.onLoaded, this.onProgress, this.onError)
-      const wathProps = ['mapping', 'wrapS', 'wrapT', 'magFilter', 'minFilter', 'repeat', 'rotation', 'rotation', 'center']
-      wathProps.forEach(prop => { bindProp(this, prop, this.texture) })
+      if (!this.src) return undefined
+      const texture = new TextureLoader().load(this.src, this.onLoaded, this.onProgress, this.onError)
+      // don't use format. TextureLoader will automatically set format to THREE.RGBFormat for JPG images.
+      const wathProps = ['mapping', 'wrapS', 'wrapT', 'magFilter', 'minFilter', 'repeat', 'rotation', 'center']
+      wathProps.forEach(prop => { bindProp(this, prop, texture) })
+      return texture
     },
     refreshTexture() {
-      this.createTexture()
-      if (!this.texture) return false
+      this.texture = this.createTexture()
 
-      if (this.material) {
+      if (this.texture && this.material) {
         this.material.setTexture(this.texture, this.name)
-        if (this.uniform) {
-          this.material.uniforms[this.uniform] = { value: this.texture }
+        if (this.material.material instanceof ShaderMaterial && this.uniform) {
+          // this.material.uniforms[this.uniform] = { value: this.texture }
         }
       }
     },
     onLoaded(t: Texture) {
-      if (this.onLoad) this.onLoad(t)
+      this.onLoad?.(t)
     },
   },
   render() { return [] },

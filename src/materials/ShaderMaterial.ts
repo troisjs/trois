@@ -34,6 +34,7 @@ export default defineComponent({
 
       const watchProps = ['vertexShader', 'fragmentShader']
       watchProps.forEach(p => {
+        // @ts-ignore
         watch(() => this[p], (value) => {
           this.setProp(p, value, true)
         })

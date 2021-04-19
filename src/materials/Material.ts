@@ -1,14 +1,16 @@
 import { defineComponent, watch } from 'vue'
 import { FrontSide, Material, Texture } from 'three'
+import { MeshInterface } from '../meshes/Mesh'
 
-interface MeshInterface {
-  setMaterial(material: Material): void
-}
-
-interface MaterialInterface {
+interface MaterialSetupInterface {
   mesh?: MeshInterface
   material?: Material
   createMaterial?(): Material
+}
+
+export interface MaterialInterface extends MaterialSetupInterface {
+  setProp(key: string, value: unknown, needsUpdate: boolean): void
+  setTexture(texture: Texture | null, key: string): void
 }
 
 export default defineComponent({
@@ -23,7 +25,7 @@ export default defineComponent({
     transparent: Boolean,
     vertexColors: Boolean,
   },
-  setup(): MaterialInterface {
+  setup(): MaterialSetupInterface {
     return {}
   },
   provide() {
@@ -49,6 +51,7 @@ export default defineComponent({
   methods: {
     setProp(key: string, value: any, needsUpdate = false) {
       if (this.material) {
+        // @ts-ignore
         this.material[key] = value
         this.material.needsUpdate = needsUpdate
       }
@@ -58,6 +61,7 @@ export default defineComponent({
     },
     addWatchers() {
       ['color', 'depthTest', 'depthWrite', 'fog', 'opacity', 'side', 'transparent'].forEach(p => {
+        // @ts-ignore
         watch(() => this[p], (value) => {
           if (p === 'color') {
             this.material.color.set(value)
