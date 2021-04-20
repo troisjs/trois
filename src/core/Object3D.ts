@@ -1,8 +1,13 @@
-import { Object3D } from 'three'
-import { ComponentPublicInstance, defineComponent, watch } from 'vue'
+import { Object3D, Scene } from 'three'
+import { ComponentPublicInstance, defineComponent, inject, watch } from 'vue'
 import { bindProp } from '../tools'
+import { RendererInterface } from './Renderer'
+import { ThreeInterface } from './useThree'
 
 interface Object3DSetupInterface {
+  three: ThreeInterface
+  scene: Scene
+  renderer: RendererInterface
   o3d?: Object3D
   parent?: ComponentPublicInstance
 }
@@ -27,7 +32,10 @@ export default defineComponent({
     userData: { type: Object, default: () => ({}) },
   },
   setup(): Object3DSetupInterface {
-    return {}
+    const three = inject('three') as ThreeInterface
+    const scene = inject('scene') as Scene
+    const renderer = inject('renderer') as RendererInterface
+    return { three, scene, renderer }
   },
   unmounted() {
     if (this.autoRemove) this.removeFromParent()
