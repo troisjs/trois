@@ -3,6 +3,14 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import usePointer, { IntersectObject, PointerConfigInterface, PointerInterface } from './usePointer'
 
+export interface SizeInterface {
+  width: number
+  height: number
+  wWidth: number
+  wHeight: number
+  ratio: number
+}
+
 export interface ThreeConfigInterface {
   canvas?: HTMLCanvasElement
   antialias: boolean
@@ -13,38 +21,12 @@ export interface ThreeConfigInterface {
   resize: boolean | string
   width?: number
   height?: number
+  onResize?(size: SizeInterface): void
   [index:string]: any
 }
 
-export interface SizeInterface {
-  width: number
-  height: number
-  wWidth: number
-  wHeight: number
-  ratio: number
-}
-
-export interface ThreeEventInterface {
-  type: 'afterinit' | 'resize'
-  // eslint-disable-next-line no-use-before-define
-  three: ThreeInterface
-}
-
-export interface ThreeInitEventInterface extends ThreeEventInterface {
-  type: 'afterinit'
-}
-
-export interface ThreeResizeEventInterface extends ThreeEventInterface {
-  type: 'resize'
-  size: SizeInterface
-}
-
-type ThreeCallbackType<T = ThreeEventInterface> = (e: T) => void
-type ThreeInitCallbackType = ThreeCallbackType<ThreeInitEventInterface>
-type ThreeResizeCallbackType = ThreeCallbackType<ThreeResizeEventInterface>
-
 export interface ThreeInterface {
-  conf: ThreeConfigInterface
+  config: ThreeConfigInterface
   renderer: WebGLRenderer
   composer?: EffectComposer
   camera?: Camera
@@ -57,9 +39,6 @@ export interface ThreeInterface {
   render(): void
   renderC(): void
   setSize(width: number, height: number): void
-  onAfterInit(cb: ThreeInitCallbackType): void
-  onAfterResize(cb: ThreeResizeCallbackType): void
-  offAfterResize(cb: ThreeResizeCallbackType): void
   addIntersectObject(o: IntersectObject): void
   removeIntersectObject(o: IntersectObject): void
 }
@@ -68,8 +47,8 @@ export interface ThreeInterface {
  * Three.js helper
  */
 export default function useThree(params: ThreeConfigInterface): ThreeInterface {
-  // default conf
-  const conf: ThreeConfigInterface = {
+  // default config
+  const config: ThreeConfigInterface = {
     antialias: true,
     alpha: false,
     autoClear: true,
@@ -82,7 +61,7 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
 
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
-      conf[key] = value
+      config[key] = value
     })
   }
 
@@ -93,25 +72,22 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
     ratio: 1,
   }
 
-  // handlers
-  const afterInitCallbacks: ThreeInitCallbackType[] = []
-  let afterResizeCallbacks: ThreeResizeCallbackType[] = []
-  let beforeRenderCallbacks: {(): void}[] = []
+  const beforeRenderCallbacks: {(): void}[] = []
 
   const intersectObjects: IntersectObject[] = []
 
+  const renderer = createRenderer()
+
   // returned object
   const obj: ThreeInterface = {
-    conf,
-    renderer: createRenderer(),
+    config,
+    renderer,
     size,
     init,
     dispose,
     render,
     renderC,
     setSize,
-    onAfterInit,
-    onAfterResize, offAfterResize,
     addIntersectObject, removeIntersectObject,
   }
 
@@ -121,8 +97,8 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
    * create WebGLRenderer
    */
   function createRenderer(): WebGLRenderer {
-    const renderer = new WebGLRenderer({ canvas: conf.canvas, antialias: conf.antialias, alpha: conf.alpha })
-    renderer.autoClear = conf.autoClear
+    const renderer = new WebGLRenderer({ canvas: config.canvas, antialias: config.antialias, alpha: config.alpha })
+    renderer.autoClear = config.autoClear
     return renderer
   }
 
@@ -140,26 +116,26 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
       return false
     }
 
-    if (conf.resize) {
+    if (config.resize) {
       onResize()
       window.addEventListener('resize', onResize)
-    } else if (conf.width && conf.height) {
-      setSize(conf.width, conf.height)
+    } else if (config.width && config.height) {
+      setSize(config.width, config.height)
     }
 
     initPointer()
 
-    if (conf.orbitCtrl) {
-      obj.cameraCtrl = new OrbitControls(obj.camera, obj.renderer.domElement)
-      if (conf.orbitCtrl instanceof Object) {
-        Object.entries(conf.orbitCtrl).forEach(([key, value]) => {
+    if (config.orbitCtrl) {
+      const cameraCtrl = new OrbitControls(obj.camera, obj.renderer.domElement)
+      if (config.orbitCtrl instanceof Object) {
+        Object.entries(config.orbitCtrl).forEach(([key, value]) => {
           // @ts-ignore
-          obj.cameraCtrl[key] = value
+          cameraCtrl[key] = value
         })
       }
+      onBeforeRender(() => { cameraCtrl.update() })
+      obj.cameraCtrl = cameraCtrl
     }
-
-    afterInitCallbacks.forEach(c => c({ type: 'afterinit', three: obj }))
 
     return true
   }
@@ -174,38 +150,17 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
       intersectObjects,
     }
 
-    if (conf.pointer && conf.pointer instanceof Object) {
-      pointerConf = { ...pointerConf, ...conf.pointer }
+    if (config.pointer && config.pointer instanceof Object) {
+      pointerConf = { ...pointerConf, ...config.pointer }
     }
 
     const pointer = obj.pointer = usePointer(pointerConf)
-    if (conf.pointer || intersectObjects.length) {
+    if (config.pointer || intersectObjects.length) {
       pointer.addListeners()
       if (pointerConf.intersectMode === 'frame') {
         onBeforeRender(pointer.intersect)
       }
     }
-  }
-
-  /**
-   * add after init callback
-   */
-  function onAfterInit(cb: ThreeInitCallbackType) {
-    afterInitCallbacks.push(cb)
-  }
-
-  /**
-   * add after resize callback
-   */
-  function onAfterResize(cb: ThreeResizeCallbackType) {
-    afterResizeCallbacks.push(cb)
-  }
-
-  /**
-   * remove after resize callback
-   */
-  function offAfterResize(cb: ThreeResizeCallbackType) {
-    afterResizeCallbacks = afterResizeCallbacks.filter(c => c !== cb)
   }
 
   /**
@@ -216,17 +171,10 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
   }
 
   /**
-   * remove before render callback
-   */
-  // function offBeforeRender(cb: void) {
-  //   beforeRenderCallbacks = beforeRenderCallbacks.filter(c => c !== cb)
-  // }
-
-  /**
    * default render
    */
   function render() {
-    if (obj.cameraCtrl) obj.cameraCtrl.update()
+    // if (obj.cameraCtrl) obj.cameraCtrl.update()
     beforeRenderCallbacks.forEach(c => c())
     obj.renderer!.render(obj.scene!, obj.camera!)
   }
@@ -235,7 +183,7 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
    * composer render
    */
   function renderC() {
-    if (obj.cameraCtrl) obj.cameraCtrl.update()
+    // if (obj.cameraCtrl) obj.cameraCtrl.update()
     beforeRenderCallbacks.forEach(c => c())
     obj.composer!.render()
   }
@@ -262,7 +210,7 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
       intersectObjects.splice(i, 1)
     }
     // remove listeners if needed
-    if (obj.pointer && !conf.pointer && intersectObjects.length === 0) {
+    if (obj.pointer && !config.pointer && intersectObjects.length === 0) {
       obj.pointer.removeListeners()
     }
   }
@@ -271,7 +219,7 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
    * remove listeners and dispose
    */
   function dispose() {
-    beforeRenderCallbacks = []
+    // beforeRenderCallbacks = []
     window.removeEventListener('resize', onResize)
     if (obj.pointer) obj.pointer.removeListeners()
     if (obj.cameraCtrl) obj.cameraCtrl.dispose()
@@ -282,13 +230,13 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
    * resize listener
    */
   function onResize() {
-    if (conf.resize === 'window') {
+    if (config.resize === 'window') {
       setSize(window.innerWidth, window.innerHeight)
     } else {
       const elt = obj.renderer!.domElement.parentNode as Element
       if (elt) setSize(elt.clientWidth, elt.clientHeight)
     }
-    afterResizeCallbacks.forEach(c => c({ type: 'resize', three: obj, size }))
+    config.onResize?.(size)
   }
 
   /**
