@@ -1,15 +1,48 @@
+/* eslint-disable no-use-before-define */
 import { WebGLRenderer } from 'three'
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import useThree, { SizeInterface, ThreeConfigInterface, ThreeInterface } from './useThree'
 
-type CallbackType<T> = (e?: T) => void
+type CallbackType<T> = (event?: T) => void
 
-interface EventInterface<T> {
-  renderer: T
+// type EventType = 'init' | 'mounted' | 'beforerender' | 'afterrender' | 'resize'
+
+interface EventInterface {
+  type: 'init' | 'mounted'
+  renderer: RendererInterface
 }
 
-interface RenderEventInterface<T> extends EventInterface<T> {
+interface RenderEventInterface {
+  type: 'beforerender' | 'afterrender'
+  renderer: RendererInterface
   time: number
+}
+
+interface ResizeEventInterface {
+  type: 'resize'
+  renderer: RendererInterface
+  size: SizeInterface
+}
+
+type InitCallbackType = CallbackType<EventInterface>
+type MountedCallbackType = CallbackType<EventInterface>
+type RenderCallbackType = CallbackType<RenderEventInterface>
+type ResizeCallbackType = CallbackType<ResizeEventInterface>
+
+// interface EventMap {
+//   'init': EventInterface;
+//   'mounted': EventInterface;
+//   'beforerender': RenderEventInterface;
+//   'afterrender': RenderEventInterface;
+//   'resize': ResizeEventInterface;
+// }
+
+interface EventCallbackMap {
+  'init': InitCallbackType;
+  'mounted': MountedCallbackType;
+  'beforerender': RenderCallbackType;
+  'afterrender': RenderCallbackType;
+  'resize': ResizeCallbackType;
 }
 
 interface RendererSetupInterface {
@@ -19,20 +52,32 @@ interface RendererSetupInterface {
   size: SizeInterface
   renderFn(): void
   raf: boolean
-  onMountedCallbacks: CallbackType<EventInterface<this>>[]
-  beforeRenderCallbacks: CallbackType<RenderEventInterface<this>>[]
-  afterRenderCallbacks: CallbackType<RenderEventInterface<this>>[]
+
   // pointerPosition?: Vector2
   // pointerPositionN?: Vector2
   // pointerPositionV3?: Vector3
+
+  initCallbacks: InitCallbackType[]
+  mountedCallbacks: MountedCallbackType[]
+  beforeRenderCallbacks: RenderCallbackType[]
+  afterRenderCallbacks: RenderCallbackType[]
+  resizeCallbacks: ResizeCallbackType[]
 }
 
 export interface RendererInterface extends RendererSetupInterface {
-  onMounted(cb: CallbackType<EventInterface<this>>): void
-  onBeforeRender(cb: CallbackType<RenderEventInterface<this>>): void
-  offBeforeRender(cb: CallbackType<RenderEventInterface<this>>): void
-  onAfterRender(cb: CallbackType<RenderEventInterface<this>>): void
-  offAfterRender(cb: CallbackType<RenderEventInterface<this>>): void
+  // onInit(cb: InitCallbackType): void
+  // onMounted(cb: MountedCallbackType): void
+
+  // onBeforeRender(cb: RenderCallbackType): void
+  // offBeforeRender(cb: RenderCallbackType): void
+  // onAfterRender(cb: RenderCallbackType): void
+  // offAfterRender(cb: RenderCallbackType): void
+
+  // onResize(cb: ResizeCallbackType): void
+  // offResize(cb: ResizeCallbackType): void
+
+  addListener<T extends keyof EventCallbackMap>(t: T, cb: EventCallbackMap[T]): void
+  removeListener<T extends keyof EventCallbackMap>(t: T, cb: EventCallbackMap[T]): void
 }
 
 export default defineComponent({
@@ -48,10 +93,15 @@ export default defineComponent({
     width: String,
     height: String,
     xr: Boolean,
-    onReady: Function,
-    // onFrame: Function,
+    onReady: Function as PropType<(r: RendererInterface) => void>,
   },
   setup(props): RendererSetupInterface {
+    const initCallbacks: InitCallbackType[] = []
+    const mountedCallbacks: MountedCallbackType[] = []
+    const beforeRenderCallbacks: RenderCallbackType[] = []
+    const afterRenderCallbacks: RenderCallbackType[] = []
+    const resizeCallbacks: ResizeCallbackType[] = []
+
     const canvas = document.createElement('canvas')
     const config: ThreeConfigInterface = {
       canvas,
@@ -70,10 +120,6 @@ export default defineComponent({
 
     const renderFn: {(): void} = () => {}
 
-    const onMountedCallbacks: {(): void}[] = []
-    const beforeRenderCallbacks: {(): void}[] = []
-    const afterRenderCallbacks: {(): void}[] = []
-
     return {
       canvas,
       three,
@@ -81,9 +127,11 @@ export default defineComponent({
       size: three.size,
       renderFn,
       raf: true,
-      onMountedCallbacks,
+      initCallbacks,
+      mountedCallbacks,
       beforeRenderCallbacks,
       afterRenderCallbacks,
+      resizeCallbacks,
     }
   },
   provide() {
@@ -97,17 +145,22 @@ export default defineComponent({
     this.$el.parentNode.insertBefore(this.canvas, this.$el)
 
     if (this.three.init()) {
-      this.onReady?.(this)
-
       // if (this.three.pointer) {
       //   this.pointerPosition = this.three.pointer.position
       //   this.pointerPositionN = this.three.pointer.positionN
       //   this.pointerPositionV3 = this.three.pointer.positionV3
       // }
 
+      this.three.config.onResize = (size) => {
+        this.resizeCallbacks.forEach(e => e({ type: 'resize', renderer: this, size }))
+      }
+
       this.renderer.shadowMap.enabled = this.shadow
 
       this.renderFn = this.three.composer ? this.three.renderC : this.three.render
+
+      this.initCallbacks.forEach(e => e({ type: 'init', renderer: this }))
+      this.onReady?.(this as RendererInterface)
 
       if (this.xr) {
         this.renderer.xr.enabled = true
@@ -117,7 +170,7 @@ export default defineComponent({
       }
     }
 
-    this.onMountedCallbacks.forEach(c => c({ renderer: this }))
+    this.mountedCallbacks.forEach(e => e({ type: 'mounted', renderer: this }))
   },
   beforeUnmount() {
     this.canvas.remove()
@@ -127,33 +180,57 @@ export default defineComponent({
     this.three.dispose()
   },
   methods: {
-    onMounted(cb: {(): void}) {
-      this.onMountedCallbacks.push(cb)
+    // onInit(cb: InitCallbackType) {
+    //   this.initCallbacks.push(cb)
+    // },
+    // onMounted(cb: MountedCallbackType) {
+    //   this.mountedCallbacks.push(cb)
+    // },
+    // onBeforeRender(cb: RenderCallbackType) {
+    //   this.beforeRenderCallbacks.push(cb)
+    // },
+    // offBeforeRender(cb: RenderCallbackType) {
+    //   this.beforeRenderCallbacks = this.beforeRenderCallbacks.filter(e => e !== cb)
+    // },
+    // onAfterRender(cb: RenderCallbackType) {
+    //   this.afterRenderCallbacks.push(cb)
+    // },
+    // offAfterRender(cb: RenderCallbackType) {
+    //   this.afterRenderCallbacks = this.afterRenderCallbacks.filter(e => e !== cb)
+    // },
+    // onResize(cb: ResizeCallbackType) {
+    //   this.resizeCallbacks.push(cb)
+    // },
+    // offResize(cb: ResizeCallbackType) {
+    //   this.resizeCallbacks = this.resizeCallbacks.filter(e => e !== cb)
+    // },
+    addListener(type: string, cb: {(): void}) {
+      const callbacks = this.getCallbacks(type)
+      callbacks.push(cb)
     },
-    onBeforeRender(cb: {(): void}) {
-      this.beforeRenderCallbacks.push(cb)
+    removeListener(type: string, cb: {(): void}) {
+      const callbacks = this.getCallbacks(type)
+      const index = callbacks.indexOf(cb)
+      if (index) callbacks.splice(index, 1)
     },
-    offBeforeRender(cb: {(): void}) {
-      this.beforeRenderCallbacks = this.beforeRenderCallbacks.filter(c => c !== cb)
-    },
-    onAfterRender(cb: {(): void}) {
-      this.afterRenderCallbacks.push(cb)
-    },
-    offAfterRender(cb: {(): void}) {
-      this.afterRenderCallbacks = this.afterRenderCallbacks.filter(c => c !== cb)
-    },
-    onAfterResize(cb: {(): void}) {
-      this.three.onAfterResize(cb)
-    },
-    offAfterResize(cb: {(): void}) {
-      this.three.offAfterResize(cb)
+    getCallbacks(type: string) {
+      if (type === 'init') {
+        return this.initCallbacks
+      } else if (type === 'mounted') {
+        return this.mountedCallbacks
+      } else if (type === 'beforerender') {
+        return this.beforeRenderCallbacks
+      } else if (type === 'afterrender') {
+        return this.afterRenderCallbacks
+      } else {
+        return this.resizeCallbacks
+      }
     },
     render(time: number) {
-      const cbParams = { time, renderer: this }
-      this.beforeRenderCallbacks.forEach(cb => cb(cbParams))
+      this.beforeRenderCallbacks.forEach(e => e({ type: 'beforerender', renderer: this, time }))
       // this.onFrame?.(cbParams)
       this.renderFn()
-      this.afterRenderCallbacks.forEach(cb => cb(cbParams))
+      this.afterRenderCallbacks.forEach(e => e({ type: 'afterrender', renderer: this, time }))
     },
     renderLoop(time: number) {
       if (this.raf) requestAnimationFrame(this.renderLoop)
