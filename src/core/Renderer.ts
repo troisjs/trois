@@ -35,9 +35,6 @@ export interface RendererInterface extends RendererSetupInterface {
   offAfterRender(cb: CallbackType<RenderEventInterface<this>>): void
 }
 
-// type MountedCallbackType = CallbackType<EventInterface<RendererSetupInterface>>
-// type RenderCallbackType = CallbackType<RenderEventInterface<RendererSetupInterface>>
-
 export default defineComponent({
   name: 'Renderer',
   props: {

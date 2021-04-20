@@ -1,8 +1,8 @@
-import { createApp as _createApp } from 'vue';
-import * as TROIS from './index.js';
+import { App, createApp as _createApp } from 'vue'
+import * as TROIS from './index'
 
 export const TroisJSVuePlugin = {
-  install: (app) => {
+  install(app: App): void {
     const comps = [
       'Camera',
       'OrthographicCamera',
@@ -73,14 +73,14 @@ export const TroisJSVuePlugin = {
       'ZoomBlurPass',
 
       'GLTFViewer',
-    ];
+    ]
 
     comps.forEach(comp => {
-      app.component(comp, TROIS[comp]);
-    });
+      app.component(comp, TROIS[comp])
+    })
   },
-};
+}
 
-export function createApp(params) {
-  return _createApp(params).use(TroisJSVuePlugin);
-};
+export function createApp(params: any): App {
+  return _createApp(params).use(TroisJSVuePlugin)
+}

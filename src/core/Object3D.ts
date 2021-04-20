@@ -7,6 +7,13 @@ interface Object3DSetupInterface {
   parent?: ComponentPublicInstance
 }
 
+export interface Object3DInterface extends Object3DSetupInterface {
+  addToParent(o?: Object3D): boolean
+  removeFromParent(o?: Object3D): boolean
+  add(o: Object3D): void
+  remove(o: Object3D): void
+}
+
 export default defineComponent({
   name: 'Object3D',
   inject: ['three', 'scene', 'renderer'],

@@ -1,4 +1,4 @@
-import { DirectionalLight, Light, LightShadow, SpotLight } from 'three'
+import { DirectionalLight, Light, SpotLight } from 'three'
 import { defineComponent, watch } from 'vue'
 import Object3D from '../core/Object3D'
 import { bindProp, setFromProp } from '../tools'
@@ -29,7 +29,7 @@ export default defineComponent({
     initLight(light: Light) {
       this.light = light
 
-      if (light instanceof LightShadow) {
+      if ((light as any).shadow) {
         light.castShadow = this.castShadow
         // @ts-ignore
         setFromProp(light.shadow.mapSize, this.shadowMapSize)

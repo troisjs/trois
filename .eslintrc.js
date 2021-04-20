@@ -51,6 +51,6 @@ module.exports = {
     'vue/no-multiple-template-root': 'off',
 
     'no-empty-function': 'off',
-    '@typescript-eslint/no-empty-function': ['warn'],
+    '@typescript-eslint/no-empty-function': ['off'],
   },
 }

@@ -24,6 +24,25 @@ export interface SizeInterface {
   ratio: number
 }
 
+export interface ThreeEventInterface {
+  type: 'afterinit' | 'resize'
+  // eslint-disable-next-line no-use-before-define
+  three: ThreeInterface
+}
+
+export interface ThreeInitEventInterface extends ThreeEventInterface {
+  type: 'afterinit'
+}
+
+export interface ThreeResizeEventInterface extends ThreeEventInterface {
+  type: 'resize'
+  size: SizeInterface
+}
+
+type ThreeCallbackType<T = ThreeEventInterface> = (e: T) => void
+type ThreeInitCallbackType = ThreeCallbackType<ThreeInitEventInterface>
+type ThreeResizeCallbackType = ThreeCallbackType<ThreeResizeEventInterface>
+
 export interface ThreeInterface {
   conf: ThreeConfigInterface
   renderer: WebGLRenderer
@@ -38,9 +57,9 @@ export interface ThreeInterface {
   render(): void
   renderC(): void
   setSize(width: number, height: number): void
-  onAfterInit(callback: {(): void}): void
-  onAfterResize(callback: {(): void}): void
-  offAfterResize(callback: {(): void}): void
+  onAfterInit(cb: ThreeInitCallbackType): void
+  onAfterResize(cb: ThreeResizeCallbackType): void
+  offAfterResize(cb: ThreeResizeCallbackType): void
   addIntersectObject(o: IntersectObject): void
   removeIntersectObject(o: IntersectObject): void
 }
@@ -75,8 +94,8 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
   }
 
   // handlers
-  const afterInitCallbacks: {(): void}[] = []
-  let afterResizeCallbacks: {(): void}[] = []
+  const afterInitCallbacks: ThreeInitCallbackType[] = []
+  let afterResizeCallbacks: ThreeResizeCallbackType[] = []
   let beforeRenderCallbacks: {(): void}[] = []
 
   const intersectObjects: IntersectObject[] = []
@@ -140,7 +159,7 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
       }
     }
 
-    afterInitCallbacks.forEach(c => c())
+    afterInitCallbacks.forEach(c => c({ type: 'afterinit', three: obj }))
 
     return true
   }
@@ -171,36 +190,36 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
   /**
    * add after init callback
    */
-  function onAfterInit(callback: {(): void}) {
-    afterInitCallbacks.push(callback)
+  function onAfterInit(cb: ThreeInitCallbackType) {
+    afterInitCallbacks.push(cb)
   }
 
   /**
    * add after resize callback
    */
-  function onAfterResize(callback: {(): void}) {
-    afterResizeCallbacks.push(callback)
+  function onAfterResize(cb: ThreeResizeCallbackType) {
+    afterResizeCallbacks.push(cb)
   }
 
   /**
    * remove after resize callback
    */
-  function offAfterResize(callback: {(): void}) {
-    afterResizeCallbacks = afterResizeCallbacks.filter(c => c !== callback)
+  function offAfterResize(cb: ThreeResizeCallbackType) {
+    afterResizeCallbacks = afterResizeCallbacks.filter(c => c !== cb)
   }
 
   /**
    * add before render callback
    */
-  function onBeforeRender(callback: {(): void}) {
-    beforeRenderCallbacks.push(callback)
+  function onBeforeRender(cb: {(): void}) {
+    beforeRenderCallbacks.push(cb)
   }
 
   /**
    * remove before render callback
    */
-  // function offBeforeRender(callback: void) {
-  //   beforeRenderCallbacks = beforeRenderCallbacks.filter(c => c !== callback)
+  // function offBeforeRender(cb: void) {
+  //   beforeRenderCallbacks = beforeRenderCallbacks.filter(c => c !== cb)
   // }
 
   /**
@@ -269,7 +288,7 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
       const elt = obj.renderer!.domElement.parentNode as Element
       if (elt) setSize(elt.clientWidth, elt.clientHeight)
     }
-    afterResizeCallbacks.forEach(c => c())
+    afterResizeCallbacks.forEach(c => c({ type: 'resize', three: obj, size }))
   }
 
   /**
