@@ -2,7 +2,8 @@
 [![NPM Package][npm]][npm-url]
 [![Build Size][build-size]][build-size-url]
 [![NPM Downloads][npm-downloads]][npmtrends-url]
-[![Discord][discord]][discord-url]
+<!-- [![Discord][discord]][discord-url] -->
+[![Support][support]][support-url]
 
 [npm]: https://img.shields.io/npm/v/troisjs
 [npm-url]: https://www.npmjs.com/package/troisjs
@@ -12,6 +13,8 @@
 [npmtrends-url]: https://www.npmtrends.com/troisjs
 [discord]: https://img.shields.io/discord/828384755778846772
 [discord-url]: https://discord.gg/q85DvHhh
+[support]: https://img.shields.io/badge/support-hicetnunc-lightgrey
+[support-url]: https://www.hicetnunc.xyz/tz/tz1XWVAgiiLBPstq5saWXKZqPHbsvq4Qdb4C
  
 <p style="text-align:center;">
   <a href="https://troisjs.github.io/little-planet/"><img src="/screenshots/little-planet.jpg" width="30%" /></a>
