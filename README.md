@@ -2,8 +2,8 @@
 [![NPM Package][npm]][npm-url]
 [![Build Size][build-size]][build-size-url]
 [![NPM Downloads][npm-downloads]][npmtrends-url]
-<!-- [![Discord][discord]][discord-url] -->
 [![Support][support]][support-url]
+<!-- [![Discord][discord]][discord-url] -->
 
 [npm]: https://img.shields.io/npm/v/troisjs
 [npm-url]: https://www.npmjs.com/package/troisjs
