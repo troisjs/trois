@@ -64,7 +64,7 @@ export default defineComponent({
     updateCubeRT() {
       this.mesh.visible = false;
       this.meshBack.visible = false;
-      this.cubeCamera.update(this.three.renderer, this.scene);
+      this.cubeCamera.update(this.renderer.renderer, this.scene);
       this.mesh.visible = true;
       this.meshBack.visible = true;
     },

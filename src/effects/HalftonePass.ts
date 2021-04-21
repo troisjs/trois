@@ -15,7 +15,7 @@ export default defineComponent({
   extends: EffectPass,
   props,
   created() {
-    const pass = new HalftonePass(this.three.size.width, this.three.size.height, {})
+    const pass = new HalftonePass(this.renderer.size.width, this.renderer.size.height, {})
 
     Object.keys(props).forEach(p => {
       // @ts-ignore

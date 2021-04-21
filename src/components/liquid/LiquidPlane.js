@@ -16,7 +16,7 @@ export default defineComponent({
     roughness: { type: Number, default: 0.25 },
   },
   mounted() {
-    this.liquidEffect = new LiquidEffect(this.three.renderer);
+    this.liquidEffect = new LiquidEffect(this.renderer.renderer);
     this.renderer.onMounted(() => {
       this.liquidEffect.renderer = this.renderer.renderer;
       this.renderer.onBeforeRender(this.update);

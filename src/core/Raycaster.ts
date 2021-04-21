@@ -2,14 +2,12 @@ import { Object3D } from 'three'
 import { defineComponent, inject, PropType } from 'vue'
 import usePointer, { IntersectObject, PointerInterface, PointerIntersectCallbackType } from './usePointer'
 import { RendererInterface } from './Renderer'
-import { ThreeInterface } from './useThree'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const emptyCallBack: PointerIntersectCallbackType = () => {}
 
 interface RaycasterSetupInterface {
   renderer: RendererInterface
-  three: ThreeInterface
   pointer?: PointerInterface
 }
 
@@ -25,22 +23,21 @@ export default defineComponent({
   },
   setup(): RaycasterSetupInterface {
     const renderer = inject('renderer') as RendererInterface
-    const three = inject('three') as ThreeInterface
-    return { renderer, three }
+    return { renderer }
   },
   mounted() {
     this.renderer.onMounted(() => {
-      if (!this.three.camera) return
+      if (!this.renderer.camera) return
 
       this.pointer = usePointer({
-        camera: this.three.camera,
+        camera: this.renderer.camera,
         domElement: this.renderer.canvas,
         intersectObjects: this.getIntersectObjects(),
-        onIntersectEnter: (<PointerIntersectCallbackType> this.onPointerEnter),
-        onIntersectOver: (<PointerIntersectCallbackType> this.onPointerOver),
-        onIntersectMove: (<PointerIntersectCallbackType> this.onPointerMove),
-        onIntersectLeave: (<PointerIntersectCallbackType> this.onPointerLeave),
-        onIntersectClick: (<PointerIntersectCallbackType> this.onClick),
+        onIntersectEnter: this.onPointerEnter,
+        onIntersectOver: this.onPointerOver,
+        onIntersectMove: this.onPointerMove,
+        onIntersectLeave: this.onPointerLeave,
+        onIntersectClick: this.onClick,
       })
       this.pointer.addListeners()
 
@@ -57,8 +54,8 @@ export default defineComponent({
   },
   methods: {
     getIntersectObjects() {
-      if (this.three.scene) {
-        const children = this.three.scene.children.filter((c: Object3D) => ['Mesh', 'InstancedMesh'].includes(c.type))
+      if (this.renderer.scene) {
+        const children = this.renderer.scene.children.filter((c: Object3D) => ['Mesh', 'InstancedMesh'].includes(c.type))
         return children as IntersectObject[]
       }
       return []

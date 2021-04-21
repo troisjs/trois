@@ -5,7 +5,7 @@ import {
   Vector2,
 } from 'three';
 
-export default function ZoomBlurImage(three) {
+export default function ZoomBlurImage(renderer) {
   let geometry, material, mesh;
 
   const uMap = { value: null };
@@ -94,7 +94,7 @@ export default function ZoomBlurImage(three) {
   }
 
   function updateUV() {
-    const ratio = three.size.ratio;
+    const ratio = renderer.size.ratio;
     const iRatio = uMap.value.image.width / uMap.value.image.height;
     uUVOffset.value.set(0, 0);
     uUVScale.value.set(1, 1);

@@ -32,7 +32,7 @@ export default defineComponent({
     },
     // update points (without using prop, faster)
     updatePoints(points: Vector3[]) {
-      updateTubeGeometryPoints(this.geometry, points)
+      updateTubeGeometryPoints(this.geometry as TubeGeometry, points)
     },
   },
 })

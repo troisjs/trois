@@ -117,7 +117,7 @@ export default defineComponent({
       this.renderMat(this.normMat, this.normRT);
     },
     renderMat(mat, target) {
-      const renderer = this.three.renderer;
+      const renderer = this.renderer.renderer;
       this.fsQuad.material = mat;
       const oldTarget = renderer.getRenderTarget();
       renderer.setRenderTarget(target);

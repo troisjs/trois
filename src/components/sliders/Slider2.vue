@@ -47,7 +47,7 @@ export default defineComponent({
   },
   unmounted() {
     this.loader.dispose();
-    const domElement = this.three.renderer.domElement;
+    const domElement = this.renderer.renderer.domElement;
     domElement.removeEventListener('click', this.onClick);
     domElement.removeEventListener('wheel', this.onWheel);
     document.removeEventListener('keyup', this.onKeyup);
@@ -66,19 +66,19 @@ export default defineComponent({
         }
       );
 
-      const domElement = this.three.renderer.domElement;
+      const domElement = this.renderer.renderer.domElement;
       if (this.events.click) domElement.addEventListener('click', this.onClick);
       if (this.events.wheel) domElement.addEventListener('wheel', this.onWheel);
       if (this.events.keyup) document.addEventListener('keyup', this.onKeyup);
       this.renderer.onBeforeRender(this.animate);
-      this.renderer.onAfterResize(this.onResize);
+      this.renderer.onResize(this.onResize);
     },
     initScene() {
       const scene = this.$refs.scene.scene;
 
-      this.image1 = new ZoomBlurImage(this.three);
+      this.image1 = new ZoomBlurImage(this.renderer);
       this.image1.setMap(this.loader.textures[0]);
-      this.image2 = new ZoomBlurImage(this.three);
+      this.image2 = new ZoomBlurImage(this.renderer);
       this.image2.setMap(this.loader.textures[1]);
       this.setImagesProgress(0);
 
@@ -86,7 +86,7 @@ export default defineComponent({
       scene.add(this.image2.mesh);
     },
     animate() {
-      const { positionN } = this.three.pointer;
+      const { positionN } = this.renderer.pointer;
       this.center.copy(positionN).divideScalar(2).addScalar(0.5);
       lerpv2(this.image1.uCenter.value, this.center, 0.1);
       lerpv2(this.image2.uCenter.value, this.center, 0.1);
@@ -106,7 +106,7 @@ export default defineComponent({
       }
     },
     onClick(e) {
-      if (e.clientY < this.three.size.height / 2) {
+      if (e.clientY < this.renderer.size.height / 2) {
         this.navPrevious();
       } else {
         this.navNext();

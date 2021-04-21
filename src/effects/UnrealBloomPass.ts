@@ -13,7 +13,7 @@ export default defineComponent({
   extends: EffectPass,
   props,
   created() {
-    const size = new Vector2(this.three.size.width, this.three.size.height)
+    const size = new Vector2(this.renderer.size.width, this.renderer.size.height)
     const pass = new UnrealBloomPass(size, this.strength, this.radius, this.threshold)
 
     Object.keys(props).forEach(p => {

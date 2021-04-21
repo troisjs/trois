@@ -71,6 +71,7 @@ const Geometry = defineComponent({
 
 export default Geometry
 
+// @ts-ignore
 export function geometryComponent(name, props, createGeometry) {
   return defineComponent({
     name,

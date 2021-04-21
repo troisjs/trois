@@ -1,22 +1,21 @@
 import { defineComponent, inject, watch } from 'vue'
 import { Scene, Color, Object3D } from 'three'
-import { ThreeInterface } from './useThree'
+import { RendererInterface } from './Renderer'
 
 export default defineComponent({
   name: 'Scene',
-  // inject: ['three'],
   props: {
     // id: String,
     background: [String, Number],
   },
   setup(props) {
-    const three = inject('three') as ThreeInterface
+    const renderer = inject('renderer') as RendererInterface
     const scene = new Scene()
     if (props.background) {
       scene.background = new Color(props.background)
     }
     watch(() => props.background, (value) => { if (scene.background instanceof Color && value) scene.background.set(value) })
-    return { three, scene }
+    return { renderer, scene }
   },
   provide() {
     return {
@@ -24,8 +23,8 @@ export default defineComponent({
     }
   },
   created() {
-    if (!this.three.scene) {
-      this.three.scene = this.scene
+    if (!this.renderer.scene) {
+      this.renderer.scene = this.scene
     }
   },
   methods: {

@@ -1,24 +1,25 @@
 /* eslint-disable no-use-before-define */
-import { WebGLRenderer } from 'three'
+import { Camera, Scene, WebGLRenderer } from 'three'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
 import { defineComponent, PropType } from 'vue'
 import useThree, { SizeInterface, ThreeConfigInterface, ThreeInterface } from './useThree'
 
-type CallbackType<T> = (event?: T) => void
+type CallbackType<T> = (event: T) => void
 
 // type EventType = 'init' | 'mounted' | 'beforerender' | 'afterrender' | 'resize'
 
-interface EventInterface {
+export interface EventInterface {
   type: 'init' | 'mounted'
   renderer: RendererInterface
 }
 
-interface RenderEventInterface {
+export interface RenderEventInterface {
   type: 'beforerender' | 'afterrender'
   renderer: RendererInterface
   time: number
 }
 
-interface ResizeEventInterface {
+export interface ResizeEventInterface {
   type: 'resize'
   renderer: RendererInterface
   size: SizeInterface
@@ -66,6 +67,10 @@ interface RendererSetupInterface {
 }
 
 export interface RendererInterface extends RendererSetupInterface {
+  scene?: Scene
+  camera?: Camera
+  composer?: EffectComposer
+
   onInit(cb: InitCallbackType): void
   onMounted(cb: MountedCallbackType): void
 
@@ -134,6 +139,20 @@ export default defineComponent({
       afterRenderCallbacks,
       resizeCallbacks,
     }
+  },
+  computed: {
+    camera: {
+      get: function(): Camera | undefined { return this.three.camera },
+      set: function(camera: Camera): void { this.three.camera = camera },
+    },
+    scene: {
+      get: function(): Scene | undefined { return this.three.scene },
+      set: function(scene: Scene): void { this.three.scene = scene },
+    },
+    composer: {
+      get: function(): EffectComposer | undefined { return this.three.composer },
+      set: function(composer: EffectComposer): void { this.three.composer = composer },
+    },
   },
   provide() {
     return {

@@ -5,15 +5,15 @@ import EffectPass from './EffectPass'
 export default defineComponent({
   extends: EffectPass,
   created() {
-    if (!this.three.scene) {
+    if (!this.renderer.scene) {
       console.error('Missing Scene')
       return
     }
-    if (!this.three.camera) {
+    if (!this.renderer.camera) {
       console.error('Missing Camera')
       return
     }
-    const pass = new RenderPass(this.three.scene, this.three.camera)
+    const pass = new RenderPass(this.renderer.scene, this.renderer.camera)
     this.initEffectPass(pass)
   },
   __hmrId: 'RenderPass',

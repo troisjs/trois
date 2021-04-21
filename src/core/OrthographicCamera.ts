@@ -34,7 +34,7 @@ export default defineComponent({
     return { camera }
   },
   created() {
-    this.three.camera = this.camera
+    this.renderer.camera = this.camera
   },
   __hmrId: 'OrthographicCamera',
 })

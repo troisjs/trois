@@ -76,6 +76,7 @@ export const TroisJSVuePlugin = {
     ]
 
     comps.forEach(comp => {
+      // @ts-ignore
       app.component(comp, TROIS[comp])
     })
   },

@@ -8,16 +8,17 @@ import {
   ShaderMaterial,
   Uniform,
   Vector2,
+  WebGLRenderer,
   WebGLRenderTarget,
-} from 'three';
+} from 'three'
 
 // shaders from https://github.com/evanw/webgl-water
 function LiquidEffect(renderer) {
-  this.renderer = renderer;
-  this.width = 512;
-  this.height = 512;
+  this.renderer = renderer
+  this.width = 512
+  this.height = 512
   // this.delta = new Vector2(this.width / Math.pow(width, 2), this.height / Math.pow(height, 2));
-  this.delta = new Vector2(1 / this.width, 1 / this.height);
+  this.delta = new Vector2(1 / this.width, 1 / this.height)
 
   const targetOptions = {
     minFilter: NearestFilter,
@@ -25,14 +26,14 @@ function LiquidEffect(renderer) {
     type: FloatType,
     format: RGBAFormat,
     depthBuffer: false,
-  };
+  }
 
-  this.hMap = new WebGLRenderTarget(this.width, this.height, targetOptions);
-  this.hMap1 = new WebGLRenderTarget(this.width, this.height, targetOptions);
-  this.fsQuad = new FullScreenQuad();
+  this.hMap = new WebGLRenderTarget(this.width, this.height, targetOptions)
+  this.hMap1 = new WebGLRenderTarget(this.width, this.height, targetOptions)
+  this.fsQuad = new FullScreenQuad()
 
-  this.initShaders();
-};
+  this.initShaders()
+}
 
 LiquidEffect.prototype.initShaders = function () {
   const defaultVertexShader = `
@@ -41,7 +42,7 @@ LiquidEffect.prototype.initShaders = function () {
       vUv = uv;
       gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     }
-  `;
+  `
 
   this.copyMat = new ShaderMaterial({
     uniforms: { tDiffuse: { value: null } },
@@ -53,7 +54,7 @@ LiquidEffect.prototype.initShaders = function () {
         gl_FragColor = texture2D(tDiffuse, vUv);
       }
     `,
-  });
+  })
 
   this.updateMat = new ShaderMaterial({
     uniforms: {
@@ -83,7 +84,7 @@ LiquidEffect.prototype.initShaders = function () {
         gl_FragColor = texel;
       }
     `,
-  });
+  })
 
   this.normalsMat = new ShaderMaterial({
     uniforms: {
@@ -103,7 +104,7 @@ LiquidEffect.prototype.initShaders = function () {
         gl_FragColor = texel;
       }
     `,
-  });
+  })
 
   this.dropMat = new ShaderMaterial({
     uniforms: {
@@ -129,35 +130,35 @@ LiquidEffect.prototype.initShaders = function () {
         gl_FragColor = texel;
       }
     `,
-  });
-};
+  })
+}
 
 LiquidEffect.prototype.update = function () {
-  this.updateHMap();
+  this.updateHMap()
   // this.updateHMap();
-  this.updateHMapNormals();
-};
+  this.updateHMapNormals()
+}
 
 LiquidEffect.prototype.updateHMap = function () {
-  this.updateMat.uniforms.tDiffuse.value = this.hMap.texture;
-  this.renderShaderMat(this.updateMat, this.hMap1);
-  this.swapBuffers();
-};
+  this.updateMat.uniforms.tDiffuse.value = this.hMap.texture
+  this.renderShaderMat(this.updateMat, this.hMap1)
+  this.swapBuffers()
+}
 
 LiquidEffect.prototype.updateHMapNormals = function () {
-  this.normalsMat.uniforms.tDiffuse.value = this.hMap.texture;
-  this.renderShaderMat(this.normalsMat, this.hMap1);
-  this.swapBuffers();
-};
+  this.normalsMat.uniforms.tDiffuse.value = this.hMap.texture
+  this.renderShaderMat(this.normalsMat, this.hMap1)
+  this.swapBuffers()
+}
 
 LiquidEffect.prototype.addDrop = function (x, y, radius, strength) {
-  this.dropMat.uniforms.tDiffuse.value = this.hMap.texture;
-  this.dropMat.uniforms.center.value.set(x, y);
-  this.dropMat.uniforms.radius.value = radius;
-  this.dropMat.uniforms.strength.value = strength;
-  this.renderShaderMat(this.dropMat, this.hMap1);
-  this.swapBuffers();
-};
+  this.dropMat.uniforms.tDiffuse.value = this.hMap.texture
+  this.dropMat.uniforms.center.value.set(x, y)
+  this.dropMat.uniforms.radius.value = radius
+  this.dropMat.uniforms.strength.value = strength
+  this.renderShaderMat(this.dropMat, this.hMap1)
+  this.swapBuffers()
+}
 
 // LiquidEffect.prototype.renderBuffer = function (buffer, target) {
 //   this.copyMat.uniforms.tDiffuse.value = buffer.texture;
@@ -165,40 +166,40 @@ LiquidEffect.prototype.addDrop = function (x, y, radius, strength) {
 // };
 
 LiquidEffect.prototype.renderShaderMat = function (mat, target) {
-  this.fsQuad.material = mat;
-  const oldTarget = this.renderer.getRenderTarget();
-  this.renderer.setRenderTarget(target);
-  this.fsQuad.render(this.renderer);
-  this.renderer.setRenderTarget(oldTarget);
-};
+  this.fsQuad.material = mat
+  const oldTarget = this.renderer.getRenderTarget()
+  this.renderer.setRenderTarget(target)
+  this.fsQuad.render(this.renderer)
+  this.renderer.setRenderTarget(oldTarget)
+}
 
 LiquidEffect.prototype.swapBuffers = function () {
-  const temp = this.hMap;
-  this.hMap = this.hMap1;
-  this.hMap1 = temp;
-};
+  const temp = this.hMap
+  this.hMap = this.hMap1
+  this.hMap1 = temp
+}
 
 // from https://threejs.org/examples/js/postprocessing/EffectComposer.js
 const FullScreenQuad = (function () {
-  const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
-  const geometry = new PlaneGeometry(2, 2);
+  const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1)
+  const geometry = new PlaneGeometry(2, 2)
 
   const FullScreenQuad = function (material) {
-    this._mesh = new Mesh(geometry, material);
-  };
+    this._mesh = new Mesh(geometry, material)
+  }
 
   Object.defineProperty(FullScreenQuad.prototype, 'material', {
-    get: function () { return this._mesh.material; },
-    set: function (value) { this._mesh.material = value; },
-  });
+    get: function () { return this._mesh.material },
+    set: function (value) { this._mesh.material = value },
+  })
 
   Object.assign(FullScreenQuad.prototype, {
     render: function (renderer) {
-      renderer.render(this._mesh, camera);
+      renderer.render(this._mesh, camera)
     },
-  });
+  })
 
-  return FullScreenQuad;
-})();
+  return FullScreenQuad
+})()
 
-export default LiquidEffect;
+export default LiquidEffect

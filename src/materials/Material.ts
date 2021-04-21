@@ -64,8 +64,10 @@ export default defineComponent({
         // @ts-ignore
         watch(() => this[p], (value) => {
           if (p === 'color') {
+            // @ts-ignore
             this.material.color.set(value)
           } else {
+            // @ts-ignore
             this.material[p] = value
           }
         })

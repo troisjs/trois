@@ -9,7 +9,7 @@ export default defineComponent({
   created() {
     const pass = new ShaderPass(FXAAShader)
 
-    // resize will be called in three init
+    // resize will be first called in renderer init
     this.renderer.addListener('resize', this.resize)
 
     this.initEffectPass(pass)

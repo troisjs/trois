@@ -28,7 +28,7 @@ export default defineComponent({
   created() {
     const composer = new EffectComposer(this.renderer.renderer)
     this.composer = composer
-    this.renderer.three.composer = composer
+    this.renderer.composer = composer
 
     // this.renderer.onInit(() => {
     this.renderer.addListener('init', () => {

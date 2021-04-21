@@ -32,10 +32,12 @@ export default defineComponent({
       // TODO : use setProp, handle flatShading ?
       Object.keys(props).forEach(p => {
         if (p === 'normalScale') return
+        // @ts-ignore
         watch(() => this[p], (value) => {
           if (p === 'emissive') {
             material[p].set(value)
           } else {
+            // @ts-ignore
             material[p] = value
           }
         })

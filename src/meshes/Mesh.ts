@@ -101,6 +101,7 @@ const Mesh = defineComponent({
 
 export default Mesh
 
+// @ts-ignore
 export function meshComponent(name, props, createGeometry) {
   return defineComponent({
     name,

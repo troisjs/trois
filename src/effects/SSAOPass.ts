@@ -11,20 +11,20 @@ export default defineComponent({
     },
   },
   created() {
-    if (!this.three.scene) {
+    if (!this.renderer.scene) {
       console.error('Missing Scene')
       return
     }
-    if (!this.three.camera) {
+    if (!this.renderer.camera) {
       console.error('Missing Camera')
       return
     }
 
     const pass = new SSAOPass(
-      this.three.scene,
-      this.three.camera,
-      this.three.size.width,
-      this.three.size.height
+      this.renderer.scene,
+      this.renderer.camera,
+      this.renderer.size.width,
+      this.renderer.size.height
     )
 
     Object.keys(this.options).forEach(key => {

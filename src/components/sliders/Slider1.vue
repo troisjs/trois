@@ -45,7 +45,7 @@ export default defineComponent({
   },
   unmounted() {
     this.loader.dispose();
-    const domElement = this.three.renderer.domElement;
+    const domElement = this.renderer.renderer.domElement;
     domElement.removeEventListener('click', this.onClick);
     domElement.removeEventListener('wheel', this.onWheel);
     document.removeEventListener('keyup', this.onKeyup);
@@ -65,26 +65,26 @@ export default defineComponent({
         }
       );
 
-      const domElement = this.three.renderer.domElement;
+      const domElement = this.renderer.renderer.domElement;
       if (this.events.click) domElement.addEventListener('click', this.onClick);
       if (this.events.wheel) domElement.addEventListener('wheel', this.onWheel);
       if (this.events.keyup) document.addEventListener('keyup', this.onKeyup);
       this.renderer.onBeforeRender(this.updateProgress);
-      this.renderer.onAfterResize(this.onResize);
+      this.renderer.onResize(this.onResize);
     },
     initScene() {
-      const renderer = this.three.renderer;
+      const renderer = this.renderer.renderer;
       const scene = this.$refs.scene.scene;
 
       this.plane1 = new AnimatedPlane({
-        renderer, screen: this.three.size,
+        renderer, screen: this.renderer.size,
         size: 10,
         anim: 1,
         texture: this.loader.textures[0],
       });
 
       this.plane2 = new AnimatedPlane({
-        renderer, screen: this.three.size,
+        renderer, screen: this.renderer.size,
         size: 10,
         anim: 2,
         texture: this.loader.textures[1],
@@ -109,7 +109,7 @@ export default defineComponent({
       }
     },
     onClick(e) {
-      if (e.clientY < this.three.size.height / 2) {
+      if (e.clientY < this.renderer.size.height / 2) {
         this.navPrevious();
       } else {
         this.navNext();

@@ -25,7 +25,7 @@ export default defineComponent({
 
     const loader = new GLTFLoader();
     loader.load(this.src, (gltf) => {
-      this.renderer.three.scene.add(gltf.scene);
+      this.renderer.scene.add(gltf.scene);
     });
   },
 });

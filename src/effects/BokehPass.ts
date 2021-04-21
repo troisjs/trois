@@ -12,11 +12,11 @@ export default defineComponent({
   extends: EffectPass,
   props,
   created() {
-    if (!this.three.scene) {
+    if (!this.renderer.scene) {
       console.error('Missing Scene')
       return
     }
-    if (!this.three.camera) {
+    if (!this.renderer.camera) {
       console.error('Missing Camera')
       return
     }
@@ -25,11 +25,11 @@ export default defineComponent({
       focus: this.focus,
       aperture: this.aperture,
       maxblur: this.maxblur,
-      width: this.three.size.width,
-      height: this.three.size.height,
+      width: this.renderer.size.width,
+      height: this.renderer.size.height,
     }
 
-    const pass = new BokehPass(this.three.scene, this.three.camera, params)
+    const pass = new BokehPass(this.renderer.scene, this.renderer.camera, params)
 
     Object.keys(props).forEach(p => {
       // @ts-ignore
