@@ -15,13 +15,15 @@ export default defineComponent({
     src: { type: String, required: true },
     width: Number,
     height: Number,
+    widthSegments: { type: Number, default: 1 },
+    heightSegments: { type: Number, default: 1 },
     keepSize: Boolean,
   },
   setup(): ImageSetupInterface {
     return object3DSetup()
   },
   created() {
-    this.geometry = new PlaneGeometry(1, 1, 1, 1)
+    this.geometry = new PlaneGeometry(1, 1, this.widthSegments, this.heightSegments)
     this.material = new MeshBasicMaterial({ side: DoubleSide, map: this.loadTexture() })
 
     watch(() => this.src, this.refreshTexture);
@@ -33,6 +35,9 @@ export default defineComponent({
 
     this.resize()
     if (this.keepSize) this.renderer.onResize(this.resize)
+  },
+  unmounted() {
+    this.renderer.offResize(this.resize)
   },
   methods: {
     loadTexture() {

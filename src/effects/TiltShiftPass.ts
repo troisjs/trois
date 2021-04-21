@@ -1,6 +1,5 @@
 import { defineComponent, watch } from 'vue'
-import { ShaderMaterial, Vector2 } from 'three'
-import { Pass } from 'three/examples/jsm/postprocessing/Pass'
+import { Vector2 } from 'three'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import EffectPass from './EffectPass'
 import TiltShift from '../shaders/TiltShift'
@@ -14,27 +13,35 @@ const props = {
 }
 
 interface TiltShiftPassSetupInterface {
-  uniforms: {[name: string]: { value: any }}
-  pass1?: Pass
-  pass2?: Pass
+  uniforms1: {[name: string]: { value: any }}
+  uniforms2: {[name: string]: { value: any }}
+  pass1?: ShaderPass
+  pass2?: ShaderPass
 }
 
 export default defineComponent({
   extends: EffectPass,
   props,
   setup(): TiltShiftPassSetupInterface {
-    const uniforms = {}
-    return { uniforms }
+    return { uniforms1: {}, uniforms2: {} }
   },
   created() {
-    const shaderMat = new ShaderMaterial(TiltShift)
-    this.uniforms = shaderMat.uniforms
+    this.pass1 = new ShaderPass(TiltShift)
+    this.pass2 = new ShaderPass(TiltShift)
 
-    this.pass1 = new ShaderPass(shaderMat)
-    this.pass2 = new ShaderPass(shaderMat)
+    const uniforms1 = this.uniforms1 = this.pass1.uniforms
+    const uniforms2 = this.uniforms2 = this.pass2.uniforms
 
-    bindProp(this, 'blurRadius', this.uniforms.blurRadius, 'value')
-    bindProp(this, 'gradientRadius', this.uniforms.gradientRadius, 'value')
+    // shared uniforms
+    uniforms2.blurRadius = uniforms1.blurRadius
+    uniforms2.gradientRadius = uniforms1.gradientRadius
+    uniforms2.start = uniforms1.start
+    uniforms2.end = uniforms1.end
+    uniforms2.texSize = uniforms1.texSize
+
+    bindProp(this, 'blurRadius', uniforms1.blurRadius, 'value')
+    bindProp(this, 'gradientRadius', uniforms1.gradientRadius, 'value')
+
     this.updateFocusLine();
 
     ['start', 'end'].forEach(p => {
@@ -43,7 +50,7 @@ export default defineComponent({
     })
 
     this.pass1.setSize = (width: number, height: number) => {
-      this.uniforms.texSize.value.set(width, height)
+      uniforms1.texSize.value.set(width, height)
     }
 
     this.initEffectPass(this.pass1)
@@ -54,10 +61,11 @@ export default defineComponent({
   },
   methods: {
     updateFocusLine() {
-      this.uniforms.start.value.copy(this.start)
-      this.uniforms.end.value.copy(this.end)
+      this.uniforms1.start.value.copy(this.start)
+      this.uniforms1.end.value.copy(this.end)
       const dv = new Vector2().copy(this.end as Vector2).sub(this.start as Vector2).normalize()
-      this.uniforms.delta.value.copy(dv)
+      this.uniforms1.delta.value.copy(dv)
+      this.uniforms2.delta.value.set(-dv.y, dv.x)
     },
   },
   __hmrId: 'TiltShiftPass',

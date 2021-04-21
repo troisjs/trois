@@ -50,7 +50,7 @@ export function updateTubeGeometryPoints(tube: TubeGeometry, points: Vector3[]):
   const nAttribute = tube.getAttribute('normal')
 
   const normal = new Vector3()
-  let P = new Vector3()
+  const P = new Vector3()
 
   for (let i = 0; i < tubularSegments; i++) {
     updateSegment(i)
@@ -61,7 +61,7 @@ export function updateTubeGeometryPoints(tube: TubeGeometry, points: Vector3[]):
   tube.attributes.normal.needsUpdate = true
 
   function updateSegment(i: number) {
-    P = curve.getPointAt(i / tubularSegments, P)
+    curve.getPointAt(i / tubularSegments, P)
     const N = frames.normals[i]
     const B = frames.binormals[i]
     for (let j = 0; j <= radialSegments; j++) {
@@ -72,7 +72,7 @@ export function updateTubeGeometryPoints(tube: TubeGeometry, points: Vector3[]):
       normal.y = (cos * N.y + sin * B.y)
       normal.z = (cos * N.z + sin * B.z)
       normal.normalize()
-      const index = (i * (radialSegments + 1) + j) * 3
+      const index = (i * (radialSegments + 1) + j)
       nAttribute.setXYZ(index, normal.x, normal.y, normal.z)
       pAttribute.setXYZ(index, P.x + radius * normal.x, P.y + radius * normal.y, P.z + radius * normal.z)
     }

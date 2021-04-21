@@ -11,12 +11,12 @@ import { Vector2 } from 'three';
 import { gsap, Power4 } from 'gsap';
 
 import OrthographicCamera from '../../core/OrthographicCamera';
-import Renderer from '../../core/Renderer.js';
-import Scene from '../../core/Scene.js';
+import Renderer from '../../core/Renderer';
+import Scene from '../../core/Scene';
 
 import { lerp, lerpv2 } from '../../tools';
 import ZoomBlurImage from './ZoomBlurImage.js';
-import useTextures from '../../use/useTextures.js';
+import useTextures from '../../use/useTextures';
 
 export default defineComponent({
   components: { OrthographicCamera, Renderer, Scene },
@@ -86,7 +86,7 @@ export default defineComponent({
       scene.add(this.image2.mesh);
     },
     animate() {
-      const { positionN } = this.renderer.pointer;
+      const { positionN } = this.renderer.three.pointer;
       this.center.copy(positionN).divideScalar(2).addScalar(0.5);
       lerpv2(this.image1.uCenter.value, this.center, 0.1);
       lerpv2(this.image2.uCenter.value, this.center, 0.1);

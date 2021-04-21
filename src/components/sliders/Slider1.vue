@@ -12,8 +12,8 @@ import { Object3D } from 'three';
 import { gsap, Power4 } from 'gsap';
 
 import Camera from '../../core/PerspectiveCamera';
-import Renderer from '../../core/Renderer.js';
-import Scene from '../../core/Scene.js';
+import Renderer from '../../core/Renderer';
+import Scene from '../../core/Scene';
 
 import { lerp } from '../../tools';
 import AnimatedPlane from './AnimatedPlane.js';

@@ -19,7 +19,7 @@ export default defineComponent({
   setup(props) {
     const camera = new OrthographicCamera(props.left, props.right, props.top, props.bottom, props.near, props.far)
 
-    bindProp(this, 'position', camera)
+    bindProp(props, 'position', camera)
 
     const watchProps = ['left', 'right', 'top', 'bottom', 'near', 'far', 'zoom']
     watchProps.forEach(p => {

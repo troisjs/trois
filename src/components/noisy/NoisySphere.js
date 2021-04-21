@@ -1,5 +1,5 @@
 import { defineComponent, watch } from 'vue';
-import Sphere from '../../meshes/Sphere.js';
+import Sphere from '../../meshes/Sphere';
 import snoise4 from '../../glsl/snoise4.glsl.js';
 
 export default defineComponent({

@@ -5,7 +5,7 @@ import {
   RGBFormat,
   WebGLCubeRenderTarget,
 } from 'three';
-import Mesh from '../../meshes/Mesh.js';
+import Mesh from '../../meshes/Mesh';
 
 export default defineComponent({
   extends: Mesh,

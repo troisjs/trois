@@ -1,7 +1,7 @@
-import { defineComponent, watch } from 'vue';
-import { DoubleSide, MeshBasicMaterial, PlaneGeometry } from 'three';
-import Image from '../../meshes/Image.js';
-import snoise2 from '../../glsl/snoise2.glsl.js';
+import { defineComponent, watch } from 'vue'
+import { DoubleSide, MeshBasicMaterial, PlaneGeometry } from 'three'
+import Image from '../../meshes/Image'
+import snoise2 from '../../glsl/snoise2.glsl.js'
 
 export default defineComponent({
   extends: Image,
@@ -15,43 +15,41 @@ export default defineComponent({
   },
   setup(props) {
     // uniforms
-    const uTime = { value: 0 };
-    const uNoiseCoef = { value: props.noiseCoef };
-    watch(() => props.noiseCoef, (value) => { uNoiseCoef.value = value; });
-    const uZCoef = { value: props.zCoef };
-    watch(() => props.zCoef, (value) => { uZCoef.value = value; });
-    const uDispCoef = { value: props.dispCoef };
-    watch(() => props.dispCoef, (value) => { uDispCoef.value = value; });
+    const uTime = { value: 0 }
+    const uNoiseCoef = { value: props.noiseCoef }
+    watch(() => props.noiseCoef, (value) => { uNoiseCoef.value = value })
+    const uZCoef = { value: props.zCoef }
+    watch(() => props.zCoef, (value) => { uZCoef.value = value })
+    const uDispCoef = { value: props.dispCoef }
+    watch(() => props.dispCoef, (value) => { uDispCoef.value = value })
 
     return {
       uTime, uNoiseCoef, uZCoef, uDispCoef,
-    };
+    }
   },
-  mounted() {
-    this.startTime = Date.now();
-    this.renderer.onBeforeRender(this.updateTime);
+  created() {
+    this.tweakMaterial()
+
+    this.startTime = Date.now()
+    this.renderer.onBeforeRender(this.updateTime)
   },
   unmounted() {
-    this.renderer.offBeforeRender(this.updateTime);
+    this.renderer.offBeforeRender(this.updateTime)
   },
   methods: {
-    createGeometry() {
-      this.geometry = new PlaneGeometry(1, 1, this.widthSegments, this.heightSegments);
-    },
-    createMaterial() {
-      this.material = new MeshBasicMaterial({ side: DoubleSide, map: this.loadTexture() });
+    tweakMaterial() {
       this.material.onBeforeCompile = (shader) => {
-        shader.uniforms.uTime = this.uTime;
-        shader.uniforms.uNoiseCoef = this.uNoiseCoef;
-        shader.uniforms.uZCoef = this.uZCoef;
-        shader.uniforms.uDispCoef = this.uDispCoef;
+        shader.uniforms.uTime = this.uTime
+        shader.uniforms.uNoiseCoef = this.uNoiseCoef
+        shader.uniforms.uZCoef = this.uZCoef
+        shader.uniforms.uDispCoef = this.uDispCoef
         shader.vertexShader = `
           uniform float uTime;
           uniform float uNoiseCoef;
           uniform float uZCoef;
           varying float vNoise;
           ${snoise2}
-        ` + shader.vertexShader;
+        ` + shader.vertexShader
 
         shader.vertexShader = shader.vertexShader.replace(
           '#include <begin_vertex>',
@@ -62,12 +60,12 @@ export default defineComponent({
             vec3 transformed = vec3(position);
             transformed.z += vNoise * uZCoef;
           `
-        );
+        )
 
         shader.fragmentShader = `
           uniform float uDispCoef;
           varying float vNoise;
-        ` + shader.fragmentShader;
+        ` + shader.fragmentShader
 
         shader.fragmentShader = shader.fragmentShader.replace(
           '#include <map_fragment>',
@@ -77,13 +75,13 @@ export default defineComponent({
             texelColor.r = dispTexel.r;
             diffuseColor = texelColor;
           `
-        );
-        this.materialShader = shader;
-      };
+        )
+        this.materialShader = shader
+      }
     },
     updateTime() {
-      this.uTime.value = (Date.now() - this.startTime) * this.timeCoef;
+      this.uTime.value = (Date.now() - this.startTime) * this.timeCoef
     },
   },
   __hmrId: 'NoisyImage',
-});
+})
