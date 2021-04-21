@@ -1,4 +1,4 @@
-import Stats from 'stats.js';
+import Stats from 'stats.js'
 
 export default {
   props: {
@@ -7,40 +7,40 @@ export default {
   emits: ['created'],
   inject: ['renderer'],
   setup({ noSetup }) {
-    const stats = new Stats();
+    const stats = new Stats()
     if (!noSetup) {
-      stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-      document.body.appendChild(stats.dom);
+      stats.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
+      document.body.appendChild(stats.dom)
     }
-    return { stats };
+    return { stats }
   },
   mounted() {
     if (!this.noSetup) {
-      this.renderer.onBeforeRender(this.begin);
-      this.renderer.onAfterRender(this.end);
+      this.renderer.onBeforeRender(this.begin)
+      this.renderer.onAfterRender(this.end)
     }
-    this.$emit('created', { stats: this.stats });
+    this.$emit('created', { stats: this.stats })
   },
   methods: {
     begin() {
       if (this.stats) {
-        this.stats.begin();
+        this.stats.begin()
       }
     },
     end() {
       if (this.stats) {
-        this.stats.end();
+        this.stats.end()
       }
     },
   },
   unmounted() {
     if (this.stats && this.stats.dom) {
-      this.stats.dom.parentElement.removeChild(this.stats.dom);
+      this.stats.dom.parentElement.removeChild(this.stats.dom)
     }
-    this.renderer.offBeforeRender(this.begin);
-    this.renderer.offAfterRender(this.end);
+    this.renderer.offBeforeRender(this.begin)
+    this.renderer.offAfterRender(this.end)
   },
   render() {
-    return this.$slots.default ? this.$slots.default() : [];
+    return this.$slots.default ? this.$slots.default() : []
   },
-};
+}

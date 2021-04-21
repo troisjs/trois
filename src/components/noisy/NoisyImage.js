@@ -1,5 +1,4 @@
 import { defineComponent, watch } from 'vue'
-import { DoubleSide, MeshBasicMaterial, PlaneGeometry } from 'three'
 import Image from '../../meshes/Image'
 import snoise2 from '../../glsl/snoise2.glsl.js'
 

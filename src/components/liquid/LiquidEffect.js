@@ -8,7 +8,6 @@ import {
   ShaderMaterial,
   Uniform,
   Vector2,
-  WebGLRenderer,
   WebGLRenderTarget,
 } from 'three'
 
