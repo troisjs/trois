@@ -91,7 +91,7 @@ const Mesh = defineComponent({
   },
   unmounted() {
     if (this.mesh) {
-      this.three?.removeIntersectObject(this.mesh)
+      this.renderer.three?.removeIntersectObject(this.mesh)
     }
     // for predefined mesh (geometry is not unmounted)
     if (this.geometry) this.geometry.dispose()
