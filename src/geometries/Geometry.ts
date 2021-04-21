@@ -66,7 +66,7 @@ const Geometry = defineComponent({
       oldGeo?.dispose()
     },
   },
-  render() { return []; },
+  render() { return [] },
 })
 
 export default Geometry
