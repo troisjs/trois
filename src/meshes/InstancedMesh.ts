@@ -29,7 +29,6 @@ export default defineComponent({
   },
   methods: {
     initMesh() {
-      console.log(this.material)
       if (!this.geometry || !this.material) return false
       this.mesh = new InstancedMesh(this.geometry, this.material, this.count)
       this.mesh.userData.component = this

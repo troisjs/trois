@@ -19,7 +19,6 @@ export default defineComponent({
   },
   methods: {
     resize({ size }: { size: SizeInterface }) {
-      console.log(size)
       if (this.pass) {
         const { resolution } = (this.pass as ShaderPass).material.uniforms
         resolution.value.x = 1 / size.width
