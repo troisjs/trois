@@ -9,6 +9,7 @@
   "devDependencies": {
     "@rollup/plugin-buble": "^0.21.3",
     "@rollup/plugin-replace": "^2.3.3",
+    "@rollup/plugin-typescript": "^8.2.1",
     "@types/three": "^0.127.1",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",

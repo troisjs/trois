@@ -1,10 +1,11 @@
 // import commonjs from '@rollup/plugin-commonjs';
-import vue from 'rollup-plugin-vue';
+import vue from 'rollup-plugin-vue'
 // import buble from '@rollup/plugin-buble';
-import { terser } from "rollup-plugin-terser";
-import replace from '@rollup/plugin-replace';
+import { terser } from "rollup-plugin-terser"
+import replace from '@rollup/plugin-replace'
+import typescript from '@rollup/plugin-typescript'
 
-const input = 'src/export.js';
+const input = 'src/export.ts'
 const external = [
   'three',
   'three/examples/jsm/controls/OrbitControls.js',
@@ -27,22 +28,23 @@ const external = [
   'three/examples/jsm/shaders/FXAAShader.js',
   'three/examples/jsm/webxr/VRButton.js',
   'vue',
-];
+]
 
 const cdnReplaces = {
   'from \'vue\'': 'from \'https://unpkg.com/vue@3.0.11/dist/vue.esm-browser.prod.js\'',
   'from \'three\'': 'from \'https://unpkg.com/three@0.127.0/build/three.module.js\'',
   'from \'three/examples': 'from \'https://unpkg.com/three@0.127.0/examples',
   delimiters: ['', ''],
-};
+}
 
 const plugins = [
+  typescript(),
   vue(),
   // buble({
   //   transforms: { asyncAwait: false, forOf: false },
   //   objectAssign: 'Object.assign',
   // }),
-];
+]
 
 export default [
   {
@@ -105,8 +107,8 @@ export default [
     output: {
       format: 'cjs',
       file: 'build/trois.js',
-      sourcemap: false,
+      sourcemap: true,
     },
     plugins,
   },
-];
+]
