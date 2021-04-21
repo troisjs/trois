@@ -1,35 +1,20 @@
 import { defineComponent } from 'vue'
-import { BufferGeometry, InstancedMesh, Material } from 'three'
-import Object3D, { object3DSetup } from '../core/Object3D'
+import { InstancedMesh } from 'three'
+import Mesh from './Mesh'
 import { bindProp } from '../tools'
-import { MeshSetupInterface, pointerProps } from './Mesh'
 
 export default defineComponent({
-  extends: Object3D,
+  extends: Mesh,
   props: {
-    castShadow: Boolean,
-    receiveShadow: Boolean,
     count: { type: Number, required: true },
-    ...pointerProps,
-  },
-  setup(): MeshSetupInterface {
-    return object3DSetup()
-  },
-  provide() {
-    return {
-      mesh: this,
-    }
-  },
-  mounted() {
-    if (!this.$slots.default) {
-      console.error('Missing geometry and material')
-      return
-    }
-    this.initMesh()
   },
   methods: {
     initMesh() {
-      if (!this.geometry || !this.material) return false
+      if (!this.geometry || !this.material) {
+        console.error('Missing geometry and/or material')
+        return false
+      }
+
       this.mesh = new InstancedMesh(this.geometry, this.material, this.count)
       this.mesh.userData.component = this
 
@@ -48,19 +33,6 @@ export default defineComponent({
 
       this.initObject3D(this.mesh)
     },
-    setGeometry(geometry: BufferGeometry) {
-      this.geometry = geometry
-      if (this.mesh) this.mesh.geometry = geometry
-    },
-    setMaterial(material: Material) {
-      this.material = material
-      if (this.mesh) this.mesh.material = material
-    },
-  },
-  unmounted() {
-    if (this.mesh) {
-      this.three.removeIntersectObject(this.mesh)
-    }
   },
   __hmrId: 'InstancedMesh',
 })
