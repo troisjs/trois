@@ -2,7 +2,7 @@ import { defineComponent } from 'vue'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader.js'
 import EffectPass from './EffectPass'
-import { ThreeResizeEventInterface } from '../core/useThree'
+import { SizeInterface } from '../core/useThree'
 
 export default defineComponent({
   extends: EffectPass,
@@ -10,15 +10,16 @@ export default defineComponent({
     const pass = new ShaderPass(FXAAShader)
 
     // resize will be called in three init
-    this.three.onAfterResize(this.resize)
+    this.renderer.addListener('resize', this.resize)
 
     this.initEffectPass(pass)
   },
   unmounted() {
-    this.three.offAfterResize(this.resize)
+    this.renderer.removeListener('resize', this.resize)
   },
   methods: {
-    resize({ size }: ThreeResizeEventInterface) {
+    resize({ size }: { size: SizeInterface }) {
+      console.log(size)
       if (this.pass) {
         const { resolution } = (this.pass as ShaderPass).material.uniforms
         resolution.value.x = 1 / size.width

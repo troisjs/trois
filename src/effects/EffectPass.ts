@@ -1,21 +1,24 @@
 import { Pass } from 'three/examples/jsm/postprocessing/Pass'
 import { defineComponent, inject } from 'vue'
+import { RendererInterface } from '../core/Renderer'
 import { ThreeInterface } from '../core/useThree'
 import { EffectComposerInterface } from './EffectComposer'
 
 interface EffectSetupInterface {
+  renderer: RendererInterface
   three: ThreeInterface
   composer: EffectComposerInterface
   pass?: Pass
 }
 
 export default defineComponent({
-  inject: ['three', 'composer'],
+  inject: ['renderer', 'three', 'composer'],
   emits: ['ready'],
   setup(): EffectSetupInterface {
+    const renderer = inject('renderer') as RendererInterface
     const three = inject('three') as ThreeInterface
     const composer = inject('composer') as EffectComposerInterface
-    return { three, composer }
+    return { renderer, three, composer }
   },
   created() {
     if (!this.composer) {
