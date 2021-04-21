@@ -65,16 +65,16 @@ interface RendererSetupInterface {
 }
 
 export interface RendererInterface extends RendererSetupInterface {
-  // onInit(cb: InitCallbackType): void
-  // onMounted(cb: MountedCallbackType): void
+  onInit(cb: InitCallbackType): void
+  onMounted(cb: MountedCallbackType): void
 
-  // onBeforeRender(cb: RenderCallbackType): void
-  // offBeforeRender(cb: RenderCallbackType): void
-  // onAfterRender(cb: RenderCallbackType): void
-  // offAfterRender(cb: RenderCallbackType): void
+  onBeforeRender(cb: RenderCallbackType): void
+  offBeforeRender(cb: RenderCallbackType): void
+  onAfterRender(cb: RenderCallbackType): void
+  offAfterRender(cb: RenderCallbackType): void
 
-  // onResize(cb: ResizeCallbackType): void
-  // offResize(cb: ResizeCallbackType): void
+  onResize(cb: ResizeCallbackType): void
+  offResize(cb: ResizeCallbackType): void
 
   addListener<T extends keyof EventCallbackMap>(t: T, cb: EventCallbackMap[T]): void
   removeListener<T extends keyof EventCallbackMap>(t: T, cb: EventCallbackMap[T]): void
@@ -151,10 +151,12 @@ export default defineComponent({
       //   this.pointerPositionV3 = this.three.pointer.positionV3
       // }
 
+      // TODO : don't use config
       this.three.config.onResize = (size) => {
         this.resizeCallbacks.forEach(e => e({ type: 'resize', renderer: this, size }))
       }
 
+      // TODO : improve shadow params
       this.renderer.shadowMap.enabled = this.shadow
 
       this.renderFn = this.three.composer ? this.three.renderC : this.three.render
@@ -180,30 +182,14 @@ export default defineComponent({
     this.three.dispose()
   },
   methods: {
-    // onInit(cb: InitCallbackType) {
-    //   this.initCallbacks.push(cb)
-    // },
-    // onMounted(cb: MountedCallbackType) {
-    //   this.mountedCallbacks.push(cb)
-    // },
-    // onBeforeRender(cb: RenderCallbackType) {
-    //   this.beforeRenderCallbacks.push(cb)
-    // },
-    // offBeforeRender(cb: RenderCallbackType) {
-    //   this.beforeRenderCallbacks = this.beforeRenderCallbacks.filter(e => e !== cb)
-    // },
-    // onAfterRender(cb: RenderCallbackType) {
-    //   this.afterRenderCallbacks.push(cb)
-    // },
-    // offAfterRender(cb: RenderCallbackType) {
-    //   this.afterRenderCallbacks = this.afterRenderCallbacks.filter(e => e !== cb)
-    // },
-    // onResize(cb: ResizeCallbackType) {
-    //   this.resizeCallbacks.push(cb)
-    // },
-    // offResize(cb: ResizeCallbackType) {
-    //   this.resizeCallbacks = this.resizeCallbacks.filter(e => e !== cb)
-    // },
+    onInit(cb: InitCallbackType) { this.addListener('init', cb) },
+    onMounted(cb: MountedCallbackType) { this.addListener('mounted', cb) },
+    onBeforeRender(cb: RenderCallbackType) { this.addListener('beforerender', cb) },
+    offBeforeRender(cb: RenderCallbackType) { this.removeListener('beforerender', cb) },
+    onAfterRender(cb: RenderCallbackType) { this.addListener('afterrender', cb) },
+    offAfterRender(cb: RenderCallbackType) { this.removeListener('afterrender', cb) },
+    onResize(cb: ResizeCallbackType) { this.addListener('resize', cb) },
+    offResize(cb: ResizeCallbackType) { this.removeListener('resize', cb) },
     addListener(type: string, cb: {(): void}) {
       const callbacks = this.getCallbacks(type)
       callbacks.push(cb)
