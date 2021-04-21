@@ -1,8 +1,7 @@
-import { ComponentPropsOptions, defineComponent, inject, watch } from 'vue'
+import { ComponentPropsOptions, defineComponent, watch } from 'vue'
 import { BufferGeometry, Material, Mesh as TMesh } from 'three'
-import Object3D from '../core/Object3D'
+import Object3D, { object3DSetup, Object3DSetupInterface } from '../core/Object3D'
 import { bindProp } from '../tools'
-import { ThreeInterface } from '../core/useThree'
 
 export const pointerProps = {
   onPointerEnter: Function,
@@ -14,21 +13,16 @@ export const pointerProps = {
   onClick: Function,
 }
 
-interface MeshSetupInterface {
-  three?: ThreeInterface
+export interface MeshSetupInterface extends Object3DSetupInterface {
   mesh?: TMesh
   geometry?: BufferGeometry
   material?: Material
   loading?: boolean
 }
 
-export interface MeshInterface {
+export interface MeshInterface extends MeshSetupInterface {
+  setGeometry(g: BufferGeometry): void
   setMaterial(m: Material): void
-}
-
-export function defaultSetup(): MeshSetupInterface {
-  const three = inject('three') as ThreeInterface
-  return { three }
 }
 
 const Mesh = defineComponent({
@@ -39,10 +33,8 @@ const Mesh = defineComponent({
     receiveShadow: Boolean,
     ...pointerProps,
   },
-  setup() {
-    return defaultSetup()
-  },
-  created() {
+  setup(): MeshSetupInterface {
+    return object3DSetup()
   },
   provide() {
     return {
@@ -114,8 +106,8 @@ export function meshComponent(name, props, createGeometry) {
     name,
     extends: Mesh,
     props,
-    setup() {
-      return defaultSetup()
+    setup(): MeshSetupInterface {
+      return object3DSetup()
     },
     created() {
       this.createGeometry()
