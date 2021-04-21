@@ -1,11 +1,10 @@
 import { defineComponent, inject } from 'vue'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
-import { ThreeInterface } from '../core/useThree'
 import { Pass } from 'three/examples/jsm/postprocessing/Pass'
+import { RendererInterface } from '../core/Renderer'
 
 interface EffectComposerSetupInterface {
-  three: ThreeInterface
-  // passes: Pass[]
+  renderer: RendererInterface
   composer?: EffectComposer
 }
 
@@ -16,10 +15,9 @@ export interface EffectComposerInterface extends EffectComposerSetupInterface {
 
 export default defineComponent({
   setup(): EffectComposerSetupInterface {
-    const three = inject('three') as ThreeInterface
+    const renderer = inject('renderer') as RendererInterface
     return {
-      three,
-      // passes: [],
+      renderer,
     }
   },
   provide() {
@@ -28,18 +26,21 @@ export default defineComponent({
     }
   },
   created() {
-    const composer = new EffectComposer(this.three.renderer)
+    const composer = new EffectComposer(this.renderer.renderer)
     this.composer = composer
-    this.three.composer = composer
+    this.renderer.three.composer = composer
 
-    this.three.onAfterInit(() => {
-      this.three.renderer.autoClear = false
+    // this.renderer.onInit(() => {
+    this.renderer.addListener('init', () => {
+      this.renderer.renderer.autoClear = false
       this.resize()
-      this.three.onAfterResize(this.resize)
+      // this.renderer.onResize(this.resize)
+      this.renderer.addListener('resize', this.resize)
     })
   },
   unmounted() {
-    this.three.offAfterResize(this.resize)
+    // this.renderer.offResize(this.resize)
+    this.renderer.removeListener('resize', this.resize)
   },
   methods: {
     addPass(pass: Pass) {
@@ -49,7 +50,7 @@ export default defineComponent({
       this.composer?.removePass(pass)
     },
     resize() {
-      this.composer?.setSize(this.three.size.width, this.three.size.height)
+      this.composer?.setSize(this.renderer.size.width, this.renderer.size.height)
     },
   },
   render() {
