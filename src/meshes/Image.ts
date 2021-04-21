@@ -3,7 +3,7 @@ import { DoubleSide, MeshBasicMaterial, PlaneGeometry, Texture, TextureLoader } 
 import Mesh, { MeshSetupInterface } from './Mesh'
 import { object3DSetup } from '../core/Object3D'
 
-interface ImageInterface extends MeshSetupInterface {
+interface ImageSetupInterface extends MeshSetupInterface {
   material?: MeshBasicMaterial
   texture?: Texture
 }
@@ -17,7 +17,7 @@ export default defineComponent({
     height: Number,
     keepSize: Boolean,
   },
-  setup(): ImageInterface {
+  setup(): ImageSetupInterface {
     return object3DSetup()
   },
   created() {

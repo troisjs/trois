@@ -28,6 +28,7 @@ type InitCallbackType = CallbackType<EventInterface>
 type MountedCallbackType = CallbackType<EventInterface>
 type RenderCallbackType = CallbackType<RenderEventInterface>
 type ResizeCallbackType = CallbackType<ResizeEventInterface>
+// type CallbackTypes = InitCallbackType | MountedCallbackType | RenderCallbackType | ResizeCallbackType
 
 // interface EventMap {
 //   'init': EventInterface;
@@ -190,15 +191,18 @@ export default defineComponent({
     offAfterRender(cb: RenderCallbackType) { this.removeListener('afterrender', cb) },
     onResize(cb: ResizeCallbackType) { this.addListener('resize', cb) },
     offResize(cb: ResizeCallbackType) { this.removeListener('resize', cb) },
-    addListener(type: string, cb: {(): void}) {
+
+    addListener(type: string, cb: {(e?: any): void}) {
       const callbacks = this.getCallbacks(type)
       callbacks.push(cb)
     },
-    removeListener(type: string, cb: {(): void}) {
+
+    removeListener(type: string, cb: {(e?: any): void}) {
       const callbacks = this.getCallbacks(type)
       const index = callbacks.indexOf(cb)
       if (index) callbacks.splice(index, 1)
     },
+
     getCallbacks(type: string) {
       if (type === 'init') {
         return this.initCallbacks
@@ -212,6 +216,7 @@ export default defineComponent({
         return this.resizeCallbacks
       }
     },
+
     render(time: number) {
       this.beforeRenderCallbacks.forEach(e => e({ type: 'beforerender', renderer: this, time }))
       // this.onFrame?.(cbParams)
