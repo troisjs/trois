@@ -4,10 +4,10 @@ import { bindProp } from '../tools'
 import { RendererInterface } from './Renderer'
 import { ThreeInterface } from './useThree'
 
-interface Object3DSetupInterface {
+export interface Object3DSetupInterface {
+  renderer: RendererInterface
   three: ThreeInterface
   scene: Scene
-  renderer: RendererInterface
   o3d?: Object3D
   parent?: ComponentPublicInstance
 }
@@ -19,9 +19,16 @@ export interface Object3DInterface extends Object3DSetupInterface {
   remove(o: Object3D): void
 }
 
+export function object3DSetup(): Object3DSetupInterface {
+  const renderer = inject('renderer') as RendererInterface
+  const three = inject('three') as ThreeInterface
+  const scene = inject('scene') as Scene
+  return { three, scene, renderer }
+}
+
 export default defineComponent({
   name: 'Object3D',
-  inject: ['three', 'scene', 'renderer'],
+  inject: ['renderer', 'three', 'scene'],
   emits: ['created', 'ready'],
   props: {
     position: { type: Object, default: () => ({ x: 0, y: 0, z: 0 }) },
@@ -31,11 +38,8 @@ export default defineComponent({
     autoRemove: { type: Boolean, default: true },
     userData: { type: Object, default: () => ({}) },
   },
-  setup(): Object3DSetupInterface {
-    const three = inject('three') as ThreeInterface
-    const scene = inject('scene') as Scene
-    const renderer = inject('renderer') as RendererInterface
-    return { three, scene, renderer }
+  setup() {
+    return object3DSetup()
   },
   unmounted() {
     if (this.autoRemove) this.removeFromParent()
