@@ -23,9 +23,7 @@ export default defineComponent({
     }
   },
   created() {
-    if (!this.renderer.scene) {
-      this.renderer.scene = this.scene
-    }
+    this.renderer.scene = this.scene
   },
   methods: {
     add(o: Object3D) { this.scene.add(o) },

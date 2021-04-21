@@ -28,7 +28,7 @@ export default defineComponent({
         this.onPointerDown ||
         this.onPointerUp ||
         this.onClick) {
-        this.three.addIntersectObject(this.mesh)
+        this.renderer.three.addIntersectObject(this.mesh)
       }
 
       this.initObject3D(this.mesh)

@@ -59,7 +59,7 @@ const Mesh = defineComponent({
         this.onPointerDown ||
         this.onPointerUp ||
         this.onClick) {
-        this.three?.addIntersectObject(mesh)
+        this.renderer.three.addIntersectObject(mesh)
       }
 
       this.mesh = mesh

@@ -14,7 +14,7 @@ export interface MaterialInterface extends MaterialSetupInterface {
 }
 
 export default defineComponent({
-  inject: ['three', 'mesh'],
+  inject: ['mesh'],
   props: {
     color: { type: [String, Number], default: '#ffffff' },
     depthTest: { type: Boolean, default: true },

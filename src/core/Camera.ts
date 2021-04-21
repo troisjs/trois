@@ -16,6 +16,7 @@ export default defineComponent({
     const renderer = inject('renderer') as RendererInterface
     return { renderer }
   },
+
   render() {
     return this.$slots.default ? this.$slots.default() : []
   },

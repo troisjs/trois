@@ -157,7 +157,6 @@ export default defineComponent({
   provide() {
     return {
       renderer: this,
-      three: this.three,
     }
   },
   mounted() {

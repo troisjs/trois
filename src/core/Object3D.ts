@@ -2,11 +2,9 @@ import { Object3D, Scene } from 'three'
 import { ComponentPublicInstance, defineComponent, inject, watch } from 'vue'
 import { bindProp } from '../tools'
 import { RendererInterface } from './Renderer'
-import { ThreeInterface } from './useThree'
 
 export interface Object3DSetupInterface {
   renderer: RendererInterface
-  three: ThreeInterface
   scene: Scene
   o3d?: Object3D
   parent?: ComponentPublicInstance
@@ -21,14 +19,13 @@ export interface Object3DInterface extends Object3DSetupInterface {
 
 export function object3DSetup(): Object3DSetupInterface {
   const renderer = inject('renderer') as RendererInterface
-  const three = inject('three') as ThreeInterface
   const scene = inject('scene') as Scene
-  return { three, scene, renderer }
+  return { scene, renderer }
 }
 
 export default defineComponent({
   name: 'Object3D',
-  inject: ['renderer', 'three', 'scene'],
+  inject: ['renderer', 'scene'],
   emits: ['created', 'ready'],
   props: {
     position: { type: Object, default: () => ({ x: 0, y: 0, z: 0 }) },
