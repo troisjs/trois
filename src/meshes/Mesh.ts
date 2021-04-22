@@ -42,6 +42,7 @@ const Mesh = defineComponent({
     }
   },
   mounted() {
+    // TODO : proper ?
     if (!this.mesh && !this.loading) this.initMesh()
   },
   methods: {

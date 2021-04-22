@@ -5,7 +5,8 @@
     // this enables stricter inference for data properties on `this`
     "strict": true,
     "moduleResolution": "node",
+    "sourceMap": true,
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "exclude": [ "node_modules" ]
+  "include": ["src/**/*.ts", "src/**/*.vue"],
+  "exclude": ["node_modules", "src/App.vue"]
 }
