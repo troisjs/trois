@@ -1,7 +1,8 @@
-import { defineComponent, watch } from 'vue'
+import { defineComponent, PropType, watch } from 'vue'
 import { PerspectiveCamera } from 'three'
 import { bindProp } from '../tools'
 import Camera from './Camera'
+import { Vector3PropInterface } from './Object3D'
 
 export default defineComponent({
   extends: Camera,
@@ -11,17 +12,16 @@ export default defineComponent({
     far: { type: Number, default: 2000 },
     fov: { type: Number, default: 50 },
     near: { type: Number, default: 0.1 },
-    position: { type: Object, default: () => ({ x: 0, y: 0, z: 0 }) },
-    lookAt: { type: Object, default: null },
+    position: { type: Object as PropType<Vector3PropInterface>, default: () => ({ x: 0, y: 0, z: 0 }) },
+    lookAt: { type: Object as PropType<Vector3PropInterface>, default: null },
   },
   setup(props) {
     const camera = new PerspectiveCamera(props.fov, props.aspect, props.near, props.far)
 
     bindProp(props, 'position', camera)
 
-    // TODO : fix lookAt x
-    if (props.lookAt) camera.lookAt(props.lookAt.x, props.lookAt.y, props.lookAt.z)
-    watch(() => props.lookAt, (v) => { camera.lookAt(v.x, v.y, v.z) }, { deep: true })
+    if (props.lookAt) camera.lookAt(props.lookAt.x ?? 0, props.lookAt.y, props.lookAt.z)
+    watch(() => props.lookAt, (v) => { camera.lookAt(v.x ?? 0, v.y, v.z) }, { deep: true })
 
     const watchProps = ['aspect', 'far', 'fov', 'near']
     watchProps.forEach(p => {

@@ -2,7 +2,7 @@ import { defineComponent, watch } from 'vue'
 import { FrontSide, Material, Texture } from 'three'
 import { MeshInterface } from '../meshes/Mesh'
 
-interface MaterialSetupInterface {
+export interface MaterialSetupInterface {
   mesh?: MeshInterface
   material?: Material
   createMaterial?(): Material

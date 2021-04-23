@@ -1,5 +1,5 @@
 import { Object3D, Scene } from 'three'
-import { ComponentPublicInstance, defineComponent, inject, watch } from 'vue'
+import { ComponentPublicInstance, defineComponent, inject, PropType, watch } from 'vue'
 import { bindProp } from '../tools'
 import { RendererInterface } from './Renderer'
 
@@ -23,20 +23,35 @@ export function object3DSetup(): Object3DSetupInterface {
   return { scene, renderer }
 }
 
+export interface Vector2PropInterface {
+  x?: number
+  y?: number
+}
+
+export interface Vector3PropInterface extends Vector2PropInterface {
+  z?: number
+}
+
+export interface EulerPropInterface extends Vector3PropInterface {
+  order?: 'XYZ' | 'YZX' | 'ZXY' | 'XZY' | 'YXZ' | 'ZYX'
+}
+
 export default defineComponent({
   name: 'Object3D',
   inject: ['renderer', 'scene'],
   emits: ['created', 'ready'],
   props: {
-    position: { type: Object, default: () => ({ x: 0, y: 0, z: 0 }) },
-    rotation: { type: Object, default: () => ({ x: 0, y: 0, z: 0 }) },
-    scale: { type: Object, default: () => ({ x: 1, y: 1, z: 1 }) },
-    lookAt: { type: Object, default: null },
+    position: { type: Object as PropType<Vector3PropInterface>, default: () => ({ x: 0, y: 0, z: 0 }) },
+    rotation: { type: Object as PropType<EulerPropInterface>, default: () => ({ x: 0, y: 0, z: 0 }) },
+    scale: { type: Object as PropType<Vector3PropInterface>, default: () => ({ x: 1, y: 1, z: 1, order: 'XYZ' }) },
+    lookAt: { type: Object as PropType<Vector3PropInterface>, default: null },
     autoRemove: { type: Boolean, default: true },
     userData: { type: Object, default: () => ({}) },
   },
   setup() {
     return object3DSetup()
+  },
+  computed: {
   },
   unmounted() {
     if (this.autoRemove) this.removeFromParent()
@@ -53,8 +68,8 @@ export default defineComponent({
       bindProp(this, 'userData', o3d.userData)
 
       // TODO : fix lookat.x
-      if (this.lookAt) o3d.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z)
-      watch(() => this.lookAt, (v) => { o3d.lookAt(v.x, v.y, v.z) }, { deep: true })
+      if (this.lookAt) o3d.lookAt(this.lookAt.x ?? 0, this.lookAt.y, this.lookAt.z)
+      watch(() => this.lookAt, (v) => { o3d.lookAt(v.x ?? 0, v.y, v.z) }, { deep: true })
 
       this.parent = this.getParent()
       if (this.addToParent()) this.$emit('ready', this)

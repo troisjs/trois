@@ -3,7 +3,7 @@ import { defineComponent, watch } from 'vue'
 import Object3D from '../core/Object3D'
 import { bindProp, setFromProp } from '../tools'
 
-interface LightSetupInterface {
+export interface LightSetupInterface {
   light?: Light
 }
 

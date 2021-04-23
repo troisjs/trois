@@ -1,11 +1,8 @@
 import { BufferGeometry } from 'three'
 import { defineComponent, inject, watch } from 'vue'
+import { MeshInterface } from '../meshes/Mesh'
 
-interface MeshInterface {
-  setGeometry(geometry: BufferGeometry): void
-}
-
-interface GeometryInterface {
+export interface GeometryInterface {
   geometry?: BufferGeometry
   mesh?: MeshInterface
   watchProps: string[]

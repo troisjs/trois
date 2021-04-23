@@ -1,7 +1,8 @@
-import { defineComponent, watch } from 'vue'
+import { defineComponent, PropType, watch } from 'vue'
 import { OrthographicCamera } from 'three'
 import { bindProp } from '../tools'
 import Camera from './Camera'
+import { Vector3PropInterface } from './Object3D'
 
 export default defineComponent({
   extends: Camera,
@@ -14,7 +15,7 @@ export default defineComponent({
     near: { type: Number, default: 0.1 },
     far: { type: Number, default: 2000 },
     zoom: { type: Number, default: 1 },
-    position: { type: Object, default: () => ({ x: 0, y: 0, z: 0 }) },
+    position: { type: Object as PropType<Vector3PropInterface>, default: () => ({ x: 0, y: 0, z: 0 }) },
   },
   setup(props) {
     const camera = new OrthographicCamera(props.left, props.right, props.top, props.bottom, props.near, props.far)

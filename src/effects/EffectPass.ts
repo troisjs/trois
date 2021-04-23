@@ -3,7 +3,7 @@ import { defineComponent, inject } from 'vue'
 import { RendererInterface } from '../core/Renderer'
 import { EffectComposerInterface } from './EffectComposer'
 
-interface EffectSetupInterface {
+export interface EffectSetupInterface {
   renderer: RendererInterface
   composer: EffectComposerInterface
   pass?: Pass
