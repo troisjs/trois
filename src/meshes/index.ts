@@ -1,4 +1,4 @@
-export { default as Mesh } from './Mesh'
+export { default as Mesh, MeshInjectionKey } from './Mesh'
 
 export { default as Box } from './Box'
 export { default as Circle } from './Circle'

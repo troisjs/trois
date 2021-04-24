@@ -1,4 +1,4 @@
-export { default as EffectComposer } from './EffectComposer'
+export { default as EffectComposer, ComposerInjectionKey } from './EffectComposer'
 export { default as RenderPass } from './RenderPass'
 
 export { default as BokehPass } from './BokehPass'
