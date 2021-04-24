@@ -10,12 +10,12 @@ export default defineComponent({
     const pass = new ShaderPass(FXAAShader)
 
     // resize will be first called in renderer init
-    this.renderer.addListener('resize', this.resize)
+    this.renderer?.addListener('resize', this.resize)
 
     this.initEffectPass(pass)
   },
   unmounted() {
-    this.renderer.removeListener('resize', this.resize)
+    this.renderer?.removeListener('resize', this.resize)
   },
   methods: {
     resize({ size }: { size: SizeInterface }) {

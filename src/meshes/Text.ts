@@ -1,7 +1,6 @@
 import { defineComponent, watch } from 'vue'
 import { Font, FontLoader, TextGeometry } from 'three'
 import Mesh, { MeshSetupInterface } from './Mesh'
-import { object3DSetup } from '../core/Object3D'
 
 interface TextSetupInterface extends MeshSetupInterface {
   geometry?: TextGeometry
@@ -27,7 +26,7 @@ export default defineComponent({
   extends: Mesh,
   props,
   setup(): TextSetupInterface {
-    return object3DSetup()
+    return {}
   },
   created() {
     if (!this.fontSrc) {

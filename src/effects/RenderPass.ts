@@ -5,6 +5,8 @@ import EffectPass from './EffectPass'
 export default defineComponent({
   extends: EffectPass,
   created() {
+    if (!this.renderer) return
+
     if (!this.renderer.scene) {
       console.error('Missing Scene')
       return

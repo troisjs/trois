@@ -1,21 +1,22 @@
-import { defineComponent, inject } from 'vue'
-import { RendererInterface } from './Renderer'
+import { defineComponent } from 'vue'
+// import { Camera } from 'three'
+// import { RendererInjectionKey, RendererInterface } from './Renderer'
 // import Object3D from './Object3D'
+
+// export interface CameraSetupInterface {
+//   renderer?: RendererInterface
+//   camera: Camera
+// }
 
 export default defineComponent({
   // TODO: eventually extend Object3D
   // extends: Object3D,
 
-  // don't work with typescript, bug ?
-  // but works in sub components (injection, not typescript)
-  inject: ['renderer'],
+  // inject: { renderer: RendererInjectionKey as symbol },
 
-  setup() {
-    // this works with typescript in sub component
-    // but setup is not called
-    const renderer = inject('renderer') as RendererInterface
-    return { renderer }
-  },
+  // setup(): CameraSetupInterface {
+  //   return {}
+  // },
 
   render() {
     return this.$slots.default ? this.$slots.default() : []

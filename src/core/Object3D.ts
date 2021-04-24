@@ -1,11 +1,12 @@
 import { Object3D, Scene } from 'three'
-import { ComponentPublicInstance, defineComponent, inject, PropType, watch } from 'vue'
+import { ComponentPublicInstance, defineComponent, PropType, watch } from 'vue'
 import { bindProp } from '../tools'
-import { RendererInterface } from './Renderer'
+import { RendererInjectionKey, RendererInterface } from './Renderer'
+import { SceneInjectionKey } from './Scene'
 
 export interface Object3DSetupInterface {
-  renderer: RendererInterface
-  scene: Scene
+  renderer?: RendererInterface
+  scene?: Scene
   o3d?: Object3D
   parent?: ComponentPublicInstance
 }
@@ -17,11 +18,11 @@ export interface Object3DInterface extends Object3DSetupInterface {
   remove(o: Object3D): void
 }
 
-export function object3DSetup(): Object3DSetupInterface {
-  const renderer = inject('renderer') as RendererInterface
-  const scene = inject('scene') as Scene
-  return { scene, renderer }
-}
+// export function object3DSetup(): Object3DSetupInterface {
+//   const renderer = inject(RendererInjectionKey)
+//   const scene = inject(SceneInjectionKey)
+//   return { scene, renderer }
+// }
 
 export interface Vector2PropInterface {
   x?: number
@@ -38,7 +39,11 @@ export interface EulerPropInterface extends Vector3PropInterface {
 
 export default defineComponent({
   name: 'Object3D',
-  inject: ['renderer', 'scene'],
+  // inject for sub components
+  inject: {
+    renderer: RendererInjectionKey as symbol,
+    scene: SceneInjectionKey as symbol,
+  },
   emits: ['created', 'ready'],
   props: {
     position: { type: Object as PropType<Vector3PropInterface>, default: () => ({ x: 0, y: 0, z: 0 }) },
@@ -48,10 +53,17 @@ export default defineComponent({
     autoRemove: { type: Boolean, default: true },
     userData: { type: Object, default: () => ({}) },
   },
-  setup() {
-    return object3DSetup()
+  setup(): Object3DSetupInterface {
+    // return object3DSetup()
+    return {}
   },
-  computed: {
+  created() {
+    if (!this.renderer) {
+      console.error('Missing parent Renderer')
+    }
+    if (!this.scene) {
+      console.error('Missing parent Scene')
+    }
   },
   unmounted() {
     if (this.autoRemove) this.removeFromParent()
@@ -67,7 +79,6 @@ export default defineComponent({
       bindProp(this, 'scale', o3d)
       bindProp(this, 'userData', o3d.userData)
 
-      // TODO : fix lookat.x
       if (this.lookAt) o3d.lookAt(this.lookAt.x ?? 0, this.lookAt.y, this.lookAt.z)
       watch(() => this.lookAt, (v) => { o3d.lookAt(v.x ?? 0, v.y, v.z) }, { deep: true })
 

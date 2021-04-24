@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 import { Camera, Scene, WebGLRenderer } from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, InjectionKey, PropType } from 'vue'
 import useThree, { SizeInterface, ThreeConfigInterface, ThreeInterface } from './useThree'
 
 type CallbackType<T> = (event: T) => void
@@ -86,6 +86,8 @@ export interface RendererInterface extends RendererSetupInterface {
   removeListener<T extends keyof EventCallbackMap>(t: T, cb: EventCallbackMap[T]): void
 }
 
+export const RendererInjectionKey: InjectionKey<RendererInterface> = Symbol('Renderer')
+
 export default defineComponent({
   name: 'Renderer',
   props: {
@@ -162,7 +164,7 @@ export default defineComponent({
   },
   provide() {
     return {
-      renderer: this,
+      [RendererInjectionKey as symbol]: this,
     }
   },
   mounted() {

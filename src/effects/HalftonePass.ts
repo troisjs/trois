@@ -15,6 +15,8 @@ export default defineComponent({
   extends: EffectPass,
   props,
   created() {
+    if (!this.renderer) return
+
     const pass = new HalftonePass(this.renderer.size.width, this.renderer.size.height, {})
 
     Object.keys(props).forEach(p => {

@@ -1,11 +1,12 @@
 import Stats from 'stats.js'
+import { RendererInjectionKey } from '../../core/Renderer'
 
 export default {
   props: {
     noSetup: { type: Boolean, default: false },
   },
   emits: ['created'],
-  inject: ['renderer'],
+  inject: { renderer: RendererInjectionKey },
   setup({ noSetup }) {
     const stats = new Stats()
     if (!noSetup) {

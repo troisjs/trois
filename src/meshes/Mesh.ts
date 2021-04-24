@@ -1,6 +1,6 @@
-import { ComponentPropsOptions, defineComponent, watch } from 'vue'
+import { ComponentPropsOptions, defineComponent, InjectionKey, watch } from 'vue'
 import { BufferGeometry, Material, Mesh as TMesh } from 'three'
-import Object3D, { object3DSetup, Object3DSetupInterface } from '../core/Object3D'
+import Object3D, { Object3DSetupInterface } from '../core/Object3D'
 import { bindProp } from '../tools'
 
 export const pointerProps = {
@@ -25,6 +25,8 @@ export interface MeshInterface extends MeshSetupInterface {
   setMaterial(m: Material): void
 }
 
+export const MeshInjectionKey: InjectionKey<MeshInterface> = Symbol('Mesh')
+
 const Mesh = defineComponent({
   name: 'Mesh',
   extends: Object3D,
@@ -34,11 +36,11 @@ const Mesh = defineComponent({
     ...pointerProps,
   },
   setup(): MeshSetupInterface {
-    return object3DSetup()
+    return {}
   },
   provide() {
     return {
-      mesh: this,
+      [MeshInjectionKey as symbol]: this,
     }
   },
   mounted() {
@@ -60,7 +62,7 @@ const Mesh = defineComponent({
         this.onPointerDown ||
         this.onPointerUp ||
         this.onClick) {
-        this.renderer.three.addIntersectObject(mesh)
+        if (this.renderer) this.renderer.three.addIntersectObject(mesh)
       }
 
       this.mesh = mesh
@@ -92,7 +94,7 @@ const Mesh = defineComponent({
   },
   unmounted() {
     if (this.mesh) {
-      this.renderer.three?.removeIntersectObject(this.mesh)
+      if (this.renderer) this.renderer.three.removeIntersectObject(this.mesh)
     }
     // for predefined mesh (geometry/material are not unmounted)
     if (this.geometry) this.geometry.dispose()
@@ -110,7 +112,7 @@ export function meshComponent(name, props, createGeometry) {
     extends: Mesh,
     props,
     setup(): MeshSetupInterface {
-      return object3DSetup()
+      return {}
     },
     created() {
       this.createGeometry()

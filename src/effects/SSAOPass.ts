@@ -11,6 +11,8 @@ export default defineComponent({
     },
   },
   created() {
+    if (!this.renderer) return
+
     if (!this.renderer.scene) {
       console.error('Missing Scene')
       return

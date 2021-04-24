@@ -1,9 +1,13 @@
 import { defineComponent } from 'vue'
 import useCannon from './useCannon.js'
-// import { bindProp } from '../../tools';
+import { RendererInjectionKey } from '../../core/Renderer'
+import { SceneInjectionKey } from '../../core/Scene'
 
 export default defineComponent({
-  inject: ['renderer', 'scene'],
+  inject: {
+    renderer: RendererInjectionKey,
+    scene: SceneInjectionKey,
+  },
   props: {
     gravity: { type: Object, default: () => ({ x: 0, y: 0, z: -9.82 }) },
     broadphase: { type: String },

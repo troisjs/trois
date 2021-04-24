@@ -10,6 +10,8 @@ export default defineComponent({
   },
   methods: {
     initMesh() {
+      if (!this.renderer) return
+
       if (!this.geometry || !this.material) {
         console.error('Missing geometry and/or material')
         return false

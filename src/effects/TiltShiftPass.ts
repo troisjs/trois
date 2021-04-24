@@ -26,6 +26,8 @@ export default defineComponent({
     return { uniforms1: {}, uniforms2: {} }
   },
   created() {
+    if (!this.composer) return
+
     this.pass1 = new ShaderPass(TiltShift)
     this.pass2 = new ShaderPass(TiltShift)
 
@@ -57,7 +59,7 @@ export default defineComponent({
     this.composer.addPass(this.pass2)
   },
   unmounted() {
-    if (this.pass2) this.composer.removePass(this.pass2)
+    if (this.composer && this.pass2) this.composer.removePass(this.pass2)
   },
   methods: {
     updateFocusLine() {

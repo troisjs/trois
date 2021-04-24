@@ -1,6 +1,6 @@
 import { defineComponent } from 'vue'
 import { Sprite, SpriteMaterial, Texture, TextureLoader } from 'three'
-import Object3D, { object3DSetup, Object3DSetupInterface } from '../core/Object3D'
+import Object3D, { Object3DSetupInterface } from '../core/Object3D'
 
 interface SpriteSetupInterface extends Object3DSetupInterface {
   texture?: Texture
@@ -15,7 +15,7 @@ export default defineComponent({
     src: { type: String, required: true },
   },
   setup(): SpriteSetupInterface {
-    return object3DSetup()
+    return {}
   },
   created() {
     this.texture = new TextureLoader().load(this.src, this.onLoaded)

@@ -1,18 +1,18 @@
 import { BufferGeometry } from 'three'
 import { defineComponent, inject, watch } from 'vue'
-import { MeshInterface } from '../meshes/Mesh'
+import { MeshInjectionKey, MeshInterface } from '../meshes/Mesh'
 
-export interface GeometryInterface {
-  geometry?: BufferGeometry
+export interface GeometrySetupInterface {
   mesh?: MeshInterface
-  watchProps: string[]
+  geometry?: BufferGeometry
+  watchProps?: string[]
 }
 
-function defaultSetup(): GeometryInterface {
-  const mesh = inject('mesh') as MeshInterface
-  const watchProps: string[] = []
-  return { mesh, watchProps }
-}
+// function defaultSetup(): GeometryInterface {
+//   const mesh = inject('mesh') as MeshInterface
+//   const watchProps: string[] = []
+//   return { mesh, watchProps }
+// }
 
 const Geometry = defineComponent({
   props: {
@@ -20,8 +20,12 @@ const Geometry = defineComponent({
     rotateY: Number,
     rotateZ: Number,
   },
-  setup() {
-    return defaultSetup()
+  // inject for sub components
+  inject: {
+    mesh: MeshInjectionKey as symbol,
+  },
+  setup(): GeometrySetupInterface {
+    return {}
   },
   created() {
     if (!this.mesh) {
@@ -29,37 +33,31 @@ const Geometry = defineComponent({
       return
     }
 
-    Object.entries(this.$props).forEach(e => this.watchProps.push(e[0]))
-
     this.createGeometry()
     this.rotateGeometry()
     if (this.geometry) this.mesh.setGeometry(this.geometry)
 
-    this.addWatchers()
+    Object.keys(this.$props).forEach(prop => {
+      // @ts-ignore
+      watch(() => this[prop], this.refreshGeometry)
+    })
   },
   unmounted() {
     this.geometry?.dispose()
   },
   methods: {
     createGeometry() {},
-    addWatchers() {
-      this.watchProps.forEach(prop => {
-        // @ts-ignore
-        watch(() => this[prop], () => {
-          this.refreshGeometry()
-        })
-      })
-    },
     rotateGeometry() {
-      if (this.rotateX) this.geometry?.rotateX(this.rotateX)
-      if (this.rotateY) this.geometry?.rotateY(this.rotateY)
-      if (this.rotateZ) this.geometry?.rotateZ(this.rotateZ)
+      if (!this.geometry) return
+      if (this.rotateX) this.geometry.rotateX(this.rotateX)
+      if (this.rotateY) this.geometry.rotateY(this.rotateY)
+      if (this.rotateZ) this.geometry.rotateZ(this.rotateZ)
     },
     refreshGeometry() {
       const oldGeo = this.geometry
       this.createGeometry()
       this.rotateGeometry()
-      if (this.geometry) this.mesh?.setGeometry(this.geometry)
+      if (this.geometry && this.mesh) this.mesh.setGeometry(this.geometry)
       oldGeo?.dispose()
     },
   },
@@ -74,8 +72,8 @@ export function geometryComponent(name, props, createGeometry) {
     name,
     extends: Geometry,
     props,
-    setup() {
-      return defaultSetup()
+    setup(): GeometrySetupInterface {
+      return {}
     },
     methods: {
       createGeometry() {

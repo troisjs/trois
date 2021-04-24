@@ -1,10 +1,10 @@
-import { defineComponent, inject } from 'vue'
+import { defineComponent, inject, InjectionKey } from 'vue'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import { Pass } from 'three/examples/jsm/postprocessing/Pass'
-import { RendererInterface } from '../core/Renderer'
+import { RendererInjectionKey, RendererInterface } from '../core/Renderer'
 
 interface EffectComposerSetupInterface {
-  renderer: RendererInterface
+  renderer?: RendererInterface
   composer?: EffectComposer
 }
 
@@ -13,34 +13,38 @@ export interface EffectComposerInterface extends EffectComposerSetupInterface {
   removePass(pass: Pass): void
 }
 
+export const ComposerInjectionKey: InjectionKey<EffectComposerInterface> = Symbol('Composer')
+
 export default defineComponent({
   setup(): EffectComposerSetupInterface {
-    const renderer = inject('renderer') as RendererInterface
-    return {
-      renderer,
-    }
+    const renderer = inject(RendererInjectionKey)
+    return { renderer }
   },
   provide() {
     return {
-      composer: this,
+      [ComposerInjectionKey as symbol]: this,
     }
   },
   created() {
+    if (!this.renderer) {
+      console.error('Renderer not found')
+      return
+    }
+    const renderer = this.renderer
+
     const composer = new EffectComposer(this.renderer.renderer)
     this.composer = composer
     this.renderer.composer = composer
 
     // this.renderer.onInit(() => {
-    this.renderer.addListener('init', () => {
-      this.renderer.renderer.autoClear = false
+    renderer.addListener('init', () => {
+      renderer.renderer.autoClear = false
       this.resize()
-      // this.renderer.onResize(this.resize)
-      this.renderer.addListener('resize', this.resize)
+      renderer.addListener('resize', this.resize)
     })
   },
   unmounted() {
-    // this.renderer.offResize(this.resize)
-    this.renderer.removeListener('resize', this.resize)
+    this.renderer?.removeListener('resize', this.resize)
   },
   methods: {
     addPass(pass: Pass) {
@@ -50,7 +54,9 @@ export default defineComponent({
       this.composer?.removePass(pass)
     },
     resize() {
-      this.composer?.setSize(this.renderer.size.width, this.renderer.size.height)
+      if (this.composer && this.renderer) {
+        this.composer.setSize(this.renderer.size.width, this.renderer.size.height)
+      }
     },
   },
   render() {

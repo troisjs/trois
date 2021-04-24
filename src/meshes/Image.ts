@@ -1,7 +1,6 @@
 import { defineComponent, watch } from 'vue'
 import { DoubleSide, MeshBasicMaterial, PlaneGeometry, Texture, TextureLoader } from 'three'
 import Mesh, { MeshSetupInterface } from './Mesh'
-import { object3DSetup } from '../core/Object3D'
 
 interface ImageSetupInterface extends MeshSetupInterface {
   material?: MeshBasicMaterial
@@ -20,9 +19,11 @@ export default defineComponent({
     keepSize: Boolean,
   },
   setup(): ImageSetupInterface {
-    return object3DSetup()
+    return {}
   },
   created() {
+    if (!this.renderer) return
+
     this.geometry = new PlaneGeometry(1, 1, this.widthSegments, this.heightSegments)
     this.material = new MeshBasicMaterial({ side: DoubleSide, map: this.loadTexture() })
 
@@ -37,7 +38,7 @@ export default defineComponent({
     if (this.keepSize) this.renderer.onResize(this.resize)
   },
   unmounted() {
-    this.renderer.offResize(this.resize)
+    this.renderer?.offResize(this.resize)
   },
   methods: {
     loadTexture() {
@@ -56,7 +57,7 @@ export default defineComponent({
       this.$emit('loaded', texture)
     },
     resize() {
-      if (!this.texture) return
+      if (!this.renderer || !this.texture) return
       const screen = this.renderer.size
       const iW = this.texture.image.width
       const iH = this.texture.image.height

@@ -1,33 +1,43 @@
-import { defineComponent, inject, watch } from 'vue'
-import { Scene, Color, Object3D } from 'three'
-import { RendererInterface } from './Renderer'
+import { defineComponent, inject, InjectionKey, provide, watch } from 'vue'
+import { Scene, Color, Object3D, Texture } from 'three'
+import { RendererInjectionKey } from './Renderer'
+
+export const SceneInjectionKey: InjectionKey<Scene> = Symbol('Scene')
 
 export default defineComponent({
   name: 'Scene',
   props: {
-    // id: String,
-    background: [String, Number],
+    background: [String, Number, Object],
   },
   setup(props) {
-    const renderer = inject('renderer') as RendererInterface
+    const renderer = inject(RendererInjectionKey)
     const scene = new Scene()
-    if (props.background) {
-      scene.background = new Color(props.background)
+
+    if (!renderer) {
+      console.error('Renderer not found')
+      return
     }
-    watch(() => props.background, (value) => { if (scene.background instanceof Color && value) scene.background.set(value) })
-    return { renderer, scene }
-  },
-  provide() {
-    return {
-      scene: this.scene,
+
+    renderer.scene = scene
+    provide(SceneInjectionKey, scene)
+
+    const setBackground = (value: any): void => {
+      if (!value) return
+      if (typeof value === 'string' || typeof value === 'number') {
+        if (scene.background instanceof Color) scene.background.set(value)
+        else scene.background = new Color(value)
+      } else if (value instanceof Texture) {
+        scene.background = value
+      }
     }
-  },
-  created() {
-    this.renderer.scene = this.scene
-  },
-  methods: {
-    add(o: Object3D) { this.scene.add(o) },
-    remove(o: Object3D) { this.scene.remove(o) },
+
+    setBackground(props.background)
+    watch(() => props.background, setBackground)
+
+    const add = (o: Object3D): void => { scene.add(o) }
+    const remove = (o: Object3D): void => { scene.remove(o) }
+
+    return { add, remove }
   },
   render() {
     return this.$slots.default ? this.$slots.default() : []

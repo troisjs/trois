@@ -1,7 +1,7 @@
 import { defineComponent, PropType, watch } from 'vue'
-import { ClampToEdgeWrapping, LinearFilter, LinearMipmapLinearFilter, RGBAFormat, ShaderMaterial, Texture, TextureLoader, UVMapping } from 'three'
+import { ClampToEdgeWrapping, LinearFilter, LinearMipmapLinearFilter, ShaderMaterial, Texture, TextureLoader, UVMapping } from 'three'
 import { bindProp } from '../tools'
-import { MaterialInterface } from './Material'
+import { MaterialInjectionKey, MaterialInterface } from './Material'
 
 export interface TexureInterface {
   material?: MaterialInterface
@@ -9,7 +9,9 @@ export interface TexureInterface {
 }
 
 export default defineComponent({
-  inject: ['material'],
+  inject: {
+    material: MaterialInjectionKey as symbol,
+  },
   props: {
     name: { type: String, default: 'map' },
     uniform: String,
@@ -53,7 +55,7 @@ export default defineComponent({
       if (this.texture && this.material) {
         this.material.setTexture(this.texture, this.name)
         if (this.material.material instanceof ShaderMaterial && this.uniform) {
-          // this.material.uniforms[this.uniform] = { value: this.texture }
+          (this.material as any).uniforms[this.uniform] = { value: this.texture }
         }
       }
     },

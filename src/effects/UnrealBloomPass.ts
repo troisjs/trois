@@ -13,6 +13,8 @@ export default defineComponent({
   extends: EffectPass,
   props,
   created() {
+    if (!this.renderer) return
+
     const size = new Vector2(this.renderer.size.width, this.renderer.size.height)
     const pass = new UnrealBloomPass(size, this.strength, this.radius, this.threshold)
 

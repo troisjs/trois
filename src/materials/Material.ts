@@ -1,6 +1,6 @@
-import { defineComponent, watch } from 'vue'
+import { defineComponent, InjectionKey, watch } from 'vue'
 import { FrontSide, Material, Texture } from 'three'
-import { MeshInterface } from '../meshes/Mesh'
+import { MeshInjectionKey, MeshInterface } from '../meshes/Mesh'
 
 export interface MaterialSetupInterface {
   mesh?: MeshInterface
@@ -13,8 +13,13 @@ export interface MaterialInterface extends MaterialSetupInterface {
   setTexture(texture: Texture | null, key: string): void
 }
 
+export const MaterialInjectionKey: InjectionKey<MaterialInterface> = Symbol('Material')
+
 export default defineComponent({
-  inject: ['mesh'],
+  // inject for sub components
+  inject: {
+    mesh: MeshInjectionKey as symbol,
+  },
   props: {
     color: { type: [String, Number], default: '#ffffff' },
     depthTest: { type: Boolean, default: true },
@@ -30,7 +35,7 @@ export default defineComponent({
   },
   provide() {
     return {
-      material: this,
+      [MaterialInjectionKey as symbol]: this,
     }
   },
   created() {

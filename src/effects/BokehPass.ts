@@ -12,6 +12,8 @@ export default defineComponent({
   extends: EffectPass,
   props,
   created() {
+    if (!this.renderer) return
+
     if (!this.renderer.scene) {
       console.error('Missing Scene')
       return

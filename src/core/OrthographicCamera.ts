@@ -1,8 +1,9 @@
-import { defineComponent, PropType, watch } from 'vue'
+import { defineComponent, inject, PropType, watch } from 'vue'
 import { OrthographicCamera } from 'three'
 import { bindProp } from '../tools'
 import Camera from './Camera'
 import { Vector3PropInterface } from './Object3D'
+import { RendererInjectionKey } from './Renderer'
 
 export default defineComponent({
   extends: Camera,
@@ -18,7 +19,14 @@ export default defineComponent({
     position: { type: Object as PropType<Vector3PropInterface>, default: () => ({ x: 0, y: 0, z: 0 }) },
   },
   setup(props) {
+    const renderer = inject(RendererInjectionKey)
+    if (!renderer) {
+      console.error('Renderer not found')
+      return
+    }
+
     const camera = new OrthographicCamera(props.left, props.right, props.top, props.bottom, props.near, props.far)
+    renderer.camera = camera
 
     bindProp(props, 'position', camera)
 
@@ -32,10 +40,7 @@ export default defineComponent({
       })
     })
 
-    return { camera }
-  },
-  created() {
-    this.renderer.camera = this.camera
+    return { renderer, camera }
   },
   __hmrId: 'OrthographicCamera',
 })
