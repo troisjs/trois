@@ -37,7 +37,7 @@ export default defineComponent({
     const add = (o: Object3D): void => { scene.add(o) }
     const remove = (o: Object3D): void => { scene.remove(o) }
 
-    return { add, remove }
+    return { scene, add, remove }
   },
   render() {
     return this.$slots.default ? this.$slots.default() : []
