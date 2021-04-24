@@ -43,19 +43,6 @@ export function lerp(value1: number, value2: number, amount: number): number {
   return value1 + (value2 - value1) * amount
 }
 
-// TODO : remove
-export function lerpv2(v1: Vector2, v2: Vector2, amount: number): void {
-  v1.x = lerp(v1.x, v2.x, amount)
-  v1.y = lerp(v1.y, v2.y, amount)
-}
-
-// TODO : remove
-export function lerpv3(v1: Vector3, v2: Vector3, amount: number): void {
-  v1.x = lerp(v1.x, v2.x, amount)
-  v1.y = lerp(v1.y, v2.y, amount)
-  v1.z = lerp(v1.z, v2.z, amount)
-}
-
 export function limit(val: number, min: number, max: number): number {
   return val < min ? min : (val > max ? max : val)
 }
