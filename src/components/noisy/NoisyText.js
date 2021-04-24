@@ -1,5 +1,5 @@
 import { defineComponent, watch } from 'vue'
-import Text from '../../meshes/Text'
+import { Text } from '../../../build/trois.module.js'
 import snoise2 from '../../glsl/snoise2.glsl.js'
 
 export default defineComponent({

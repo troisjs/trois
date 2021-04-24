@@ -1,7 +1,7 @@
 import { defineComponent, watch } from 'vue'
 import { ObjectSpaceNormalMap, ShaderMaterial, Vector2, WebGLRenderTarget } from 'three'
 import { Pass } from 'three/examples/jsm/postprocessing/Pass.js'
-import Plane from '../../meshes/Plane'
+import { Plane } from '../../../build/trois.module.js'
 import snoise3 from '../../glsl/snoise3.glsl.js'
 
 export default defineComponent({

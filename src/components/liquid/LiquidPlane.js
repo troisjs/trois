@@ -1,7 +1,6 @@
 import { defineComponent, watch } from 'vue'
 import { DoubleSide, Mesh, MeshStandardMaterial, PlaneGeometry } from 'three'
-import Object3D from '../../core/Object3D'
-import { bindProps } from '../../tools'
+import { bindProps, Object3D } from '../../../build/trois.module.js'
 import LiquidEffect from './LiquidEffect.js'
 
 export default defineComponent({

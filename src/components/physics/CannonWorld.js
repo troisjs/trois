@@ -1,7 +1,6 @@
 import { defineComponent } from 'vue'
 import useCannon from './useCannon.js'
-import { RendererInjectionKey } from '../../core/Renderer'
-import { SceneInjectionKey } from '../../core/Scene'
+import { RendererInjectionKey, SceneInjectionKey } from '../../../build/trois.module.js'
 
 export default defineComponent({
   inject: {

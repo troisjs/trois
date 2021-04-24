@@ -11,13 +11,8 @@ import { defineComponent } from 'vue'
 import { Object3D } from 'three'
 import { gsap, Power4 } from 'gsap'
 
-import Camera from '../../core/PerspectiveCamera'
-import Renderer from '../../core/Renderer'
-import Scene from '../../core/Scene'
-
-import { lerp } from '../../tools'
+import { lerp, useTextures, Camera, Renderer, Scene } from '../../../build/trois.module.js'
 import AnimatedPlane from './AnimatedPlane.js'
-import useTextures from '../../use/useTextures'
 
 export default defineComponent({
   components: { Camera, Renderer, Scene },

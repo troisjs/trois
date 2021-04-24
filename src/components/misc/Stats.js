@@ -1,5 +1,5 @@
 import Stats from 'stats.js'
-import { RendererInjectionKey } from '../../core/Renderer'
+import { RendererInjectionKey } from '../../../build/trois.module.js'
 
 export default {
   props: {
