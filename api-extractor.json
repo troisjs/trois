@@ -1,0 +1,13 @@
+{
+  "mainEntryPointFilePath": "./types/export.d.ts",
+  "apiReport": {
+    "enabled": true
+  },
+  "docModel": {
+    "enabled": true
+  },
+  "dtsRollup": {
+    "enabled": true,
+    "publicTrimmedFilePath": "./dist/trois.d.ts"
+  }
+}

@@ -1,8 +1,8 @@
-import { defineComponent, watch } from 'vue';
-import { ObjectSpaceNormalMap, ShaderMaterial, Vector2, WebGLRenderTarget } from 'three';
-import { Pass } from 'three/examples/jsm/postprocessing/Pass.js';
-import Plane from '../../meshes/Plane.js';
-import snoise3 from '../../glsl/snoise3.glsl.js';
+import { defineComponent, watch } from 'vue'
+import { ObjectSpaceNormalMap, ShaderMaterial, Vector2, WebGLRenderTarget } from 'three'
+import { Pass } from 'three/examples/jsm/postprocessing/Pass.js'
+import { Plane } from '../../../build/trois.module.js'
+import snoise3 from '../../glsl/snoise3.glsl.js'
 
 export default defineComponent({
   extends: Plane,
@@ -14,38 +14,38 @@ export default defineComponent({
   },
   setup(props) {
     // uniforms
-    const uTime = { value: 0 };
-    const uNoiseCoef = { value: props.noiseCoef };
-    watch(() => props.noiseCoef, (value) => { uNoiseCoef.value = value; });
-    const uDelta = { value: new Vector2(props.deltaCoef, props.deltaCoef) };
-    watch(() => props.deltaCoef, (value) => { uDelta.value.set(value, value); });
+    const uTime = { value: 0 }
+    const uNoiseCoef = { value: props.noiseCoef }
+    watch(() => props.noiseCoef, (value) => { uNoiseCoef.value = value })
+    const uDelta = { value: new Vector2(props.deltaCoef, props.deltaCoef) }
+    watch(() => props.deltaCoef, (value) => { uDelta.value.set(value, value) })
 
     return {
       uTime, uNoiseCoef, uDelta,
-    };
+    }
   },
   mounted() {
-    this.init();
+    this.init()
 
-    watch(() => this.displacementScale, (value) => { this.material.displacementScale = value; });
+    watch(() => this.displacementScale, (value) => { this.material.displacementScale = value })
 
-    this.startTime = Date.now();
-    this.rendererComponent.onBeforeRender(this.update);
+    this.startTime = Date.now()
+    this.renderer.onBeforeRender(this.update)
   },
   unmounted() {
-    this.rendererComponent.offBeforeRender(this.update);
-    this.fsQuad.dispose();
-    this.dispRT.dispose();
-    this.dispMat.dispose();
-    this.normRT.dispose();
-    this.normMat.dispose();
+    this.renderer.offBeforeRender(this.update)
+    this.fsQuad.dispose()
+    this.dispRT.dispose()
+    this.dispMat.dispose()
+    this.normRT.dispose()
+    this.normMat.dispose()
   },
   methods: {
     init() {
-      this.fsQuad = new Pass.FullScreenQuad();
+      this.fsQuad = new Pass.FullScreenQuad()
 
       // displacement map
-      this.dispRT = new WebGLRenderTarget(512, 512, { depthBuffer: false, stencilBuffer: false });
+      this.dispRT = new WebGLRenderTarget(512, 512, { depthBuffer: false, stencilBuffer: false })
       this.dispMat = new ShaderMaterial({
         uniforms: {
           uTime: this.uTime,
@@ -70,10 +70,10 @@ export default defineComponent({
             gl_FragColor = vec4(noise, 0.0, 0.0, 1.0);
           }
         `,
-      });
+      })
 
       // normal map
-      this.normRT = new WebGLRenderTarget(512, 512, { depthBuffer: false, stencilBuffer: false });
+      this.normRT = new WebGLRenderTarget(512, 512, { depthBuffer: false, stencilBuffer: false })
       this.normMat = new ShaderMaterial({
         uniforms: {
           dispMap: { value: this.dispRT.texture },
@@ -100,30 +100,30 @@ export default defineComponent({
             gl_FragColor = vec4(0.5 + (x1 - x2), 0.5 + (y1 - y2), 1.0, 1.0);
           }
         `,
-      });
+      })
 
-      this.material.displacementMap = this.dispRT.texture;
-      this.material.displacementScale = this.displacementScale;
-      this.material.normalMap = this.normRT.texture;
-      this.material.normalMapType = ObjectSpaceNormalMap;
+      this.material.displacementMap = this.dispRT.texture
+      this.material.displacementScale = this.displacementScale
+      this.material.normalMap = this.normRT.texture
+      this.material.normalMapType = ObjectSpaceNormalMap
       // this.material.needsUpdate = true;
     },
     update() {
-      this.uTime.value = (Date.now() - this.startTime) * this.timeCoef;
-      this.renderDisp();
+      this.uTime.value = (Date.now() - this.startTime) * this.timeCoef
+      this.renderDisp()
     },
     renderDisp() {
-      this.renderMat(this.dispMat, this.dispRT);
-      this.renderMat(this.normMat, this.normRT);
+      this.renderMat(this.dispMat, this.dispRT)
+      this.renderMat(this.normMat, this.normRT)
     },
     renderMat(mat, target) {
-      const renderer = this.three.renderer;
-      this.fsQuad.material = mat;
-      const oldTarget = renderer.getRenderTarget();
-      renderer.setRenderTarget(target);
-      this.fsQuad.render(renderer);
-      renderer.setRenderTarget(oldTarget);
+      const renderer = this.renderer.renderer
+      this.fsQuad.material = mat
+      const oldTarget = renderer.getRenderTarget()
+      renderer.setRenderTarget(target)
+      this.fsQuad.render(renderer)
+      renderer.setRenderTarget(oldTarget)
     },
   },
   __hmrId: 'NoisyPlane',
-});
+})

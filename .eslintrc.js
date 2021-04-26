@@ -1,22 +1,28 @@
-/* eslint-disable quote-props */
 module.exports = {
+  root: true,
   env: {
     browser: true,
     es2020: true,
+    node: true,
   },
   extends: [
     'plugin:vue/essential',
+    '@vue/standard',
+    '@vue/typescript/recommended',
     'standard',
   ],
+  parser: 'vue-eslint-parser',
   parserOptions: {
-    ecmaVersion: 12,
-    sourceType: 'module',
+    parser: '@typescript-eslint/parser',
   },
-  plugins: [
-    'vue',
-  ],
+  // parserOptions: {
+  //   ecmaVersion: 2020,
+  // },
   rules: {
-    'semi': [2, 'always'],
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+
+    'semi': ['error', 'never'],
     'space-before-function-paren': 'off',
     'one-var': 'off',
     'quotes': 'off',
@@ -36,5 +42,15 @@ module.exports = {
     'object-property-newline': 'off',
     'eqeqeq': 'warn',
     'no-multiple-empty-lines': 'off',
+
+    '@typescript-eslint/ban-ts-comment': 'warn',
+    // '@typescript-eslint/ban-ts-comment': ['warn', {
+    //   'ts-ignore': 'allow-with-description',
+    // }],
+    // 'vue/valid-template-root': 'off',
+    'vue/no-multiple-template-root': 'off',
+
+    'no-empty-function': 'off',
+    '@typescript-eslint/no-empty-function': ['off'],
   },
-};
+}

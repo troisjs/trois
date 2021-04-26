@@ -14,57 +14,57 @@ export default {
       error: '',
       xrSupport: false,
       currentSession: null,
-    };
+    }
   },
   computed: {
     message() {
       if (this.xrSupport) {
-        return this.currentSession ? this.exitMessage : this.enterMessage;
+        return this.currentSession ? this.exitMessage : this.enterMessage
       } else if (this.error) {
-        return this.error;
+        return this.error
       }
-      return '';
+      return ''
     },
   },
   created() {
     if ('xr' in navigator) {
       navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
-        this.xrSupport = supported;
-      });
+        this.xrSupport = supported
+      })
     } else {
       if (window.isSecureContext === false) {
-        this.error = 'WEBXR NEEDS HTTPS';
+        this.error = 'WEBXR NEEDS HTTPS'
       } else {
-        this.error = 'WEBXR NOT AVAILABLE';
+        this.error = 'WEBXR NOT AVAILABLE'
       }
     }
   },
   methods: {
     init(renderer) {
-      this.renderer = renderer;
+      this.renderer = renderer
     },
     onClick() {
-      if (!this.xrSupport) return;
-      if (!this.renderer) return;
+      if (!this.xrSupport) return
+      if (!this.renderer) return
 
       if (this.currentSession) {
-        this.currentSession.end();
+        this.currentSession.end()
       } else {
-        const sessionInit = { optionalFeatures: ['local-floor', 'bounded-floor', 'hand-tracking'] };
-        navigator.xr.requestSession('immersive-vr', sessionInit).then(this.onSessionStarted);
+        const sessionInit = { optionalFeatures: ['local-floor', 'bounded-floor', 'hand-tracking'] }
+        navigator.xr.requestSession('immersive-vr', sessionInit).then(this.onSessionStarted)
       }
     },
     async onSessionStarted(session) {
-      session.addEventListener('end', this.onSessionEnded);
-      await this.renderer.xr.setSession(session);
-      this.currentSession = session;
+      session.addEventListener('end', this.onSessionEnded)
+      await this.renderer.xr.setSession(session)
+      this.currentSession = session
     },
     onSessionEnded() {
-      this.currentSession.removeEventListener('end', this.onSessionEnded);
-      this.currentSession = null;
+      this.currentSession.removeEventListener('end', this.onSessionEnded)
+      this.currentSession = null
     },
   },
-};
+}
 </script>
 
 <style scoped>

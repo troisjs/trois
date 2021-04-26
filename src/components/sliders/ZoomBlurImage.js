@@ -3,23 +3,23 @@ import {
   PlaneGeometry,
   ShaderMaterial,
   Vector2,
-} from 'three';
+} from 'three'
 
-export default function ZoomBlurImage(three) {
-  let geometry, material, mesh;
+export default function ZoomBlurImage(renderer) {
+  let geometry, material, mesh
 
-  const uMap = { value: null };
-  const uCenter = { value: new Vector2(0.5, 0.5) };
-  const uStrength = { value: 0 };
-  const uUVOffset = { value: new Vector2(0, 0) };
-  const uUVScale = { value: new Vector2(1, 1) };
+  const uMap = { value: null }
+  const uCenter = { value: new Vector2(0.5, 0.5) }
+  const uStrength = { value: 0 }
+  const uUVOffset = { value: new Vector2(0, 0) }
+  const uUVScale = { value: new Vector2(1, 1) }
 
-  init();
+  init()
 
-  return { geometry, material, mesh, uCenter, uStrength, setMap, updateUV };
+  return { geometry, material, mesh, uCenter, uStrength, setMap, updateUV }
 
   function init() {
-    geometry = new PlaneGeometry(2, 2, 1, 1);
+    geometry = new PlaneGeometry(2, 2, 1, 1)
 
     material = new ShaderMaterial({
       transparent: true,
@@ -83,27 +83,27 @@ export default function ZoomBlurImage(three) {
           }
         }
       `,
-    });
+    })
 
-    mesh = new Mesh(geometry, material);
+    mesh = new Mesh(geometry, material)
   }
 
   function setMap(value) {
-    uMap.value = value;
-    updateUV();
+    uMap.value = value
+    updateUV()
   }
 
   function updateUV() {
-    const ratio = three.size.ratio;
-    const iRatio = uMap.value.image.width / uMap.value.image.height;
-    uUVOffset.value.set(0, 0);
-    uUVScale.value.set(1, 1);
+    const ratio = renderer.size.ratio
+    const iRatio = uMap.value.image.width / uMap.value.image.height
+    uUVOffset.value.set(0, 0)
+    uUVScale.value.set(1, 1)
     if (iRatio > ratio) {
-      uUVScale.value.x = ratio / iRatio;
-      uUVOffset.value.x = (1 - uUVScale.value.x) / 2;
+      uUVScale.value.x = ratio / iRatio
+      uUVOffset.value.x = (1 - uUVScale.value.x) / 2
     } else {
-      uUVScale.value.y = iRatio / ratio;
-      uUVOffset.value.y = (1 - uUVScale.value.y) / 2;
+      uUVScale.value.y = iRatio / ratio
+      uUVOffset.value.y = (1 - uUVScale.value.y) / 2
     }
   }
 }
