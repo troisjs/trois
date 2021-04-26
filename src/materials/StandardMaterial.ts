@@ -1,7 +1,8 @@
-import { defineComponent, watch } from 'vue'
+import { defineComponent, PropType, watch } from 'vue'
 import { MeshStandardMaterial } from 'three'
 import { bindProp, bindProps, propsValues } from '../tools'
 import Material, { wireframeProps } from './Material'
+import { Vector2PropInterface } from '../core/Object3D'
 
 const props = {
   aoMapIntensity: { type: Number, default: 1 },
@@ -13,7 +14,7 @@ const props = {
   envMapIntensity: { type: Number, default: 1 },
   lightMapIntensity: { type: Number, default: 1 },
   metalness: { type: Number, default: 0 },
-  normalScale: { type: Object, default: () => ({ x: 1, y: 1 }) },
+  normalScale: { type: Object as PropType<Vector2PropInterface>, default: () => ({ x: 1, y: 1 }) },
   roughness: { type: Number, default: 1 },
   refractionRatio: { type: Number, default: 0.98 },
   flatShading: Boolean,

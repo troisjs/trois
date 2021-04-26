@@ -1,15 +1,16 @@
-import { defineComponent, watch } from 'vue'
+import { defineComponent, PropType, watch } from 'vue'
 import { Vector2 } from 'three'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import EffectPass from './EffectPass'
 import TiltShift from '../shaders/TiltShift'
+import { Vector2PropInterface } from '../core/Object3D'
 import { bindProp } from '../tools'
 
 const props = {
   blurRadius: { type: Number, default: 10 },
   gradientRadius: { type: Number, default: 100 },
-  start: { type: Object, default: () => ({ x: 0, y: 100 }) },
-  end: { type: Object, default: () => ({ x: 10, y: 100 }) },
+  start: { type: Object as PropType<Vector2PropInterface>, default: () => ({ x: 0, y: 100 }) },
+  end: { type: Object as PropType<Vector2PropInterface>, default: () => ({ x: 10, y: 100 }) },
 }
 
 interface TiltShiftPassSetupInterface {

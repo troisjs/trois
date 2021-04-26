@@ -1,6 +1,6 @@
 import { DirectionalLight, Light, SpotLight } from 'three'
-import { defineComponent, watch } from 'vue'
-import Object3D from '../core/Object3D'
+import { defineComponent, PropType, watch } from 'vue'
+import Object3D, { Vector2PropInterface } from '../core/Object3D'
 import { bindProp, setFromProp } from '../tools'
 
 export interface LightSetupInterface {
@@ -14,7 +14,7 @@ export default defineComponent({
     color: { type: String, default: '#ffffff' },
     intensity: { type: Number, default: 1 },
     castShadow: { type: Boolean, default: false },
-    shadowMapSize: { type: Object, default: () => ({ x: 512, y: 512 }) },
+    shadowMapSize: { type: Object as PropType<Vector2PropInterface>, default: () => ({ x: 512, y: 512 }) },
     shadowCamera: { type: Object, default: () => ({}) },
   },
   setup(): LightSetupInterface {

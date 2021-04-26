@@ -2,6 +2,7 @@ import { defineComponent, PropType, watch } from 'vue'
 import { ClampToEdgeWrapping, LinearFilter, LinearMipmapLinearFilter, ShaderMaterial, Texture, TextureLoader, UVMapping } from 'three'
 import { bindProp } from '../tools'
 import { MaterialInjectionKey, MaterialInterface } from './Material'
+import { Vector2PropInterface } from '../core/Object3D'
 
 export interface TexureInterface {
   material?: MaterialInterface
@@ -25,9 +26,9 @@ export default defineComponent({
     wrapT: { type: Number, default: ClampToEdgeWrapping },
     magFilter: { type: Number, default: LinearFilter },
     minFilter: { type: Number, default: LinearMipmapLinearFilter },
-    repeat: { type: Object, default: () => ({ x: 1, y: 1 }) },
+    repeat: { type: Object as PropType<Vector2PropInterface>, default: () => ({ x: 1, y: 1 }) },
     rotation: { type: Number, default: 0 },
-    center: { type: Object, default: () => ({ x: 0, y: 0 }) },
+    center: { type: Object as PropType<Vector2PropInterface>, default: () => ({ x: 0, y: 0 }) },
   },
   setup(): TexureInterface {
     return {}
