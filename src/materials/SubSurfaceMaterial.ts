@@ -1,18 +1,18 @@
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { Color, ShaderMaterial, UniformsUtils } from 'three'
 import SubsurfaceScatteringShader from './SubsurfaceScatteringShader'
 import Material from './Material'
 // import { bindProps, propsValues } from '../tools'
 
 const props = {
-  color: { type: [String, Number], default: '#ffffff' },
-  thicknessColor: { type: [String, Number], default: '#ffffff' },
+  color: { type: [String, Number] as PropType<string | number>, default: '#ffffff' },
+  thicknessColor: { type: [String, Number] as PropType<string | number>, default: '#ffffff' },
   thicknessDistortion: { type: Number, default: 0.4 },
   thicknessAmbient: { type: Number, default: 0.01 },
   thicknessAttenuation: { type: Number, default: 0.7 },
   thicknessPower: { type: Number, default: 2 },
   thicknessScale: { type: Number, default: 4 },
-}
+} as const
 
 export default defineComponent({
   extends: Material,

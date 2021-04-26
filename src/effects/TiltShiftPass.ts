@@ -11,7 +11,7 @@ const props = {
   gradientRadius: { type: Number, default: 100 },
   start: { type: Object as PropType<Vector2PropInterface>, default: () => ({ x: 0, y: 100 }) },
   end: { type: Object as PropType<Vector2PropInterface>, default: () => ({ x: 10, y: 100 }) },
-}
+} as const
 
 interface TiltShiftPassSetupInterface {
   uniforms1: {[name: string]: { value: any }}

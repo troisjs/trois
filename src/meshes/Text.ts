@@ -1,4 +1,4 @@
-import { defineComponent, watch } from 'vue'
+import { defineComponent, PropType, watch } from 'vue'
 import { Font, FontLoader, TextGeometry } from 'three'
 import Mesh, { MeshSetupInterface } from './Mesh'
 
@@ -19,8 +19,8 @@ const props = {
   bevelSize: { type: Number, default: 8 },
   bevelOffset: { type: Number, default: 0 },
   bevelSegments: { type: Number, default: 5 },
-  align: { type: [Boolean, String], default: false },
-}
+  align: { type: [Boolean, String] as PropType<boolean | string>, default: false },
+} as const
 
 export default defineComponent({
   extends: Mesh,

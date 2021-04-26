@@ -7,7 +7,7 @@ const props = {
   scanlinesIntensity: { type: Number, default: 0.05 },
   scanlinesCount: { type: Number, default: 4096 },
   grayscale: { type: Number, default: 0 },
-}
+} as const
 
 export default defineComponent({
   extends: EffectPass,

@@ -9,7 +9,7 @@ const props = {
   rotateG: { type: Number, default: Math.PI / 12 * 2 },
   rotateB: { type: Number, default: Math.PI / 12 * 3 },
   scatter: { type: Number, default: 0 },
-}
+} as const
 
 export default defineComponent({
   extends: EffectPass,

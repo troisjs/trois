@@ -6,7 +6,7 @@ const props = {
   focus: { type: Number, default: 1 },
   aperture: { type: Number, default: 0.025 },
   maxblur: { type: Number, default: 0.01 },
-}
+} as const
 
 export default defineComponent({
   extends: EffectPass,

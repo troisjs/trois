@@ -9,7 +9,7 @@ const props = {
   bumpScale: { type: Number, default: 1 },
   displacementBias: { type: Number, default: 0 },
   displacementScale: { type: Number, default: 1 },
-  emissive: { type: [Number, String], default: 0 },
+  emissive: { type: [String, Number] as PropType<string | number>, default: 0 },
   emissiveIntensity: { type: Number, default: 1 },
   envMapIntensity: { type: Number, default: 1 },
   lightMapIntensity: { type: Number, default: 1 },
@@ -18,7 +18,7 @@ const props = {
   roughness: { type: Number, default: 1 },
   refractionRatio: { type: Number, default: 0.98 },
   flatShading: Boolean,
-}
+} as const
 
 export default defineComponent({
   extends: Material,

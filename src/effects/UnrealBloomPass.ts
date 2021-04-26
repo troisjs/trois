@@ -7,7 +7,7 @@ const props = {
   strength: { type: Number, default: 1.5 },
   radius: { type: Number, default: 0 },
   threshold: { type: Number, default: 0 },
-}
+} as const
 
 export default defineComponent({
   extends: EffectPass,
