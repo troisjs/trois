@@ -69,7 +69,7 @@ const Mesh = defineComponent({
       this.initObject3D(mesh)
     },
     createGeometry() {},
-    addGeometryWatchers(props: ComponentPropsOptions) {
+    addGeometryWatchers(props: Readonly<ComponentPropsOptions>) {
       Object.keys(props).forEach(prop => {
         // @ts-ignore
         watch(() => this[prop], () => {
@@ -105,15 +105,16 @@ const Mesh = defineComponent({
 
 export default Mesh
 
-// @ts-ignore
-export function meshComponent(name, props, createGeometry) {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function meshComponent<P extends Readonly<ComponentPropsOptions>>(
+  name: string,
+  props: P,
+  createGeometry: {(c: any): BufferGeometry}
+) {
   return defineComponent({
     name,
     extends: Mesh,
     props,
-    setup(): MeshSetupInterface {
-      return {}
-    },
     created() {
       this.createGeometry()
       this.addGeometryWatchers(props)
@@ -123,6 +124,5 @@ export function meshComponent(name, props, createGeometry) {
         this.geometry = createGeometry(this)
       },
     },
-    // __hmrId: name,
   })
 }
