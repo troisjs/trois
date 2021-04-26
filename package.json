@@ -7,9 +7,9 @@
     "rollup": "rollup -c"
   },
   "devDependencies": {
+    "@microsoft/api-extractor": "^7.14.0",
     "@rollup/plugin-buble": "^0.21.3",
     "@rollup/plugin-replace": "^2.3.3",
-    "@rollup/plugin-typescript": "^8.2.1",
     "@types/three": "^0.127.1",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
@@ -26,17 +26,20 @@
     "eslint-plugin-vue": "^7.9.0",
     "gsap": "^3.5.1",
     "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.30.0",
     "rollup-plugin-vue": "^6.0.0-beta.11",
     "stats.js": "0.17.0",
     "three": "^0.127",
-    "typescript": "^4.1.3",
+    "tslib": "^2.2.0",
+    "typescript": "^4.1.5",
     "vite": "^2.1.5",
     "vue": "^3.0.11",
     "vue-eslint-parser": "^7.6.0",
-    "vue-tsc": "^0.0.24"
+    "vue-tsc": "^0.0.25"
   },
   "main": "build/trois.js",
   "module": "build/trois.module.js",
+  "typings": "build/trois.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/troisjs/trois.git"

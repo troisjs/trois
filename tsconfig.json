@@ -5,8 +5,17 @@
     // this enables stricter inference for data properties on `this`
     "strict": true,
     "moduleResolution": "node",
+
+    // "esModuleInterop": true,
+    // "lib": ["esnext", "dom"],
+    // "types": ["vite/client"],
+
     "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "types",
   },
   "include": ["src/**/*.ts", "src/**/*.vue"],
-  "exclude": ["node_modules", "src/App.vue"]
+  // "include": ["src/export.ts"],
+  // "exclude": ["src/App.vue", "src/main.ts"],
 }

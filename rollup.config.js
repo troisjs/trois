@@ -1,11 +1,14 @@
-// import commonjs from '@rollup/plugin-commonjs';
+import path from 'path'
 import vue from 'rollup-plugin-vue'
-// import buble from '@rollup/plugin-buble';
-import { terser } from "rollup-plugin-terser"
+import typescript from 'rollup-plugin-typescript2'
 import replace from '@rollup/plugin-replace'
-import typescript from '@rollup/plugin-typescript'
+import { terser } from "rollup-plugin-terser"
+
+// ensure TS checks only once for each build
+let hasTSChecked = false
 
 const input = 'src/export.ts'
+
 const external = [
   'three',
   'three/examples/jsm/controls/OrbitControls.js',
@@ -37,78 +40,42 @@ const cdnReplaces = {
   delimiters: ['', ''],
 }
 
-const plugins = [
-  typescript(),
-  vue(),
-  // buble({
-  //   transforms: { asyncAwait: false, forOf: false },
-  //   objectAssign: 'Object.assign',
-  // }),
-]
+function createConfig(format, output, plugins = []) {
+  const tsPlugin = typescript({
+    check: false, // !hasTSChecked,
+    cacheRoot: path.resolve(__dirname, 'node_modules/.tscache'),
+    tsconfigOverride: {
+      compilerOptions: {
+        sourceMap: false, // !hasTSChecked,
+        declaration: false, // !hasTSChecked,
+        declarationMap: false, // !hasTSChecked,
+      },
+      include: [input],
+    },
+  })
+  hasTSChecked = true
+
+  return {
+    input,
+    external,
+    output: {
+      format,
+      ...output,
+      // exports: 'named',
+      sourcemap: true,
+    },
+    plugins: [
+      tsPlugin,
+      vue(),
+      ...plugins,
+    ],
+  }
+}
 
 export default [
-  {
-    input,
-    external,
-    output: {
-      format: 'es',
-      exports: 'named',
-      file: 'build/trois.module.cdn.js',
-      sourcemap: true,
-    },
-    plugins: [
-      replace(cdnReplaces),
-      ...plugins,
-    ],
-  },
-  {
-    input,
-    external,
-    output: {
-      format: 'es',
-      exports: 'named',
-      file: 'build/trois.module.cdn.min.js',
-      sourcemap: true,
-    },
-    plugins: [
-      replace(cdnReplaces),
-      ...plugins,
-      terser(),
-    ],
-  },
-  {
-    input,
-    external,
-    output: {
-      format: 'es',
-      exports: 'named',
-      file: 'build/trois.module.js',
-      sourcemap: true,
-    },
-    plugins,
-  },
-  {
-    input,
-    external,
-    output: {
-      format: 'es',
-      exports: 'named',
-      file: 'build/trois.module.min.js',
-      sourcemap: true,
-    },
-    plugins: [
-      ...plugins,
-      terser(),
-    ],
-  },
-  {
-    input,
-    external,
-    output: {
-      format: 'cjs',
-      file: 'build/trois.js',
-      sourcemap: true,
-    },
-    plugins,
-  },
+  createConfig('es', { file: 'build/trois.module.cdn.js' }, [replace(cdnReplaces)]),
+  createConfig('es', { file: 'build/trois.module.cdn.min.js' }, [replace(cdnReplaces), terser()]),
+  createConfig('es', { file: 'build/trois.module.js' }),
+  createConfig('es', { file: 'build/trois.module.min.js' }, [terser()]),
+  createConfig('cjs', { file: 'build/trois.js' }),
 ]
