@@ -6,7 +6,7 @@ export const props = {
   height: { type: Number, default: 1 },
   widthSegments: { type: Number, default: 1 },
   heightSegments: { type: Number, default: 1 },
-}
+} as const
 
 export function createGeometry(comp: any): PlaneGeometry {
   return new PlaneGeometry(comp.width, comp.height, comp.widthSegments, comp.heightSegments)

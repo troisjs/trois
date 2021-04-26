@@ -9,7 +9,7 @@ export const props = {
   radius: { type: Number, default: 1 },
   radialSegments: { type: Number, default: 8 },
   closed: { type: Boolean, default: false },
-}
+} as const
 
 export function createGeometry(comp: any): TubeGeometry {
   let curve

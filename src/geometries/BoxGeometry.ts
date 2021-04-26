@@ -9,7 +9,7 @@ export const props = {
   widthSegments: { type: Number, default: 1 },
   heightSegments: { type: Number, default: 1 },
   depthSegments: { type: Number, default: 1 },
-}
+} as const
 
 export function createGeometry(comp: any): BoxGeometry {
   if (comp.size) {

@@ -1,5 +1,5 @@
+import { ComponentPropsOptions, defineComponent, watch } from 'vue'
 import { BufferGeometry } from 'three'
-import { defineComponent, inject, watch } from 'vue'
 import { MeshInjectionKey, MeshInterface } from '../meshes/Mesh'
 
 export interface GeometrySetupInterface {
@@ -66,20 +66,20 @@ const Geometry = defineComponent({
 
 export default Geometry
 
-// @ts-ignore
-export function geometryComponent(name, props, createGeometry) {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function geometryComponent<P extends Readonly<ComponentPropsOptions>>(
+  name: string,
+  props: P,
+  createGeometry: {(c: any): BufferGeometry}
+) {
   return defineComponent({
     name,
     extends: Geometry,
     props,
-    setup(): GeometrySetupInterface {
-      return {}
-    },
     methods: {
       createGeometry() {
         this.geometry = createGeometry(this)
       },
     },
-    // __hmrId: name,
   })
 }
