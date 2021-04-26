@@ -1,7 +1,7 @@
 import { Camera, OrthographicCamera, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
-import usePointer, { IntersectObject, PointerConfigInterface, PointerInterface } from './usePointer'
+import usePointer, { IntersectObject, PointerConfigInterface, PointerPublicConfigInterface, PointerInterface } from './usePointer'
 
 export interface SizeInterface {
   width: number
@@ -17,7 +17,7 @@ export interface ThreeConfigInterface {
   alpha: boolean
   autoClear: boolean
   orbitCtrl: boolean | Record<string, unknown>
-  pointer: boolean | PointerConfigInterface
+  pointer: boolean | PointerPublicConfigInterface
   resize: boolean | string
   width?: number
   height?: number

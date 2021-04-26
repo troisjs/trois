@@ -2,6 +2,7 @@
 import { Camera, Scene, WebGLRenderer } from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
 import { defineComponent, InjectionKey, PropType } from 'vue'
+import { PointerPublicConfigInterface } from './usePointer'
 import useThree, { SizeInterface, ThreeConfigInterface, ThreeInterface } from './useThree'
 
 type CallbackType<T> = (event: T) => void
@@ -94,9 +95,9 @@ export default defineComponent({
     antialias: Boolean,
     alpha: Boolean,
     autoClear: { type: Boolean, default: true },
-    orbitCtrl: { type: [Boolean, Object], default: false },
-    pointer: { type: [Boolean, Object], default: false },
-    resize: { type: [Boolean, String], default: false },
+    orbitCtrl: { type: [Boolean, Object] as PropType<boolean | Record<string, unknown>>, default: false },
+    pointer: { type: [Boolean, Object] as PropType<boolean | PointerPublicConfigInterface>, default: false },
+    resize: { type: [Boolean, String] as PropType<boolean | string>, default: false },
     shadow: Boolean,
     width: String,
     height: String,

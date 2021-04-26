@@ -20,10 +20,7 @@ export type PointerCallbackType = (e: PointerEventInterface) => void
 export type PointerIntersectCallbackType = (e: PointerIntersectEventInterface) => void
 export type IntersectObject = Mesh | InstancedMesh
 
-export interface PointerConfigInterface {
-  camera: Camera
-  domElement: HTMLCanvasElement
-  intersectObjects: IntersectObject[]
+export interface PointerPublicConfigInterface {
   intersectMode?: 'frame'
   touch?: boolean
   resetOnEnd?: boolean
@@ -38,6 +35,12 @@ export interface PointerConfigInterface {
   onIntersectMove?: PointerIntersectCallbackType
   onIntersectLeave?: PointerIntersectCallbackType
   onIntersectClick?: PointerIntersectCallbackType
+}
+
+export interface PointerConfigInterface extends PointerPublicConfigInterface {
+  camera: Camera
+  domElement: HTMLCanvasElement
+  intersectObjects: IntersectObject[]
 }
 
 export interface PointerInterface {
