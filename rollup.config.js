@@ -1,6 +1,8 @@
 // import vue from 'rollup-plugin-vue'
-import esbuild from 'rollup-plugin-esbuild'
-import replace from '@rollup/plugin-replace'
+// import esbuild from 'rollup-plugin-esbuild'
+// import replace from '@rollup/plugin-replace'
+import dts from "rollup-plugin-dts"
+// import { nodeResolve } from '@rollup/plugin-node-resolve'
 
 const input = 'src/export.ts'
 
@@ -28,41 +30,50 @@ const external = [
   'vue',
 ]
 
-const cdnReplaces = {
-  'from \'vue\'': 'from \'https://unpkg.com/vue@3.0.11/dist/vue.esm-browser.prod.js\'',
-  'from \'three\'': 'from \'https://unpkg.com/three@0.127.0/build/three.module.js\'',
-  'from \'three/examples': 'from \'https://unpkg.com/three@0.127.0/examples',
-  delimiters: ['', ''],
-}
+// const cdnReplaces = {
+//   'from \'vue\'': 'from \'https://unpkg.com/vue@3.0.11/dist/vue.esm-browser.prod.js\'',
+//   'from \'three\'': 'from \'https://unpkg.com/three@0.127.0/build/three.module.js\'',
+//   'from \'three/examples': 'from \'https://unpkg.com/three@0.127.0/examples',
+//   delimiters: ['', ''],
+// }
 
-function createConfig(format, output, plugins = [], minify = false) {
-  const tsPlugin = esbuild({
-    sourceMap: true,
-    minify,
-    target: 'es2019',
-  })
+// function createConfig(format, output, plugins = [], minify = false) {
+//   const tsPlugin = esbuild({
+//     sourceMap: true,
+//     minify,
+//     target: 'es2019',
+//   })
 
-  return {
-    input,
-    external,
-    output: {
-      format,
-      ...output,
-      // exports: 'named',
-      sourcemap: true,
-    },
-    plugins: [
-      // vue(),
-      tsPlugin,
-      ...plugins,
-    ],
-  }
-}
+//   return {
+//     input,
+//     external,
+//     output: {
+//       format,
+//       ...output,
+//       // exports: 'named',
+//       sourcemap: true,
+//     },
+//     plugins: [
+//       // vue(),
+//       tsPlugin,
+//       ...plugins,
+//     ],
+//   }
+// }
 
 export default [
-  createConfig('es', { file: 'build/trois.module.cdn.js' }, [replace(cdnReplaces)]),
-  createConfig('es', { file: 'build/trois.module.cdn.min.js' }, [replace(cdnReplaces)], true),
-  createConfig('es', { file: 'build/trois.module.js' }),
-  createConfig('es', { file: 'build/trois.module.min.js' }, [], true),
-  createConfig('cjs', { file: 'build/trois.js' }),
+  // createConfig('es', { file: 'build/trois.module.cdn.js' }, [replace(cdnReplaces)]),
+  // createConfig('es', { file: 'build/trois.module.cdn.min.js' }, [replace(cdnReplaces)], true),
+  // createConfig('es', { file: 'build/trois.module.js' }),
+  // createConfig('es', { file: 'build/trois.module.min.js' }, [], true),
+  // createConfig('cjs', { file: 'build/trois.js' }),
+  {
+    input: 'types/export.d.ts',
+    external,
+    output: {
+      format: 'es',
+      file: 'build/trois.d.ts',
+      plugins: [dts()],
+    },
+  },
 ]
