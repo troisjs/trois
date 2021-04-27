@@ -1,11 +1,6 @@
-import path from 'path'
-import vue from 'rollup-plugin-vue'
-import typescript from 'rollup-plugin-typescript2'
+// import vue from 'rollup-plugin-vue'
+import esbuild from 'rollup-plugin-esbuild'
 import replace from '@rollup/plugin-replace'
-import { terser } from "rollup-plugin-terser"
-
-// ensure TS checks only once for each build
-let hasTSChecked = false
 
 const input = 'src/export.ts'
 
@@ -40,20 +35,12 @@ const cdnReplaces = {
   delimiters: ['', ''],
 }
 
-function createConfig(format, output, plugins = []) {
-  const tsPlugin = typescript({
-    check: false, // !hasTSChecked,
-    cacheRoot: path.resolve(__dirname, 'node_modules/.tscache'),
-    tsconfigOverride: {
-      compilerOptions: {
-        sourceMap: false, // !hasTSChecked,
-        declaration: false, // !hasTSChecked,
-        declarationMap: false, // !hasTSChecked,
-      },
-      include: [input],
-    },
+function createConfig(format, output, plugins = [], minify = false) {
+  const tsPlugin = esbuild({
+    sourceMap: true,
+    minify,
+    target: 'es2019',
   })
-  hasTSChecked = true
 
   return {
     input,
@@ -65,8 +52,8 @@ function createConfig(format, output, plugins = []) {
       sourcemap: true,
     },
     plugins: [
+      // vue(),
       tsPlugin,
-      vue(),
       ...plugins,
     ],
   }
@@ -74,8 +61,8 @@ function createConfig(format, output, plugins = []) {
 
 export default [
   createConfig('es', { file: 'build/trois.module.cdn.js' }, [replace(cdnReplaces)]),
-  createConfig('es', { file: 'build/trois.module.cdn.min.js' }, [replace(cdnReplaces), terser()]),
+  createConfig('es', { file: 'build/trois.module.cdn.min.js' }, [replace(cdnReplaces)], true),
   createConfig('es', { file: 'build/trois.module.js' }),
-  createConfig('es', { file: 'build/trois.module.min.js' }, [terser()]),
+  createConfig('es', { file: 'build/trois.module.min.js' }, [], true),
   createConfig('cjs', { file: 'build/trois.js' }),
 ]
