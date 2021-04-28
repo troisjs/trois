@@ -3,6 +3,7 @@
   "version": "0.2.3",
   "scripts": {
     "dev": "vite",
+    "types": "tsc",
     "build": "vue-tsc --noEmit && vite build",
     "rollup": "rollup -c"
   },
@@ -25,6 +26,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^7.9.0",
     "gsap": "^3.5.1",
+    "rollup-plugin-dts": "^3.0.1",
     "rollup-plugin-esbuild": "^4.1.0",
     "stats.js": "0.17.0",
     "three": "^0.127",
@@ -37,7 +39,7 @@
   },
   "main": "build/trois.js",
   "module": "build/trois.module.js",
-  "typings": "build/trois.d.ts",
+  "types": "build/trois.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/troisjs/trois.git"

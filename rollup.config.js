@@ -1,6 +1,7 @@
 // import vue from 'rollup-plugin-vue'
 import esbuild from 'rollup-plugin-esbuild'
 import replace from '@rollup/plugin-replace'
+import dts from "rollup-plugin-dts"
 
 const input = 'src/export.ts'
 
@@ -65,4 +66,13 @@ export default [
   createConfig('es', { file: 'build/trois.module.js' }),
   createConfig('es', { file: 'build/trois.module.min.js' }, [], true),
   createConfig('cjs', { file: 'build/trois.js' }),
+  {
+    input: 'types/export.d.ts',
+    external,
+    plugins: [dts()],
+    output: {
+      format: 'es',
+      file: 'build/trois.d.ts',
+    },
+  },
 ]
