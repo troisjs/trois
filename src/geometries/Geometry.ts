@@ -63,6 +63,7 @@ const Geometry = defineComponent({
           geometry.setAttribute(attribute.name, bufferAttribute)
         }
       })
+      geometry.computeBoundingBox()
       this.geometry = geometry
     },
     rotateGeometry() {
