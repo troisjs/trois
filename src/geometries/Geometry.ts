@@ -1,11 +1,18 @@
-import { ComponentPropsOptions, defineComponent, watch } from 'vue'
-import { BufferGeometry } from 'three'
+import { ComponentPropsOptions, defineComponent, PropType, watch } from 'vue'
+import { BufferAttribute, BufferGeometry } from 'three'
 import { MeshInjectionKey, MeshInterface } from '../meshes/Mesh'
 
 export interface GeometrySetupInterface {
   mesh?: MeshInterface
   geometry?: BufferGeometry
   watchProps?: string[]
+}
+
+export interface GeometryAttributeInterface {
+  name: string
+  array: ArrayLike<number>
+  itemSize: number
+  normalized?: boolean
 }
 
 // function defaultSetup(): GeometryInterface {
@@ -19,6 +26,7 @@ const Geometry = defineComponent({
     rotateX: Number,
     rotateY: Number,
     rotateZ: Number,
+    attributes: { type: Array as PropType<Array<GeometryAttributeInterface>>, default: () => ([]) },
   },
   // inject for sub components
   inject: {
@@ -46,7 +54,17 @@ const Geometry = defineComponent({
     this.geometry?.dispose()
   },
   methods: {
-    createGeometry() {},
+    createGeometry() {
+      const bufferAttributes: Record<string, unknown> = {}
+      const geometry = new BufferGeometry()
+      this.attributes.forEach(attribute => {
+        if (attribute.name && attribute.itemSize && attribute.array) {
+          const bufferAttribute = bufferAttributes[attribute.name] = new BufferAttribute(attribute.array, attribute.itemSize, attribute.normalized)
+          geometry.setAttribute(attribute.name, bufferAttribute)
+        }
+      })
+      this.geometry = geometry
+    },
     rotateGeometry() {
       if (!this.geometry) return
       if (this.rotateX) this.geometry.rotateX(this.rotateX)
