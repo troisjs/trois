@@ -1,10 +1,10 @@
 import { Texture, TextureLoader } from 'three'
 
-interface TextureConfigInterface {
+export interface TextureConfigInterface {
   src: string
 }
 
-interface TexturesInterface {
+export interface TexturesInterface {
   loader: TextureLoader
   count: number
   textures: Texture[],

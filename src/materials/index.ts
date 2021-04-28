@@ -1,4 +1,4 @@
-export { MaterialInjectionKey } from './Material'
+export { default as Material, MaterialInjectionKey } from './Material'
 export { default as BasicMaterial } from './BasicMaterial'
 export { default as LambertMaterial } from './LambertMaterial'
 export { default as MatcapMaterial } from './MatcapMaterial'

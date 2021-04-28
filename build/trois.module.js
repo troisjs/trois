@@ -1,5 +1,5 @@
-import { defineComponent, h, toRef, watch, createApp as createApp$1 } from 'vue';
-import { Vector3, Raycaster as Raycaster$1, Plane as Plane$1, Vector2, InstancedMesh as InstancedMesh$1, WebGLRenderer, OrthographicCamera as OrthographicCamera$1, PerspectiveCamera as PerspectiveCamera$1, Group as Group$1, Scene as Scene$1, Color, BoxGeometry as BoxGeometry$1, CircleGeometry as CircleGeometry$1, ConeGeometry as ConeGeometry$1, CylinderGeometry as CylinderGeometry$1, DodecahedronGeometry as DodecahedronGeometry$1, IcosahedronGeometry as IcosahedronGeometry$1, LatheGeometry as LatheGeometry$1, OctahedronGeometry as OctahedronGeometry$1, PlaneGeometry as PlaneGeometry$1, PolyhedronGeometry as PolyhedronGeometry$1, RingGeometry as RingGeometry$1, SphereGeometry as SphereGeometry$1, TetrahedronGeometry as TetrahedronGeometry$1, TorusGeometry as TorusGeometry$1, TorusKnotGeometry as TorusKnotGeometry$1, TubeGeometry as TubeGeometry$1, Curve, CatmullRomCurve3, AmbientLight as AmbientLight$1, DirectionalLight as DirectionalLight$1, HemisphereLight as HemisphereLight$1, PointLight as PointLight$1, RectAreaLight as RectAreaLight$1, SpotLight as SpotLight$1, FrontSide, MeshBasicMaterial, MeshLambertMaterial, TextureLoader, MeshMatcapMaterial, MeshPhongMaterial, MeshStandardMaterial, MeshPhysicalMaterial, ShaderMaterial as ShaderMaterial$1, ShaderChunk, UniformsUtils, ShaderLib, MeshToonMaterial, UVMapping, ClampToEdgeWrapping, LinearFilter, LinearMipmapLinearFilter, CubeTextureLoader, CubeRefractionMapping, Mesh as Mesh$1, FontLoader, TextGeometry, DoubleSide, SpriteMaterial, Sprite as Sprite$1 } from 'three';
+import { defineComponent, toRef, watch, inject, provide, onUnmounted, createApp as createApp$1 } from 'vue';
+import { Vector3, Raycaster as Raycaster$1, Plane as Plane$1, Vector2, InstancedMesh as InstancedMesh$1, WebGLRenderer, OrthographicCamera as OrthographicCamera$1, PerspectiveCamera as PerspectiveCamera$1, Scene as Scene$1, Color, Texture as Texture$1, Group as Group$1, WebGLCubeRenderTarget, RGBFormat, LinearMipmapLinearFilter, CubeCamera as CubeCamera$1, Mesh as Mesh$1, BoxGeometry as BoxGeometry$1, CircleGeometry as CircleGeometry$1, ConeGeometry as ConeGeometry$1, CylinderGeometry as CylinderGeometry$1, DodecahedronGeometry as DodecahedronGeometry$1, IcosahedronGeometry as IcosahedronGeometry$1, LatheGeometry as LatheGeometry$1, OctahedronGeometry as OctahedronGeometry$1, PlaneGeometry as PlaneGeometry$1, PolyhedronGeometry as PolyhedronGeometry$1, RingGeometry as RingGeometry$1, SphereGeometry as SphereGeometry$1, TetrahedronGeometry as TetrahedronGeometry$1, TorusGeometry as TorusGeometry$1, TorusKnotGeometry as TorusKnotGeometry$1, TubeGeometry as TubeGeometry$1, Curve, CatmullRomCurve3, SpotLight as SpotLight$1, DirectionalLight as DirectionalLight$1, AmbientLight as AmbientLight$1, HemisphereLight as HemisphereLight$1, PointLight as PointLight$1, RectAreaLight as RectAreaLight$1, FrontSide, MeshBasicMaterial, MeshLambertMaterial, TextureLoader, MeshMatcapMaterial, MeshPhongMaterial, MeshStandardMaterial, MeshPhysicalMaterial, ShaderMaterial as ShaderMaterial$1, ShaderChunk, UniformsUtils, ShaderLib, MeshToonMaterial, UVMapping, ClampToEdgeWrapping, LinearFilter, CubeReflectionMapping, CubeTextureLoader, FontLoader, TextGeometry, DoubleSide, SpriteMaterial, Sprite as Sprite$1 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
 import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper.js';
@@ -19,28 +19,24 @@ import { UnrealBloomPass as UnrealBloomPass$1 } from 'three/examples/jsm/postpro
 function useRaycaster(options) {
   const {
     camera,
-    resetPosition = new Vector3(0, 0, 0),
+    resetPosition = new Vector3(0, 0, 0)
   } = options;
-
   const raycaster = new Raycaster$1();
   const position = resetPosition.clone();
   const plane = new Plane$1(new Vector3(0, 0, 1), 0);
-
   const updatePosition = (coords) => {
     raycaster.setFromCamera(coords, camera);
     camera.getWorldDirection(plane.normal);
     raycaster.ray.intersectPlane(plane, position);
   };
-
   const intersect = (coords, objects) => {
     raycaster.setFromCamera(coords, camera);
     return raycaster.intersectObjects(objects);
   };
-
   return {
     position,
     updatePosition,
-    intersect,
+    intersect
   };
 }
 
@@ -53,22 +49,29 @@ function usePointer(options) {
     resetOnEnd = false,
     resetPosition = new Vector2(0, 0),
     resetPositionV3 = new Vector3(0, 0, 0),
-    onEnter = () => {},
-    onMove = () => {},
-    onLeave = () => {},
-    onIntersectEnter = () => {},
-    onIntersectOver = () => {},
-    onIntersectMove = () => {},
-    onIntersectLeave = () => {},
-    onIntersectClick = () => {},
+    onEnter = () => {
+    },
+    onMove = () => {
+    },
+    onLeave = () => {
+    },
+    onClick = () => {
+    },
+    onIntersectEnter = () => {
+    },
+    onIntersectOver = () => {
+    },
+    onIntersectMove = () => {
+    },
+    onIntersectLeave = () => {
+    },
+    onIntersectClick = () => {
+    }
   } = options;
-
   const position = resetPosition.clone();
   const positionN = new Vector2(0, 0);
-
-  const raycaster = useRaycaster({ camera });
+  const raycaster = useRaycaster({camera});
   const positionV3 = raycaster.position;
-
   const obj = {
     position,
     positionN,
@@ -77,29 +80,26 @@ function usePointer(options) {
     listeners: false,
     addListeners,
     removeListeners,
-    intersect,
+    intersect
   };
-
   return obj;
-
   function reset() {
     position.copy(resetPosition);
     positionV3.copy(resetPositionV3);
   }
   function updatePosition(event) {
     let x, y;
-    if (event.touches && event.touches.length > 0) {
+    if (event instanceof TouchEvent && event.touches && event.touches.length > 0) {
       x = event.touches[0].clientX;
       y = event.touches[0].clientY;
     } else {
       x = event.clientX;
       y = event.clientY;
     }
-
     const rect = domElement.getBoundingClientRect();
     position.x = x - rect.left;
     position.y = y - rect.top;
-    positionN.x = (position.x / rect.width) * 2 - 1;
+    positionN.x = position.x / rect.width * 2 - 1;
     positionN.y = -(position.y / rect.height) * 2 + 1;
     raycaster.updatePosition(positionN);
   }
@@ -108,55 +108,51 @@ function usePointer(options) {
       const intersects = raycaster.intersect(positionN, intersectObjects);
       const offObjects = [...intersectObjects];
       const iMeshes = [];
-
-      intersects.forEach(intersect => {
-        const { object } = intersect;
-        const { component } = object;
-
-        // only once for InstancedMesh
+      intersects.forEach((intersect2) => {
+        var _a, _b, _c;
+        const {object} = intersect2;
+        const {component} = object.userData;
         if (object instanceof InstancedMesh$1) {
-          if (iMeshes.indexOf(object) !== -1) return;
+          if (iMeshes.indexOf(object) !== -1)
+            return;
           iMeshes.push(object);
         }
-
-        if (!object.over) {
-          object.over = true;
-          const overEvent = { type: 'pointerover', over: true, component, intersect };
-          const enterEvent = { ...overEvent, type: 'pointerenter' };
+        if (!object.userData.over) {
+          object.userData.over = true;
+          const overEvent = {type: "pointerover", over: true, component, intersect: intersect2};
+          const enterEvent = {...overEvent, type: "pointerenter"};
           onIntersectOver(overEvent);
           onIntersectEnter(enterEvent);
-          component.onPointerOver?.(overEvent);
-          component.onPointerEnter?.(enterEvent);
+          (_a = component.onPointerOver) == null ? void 0 : _a.call(component, overEvent);
+          (_b = component.onPointerEnter) == null ? void 0 : _b.call(component, enterEvent);
         }
-
-        const moveEvent = { type: 'pointermove', component, intersect };
+        const moveEvent = {type: "pointermove", component, intersect: intersect2};
         onIntersectMove(moveEvent);
-        component.onPointerMove?.(moveEvent);
-
+        (_c = component.onPointerMove) == null ? void 0 : _c.call(component, moveEvent);
         offObjects.splice(offObjects.indexOf(object), 1);
       });
-
-      offObjects.forEach(object => {
-        const { component } = object;
-        if (object.over) {
-          object.over = false;
-          const overEvent = { type: 'pointerover', over: false, component };
-          const leaveEvent = { ...overEvent, type: 'pointerleave' };
+      offObjects.forEach((object) => {
+        var _a, _b;
+        const {component} = object.userData;
+        if (object.userData.over) {
+          object.userData.over = false;
+          const overEvent = {type: "pointerover", over: false, component};
+          const leaveEvent = {...overEvent, type: "pointerleave"};
           onIntersectOver(overEvent);
           onIntersectLeave(leaveEvent);
-          component.onPointerOver?.(overEvent);
-          component.onPointerLeave?.(leaveEvent);
+          (_a = component.onPointerOver) == null ? void 0 : _a.call(component, overEvent);
+          (_b = component.onPointerLeave) == null ? void 0 : _b.call(component, leaveEvent);
         }
       });
     }
   }
   function pointerEnter(event) {
     updatePosition(event);
-    onEnter({ type: 'pointerenter', position, positionN, positionV3 });
+    onEnter({type: "pointerenter", position, positionN, positionV3});
   }
   function pointerMove(event) {
     updatePosition(event);
-    onMove({ type: 'pointermove', position, positionN, positionV3 });
+    onMove({type: "pointermove", position, positionN, positionV3});
     intersect();
   }
   function pointerClick(event) {
@@ -164,352 +160,319 @@ function usePointer(options) {
     if (intersectObjects.length) {
       const intersects = raycaster.intersect(positionN, intersectObjects);
       const iMeshes = [];
-      intersects.forEach(intersect => {
-        const { object } = intersect;
-        const { component } = object;
-
-        // only once for InstancedMesh
+      intersects.forEach((intersect2) => {
+        var _a;
+        const {object} = intersect2;
+        const {component} = object.userData;
         if (object instanceof InstancedMesh$1) {
-          if (iMeshes.indexOf(object) !== -1) return;
+          if (iMeshes.indexOf(object) !== -1)
+            return;
           iMeshes.push(object);
         }
-
-        const event = { type: 'click', component, intersect };
-        onIntersectClick(event);
-        component.onClick?.(event);
+        const event2 = {type: "click", component, intersect: intersect2};
+        onIntersectClick(event2);
+        (_a = component.onClick) == null ? void 0 : _a.call(component, event2);
       });
     }
+    onClick({type: "click", position, positionN, positionV3});
   }
   function pointerLeave() {
-    if (resetOnEnd) reset();
-    onLeave({ type: 'pointerleave' });
+    if (resetOnEnd)
+      reset();
+    onLeave({type: "pointerleave"});
   }
   function addListeners() {
-    domElement.addEventListener('mouseenter', pointerEnter);
-    domElement.addEventListener('mousemove', pointerMove);
-    domElement.addEventListener('mouseleave', pointerLeave);
-    domElement.addEventListener('click', pointerClick);
+    domElement.addEventListener("mouseenter", pointerEnter);
+    domElement.addEventListener("mousemove", pointerMove);
+    domElement.addEventListener("mouseleave", pointerLeave);
+    domElement.addEventListener("click", pointerClick);
     if (touch) {
-      domElement.addEventListener('touchstart', pointerEnter);
-      domElement.addEventListener('touchmove', pointerMove);
-      domElement.addEventListener('touchend', pointerLeave);
+      domElement.addEventListener("touchstart", pointerEnter);
+      domElement.addEventListener("touchmove", pointerMove);
+      domElement.addEventListener("touchend", pointerLeave);
     }
     obj.listeners = true;
   }
   function removeListeners() {
-    domElement.removeEventListener('mouseenter', pointerEnter);
-    domElement.removeEventListener('mousemove', pointerMove);
-    domElement.removeEventListener('mouseleave', pointerLeave);
-    domElement.removeEventListener('click', pointerClick);
-
-    domElement.removeEventListener('touchstart', pointerEnter);
-    domElement.removeEventListener('touchmove', pointerMove);
-    domElement.removeEventListener('touchend', pointerLeave);
+    domElement.removeEventListener("mouseenter", pointerEnter);
+    domElement.removeEventListener("mousemove", pointerMove);
+    domElement.removeEventListener("mouseleave", pointerLeave);
+    domElement.removeEventListener("click", pointerClick);
+    domElement.removeEventListener("touchstart", pointerEnter);
+    domElement.removeEventListener("touchmove", pointerMove);
+    domElement.removeEventListener("touchend", pointerLeave);
     obj.listeners = false;
-  }}
+  }
+}
 
-/**
- * Three.js helper
- */
-function useThree() {
-  // default conf
-  const conf = {
-    canvas: null,
+function useThree(params) {
+  const config = {
     antialias: true,
     alpha: false,
     autoClear: true,
-    orbit_ctrl: false,
+    orbitCtrl: false,
     pointer: false,
     resize: false,
     width: 300,
-    height: 150,
+    height: 150
   };
-
-  // size
+  if (params) {
+    Object.entries(params).forEach(([key, value]) => {
+      config[key] = value;
+    });
+  }
   const size = {
-    width: 1, height: 1,
-    wWidth: 1, wHeight: 1,
-    ratio: 1,
+    width: 1,
+    height: 1,
+    wWidth: 1,
+    wHeight: 1,
+    ratio: 1
   };
-
-  // handlers
-  const afterInitCallbacks = [];
-  let afterResizeCallbacks = [];
-  let beforeRenderCallbacks = [];
-
+  const beforeRenderCallbacks = [];
   const intersectObjects = [];
-
-  // returned object
+  const renderer = createRenderer();
   const obj = {
-    conf,
-    renderer: null,
-    camera: null,
-    cameraCtrl: null,
-    scene: null,
-    pointer: null,
+    config,
+    renderer,
     size,
     init,
     dispose,
     render,
     renderC,
     setSize,
-    onAfterInit,
-    onAfterResize, offAfterResize,
-    // onBeforeRender, offBeforeRender,
-    addIntersectObject, removeIntersectObject,
+    addIntersectObject,
+    removeIntersectObject
   };
-
-  /**
-   * init three
-   */
-  function init(params) {
-    if (params) {
-      Object.entries(params).forEach(([key, value]) => {
-        conf[key] = value;
-      });
-    }
-
+  return obj;
+  function createRenderer() {
+    const renderer2 = new WebGLRenderer({canvas: config.canvas, antialias: config.antialias, alpha: config.alpha});
+    renderer2.autoClear = config.autoClear;
+    return renderer2;
+  }
+  function init() {
     if (!obj.scene) {
-      console.error('Missing Scene');
-      return;
+      console.error("Missing Scene");
+      return false;
     }
-
     if (!obj.camera) {
-      console.error('Missing Camera');
-      return;
+      console.error("Missing Camera");
+      return false;
     }
-
-    obj.renderer = new WebGLRenderer({ canvas: conf.canvas, antialias: conf.antialias, alpha: conf.alpha });
-    obj.renderer.autoClear = conf.autoClear;
-
-    if (conf.resize) {
+    if (config.resize) {
       onResize();
-      window.addEventListener('resize', onResize);
-    } else {
-      setSize(conf.width, conf.height);
+      window.addEventListener("resize", onResize);
+    } else if (config.width && config.height) {
+      setSize(config.width, config.height);
     }
-
     initPointer();
-
-    if (conf.orbit_ctrl) {
-      obj.orbitCtrl = new OrbitControls(obj.camera, obj.renderer.domElement);
-      if (conf.orbit_ctrl instanceof Object) {
-        Object.entries(conf.orbit_ctrl).forEach(([key, value]) => {
-          obj.orbitCtrl[key] = value;
+    if (config.orbitCtrl) {
+      const cameraCtrl = new OrbitControls(obj.camera, obj.renderer.domElement);
+      if (config.orbitCtrl instanceof Object) {
+        Object.entries(config.orbitCtrl).forEach(([key, value]) => {
+          cameraCtrl[key] = value;
         });
       }
+      onBeforeRender(() => {
+        cameraCtrl.update();
+      });
+      obj.cameraCtrl = cameraCtrl;
     }
-
-    afterInitCallbacks.forEach(c => c());
-
     return true;
   }
   function initPointer() {
     let pointerConf = {
       camera: obj.camera,
       domElement: obj.renderer.domElement,
-      intersectObjects,
+      intersectObjects
     };
-
-    if (conf.pointer && conf.pointer instanceof Object) {
-      pointerConf = { ...pointerConf, ...conf.pointer };
+    if (config.pointer && config.pointer instanceof Object) {
+      pointerConf = {...pointerConf, ...config.pointer};
     }
-
-    obj.pointer = usePointer(pointerConf);
-    if (conf.pointer || intersectObjects.length) {
-      obj.pointer.addListeners();
-      if (conf.pointer.intersectMode === 'frame') {
-        onBeforeRender(() => {
-          obj.pointer.intersect();
-        });
+    const pointer = obj.pointer = usePointer(pointerConf);
+    if (config.pointer || intersectObjects.length) {
+      pointer.addListeners();
+      if (pointerConf.intersectMode === "frame") {
+        onBeforeRender(pointer.intersect);
       }
     }
   }
-
-  /**
-   * add after init callback
-   */
-  function onAfterInit(callback) {
-    afterInitCallbacks.push(callback);
+  function onBeforeRender(cb) {
+    beforeRenderCallbacks.push(cb);
   }
-
-  /**
-   * add after resize callback
-   */
-  function onAfterResize(callback) {
-    afterResizeCallbacks.push(callback);
-  }
-
-  /**
-   * remove after resize callback
-   */
-  function offAfterResize(callback) {
-    afterResizeCallbacks = afterResizeCallbacks.filter(c => c !== callback);
-  }
-
-  /**
-   * add before render callback
-   */
-  function onBeforeRender(callback) {
-    beforeRenderCallbacks.push(callback);
-  }
-
-  /**
-   * default render
-   */
   function render() {
-    if (obj.orbitCtrl) obj.orbitCtrl.update();
-    beforeRenderCallbacks.forEach(c => c());
+    beforeRenderCallbacks.forEach((c) => c());
     obj.renderer.render(obj.scene, obj.camera);
   }
-
-  /**
-   * composer render
-   */
   function renderC() {
-    if (obj.orbitCtrl) obj.orbitCtrl.update();
-    beforeRenderCallbacks.forEach(c => c());
+    beforeRenderCallbacks.forEach((c) => c());
     obj.composer.render();
   }
-
-  /**
-   * add intersect object
-   */
   function addIntersectObject(o) {
     if (intersectObjects.indexOf(o) === -1) {
       intersectObjects.push(o);
     }
-    // add listeners if needed
     if (obj.pointer && !obj.pointer.listeners) {
       obj.pointer.addListeners();
     }
   }
-
-  /**
-   * remove intersect object
-   */
   function removeIntersectObject(o) {
     const i = intersectObjects.indexOf(o);
     if (i !== -1) {
       intersectObjects.splice(i, 1);
     }
-    // remove listeners if needed
-    if (obj.pointer && !conf.pointer && intersectObjects.length === 0) {
+    if (obj.pointer && !config.pointer && intersectObjects.length === 0) {
       obj.pointer.removeListeners();
     }
   }
-
-  /**
-   * remove listeners and dispose
-   */
   function dispose() {
-    beforeRenderCallbacks = [];
-    window.removeEventListener('resize', onResize);
-    if (obj.pointer) obj.pointer.removeListeners();
-    if (obj.orbitCtrl) obj.orbitCtrl.dispose();
-    if (obj.renderer) obj.renderer.dispose();
+    window.removeEventListener("resize", onResize);
+    if (obj.pointer)
+      obj.pointer.removeListeners();
+    if (obj.cameraCtrl)
+      obj.cameraCtrl.dispose();
+    if (obj.renderer)
+      obj.renderer.dispose();
   }
-
-  /**
-   * resize listener
-   */
   function onResize() {
-    if (conf.resize === 'window') {
+    var _a;
+    if (config.resize === "window") {
       setSize(window.innerWidth, window.innerHeight);
     } else {
       const elt = obj.renderer.domElement.parentNode;
-      setSize(elt.clientWidth, elt.clientHeight);
+      if (elt)
+        setSize(elt.clientWidth, elt.clientHeight);
     }
-    afterResizeCallbacks.forEach(c => c());
+    (_a = config.onResize) == null ? void 0 : _a.call(config, size);
   }
-
-  /**
-   * update renderer size and camera
-   */
   function setSize(width, height) {
     size.width = width;
     size.height = height;
     size.ratio = width / height;
-
     obj.renderer.setSize(width, height, false);
-    obj.camera.aspect = size.ratio;
-    obj.camera.updateProjectionMatrix();
-
-    if (obj.composer) {
-      obj.composer.setSize(width, height);
+    const camera = obj.camera;
+    if (camera.type === "PerspectiveCamera") {
+      const pCamera = camera;
+      pCamera.aspect = size.ratio;
+      pCamera.updateProjectionMatrix();
     }
-
-    if (obj.camera.type === 'OrthographicCamera') {
-      size.wWidth = obj.camera.right - obj.camera.left;
-      size.wHeight = obj.camera.top - obj.camera.bottom;
+    if (camera.type === "OrthographicCamera") {
+      const oCamera = camera;
+      size.wWidth = oCamera.right - oCamera.left;
+      size.wHeight = oCamera.top - oCamera.bottom;
     } else {
       const wsize = getCameraSize();
-      size.wWidth = wsize[0]; size.wHeight = wsize[1];
+      size.wWidth = wsize[0];
+      size.wHeight = wsize[1];
     }
   }
-
-  /**
-   * calculate camera visible area size
-   */
   function getCameraSize() {
-    const vFOV = (obj.camera.fov * Math.PI) / 180;
-    const h = 2 * Math.tan(vFOV / 2) * Math.abs(obj.camera.position.z);
-    const w = h * obj.camera.aspect;
+    const camera = obj.camera;
+    const vFOV = camera.fov * Math.PI / 180;
+    const h = 2 * Math.tan(vFOV / 2) * Math.abs(camera.position.z);
+    const w = h * camera.aspect;
     return [w, h];
   }
-
-  return obj;
 }
 
+const RendererInjectionKey = Symbol("Renderer");
 var Renderer = defineComponent({
-  name: 'Renderer',
+  name: "Renderer",
   props: {
     antialias: Boolean,
     alpha: Boolean,
-    autoClear: { type: Boolean, default: true },
-    orbitCtrl: { type: [Boolean, Object], default: false },
-    pointer: { type: [Boolean, Object], default: false },
-    resize: { type: [Boolean, String], default: false },
+    autoClear: {type: Boolean, default: true},
+    orbitCtrl: {type: [Boolean, Object], default: false},
+    pointer: {type: [Boolean, Object], default: false},
+    resize: {type: [Boolean, String], default: false},
     shadow: Boolean,
     width: String,
     height: String,
     xr: Boolean,
+    onReady: Function,
+    onClick: Function
   },
-  setup() {
-    return {
-      three: useThree(),
-      raf: true,
-      onMountedCallbacks: [],
-      beforeRenderCallbacks: [],
-      afterRenderCallbacks: [],
+  setup(props) {
+    const initCallbacks = [];
+    const mountedCallbacks = [];
+    const beforeRenderCallbacks = [];
+    const afterRenderCallbacks = [];
+    const resizeCallbacks = [];
+    const canvas = document.createElement("canvas");
+    const config = {
+      canvas,
+      antialias: props.antialias,
+      alpha: props.alpha,
+      autoClear: props.autoClear,
+      orbitCtrl: props.orbitCtrl,
+      pointer: props.pointer,
+      resize: props.resize
     };
+    if (props.width)
+      config.width = parseInt(props.width);
+    if (props.height)
+      config.height = parseInt(props.height);
+    const three = useThree(config);
+    const renderFn = () => {
+    };
+    if (props.onClick) {
+      canvas.addEventListener("click", props.onClick);
+    }
+    return {
+      canvas,
+      three,
+      renderer: three.renderer,
+      size: three.size,
+      renderFn,
+      raf: true,
+      initCallbacks,
+      mountedCallbacks,
+      beforeRenderCallbacks,
+      afterRenderCallbacks,
+      resizeCallbacks
+    };
+  },
+  computed: {
+    camera: {
+      get: function() {
+        return this.three.camera;
+      },
+      set: function(camera) {
+        this.three.camera = camera;
+      }
+    },
+    scene: {
+      get: function() {
+        return this.three.scene;
+      },
+      set: function(scene) {
+        this.three.scene = scene;
+      }
+    },
+    composer: {
+      get: function() {
+        return this.three.composer;
+      },
+      set: function(composer) {
+        this.three.composer = composer;
+      }
+    }
   },
   provide() {
     return {
-      three: this.three,
-      // renderer: this.three.renderer,
-      rendererComponent: this,
+      [RendererInjectionKey]: this
     };
   },
   mounted() {
-    const params = {
-      canvas: this.$el,
-      antialias: this.antialias,
-      alpha: this.alpha,
-      autoClear: this.autoClear,
-      orbit_ctrl: this.orbitCtrl,
-      pointer: this.pointer,
-      resize: this.resize,
-      width: this.width,
-      height: this.height,
-    };
-
-    if (this.three.init(params)) {
-      this.renderer = this.three.renderer;
+    var _a;
+    this.$el.parentNode.insertBefore(this.canvas, this.$el);
+    if (this.three.init()) {
+      this.three.config.onResize = (size) => {
+        this.resizeCallbacks.forEach((e) => e({type: "resize", renderer: this, size}));
+      };
       this.renderer.shadowMap.enabled = this.shadow;
-
-      this._render = this.three.composer ? this.three.renderC : this.three.render;
-
+      this.renderFn = this.three.composer ? this.three.renderC : this.three.render;
+      this.initCallbacks.forEach((e) => e({type: "init", renderer: this}));
+      (_a = this.onReady) == null ? void 0 : _a.call(this, this);
       if (this.xr) {
         this.renderer.xr.enabled = true;
         this.renderer.setAnimationLoop(this.render);
@@ -517,50 +480,78 @@ var Renderer = defineComponent({
         requestAnimationFrame(this.renderLoop);
       }
     }
-    this.onMountedCallbacks.forEach(c => c());
+    this.mountedCallbacks.forEach((e) => e({type: "mounted", renderer: this}));
   },
   beforeUnmount() {
+    this.canvas.remove();
     this.beforeRenderCallbacks = [];
     this.afterRenderCallbacks = [];
     this.raf = false;
     this.three.dispose();
   },
   methods: {
+    onInit(cb) {
+      this.addListener("init", cb);
+    },
     onMounted(cb) {
-      this.onMountedCallbacks.push(cb);
+      this.addListener("mounted", cb);
     },
     onBeforeRender(cb) {
-      this.beforeRenderCallbacks.push(cb);
+      this.addListener("beforerender", cb);
     },
     offBeforeRender(cb) {
-      this.beforeRenderCallbacks = this.beforeRenderCallbacks.filter(c => c !== cb);
+      this.removeListener("beforerender", cb);
     },
     onAfterRender(cb) {
-      this.afterRenderCallbacks.push(cb);
+      this.addListener("afterrender", cb);
     },
     offAfterRender(cb) {
-      this.afterRenderCallbacks = this.afterRenderCallbacks.filter(c => c !== cb);
+      this.removeListener("afterrender", cb);
     },
-    onAfterResize(cb) {
-      this.three.onAfterResize(cb);
+    onResize(cb) {
+      this.addListener("resize", cb);
     },
-    offAfterResize(cb) {
-      this.three.offAfterResize(cb);
+    offResize(cb) {
+      this.removeListener("resize", cb);
+    },
+    addListener(type, cb) {
+      const callbacks = this.getCallbacks(type);
+      callbacks.push(cb);
+    },
+    removeListener(type, cb) {
+      const callbacks = this.getCallbacks(type);
+      const index = callbacks.indexOf(cb);
+      if (index)
+        callbacks.splice(index, 1);
+    },
+    getCallbacks(type) {
+      if (type === "init") {
+        return this.initCallbacks;
+      } else if (type === "mounted") {
+        return this.mountedCallbacks;
+      } else if (type === "beforerender") {
+        return this.beforeRenderCallbacks;
+      } else if (type === "afterrender") {
+        return this.afterRenderCallbacks;
+      } else {
+        return this.resizeCallbacks;
+      }
     },
     render(time) {
-      this.beforeRenderCallbacks.forEach(c => c({ time }));
-      this._render();
-      this.afterRenderCallbacks.forEach(c => c({ time }));
+      this.beforeRenderCallbacks.forEach((e) => e({type: "beforerender", renderer: this, time}));
+      this.renderFn();
+      this.afterRenderCallbacks.forEach((e) => e({type: "afterrender", renderer: this, time}));
     },
     renderLoop(time) {
-      if (this.raf) requestAnimationFrame(this.renderLoop);
+      if (this.raf)
+        requestAnimationFrame(this.renderLoop);
       this.render(time);
-    },
+    }
   },
   render() {
-    return h('canvas', {}, this.$slots.default());
+    return this.$slots.default ? this.$slots.default() : [];
   },
-  __hmrId: 'Renderer',
+  __hmrId: "Renderer"
 });
 
 function setFromProp(o, prop) {
@@ -571,25 +562,30 @@ function setFromProp(o, prop) {
   }
 }
 function bindProps(src, props, dst) {
-  props.forEach(prop => {
-    bindProp(src, prop, dst);
+  props.forEach((prop) => {
+    bindProp(src, prop, dst, prop);
   });
 }
 function bindProp(src, srcProp, dst, dstProp) {
-  if (!dstProp) dstProp = srcProp;
+  const _dstProp = dstProp || srcProp;
   const ref = toRef(src, srcProp);
   if (ref.value instanceof Object) {
-    setFromProp(dst[dstProp], ref.value);
-    watch(ref, (value) => { setFromProp(dst[dstProp], value); }, { deep: true });
+    setFromProp(dst[_dstProp], ref.value);
+    watch(ref, (value) => {
+      setFromProp(dst[_dstProp], value);
+    }, {deep: true});
   } else {
-    if (ref.value) dst[dstProp] = src[srcProp];
-    watch(ref, (value) => { dst[dstProp] = value; });
+    if (ref.value)
+      dst[_dstProp] = src[srcProp];
+    watch(ref, (value) => {
+      dst[_dstProp] = value;
+    });
   }
 }
-function propsValues(props, exclude) {
+function propsValues(props, exclude = []) {
   const values = {};
   Object.entries(props).forEach(([key, value]) => {
-    if (!exclude || (exclude && !exclude.includes(key))) {
+    if (!exclude || exclude && !exclude.includes(key)) {
       values[key] = value;
     }
   });
@@ -600,319 +596,510 @@ function lerp(value1, value2, amount) {
   amount = amount > 1 ? 1 : amount;
   return value1 + (value2 - value1) * amount;
 }
-function lerpv2(v1, v2, amount) {
-  v1.x = lerp(v1.x, v2.x, amount);
-  v1.y = lerp(v1.y, v2.y, amount);
-}
-function lerpv3(v1, v2, amount) {
-  v1.x = lerp(v1.x, v2.x, amount);
-  v1.y = lerp(v1.y, v2.y, amount);
-  v1.z = lerp(v1.z, v2.z, amount);
-}
 function limit(val, min, max) {
-  return val < min ? min : (val > max ? max : val);
+  return val < min ? min : val > max ? max : val;
 }
-// from https://github.com/pmndrs/drei/blob/master/src/useMatcapTexture.tsx
-const MATCAP_ROOT = 'https://rawcdn.githack.com/emmelleppi/matcaps/9b36ccaaf0a24881a39062d05566c9e92be4aa0d';
-
-function getMatcapUrl(hash, format = 1024) {
+const MATCAP_ROOT = "https://rawcdn.githack.com/emmelleppi/matcaps/9b36ccaaf0a24881a39062d05566c9e92be4aa0d";
+const DEFAULT_MATCAP = "0404E8_0404B5_0404CB_3333FC";
+function getMatcapUrl(hash = DEFAULT_MATCAP, format = 1024) {
   const fileName = `${hash}${getMatcapFormatString(format)}.png`;
   return `${MATCAP_ROOT}/${format}/${fileName}`;
 }
 function getMatcapFormatString(format) {
   switch (format) {
     case 64:
-      return '-64px';
+      return "-64px";
     case 128:
-      return '-128px';
+      return "-128px";
     case 256:
-      return '-256px';
+      return "-256px";
     case 512:
-      return '-512px';
+      return "-512px";
     default:
-      return '';
+      return "";
   }
 }
 
-// import Object3D from '../core/Object3D.js';
-
 var Camera = defineComponent({
-  // TODO: eventually extend Object3D, for now: error 'injection "scene" not found'
-  // because camera is a sibling of scene in Trois
-  // extends: Object3D,
-  inject: ['three'],
   render() {
     return this.$slots.default ? this.$slots.default() : [];
-  },
+  }
 });
 
 var OrthographicCamera = defineComponent({
   extends: Camera,
-  name: 'OrthographicCamera',
-  inject: ['three'],
+  name: "OrthographicCamera",
   props: {
-    left: { type: Number, default: -1 },
-    right: { type: Number, default: 1 },
-    top: { type: Number, default: 1 },
-    bottom: { type: Number, default: -1 },
-    near: { type: Number, default: 0.1 },
-    far: { type: Number, default: 2000 },
-    zoom: { type: Number, default: 1 },
-    position: { type: Object, default: { x: 0, y: 0, z: 0 } },
+    left: {type: Number, default: -1},
+    right: {type: Number, default: 1},
+    top: {type: Number, default: 1},
+    bottom: {type: Number, default: -1},
+    near: {type: Number, default: 0.1},
+    far: {type: Number, default: 2e3},
+    zoom: {type: Number, default: 1},
+    position: {type: Object, default: () => ({x: 0, y: 0, z: 0})}
   },
-  created() {
-    this.camera = new OrthographicCamera$1(this.left, this.right, this.top, this.bottom, this.near, this.far);
-    bindProp(this, 'position', this.camera);
-
-    ['left', 'right', 'top', 'bottom', 'near', 'far', 'zoom'].forEach(p => {
-      watch(() => this[p], () => {
-        this.camera[p] = this[p];
-        this.camera.updateProjectionMatrix();
+  setup(props) {
+    const renderer = inject(RendererInjectionKey);
+    if (!renderer) {
+      console.error("Renderer not found");
+      return;
+    }
+    const camera = new OrthographicCamera$1(props.left, props.right, props.top, props.bottom, props.near, props.far);
+    renderer.camera = camera;
+    bindProp(props, "position", camera);
+    const watchProps = ["left", "right", "top", "bottom", "near", "far", "zoom"];
+    watchProps.forEach((p) => {
+      watch(() => props[p], (value) => {
+        camera[p] = value;
+        camera.updateProjectionMatrix();
       });
     });
-
-    this.three.camera = this.camera;
+    return {renderer, camera};
   },
-  __hmrId: 'OrthographicCamera',
+  __hmrId: "OrthographicCamera"
 });
 
 var PerspectiveCamera = defineComponent({
   extends: Camera,
-  name: 'PerspectiveCamera',
-  inject: ['three'],
+  name: "PerspectiveCamera",
   props: {
-    aspect: { type: Number, default: 1 },
-    far: { type: Number, default: 2000 },
-    fov: { type: Number, default: 50 },
-    near: { type: Number, default: 0.1 },
-    position: { type: Object, default: { x: 0, y: 0, z: 0 } },
-    lookAt: { type: Object, default: null },
+    aspect: {type: Number, default: 1},
+    far: {type: Number, default: 2e3},
+    fov: {type: Number, default: 50},
+    near: {type: Number, default: 0.1},
+    position: {type: Object, default: () => ({x: 0, y: 0, z: 0})},
+    lookAt: {type: Object, default: null}
   },
-  created() {
-    this.camera = new PerspectiveCamera$1(this.fov, this.aspect, this.near, this.far);
-    bindProp(this, 'position', this.camera);
-
-    if (this.lookAt) this.camera.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z);
-    watch(() => this.lookAt, (v) => { this.camera.lookAt(v.x, v.y, v.z); }, { deep: true });
-
-    ['aspect', 'far', 'fov', 'near'].forEach(p => {
-      watch(() => this[p], () => {
-        this.camera[p] = this[p];
-        this.camera.updateProjectionMatrix();
+  setup(props) {
+    var _a;
+    const renderer = inject(RendererInjectionKey);
+    if (!renderer) {
+      console.error("Renderer not found");
+      return;
+    }
+    const camera = new PerspectiveCamera$1(props.fov, props.aspect, props.near, props.far);
+    renderer.camera = camera;
+    bindProp(props, "position", camera);
+    if (props.lookAt)
+      camera.lookAt((_a = props.lookAt.x) != null ? _a : 0, props.lookAt.y, props.lookAt.z);
+    watch(() => props.lookAt, (v) => {
+      var _a2;
+      camera.lookAt((_a2 = v.x) != null ? _a2 : 0, v.y, v.z);
+    }, {deep: true});
+    const watchProps = ["aspect", "far", "fov", "near"];
+    watchProps.forEach((p) => {
+      watch(() => props[p], (value) => {
+        camera[p] = value;
+        camera.updateProjectionMatrix();
       });
     });
-
-    this.three.camera = this.camera;
+    return {renderer, camera};
   },
-  __hmrId: 'PerspectiveCamera',
+  __hmrId: "PerspectiveCamera"
+});
+
+const SceneInjectionKey = Symbol("Scene");
+var Scene = defineComponent({
+  name: "Scene",
+  props: {
+    background: [String, Number, Object]
+  },
+  setup(props) {
+    const renderer = inject(RendererInjectionKey);
+    const scene = new Scene$1();
+    if (!renderer) {
+      console.error("Renderer not found");
+      return;
+    }
+    renderer.scene = scene;
+    provide(SceneInjectionKey, scene);
+    const setBackground = (value) => {
+      if (!value)
+        return;
+      if (typeof value === "string" || typeof value === "number") {
+        if (scene.background instanceof Color)
+          scene.background.set(value);
+        else
+          scene.background = new Color(value);
+      } else if (value instanceof Texture$1) {
+        scene.background = value;
+      }
+    };
+    setBackground(props.background);
+    watch(() => props.background, setBackground);
+    const add = (o) => {
+      scene.add(o);
+    };
+    const remove = (o) => {
+      scene.remove(o);
+    };
+    return {scene, add, remove};
+  },
+  render() {
+    return this.$slots.default ? this.$slots.default() : [];
+  },
+  __hmrId: "Scene"
 });
 
 var Object3D = defineComponent({
-  name: 'Object3D',
-  inject: ['three', 'scene', 'rendererComponent'],
-  emits: ['created', 'ready'],
-  props: {
-    position: { type: Object, default: { x: 0, y: 0, z: 0 } },
-    rotation: { type: Object, default: { x: 0, y: 0, z: 0 } },
-    scale: { type: Object, default: { x: 1, y: 1, z: 1 } },
-    lookAt: { type: Object, default: null },
-    autoRemove: { type: Boolean, default: true },
-    userData: { type: Object, default: () => ({}) },
+  name: "Object3D",
+  inject: {
+    renderer: RendererInjectionKey,
+    scene: SceneInjectionKey
   },
-  // can't use setup because it will not be used in sub components
-  // setup() {},
+  emits: ["created", "ready"],
+  props: {
+    position: {type: Object, default: () => ({x: 0, y: 0, z: 0})},
+    rotation: {type: Object, default: () => ({x: 0, y: 0, z: 0})},
+    scale: {type: Object, default: () => ({x: 1, y: 1, z: 1, order: "XYZ"})},
+    lookAt: {type: Object, default: null},
+    autoRemove: {type: Boolean, default: true},
+    userData: {type: Object, default: () => ({})}
+  },
+  setup() {
+    return {};
+  },
+  created() {
+    if (!this.renderer) {
+      console.error("Missing parent Renderer");
+    }
+    if (!this.scene) {
+      console.error("Missing parent Scene");
+    }
+  },
   unmounted() {
-    if (this.autoRemove) this.removeFromParent();
+    if (this.autoRemove)
+      this.removeFromParent();
   },
   methods: {
     initObject3D(o3d) {
+      var _a;
       this.o3d = o3d;
-      this.o3d.userData = this.userData;
-      this.$emit('created', this.o3d);
-
-      bindProp(this, 'position', this.o3d);
-      bindProp(this, 'rotation', this.o3d);
-      bindProp(this, 'scale', this.o3d);
-
-      // TODO : fix lookat.x
-      if (this.lookAt) this.o3d.lookAt(this.lookAt.x, this.lookAt.y, this.lookAt.z);
-      watch(() => this.lookAt, (v) => { this.o3d.lookAt(v.x, v.y, v.z); }, { deep: true });
-
-      this._parent = this.getParent();
-      if (this.addToParent()) this.$emit('ready', this);
-      else console.error('Missing parent (Scene, Group...)');
+      this.$emit("created", o3d);
+      bindProp(this, "position", o3d);
+      bindProp(this, "rotation", o3d);
+      bindProp(this, "scale", o3d);
+      bindProp(this, "userData", o3d.userData);
+      if (this.lookAt)
+        o3d.lookAt((_a = this.lookAt.x) != null ? _a : 0, this.lookAt.y, this.lookAt.z);
+      watch(() => this.lookAt, (v) => {
+        var _a2;
+        o3d.lookAt((_a2 = v.x) != null ? _a2 : 0, v.y, v.z);
+      }, {deep: true});
+      this.parent = this.getParent();
+      if (this.addToParent())
+        this.$emit("ready", this);
+      else
+        console.error("Missing parent (Scene, Group...)");
     },
     getParent() {
       let parent = this.$parent;
       while (parent) {
-        if (parent.add) return parent;
+        if (parent.add)
+          return parent;
         parent = parent.$parent;
       }
-      return false;
+      return void 0;
     },
     addToParent(o) {
       const o3d = o || this.o3d;
-      if (this._parent) {
-        this._parent.add(o3d);
+      if (this.parent) {
+        this.parent.add(o3d);
         return true;
       }
       return false;
     },
     removeFromParent(o) {
       const o3d = o || this.o3d;
-      if (this._parent) {
-        this._parent.remove(o3d);
+      if (this.parent) {
+        this.parent.remove(o3d);
         return true;
       }
       return false;
     },
-    add(o) { this.o3d.add(o); },
-    remove(o) { this.o3d.remove(o); },
+    add(o) {
+      var _a;
+      (_a = this.o3d) == null ? void 0 : _a.add(o);
+    },
+    remove(o) {
+      var _a;
+      (_a = this.o3d) == null ? void 0 : _a.remove(o);
+    }
   },
   render() {
     return this.$slots.default ? this.$slots.default() : [];
   },
-  __hmrId: 'Object3D',
+  __hmrId: "Object3D"
 });
 
 var Group = defineComponent({
-  name: 'Group',
+  name: "Group",
   extends: Object3D,
-  created() {
-    this.group = new Group$1();
-    this.initObject3D(this.group);
-  },
-  __hmrId: 'Group',
-});
-
-var Scene = defineComponent({
-  name: 'Scene',
-  inject: ['three'],
-  props: {
-    id: String,
-    background: [String, Number],
-  },
-  setup(props) {
-    const scene = new Scene$1();
-    if (props.background) scene.background = new Color(props.background);
-    watch(() => props.background, (value) => { scene.background.set(value); });
-    return { scene };
-  },
-  provide() {
+  setup() {
     return {
-      scene: this.scene,
+      group: new Group$1()
     };
   },
-  mounted() {
-    if (!this.three.scene) {
-      this.three.scene = this.scene;
-    }
+  created() {
+    this.initObject3D(this.group);
   },
-  methods: {
-    add(o) { this.scene.add(o); },
-    remove(o) { this.scene.remove(o); },
-  },
-  render() {
-    return this.$slots.default ? this.$slots.default() : [];
-  },
-  __hmrId: 'Scene',
+  __hmrId: "Group"
 });
 
+const emptyCallBack = () => {
+};
 var Raycaster = defineComponent({
-  name: 'Raycaster',
-  inject: ['three', 'rendererComponent'],
+  name: "Raycaster",
   props: {
-    onPointerEnter: { type: Function, default: () => {} },
-    onPointerOver: { type: Function, default: () => {} },
-    onPointerMove: { type: Function, default: () => {} },
-    onPointerLeave: { type: Function, default: () => {} },
-    onClick: { type: Function, default: () => {} },
-    intersectMode: { type: String, default: 'move' },
+    onPointerEnter: {type: Function, default: emptyCallBack},
+    onPointerOver: {type: Function, default: emptyCallBack},
+    onPointerMove: {type: Function, default: emptyCallBack},
+    onPointerLeave: {type: Function, default: emptyCallBack},
+    onClick: {type: Function, default: emptyCallBack},
+    intersectMode: {type: String, default: "move"}
+  },
+  setup() {
+    const renderer = inject(RendererInjectionKey);
+    return {renderer};
   },
   mounted() {
-    this.rendererComponent.onMounted(() => {
+    if (!this.renderer) {
+      console.error("Renderer not found");
+      return;
+    }
+    const renderer = this.renderer;
+    this.renderer.onMounted(() => {
+      if (!renderer.camera)
+        return;
       this.pointer = usePointer({
-        camera: this.three.camera,
-        domElement: this.three.renderer.domElement,
+        camera: renderer.camera,
+        domElement: renderer.canvas,
         intersectObjects: this.getIntersectObjects(),
         onIntersectEnter: this.onPointerEnter,
         onIntersectOver: this.onPointerOver,
         onIntersectMove: this.onPointerMove,
         onIntersectLeave: this.onPointerLeave,
-        onIntersectClick: this.onClick,
+        onIntersectClick: this.onClick
       });
       this.pointer.addListeners();
-
-      if (this.intersectMode === 'frame') {
-        this.rendererComponent.onBeforeRender(this.pointer.intersect);
+      if (this.intersectMode === "frame") {
+        renderer.onBeforeRender(this.pointer.intersect);
       }
     });
   },
   unmounted() {
+    var _a;
     if (this.pointer) {
       this.pointer.removeListeners();
-      this.rendererComponent.offBeforeRender(this.pointer.intersect);
+      (_a = this.renderer) == null ? void 0 : _a.offBeforeRender(this.pointer.intersect);
     }
   },
   methods: {
     getIntersectObjects() {
-      return this.three.scene.children.filter(e => e.type === 'Mesh');
-    },
+      if (this.renderer && this.renderer.scene) {
+        const children = this.renderer.scene.children.filter((c) => ["Mesh", "InstancedMesh"].includes(c.type));
+        return children;
+      }
+      return [];
+    }
   },
   render() {
     return [];
   },
-  __hmrId: 'Raycaster',
+  __hmrId: "Raycaster"
 });
 
-const Geometry = defineComponent({
-  inject: ['mesh'],
+var CubeCamera = defineComponent({
+  extends: Object3D,
   props: {
-    rotateX: Number,
-    rotateY: Number,
-    rotateZ: Number,
+    cubeRTSize: {type: Number, default: 256},
+    cubeCameraNear: {type: Number, default: 0.1},
+    cubeCameraFar: {type: Number, default: 2e3},
+    autoUpdate: Boolean
   },
-  created() {
-    if (!this.mesh) {
-      console.error('Missing parent Mesh');
+  setup(props) {
+    const rendererC = inject(RendererInjectionKey);
+    if (!rendererC || !rendererC.scene) {
+      console.error("Missing Renderer / Scene");
+      return;
     }
-
-    this.watchProps = [];
-    Object.entries(this.$props).forEach(e => this.watchProps.push(e[0]));
-
-    this.createGeometry();
-    this.rotateGeometry();
-    this.mesh.setGeometry(this.geometry);
-
-    this.addWatchers();
+    const renderer = rendererC.renderer, scene = rendererC.scene;
+    const cubeRT = new WebGLCubeRenderTarget(props.cubeRTSize, {format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter});
+    const cubeCamera = new CubeCamera$1(props.cubeCameraNear, props.cubeCameraFar, cubeRT);
+    const updateRT = () => {
+      cubeCamera.update(renderer, scene);
+    };
+    if (props.autoUpdate) {
+      rendererC.onBeforeRender(updateRT);
+      onUnmounted(() => {
+        rendererC.offBeforeRender(updateRT);
+      });
+    } else {
+      rendererC.onMounted(updateRT);
+    }
+    return {cubeRT, cubeCamera};
   },
-  unmounted() {
-    this.geometry.dispose();
+  render() {
+    return [];
+  },
+  __hmrId: "CubeCamera"
+});
+
+const pointerProps = {
+  onPointerEnter: Function,
+  onPointerOver: Function,
+  onPointerMove: Function,
+  onPointerLeave: Function,
+  onPointerDown: Function,
+  onPointerUp: Function,
+  onClick: Function
+};
+const MeshInjectionKey = Symbol("Mesh");
+const Mesh = defineComponent({
+  name: "Mesh",
+  extends: Object3D,
+  props: {
+    castShadow: Boolean,
+    receiveShadow: Boolean,
+    ...pointerProps
+  },
+  setup() {
+    return {};
+  },
+  provide() {
+    return {
+      [MeshInjectionKey]: this
+    };
+  },
+  mounted() {
+    if (!this.mesh && !this.loading)
+      this.initMesh();
   },
   methods: {
-    addWatchers() {
-      this.watchProps.forEach(prop => {
+    initMesh() {
+      const mesh = new Mesh$1(this.geometry, this.material);
+      mesh.userData.component = this;
+      bindProp(this, "castShadow", mesh);
+      bindProp(this, "receiveShadow", mesh);
+      if (this.onPointerEnter || this.onPointerOver || this.onPointerMove || this.onPointerLeave || this.onPointerDown || this.onPointerUp || this.onClick) {
+        if (this.renderer)
+          this.renderer.three.addIntersectObject(mesh);
+      }
+      this.mesh = mesh;
+      this.initObject3D(mesh);
+    },
+    createGeometry() {
+    },
+    addGeometryWatchers(props) {
+      Object.keys(props).forEach((prop) => {
         watch(() => this[prop], () => {
           this.refreshGeometry();
         });
       });
     },
+    setGeometry(geometry) {
+      this.geometry = geometry;
+      if (this.mesh)
+        this.mesh.geometry = geometry;
+    },
+    setMaterial(material) {
+      this.material = material;
+      if (this.mesh)
+        this.mesh.material = material;
+    },
+    refreshGeometry() {
+      const oldGeo = this.geometry;
+      this.createGeometry();
+      if (this.mesh && this.geometry)
+        this.mesh.geometry = this.geometry;
+      oldGeo == null ? void 0 : oldGeo.dispose();
+    }
+  },
+  unmounted() {
+    if (this.mesh) {
+      if (this.renderer)
+        this.renderer.three.removeIntersectObject(this.mesh);
+    }
+    if (this.geometry)
+      this.geometry.dispose();
+    if (this.material)
+      this.material.dispose();
+  },
+  __hmrId: "Mesh"
+});
+function meshComponent(name, props, createGeometry) {
+  return defineComponent({
+    name,
+    extends: Mesh,
+    props,
+    created() {
+      this.createGeometry();
+      this.addGeometryWatchers(props);
+    },
+    methods: {
+      createGeometry() {
+        this.geometry = createGeometry(this);
+      }
+    }
+  });
+}
+
+const Geometry = defineComponent({
+  props: {
+    rotateX: Number,
+    rotateY: Number,
+    rotateZ: Number
+  },
+  inject: {
+    mesh: MeshInjectionKey
+  },
+  setup() {
+    return {};
+  },
+  created() {
+    if (!this.mesh) {
+      console.error("Missing parent Mesh");
+      return;
+    }
+    this.createGeometry();
+    this.rotateGeometry();
+    if (this.geometry)
+      this.mesh.setGeometry(this.geometry);
+    Object.keys(this.$props).forEach((prop) => {
+      watch(() => this[prop], this.refreshGeometry);
+    });
+  },
+  unmounted() {
+    var _a;
+    (_a = this.geometry) == null ? void 0 : _a.dispose();
+  },
+  methods: {
+    createGeometry() {
+    },
     rotateGeometry() {
-      if (this.rotateX) this.geometry.rotateX(this.rotateX);
-      if (this.rotateY) this.geometry.rotateY(this.rotateY);
-      if (this.rotateZ) this.geometry.rotateZ(this.rotateZ);
+      if (!this.geometry)
+        return;
+      if (this.rotateX)
+        this.geometry.rotateX(this.rotateX);
+      if (this.rotateY)
+        this.geometry.rotateY(this.rotateY);
+      if (this.rotateZ)
+        this.geometry.rotateZ(this.rotateZ);
     },
     refreshGeometry() {
       const oldGeo = this.geometry;
       this.createGeometry();
       this.rotateGeometry();
-      this.mesh.setGeometry(this.geometry);
-      oldGeo.dispose();
-    },
+      if (this.geometry && this.mesh)
+        this.mesh.setGeometry(this.geometry);
+      oldGeo == null ? void 0 : oldGeo.dispose();
+    }
   },
-  render() { return []; },
+  render() {
+    return [];
+  }
 });
-
 function geometryComponent(name, props, createGeometry) {
   return defineComponent({
     name,
@@ -921,21 +1108,20 @@ function geometryComponent(name, props, createGeometry) {
     methods: {
       createGeometry() {
         this.geometry = createGeometry(this);
-      },
-    },
+      }
+    }
   });
 }
 
-const props$h = {
+const props$n = {
   size: Number,
-  width: { type: Number, default: 1 },
-  height: { type: Number, default: 1 },
-  depth: { type: Number, default: 1 },
-  widthSegments: { type: Number, default: 1 },
-  heightSegments: { type: Number, default: 1 },
-  depthSegments: { type: Number, default: 1 },
+  width: {type: Number, default: 1},
+  height: {type: Number, default: 1},
+  depth: {type: Number, default: 1},
+  widthSegments: {type: Number, default: 1},
+  heightSegments: {type: Number, default: 1},
+  depthSegments: {type: Number, default: 1}
 };
-
 function createGeometry$f(comp) {
   if (comp.size) {
     return new BoxGeometry$1(comp.size, comp.size, comp.size, comp.widthSegments, comp.heightSegments, comp.depthSegments);
@@ -943,188 +1129,173 @@ function createGeometry$f(comp) {
     return new BoxGeometry$1(comp.width, comp.height, comp.depth, comp.widthSegments, comp.heightSegments, comp.depthSegments);
   }
 }
-var BoxGeometry = geometryComponent('BoxGeometry', props$h, createGeometry$f);
+var BoxGeometry = geometryComponent("BoxGeometry", props$n, createGeometry$f);
 
-const props$g = {
-  radius: { type: Number, default: 1 },
-  segments: { type: Number, default: 8 },
-  thetaStart: { type: Number, default: 0 },
-  thetaLength: { type: Number, default: Math.PI * 2 },
+const props$m = {
+  radius: {type: Number, default: 1},
+  segments: {type: Number, default: 8},
+  thetaStart: {type: Number, default: 0},
+  thetaLength: {type: Number, default: Math.PI * 2}
 };
-
 function createGeometry$e(comp) {
   return new CircleGeometry$1(comp.radius, comp.segments, comp.thetaStart, comp.thetaLength);
 }
-var CircleGeometry = geometryComponent('CircleGeometry', props$g, createGeometry$e);
+var CircleGeometry = geometryComponent("CircleGeometry", props$m, createGeometry$e);
 
-const props$f = {
-  radius: { type: Number, default: 1 },
-  height: { type: Number, default: 1 },
-  radialSegments: { type: Number, default: 8 },
-  heightSegments: { type: Number, default: 1 },
-  openEnded: { type: Boolean, default: false },
-  thetaStart: { type: Number, default: 0 },
-  thetaLength: { type: Number, default: Math.PI * 2 },
+const props$l = {
+  radius: {type: Number, default: 1},
+  height: {type: Number, default: 1},
+  radialSegments: {type: Number, default: 8},
+  heightSegments: {type: Number, default: 1},
+  openEnded: {type: Boolean, default: false},
+  thetaStart: {type: Number, default: 0},
+  thetaLength: {type: Number, default: Math.PI * 2}
 };
-
 function createGeometry$d(comp) {
   return new ConeGeometry$1(comp.radius, comp.height, comp.radialSegments, comp.heightSegments, comp.openEnded, comp.thetaStart, comp.thetaLength);
 }
-var ConeGeometry = geometryComponent('ConeGeometry', props$f, createGeometry$d);
+var ConeGeometry = geometryComponent("ConeGeometry", props$l, createGeometry$d);
 
-const props$e = {
-  radiusTop: { type: Number, default: 1 },
-  radiusBottom: { type: Number, default: 1 },
-  height: { type: Number, default: 1 },
-  radialSegments: { type: Number, default: 8 },
-  heightSegments: { type: Number, default: 1 },
-  openEnded: { type: Boolean, default: false },
-  thetaStart: { type: Number, default: 0 },
-  thetaLength: { type: Number, default: Math.PI * 2 },
+const props$k = {
+  radiusTop: {type: Number, default: 1},
+  radiusBottom: {type: Number, default: 1},
+  height: {type: Number, default: 1},
+  radialSegments: {type: Number, default: 8},
+  heightSegments: {type: Number, default: 1},
+  openEnded: {type: Boolean, default: false},
+  thetaStart: {type: Number, default: 0},
+  thetaLength: {type: Number, default: Math.PI * 2}
 };
-
 function createGeometry$c(comp) {
   return new CylinderGeometry$1(comp.radiusTop, comp.radiusBottom, comp.height, comp.radialSegments, comp.heightSegments, comp.openEnded, comp.thetaStart, comp.thetaLength);
 }
-var CylinderGeometry = geometryComponent('CylinderGeometry', props$e, createGeometry$c);
+var CylinderGeometry = geometryComponent("CylinderGeometry", props$k, createGeometry$c);
 
-const props$d = {
-  radius: { type: Number, default: 1 },
-  detail: { type: Number, default: 0 },
+const props$j = {
+  radius: {type: Number, default: 1},
+  detail: {type: Number, default: 0}
 };
-
 function createGeometry$b(comp) {
   return new DodecahedronGeometry$1(comp.radius, comp.detail);
 }
-var DodecahedronGeometry = geometryComponent('DodecahedronGeometry', props$d, createGeometry$b);
+var DodecahedronGeometry = geometryComponent("DodecahedronGeometry", props$j, createGeometry$b);
 
-const props$c = {
-  radius: { type: Number, default: 1 },
-  detail: { type: Number, default: 0 },
+const props$i = {
+  radius: {type: Number, default: 1},
+  detail: {type: Number, default: 0}
 };
-
 function createGeometry$a(comp) {
   return new IcosahedronGeometry$1(comp.radius, comp.detail);
 }
-var IcosahedronGeometry = geometryComponent('IcosahedronGeometry', props$c, createGeometry$a);
+var IcosahedronGeometry = geometryComponent("IcosahedronGeometry", props$i, createGeometry$a);
 
-const props$b = {
+const props$h = {
   points: Array,
-  segments: { type: Number, default: 12 },
-  phiStart: { type: Number, default: 0 },
-  phiLength: { type: Number, default: Math.PI * 2 },
+  segments: {type: Number, default: 12},
+  phiStart: {type: Number, default: 0},
+  phiLength: {type: Number, default: Math.PI * 2}
 };
-
 function createGeometry$9(comp) {
   return new LatheGeometry$1(comp.points, comp.segments, comp.phiStart, comp.phiLength);
 }
-var LatheGeometry = geometryComponent('LatheGeometry', props$b, createGeometry$9);
+var LatheGeometry = geometryComponent("LatheGeometry", props$h, createGeometry$9);
 
-const props$a = {
-  radius: { type: Number, default: 1 },
-  detail: { type: Number, default: 0 },
+const props$g = {
+  radius: {type: Number, default: 1},
+  detail: {type: Number, default: 0}
 };
-
 function createGeometry$8(comp) {
   return new OctahedronGeometry$1(comp.radius, comp.detail);
 }
-var OctahedronGeometry = geometryComponent('OctahedronGeometry', props$a, createGeometry$8);
+var OctahedronGeometry = geometryComponent("OctahedronGeometry", props$g, createGeometry$8);
 
-const props$9 = {
-  width: { type: Number, default: 1 },
-  height: { type: Number, default: 1 },
-  widthSegments: { type: Number, default: 1 },
-  heightSegments: { type: Number, default: 1 },
+const props$f = {
+  width: {type: Number, default: 1},
+  height: {type: Number, default: 1},
+  widthSegments: {type: Number, default: 1},
+  heightSegments: {type: Number, default: 1}
 };
-
 function createGeometry$7(comp) {
   return new PlaneGeometry$1(comp.width, comp.height, comp.widthSegments, comp.heightSegments);
 }
-var PlaneGeometry = geometryComponent('PlaneGeometry', props$9, createGeometry$7);
+var PlaneGeometry = geometryComponent("PlaneGeometry", props$f, createGeometry$7);
 
-const props$8 = {
+const props$e = {
   vertices: Array,
   indices: Array,
-  radius: { type: Number, default: 1 },
-  detail: { type: Number, default: 0 },
+  radius: {type: Number, default: 1},
+  detail: {type: Number, default: 0}
 };
-
 function createGeometry$6(comp) {
   return new PolyhedronGeometry$1(comp.vertices, comp.indices, comp.radius, comp.detail);
 }
-var PolyhedronGeometry = geometryComponent('PolyhedronGeometry', props$8, createGeometry$6);
+var PolyhedronGeometry = geometryComponent("PolyhedronGeometry", props$e, createGeometry$6);
 
-const props$7 = {
-  innerRadius: { type: Number, default: 0.5 },
-  outerRadius: { type: Number, default: 1 },
-  thetaSegments: { type: Number, default: 8 },
-  phiSegments: { type: Number, default: 1 },
-  thetaStart: { type: Number, default: 0 },
-  thetaLength: { type: Number, default: Math.PI * 2 },
+const props$d = {
+  innerRadius: {type: Number, default: 0.5},
+  outerRadius: {type: Number, default: 1},
+  thetaSegments: {type: Number, default: 8},
+  phiSegments: {type: Number, default: 1},
+  thetaStart: {type: Number, default: 0},
+  thetaLength: {type: Number, default: Math.PI * 2}
 };
-
 function createGeometry$5(comp) {
   return new RingGeometry$1(comp.innerRadius, comp.outerRadius, comp.thetaSegments, comp.phiSegments, comp.thetaStart, comp.thetaLength);
 }
-var RingGeometry = geometryComponent('RingGeometry', props$7, createGeometry$5);
+var RingGeometry = geometryComponent("RingGeometry", props$d, createGeometry$5);
 
-const props$6 = {
-  radius: { type: Number, default: 1 },
-  widthSegments: { type: Number, default: 12 },
-  heightSegments: { type: Number, default: 12 },
+const props$c = {
+  radius: {type: Number, default: 1},
+  widthSegments: {type: Number, default: 12},
+  heightSegments: {type: Number, default: 12}
 };
-
 function createGeometry$4(comp) {
   return new SphereGeometry$1(comp.radius, comp.widthSegments, comp.heightSegments);
 }
-var SphereGeometry = geometryComponent('SphereGeometry', props$6, createGeometry$4);
+var SphereGeometry = geometryComponent("SphereGeometry", props$c, createGeometry$4);
 
-const props$5 = {
-  radius: { type: Number, default: 1 },
-  detail: { type: Number, default: 0 },
+const props$b = {
+  radius: {type: Number, default: 1},
+  detail: {type: Number, default: 0}
 };
-
 function createGeometry$3(comp) {
   return new TetrahedronGeometry$1(comp.radius, comp.detail);
 }
-var TetrahedronGeometry = geometryComponent('TetrahedronGeometry', props$5, createGeometry$3);
+var TetrahedronGeometry = geometryComponent("TetrahedronGeometry", props$b, createGeometry$3);
 
-const props$4 = {
-  radius: { type: Number, default: 1 },
-  tube: { type: Number, default: 0.4 },
-  radialSegments: { type: Number, default: 8 },
-  tubularSegments: { type: Number, default: 6 },
-  arc: { type: Number, default: Math.PI * 2 },
+const props$a = {
+  radius: {type: Number, default: 1},
+  tube: {type: Number, default: 0.4},
+  radialSegments: {type: Number, default: 8},
+  tubularSegments: {type: Number, default: 6},
+  arc: {type: Number, default: Math.PI * 2}
 };
-
 function createGeometry$2(comp) {
   return new TorusGeometry$1(comp.radius, comp.tube, comp.radialSegments, comp.tubularSegments, comp.arc);
 }
-var TorusGeometry = geometryComponent('TorusGeometry', props$4, createGeometry$2);
+var TorusGeometry = geometryComponent("TorusGeometry", props$a, createGeometry$2);
 
-const props$3 = {
-  radius: { type: Number, default: 1 },
-  tube: { type: Number, default: 0.4 },
-  tubularSegments: { type: Number, default: 64 },
-  radialSegments: { type: Number, default: 8 },
-  p: { type: Number, default: 2 },
-  q: { type: Number, default: 3 },
+const props$9 = {
+  radius: {type: Number, default: 1},
+  tube: {type: Number, default: 0.4},
+  tubularSegments: {type: Number, default: 64},
+  radialSegments: {type: Number, default: 8},
+  p: {type: Number, default: 2},
+  q: {type: Number, default: 3}
 };
-
 function createGeometry$1(comp) {
   return new TorusKnotGeometry$1(comp.radius, comp.tube, comp.tubularSegments, comp.radialSegments, comp.p, comp.q);
 }
-var TorusKnotGeometry = geometryComponent('TorusKnotGeometry', props$3, createGeometry$1);
+var TorusKnotGeometry = geometryComponent("TorusKnotGeometry", props$9, createGeometry$1);
 
-const props$2 = {
+const props$8 = {
   points: Array,
   path: Curve,
-  tubularSegments: { type: Number, default: 64 },
-  radius: { type: Number, default: 1 },
-  radialSegments: { type: Number, default: 8 },
-  closed: { type: Boolean, default: false },
+  tubularSegments: {type: Number, default: 64},
+  radius: {type: Number, default: 1},
+  radialSegments: {type: Number, default: 8},
+  closed: {type: Boolean, default: false}
 };
-
 function createGeometry(comp) {
   let curve;
   if (comp.points) {
@@ -1132,509 +1303,464 @@ function createGeometry(comp) {
   } else if (comp.path) {
     curve = comp.path;
   } else {
-    console.error('Missing path curve or points.');
+    console.error("Missing path curve or points.");
   }
   return new TubeGeometry$1(curve, comp.tubularSegments, comp.radius, comp.radiusSegments, comp.closed);
 }
 var TubeGeometry = defineComponent({
   extends: Geometry,
-  props: props$2,
+  props: props$8,
   methods: {
     createGeometry() {
       this.geometry = createGeometry(this);
     },
-    // update points (without using prop, faster)
     updatePoints(points) {
       updateTubeGeometryPoints(this.geometry, points);
-    },
-  },
+    }
+  }
 });
-
 function updateTubeGeometryPoints(tube, points) {
   const curve = new CatmullRomCurve3(points);
-  const { radialSegments, radius, tubularSegments, closed } = tube.parameters;
+  const {radialSegments, radius, tubularSegments, closed} = tube.parameters;
   const frames = curve.computeFrenetFrames(tubularSegments, closed);
   tube.tangents = frames.tangents;
   tube.normals = frames.normals;
   tube.binormals = frames.binormals;
   tube.parameters.path = curve;
-
-  const pArray = tube.attributes.position.array;
-  const nArray = tube.attributes.normal.array;
+  const pAttribute = tube.getAttribute("position");
+  const nAttribute = tube.getAttribute("normal");
   const normal = new Vector3();
-  let P;
-
+  const P = new Vector3();
   for (let i = 0; i < tubularSegments; i++) {
     updateSegment(i);
   }
   updateSegment(tubularSegments);
-
   tube.attributes.position.needsUpdate = true;
   tube.attributes.normal.needsUpdate = true;
-
   function updateSegment(i) {
-    P = curve.getPointAt(i / tubularSegments, P);
+    curve.getPointAt(i / tubularSegments, P);
     const N = frames.normals[i];
     const B = frames.binormals[i];
     for (let j = 0; j <= radialSegments; j++) {
       const v = j / radialSegments * Math.PI * 2;
       const sin = Math.sin(v);
       const cos = -Math.cos(v);
-      normal.x = (cos * N.x + sin * B.x);
-      normal.y = (cos * N.y + sin * B.y);
-      normal.z = (cos * N.z + sin * B.z);
+      normal.x = cos * N.x + sin * B.x;
+      normal.y = cos * N.y + sin * B.y;
+      normal.z = cos * N.z + sin * B.z;
       normal.normalize();
-      const index = (i * (radialSegments + 1) + j) * 3;
-      nArray[index] = normal.x;
-      nArray[index + 1] = normal.y;
-      nArray[index + 2] = normal.z;
-      pArray[index] = P.x + radius * normal.x;
-      pArray[index + 1] = P.y + radius * normal.y;
-      pArray[index + 2] = P.z + radius * normal.z;
+      const index = i * (radialSegments + 1) + j;
+      nAttribute.setXYZ(index, normal.x, normal.y, normal.z);
+      pAttribute.setXYZ(index, P.x + radius * normal.x, P.y + radius * normal.y, P.z + radius * normal.z);
     }
   }
 }
 
 var Light = defineComponent({
   extends: Object3D,
-  name: 'Light',
+  name: "Light",
   props: {
-    color: { type: String, default: '#ffffff' },
-    intensity: { type: Number, default: 1 },
-    castShadow: { type: Boolean, default: false },
-    shadowMapSize: { type: Object, default: { x: 512, y: 512 } },
-    shadowCamera: { type: Object, default: {} },
+    color: {type: String, default: "#ffffff"},
+    intensity: {type: Number, default: 1},
+    castShadow: {type: Boolean, default: false},
+    shadowMapSize: {type: Object, default: () => ({x: 512, y: 512})},
+    shadowCamera: {type: Object, default: () => ({})}
   },
-  // can't use setup because it will not be used in sub components
-  // setup() {},
+  setup() {
+    return {};
+  },
   unmounted() {
-    if (this.light.target) this.removeFromParent(this.light.target);
+    if (this.light instanceof SpotLight$1 || this.light instanceof DirectionalLight$1) {
+      this.removeFromParent(this.light.target);
+    }
   },
   methods: {
-    initLight() {
-      if (this.light.target) {
-        bindProp(this, 'target', this.light.target, 'position');
+    initLight(light) {
+      this.light = light;
+      if (light.shadow) {
+        light.castShadow = this.castShadow;
+        setFromProp(light.shadow.mapSize, this.shadowMapSize);
+        setFromProp(light.shadow.camera, this.shadowCamera);
       }
-
-      if (this.light.shadow) {
-        this.light.castShadow = this.castShadow;
-        setFromProp(this.light.shadow.mapSize, this.shadowMapSize);
-        setFromProp(this.light.shadow.camera, this.shadowCamera);
-      }
-
-      ['color', 'intensity', 'castShadow'].forEach(p => {
-        watch(() => this[p], () => {
-          if (p === 'color') {
-            this.light.color.set(this.color);
+      ["color", "intensity", "castShadow"].forEach((p) => {
+        watch(() => this[p], (value) => {
+          if (p === "color") {
+            light.color.set(value);
           } else {
-            this.light[p] = this[p];
+            light[p] = value;
           }
         });
       });
-
-      this.initObject3D(this.light);
-      if (this.light.target) this.addToParent(this.light.target);
-    },
+      this.initObject3D(light);
+      if (light instanceof SpotLight$1 || light instanceof DirectionalLight$1) {
+        bindProp(this, "target", light.target, "position");
+        this.addToParent(light.target);
+      }
+    }
   },
-  __hmrId: 'Light',
+  __hmrId: "Light"
 });
 
 var AmbientLight = defineComponent({
   extends: Light,
   created() {
-    this.light = new AmbientLight$1(this.color, this.intensity);
-    this.initLight();
+    this.initLight(new AmbientLight$1(this.color, this.intensity));
   },
-  __hmrId: 'AmbientLight',
+  __hmrId: "AmbientLight"
 });
 
 var DirectionalLight = defineComponent({
   extends: Light,
   props: {
-    target: Object,
+    target: {type: Object, default: () => ({x: 0, y: 0, z: 0})}
   },
   created() {
-    this.light = new DirectionalLight$1(this.color, this.intensity);
-    this.initLight();
+    this.initLight(new DirectionalLight$1(this.color, this.intensity));
   },
-  __hmrId: 'DirectionalLight',
+  __hmrId: "DirectionalLight"
 });
 
 var HemisphereLight = defineComponent({
   extends: Light,
   props: {
-    groundColor: { type: String, default: '#444444' },
+    groundColor: {type: String, default: "#444444"}
   },
   created() {
-    this.light = new HemisphereLight$1(this.color, this.groundColor, this.intensity);
-    watch(() => this.groundColor, (value) => { this.light.groundColor.set(value); });
-    this.initLight();
+    const light = new HemisphereLight$1(this.color, this.groundColor, this.intensity);
+    watch(() => this.groundColor, (value) => {
+      light.groundColor.set(value);
+    });
+    this.initLight(light);
   },
-  __hmrId: 'HemisphereLight',
+  __hmrId: "HemisphereLight"
 });
 
 var PointLight = defineComponent({
   extends: Light,
   props: {
-    distance: {
-      type: Number,
-      default: 0,
-    },
-    decay: {
-      type: Number,
-      default: 1,
-    },
+    distance: {type: Number, default: 0},
+    decay: {type: Number, default: 1}
   },
   created() {
-    this.light = new PointLight$1(this.color, this.intensity, this.distance, this.decay);
-    this.initLight();
+    this.initLight(new PointLight$1(this.color, this.intensity, this.distance, this.decay));
   },
-  __hmrId: 'PointLight',
+  __hmrId: "PointLight"
 });
 
 var RectAreaLight = defineComponent({
   extends: Light,
   props: {
-    width: { type: Number, default: 10 },
-    height: { type: Number, default: 10 },
-    helper: Boolean,
+    width: {type: Number, default: 10},
+    height: {type: Number, default: 10},
+    helper: Boolean
   },
   created() {
     RectAreaLightUniformsLib.init();
-    this.light = new RectAreaLight$1(this.color, this.intensity, this.width, this.height);
-
-    ['width', 'height'].forEach(p => {
-      watch(() => this[p], () => {
-        this.light[p] = this[p];
+    const light = new RectAreaLight$1(this.color, this.intensity, this.width, this.height);
+    const watchProps = ["width", "height"];
+    watchProps.forEach((p) => {
+      watch(() => this[p], (value) => {
+        light[p] = value;
       });
     });
-
     if (this.helper) {
-      this.lightHelper = new RectAreaLightHelper(this.light);
-      this.light.add(this.lightHelper);
+      const lightHelper = new RectAreaLightHelper(light);
+      light.add(lightHelper);
     }
-
-    this.initLight();
+    this.initLight(light);
   },
-  unmounted() {
-    if (this.lightHelper) this.removeFromParent(this.lightHelper);
-  },
-  __hmrId: 'RectAreaLight',
+  __hmrId: "RectAreaLight"
 });
 
 var SpotLight = defineComponent({
   extends: Light,
   props: {
-    angle: { type: Number, default: Math.PI / 3 },
-    decay: { type: Number, default: 1 },
-    distance: { type: Number, default: 0 },
-    penumbra: { type: Number, default: 0 },
-    target: Object,
+    angle: {type: Number, default: Math.PI / 3},
+    decay: {type: Number, default: 1},
+    distance: {type: Number, default: 0},
+    penumbra: {type: Number, default: 0},
+    target: Object
   },
   created() {
-    this.light = new SpotLight$1(this.color, this.intensity, this.distance, this.angle, this.penumbra, this.decay);
-    ['angle', 'decay', 'distance', 'penumbra'].forEach(p => {
-      watch(() => this[p], () => {
-        this.light[p] = this[p];
+    const light = new SpotLight$1(this.color, this.intensity, this.distance, this.angle, this.penumbra, this.decay);
+    const watchProps = ["angle", "decay", "distance", "penumbra"];
+    watchProps.forEach((p) => {
+      watch(() => this[p], (value) => {
+        light[p] = value;
       });
     });
-    this.initLight();
+    this.initLight(light);
   },
-  __hmrId: 'SpotLight',
+  __hmrId: "SpotLight"
 });
 
+const MaterialInjectionKey = Symbol("Material");
 var Material = defineComponent({
-  inject: ['three', 'mesh'],
+  inject: {
+    mesh: MeshInjectionKey
+  },
   props: {
-    color: { type: [String, Number], default: '#ffffff' },
-    depthTest: { type: Boolean, default: true },
-    depthWrite: { type: Boolean, default: true },
-    fog: { type: Boolean, default: true },
-    opacity: { type: Number, default: 1 },
-    side: { type: Number, default: FrontSide },
+    color: {type: [String, Number], default: "#ffffff"},
+    depthTest: {type: Boolean, default: true},
+    depthWrite: {type: Boolean, default: true},
+    fog: {type: Boolean, default: true},
+    opacity: {type: Number, default: 1},
+    side: {type: Number, default: FrontSide},
     transparent: Boolean,
-    vertexColors: Boolean,
+    vertexColors: Boolean
+  },
+  setup() {
+    return {};
   },
   provide() {
     return {
-      material: this,
+      [MaterialInjectionKey]: this
     };
   },
   created() {
-    this.createMaterial();
-    this.mesh.setMaterial(this.material);
-
-    this._addWatchers();
-    if (this.addWatchers) this.addWatchers();
+    if (!this.mesh) {
+      console.error("Missing parent Mesh");
+      return;
+    }
+    if (this.createMaterial) {
+      this.material = this.createMaterial();
+      this.mesh.setMaterial(this.material);
+      this.addWatchers();
+    }
   },
   unmounted() {
-    this.material.dispose();
+    var _a;
+    (_a = this.material) == null ? void 0 : _a.dispose();
   },
   methods: {
     setProp(key, value, needsUpdate = false) {
-      this.material[key] = value;
-      this.material.needsUpdate = needsUpdate;
+      if (this.material) {
+        this.material[key] = value;
+        this.material.needsUpdate = needsUpdate;
+      }
     },
-    setTexture(texture, key = 'map') {
+    setTexture(texture, key = "map") {
       this.setProp(key, texture, true);
     },
-    _addWatchers() {
-      ['color', 'depthTest', 'depthWrite', 'fog', 'opacity', 'side', 'transparent'].forEach(p => {
-        watch(() => this[p], () => {
-          if (p === 'color') {
-            this.material.color.set(this.color);
+    addWatchers() {
+      ["color", "depthTest", "depthWrite", "fog", "opacity", "side", "transparent"].forEach((p) => {
+        watch(() => this[p], (value) => {
+          if (p === "color") {
+            this.material.color.set(value);
           } else {
-            this.material[p] = this[p];
+            this.material[p] = value;
           }
         });
       });
-    },
+    }
   },
   render() {
     return this.$slots.default ? this.$slots.default() : [];
   },
-  __hmrId: 'Material',
+  __hmrId: "Material"
 });
-
 const wireframeProps = {
-  wireframe: { type: Boolean, default: false },
-  // not needed for WebGL
-  // wireframeLinecap: { type: String, default: 'round' },
-  // wireframeLinejoin: { type: String, default: 'round' },
-  wireframeLinewidth: { type: Number, default: 1 }, // not really useful
+  wireframe: {type: Boolean, default: false},
+  wireframeLinewidth: {type: Number, default: 1}
 };
 
 var BasicMaterial = defineComponent({
   extends: Material,
   props: {
-    ...wireframeProps,
+    ...wireframeProps
   },
   methods: {
     createMaterial() {
-      this.material = new MeshBasicMaterial(propsValues(this.$props));
-    },
-    addWatchers() {
-      bindProps(this, Object.keys(wireframeProps), this.material);
-    },
+      const material = new MeshBasicMaterial(propsValues(this.$props));
+      bindProps(this, Object.keys(wireframeProps), material);
+      return material;
+    }
   },
-  __hmrId: 'BasicMaterial',
+  __hmrId: "BasicMaterial"
 });
 
 var LambertMaterial = defineComponent({
   extends: Material,
   props: {
-    ...wireframeProps,
+    ...wireframeProps
   },
   methods: {
     createMaterial() {
-      this.material = new MeshLambertMaterial(propsValues(this.$props));
-    },
-    addWatchers() {
-      bindProps(this, Object.keys(wireframeProps), this.material);
-    },
+      const material = new MeshLambertMaterial(propsValues(this.$props));
+      bindProps(this, Object.keys(wireframeProps), material);
+      return material;
+    }
   },
-  __hmrId: 'LambertMaterial',
+  __hmrId: "LambertMaterial"
 });
 
 var MatcapMaterial = defineComponent({
   extends: Material,
   props: {
     src: String,
-    name: String,
-    flatShading: Boolean,
+    name: {type: String, default: "0404E8_0404B5_0404CB_3333FC"},
+    flatShading: Boolean
   },
   methods: {
     createMaterial() {
-      const src = this.name ? getMatcapUrl(this.name) : this.src;
-      const opts = propsValues(this.$props, ['src', 'name']);
+      const src = this.src ? this.src : getMatcapUrl(this.name);
+      const opts = propsValues(this.$props, ["src", "name"]);
       opts.matcap = new TextureLoader().load(src);
-      this.material = new MeshMatcapMaterial(opts);
-    },
-    addWatchers() {
-      // TODO
-    },
+      return new MeshMatcapMaterial(opts);
+    }
   },
-  __hmrId: 'MatcapMaterial',
+  __hmrId: "MatcapMaterial"
 });
 
 var PhongMaterial = defineComponent({
   extends: Material,
   props: {
-    emissive: { type: [Number, String], default: 0 },
-    emissiveIntensity: { type: Number, default: 1 },
-    reflectivity: { type: Number, default: 1 },
-    shininess: { type: Number, default: 30 },
-    specular: { type: [String, Number], default: 0x111111 },
+    emissive: {type: [Number, String], default: 0},
+    emissiveIntensity: {type: Number, default: 1},
+    reflectivity: {type: Number, default: 1},
+    shininess: {type: Number, default: 30},
+    specular: {type: [String, Number], default: 1118481},
     flatShading: Boolean,
-    ...wireframeProps,
+    ...wireframeProps
   },
   methods: {
     createMaterial() {
-      this.material = new MeshPhongMaterial(propsValues(this.$props));
-    },
-    addWatchers() {
-      // TODO : handle flatShading ?
-      ['emissive', 'emissiveIntensity', 'reflectivity', 'shininess', 'specular'].forEach(p => {
+      const material = new MeshPhongMaterial(propsValues(this.$props));
+      const watchProps = ["emissive", "emissiveIntensity", "reflectivity", "shininess", "specular"];
+      watchProps.forEach((p) => {
         watch(() => this[p], (value) => {
-          if (p === 'emissive' || p === 'specular') {
-            this.material[p].set(value);
+          if (p === "emissive" || p === "specular") {
+            material[p].set(value);
           } else {
-            this.material[p] = value;
+            material[p] = value;
           }
         });
       });
-      bindProps(this, Object.keys(wireframeProps), this.material);
-    },
+      bindProps(this, Object.keys(wireframeProps), material);
+      return material;
+    }
   },
-  __hmrId: 'PhongMaterial',
+  __hmrId: "PhongMaterial"
 });
 
-const props$1 = {
-  aoMapIntensity: { type: Number, default: 1 },
-  bumpScale: { type: Number, default: 1 },
-  displacementBias: { type: Number, default: 0 },
-  displacementScale: { type: Number, default: 1 },
-  emissive: { type: [Number, String], default: 0 },
-  emissiveIntensity: { type: Number, default: 1 },
-  envMapIntensity: { type: Number, default: 1 },
-  lightMapIntensity: { type: Number, default: 1 },
-  metalness: { type: Number, default: 0 },
-  normalScale: { type: Object, default: { x: 1, y: 1 } },
-  roughness: { type: Number, default: 1 },
-  refractionRatio: { type: Number, default: 0.98 },
-  flatShading: Boolean,
+const props$7 = {
+  aoMapIntensity: {type: Number, default: 1},
+  bumpScale: {type: Number, default: 1},
+  displacementBias: {type: Number, default: 0},
+  displacementScale: {type: Number, default: 1},
+  emissive: {type: [String, Number], default: 0},
+  emissiveIntensity: {type: Number, default: 1},
+  envMapIntensity: {type: Number, default: 1},
+  lightMapIntensity: {type: Number, default: 1},
+  metalness: {type: Number, default: 0},
+  normalScale: {type: Object, default: () => ({x: 1, y: 1})},
+  roughness: {type: Number, default: 1},
+  refractionRatio: {type: Number, default: 0.98},
+  flatShading: Boolean
 };
-
 var StandardMaterial = defineComponent({
   extends: Material,
   props: {
-    ...props$1,
-    ...wireframeProps,
+    ...props$7,
+    ...wireframeProps
   },
   methods: {
     createMaterial() {
-      this.material = new MeshStandardMaterial(propsValues(this.$props, ['normalScale']));
-    },
-    addWatchers() {
-      // TODO : use setProp, handle flatShading ?
-      Object.keys(props$1).forEach(p => {
-        if (p === 'normalScale') return;
+      const material = new MeshStandardMaterial(propsValues(this.$props, ["normalScale"]));
+      Object.keys(props$7).forEach((p) => {
+        if (p === "normalScale")
+          return;
         watch(() => this[p], (value) => {
-          if (p === 'emissive') {
-            this.material[p].set(value);
+          if (p === "emissive") {
+            material[p].set(value);
           } else {
-            this.material[p] = value;
+            material[p] = value;
           }
         });
       });
-      bindProp(this, 'normalScale', this.material);
-      bindProps(this, Object.keys(wireframeProps), this.material);
-    },
+      bindProp(this, "normalScale", material);
+      bindProps(this, Object.keys(wireframeProps), material);
+      return material;
+    }
   },
-  __hmrId: 'StandardMaterial',
+  __hmrId: "StandardMaterial"
 });
 
 var PhysicalMaterial = defineComponent({
   extends: StandardMaterial,
   props: {
-    flatShading: Boolean,
+    flatShading: Boolean
   },
   methods: {
     createMaterial() {
-      this.material = new MeshPhysicalMaterial(propsValues(this.$props));
-    },
-    addWatchers() {
-      // TODO
-    },
+      return new MeshPhysicalMaterial(propsValues(this.$props));
+    }
   },
-  __hmrId: 'PhysicalMaterial',
+  __hmrId: "PhysicalMaterial"
 });
 
 const defaultVertexShader = `
-varying vec2 vUv;
-void main(){
-  vUv = uv;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
-}`;
-
+  varying vec2 vUv;
+  void main(){
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+  }
+`;
 const defaultFragmentShader = `
-varying vec2 vUv;
-void main() {
-  gl_FragColor = vec4(vUv.x, vUv.y, 0., 1.0);
-}`;
-
+  varying vec2 vUv;
+  void main() {
+    gl_FragColor = vec4(vUv.x, vUv.y, 0., 1.0);
+  }
+`;
 var ShaderMaterial = defineComponent({
-  inject: ['three', 'mesh'],
+  extends: Material,
   props: {
-    uniforms: { type: Object, default: () => { return {}; } },
-    vertexShader: { type: String, default: defaultVertexShader },
-    fragmentShader: { type: String, default: defaultFragmentShader },
-  },
-  provide() {
-    return {
-      material: this,
-    };
-  },
-  created() {
-    this.createMaterial();
-    ['vertexShader', 'fragmentShader'].forEach(p => {
-      watch(() => this[p], () => {
-        // recreate material if we change either shader
-        this.material.dispose();
-        this.createMaterial();
-      });
-    });
-  },
-  unmounted() {
-    this.material.dispose();
+    uniforms: {type: Object, default: () => ({})},
+    vertexShader: {type: String, default: defaultVertexShader},
+    fragmentShader: {type: String, default: defaultFragmentShader}
   },
   methods: {
     createMaterial() {
-      this.material = new ShaderMaterial$1(propsValues(this.$props));
-      this.mesh.setMaterial(this.material);
+      const material = new ShaderMaterial$1({
+        uniforms: this.uniforms,
+        vertexShader: this.vertexShader,
+        fragmentShader: this.fragmentShader
+      });
+      const watchProps = ["vertexShader", "fragmentShader"];
+      watchProps.forEach((p) => {
+        watch(() => this[p], (value) => {
+          this.setProp(p, value, true);
+        });
+      });
+      return material;
     },
+    addWatchers() {
+    }
   },
-  render() {
-    return this.$slots.default ? this.$slots.default() : [];
-  },
-  __hmrId: 'ShaderMaterial',
+  __hmrId: "ShaderMaterial"
 });
-
-/**
- * ------------------------------------------------------------------------------------------
- * Subsurface Scattering shader
- * Based on three/examples/jsm/shaders/SubsurfaceScatteringShader.js
- * Based on GDC 2011 – Approximating Translucency for a Fast, Cheap and Convincing Subsurface Scattering Look
- * https://colinbarrebrisebois.com/2011/03/07/gdc-2011-approximating-translucency-for-a-fast-cheap-and-convincing-subsurface-scattering-look/
- *------------------------------------------------------------------------------------------
- */
 
 function replaceAll(string, find, replace) {
   return string.split(find).join(replace);
 }
-
-const meshphongFragHead = ShaderChunk.meshphong_frag.slice(0, ShaderChunk.meshphong_frag.indexOf('void main() {'));
-const meshphongFragBody = ShaderChunk.meshphong_frag.slice(ShaderChunk.meshphong_frag.indexOf('void main() {'));
-
+const meshphongFragHead = ShaderChunk.meshphong_frag.slice(0, ShaderChunk.meshphong_frag.indexOf("void main() {"));
+const meshphongFragBody = ShaderChunk.meshphong_frag.slice(ShaderChunk.meshphong_frag.indexOf("void main() {"));
 const SubsurfaceScatteringShader = {
-
   uniforms: UniformsUtils.merge([
     ShaderLib.phong.uniforms,
     {
-      thicknessColor: { value: new Color(0xffffff) },
-      thicknessDistortion: { value: 0.1 },
-      thicknessAmbient: { value: 0.0 },
-      thicknessAttenuation: { value: 0.1 },
-      thicknessPower: { value: 2.0 },
-      thicknessScale: { value: 10.0 },
-    },
+      thicknessColor: {value: new Color(16777215)},
+      thicknessDistortion: {value: 0.1},
+      thicknessAmbient: {value: 0},
+      thicknessAttenuation: {value: 0.1},
+      thicknessPower: {value: 2},
+      thicknessScale: {value: 10}
+    }
   ]),
-
   vertexShader: `
     #define USE_UV
     ${ShaderChunk.meshphong_vert}
   `,
-
   fragmentShader: `
     #define USE_UV
     #define SUBSURFACE
@@ -1659,357 +1785,222 @@ const SubsurfaceScatteringShader = {
       vec3 scatteringIllu = (scatteringDot + thicknessAmbient) * thickness;
       reflectedLight.directDiffuse += scatteringIllu * thicknessAttenuation * directLight.color;
     }
-  ` + meshphongFragBody.replace(
-    '#include <lights_fragment_begin>',
-    replaceAll(
-      ShaderChunk.lights_fragment_begin,
-      'RE_Direct( directLight, geometry, material, reflectedLight );',
-      `
+  ` + meshphongFragBody.replace("#include <lights_fragment_begin>", replaceAll(ShaderChunk.lights_fragment_begin, "RE_Direct( directLight, geometry, material, reflectedLight );", `
         RE_Direct( directLight, geometry, material, reflectedLight );
         #if defined( SUBSURFACE ) && defined( USE_UV )
           RE_Direct_Scattering(directLight, vUv, geometry, reflectedLight);
         #endif
-      `
-    )
-  ),
+      `))
 };
 
+const props$6 = {
+  color: {type: [String, Number], default: "#ffffff"},
+  thicknessColor: {type: [String, Number], default: "#ffffff"},
+  thicknessDistortion: {type: Number, default: 0.4},
+  thicknessAmbient: {type: Number, default: 0.01},
+  thicknessAttenuation: {type: Number, default: 0.7},
+  thicknessPower: {type: Number, default: 2},
+  thicknessScale: {type: Number, default: 4}
+};
 var SubSurfaceMaterial = defineComponent({
-  inject: ['three', 'mesh'],
-  props: {
-    color: { type: String, default: '#ffffff' },
-    thicknessColor: { type: String, default: '#ffffff' },
-    thicknessDistortion: { type: Number, default: 0.4 },
-    thicknessAmbient: { type: Number, default: 0.01 },
-    thicknessAttenuation: { type: Number, default: 0.7 },
-    thicknessPower: { type: Number, default: 2 },
-    thicknessScale: { type: Number, default: 4 },
-    transparent: { type: Boolean, default: false },
-    opacity: { type: Number, default: 1 },
-    vertexColors: { type: Boolean, default: false },
-  },
-  created() {
-    this.createMaterial();
-    this.mesh.setMaterial(this.material);
-  },
-  unmounted() {
-    this.material.dispose();
-  },
+  extends: Material,
+  props: props$6,
   methods: {
     createMaterial() {
       const params = SubsurfaceScatteringShader;
       const uniforms = UniformsUtils.clone(params.uniforms);
-
-      Object.entries(this.$props).forEach(([key, value]) => {
+      Object.keys(props$6).forEach((key) => {
+        const value = this[key];
         let _key = key, _value = value;
-        if (['color', 'thicknessColor'].includes(key)) {
-          if (key === 'color') _key = 'diffuse';
+        if (["color", "thicknessColor"].includes(key)) {
+          if (key === "color")
+            _key = "diffuse";
           _value = new Color(value);
         }
-        if (!['transparent', 'vertexColors'].includes(key)) {
-          uniforms[_key].value = _value;
-        }
+        uniforms[_key].value = _value;
       });
-
-      this.material = new ShaderMaterial$1({
+      const material = new ShaderMaterial$1({
         ...params,
         uniforms,
         lights: true,
         transparent: this.transparent,
-        vertexColors: this.vertexColors,
+        vertexColors: this.vertexColors
       });
-    },
+      return material;
+    }
   },
-  render() {
-    return [];
-  },
-  __hmrId: 'SubSurfaceMaterial',
+  __hmrId: "SubSurfaceMaterial"
 });
 
 var ToonMaterial = defineComponent({
   extends: Material,
   props: {
-    ...wireframeProps,
+    ...wireframeProps
   },
   methods: {
     createMaterial() {
-      this.material = new MeshToonMaterial(propsValues(this.$props));
-    },
-    addWatchers() {
-      bindProps(this, Object.keys(wireframeProps), this.material);
-    },
+      const material = new MeshToonMaterial(propsValues(this.$props));
+      bindProps(this, Object.keys(wireframeProps), material);
+      return material;
+    }
   },
-  __hmrId: 'ToonMaterial',
+  __hmrId: "ToonMaterial"
 });
 
 var Texture = defineComponent({
-  inject: ['material'],
-  emits: ['loaded'],
+  inject: {
+    material: MaterialInjectionKey
+  },
   props: {
-    name: { type: String, default: 'map' },
-    uniform: { type: String, default: null },
+    name: {type: String, default: "map"},
+    uniform: String,
     src: String,
     onLoad: Function,
     onProgress: Function,
     onError: Function,
-    mapping: { type: Number, default: UVMapping },
-    wrapS: { type: Number, default: ClampToEdgeWrapping },
-    wrapT: { type: Number, default: ClampToEdgeWrapping },
-    magFilter: { type: Number, default: LinearFilter },
-    minFilter: { type: Number, default: LinearMipmapLinearFilter },
-    repeat: { type: Object, default: { x: 1, y: 1 } },
-    rotation: { type: Number, default: 0 },
-    center: { type: Object, default: { x: 0, y: 0 } },
+    mapping: {type: Number, default: UVMapping},
+    wrapS: {type: Number, default: ClampToEdgeWrapping},
+    wrapT: {type: Number, default: ClampToEdgeWrapping},
+    magFilter: {type: Number, default: LinearFilter},
+    minFilter: {type: Number, default: LinearMipmapLinearFilter},
+    repeat: {type: Object, default: () => ({x: 1, y: 1})},
+    rotation: {type: Number, default: 0},
+    center: {type: Object, default: () => ({x: 0, y: 0})}
+  },
+  setup() {
+    return {};
   },
   created() {
     this.refreshTexture();
     watch(() => this.src, this.refreshTexture);
   },
   unmounted() {
-    if (this.material && this.material.setTexture) this.material.setTexture(null, this.name);
-    this.texture.dispose();
+    var _a, _b;
+    (_a = this.material) == null ? void 0 : _a.setTexture(null, this.name);
+    (_b = this.texture) == null ? void 0 : _b.dispose();
   },
   methods: {
     createTexture() {
-      this.texture = new TextureLoader().load(this.src, this.onLoaded, this.onProgress, this.onError);
-      const wathProps = ['mapping', 'wrapS', 'wrapT', 'magFilter', 'minFilter', 'repeat', 'rotation', 'rotation', 'center'];
-      wathProps.forEach(prop => {
-        bindProp(this, prop, this.texture);
+      if (!this.src)
+        return void 0;
+      const texture = new TextureLoader().load(this.src, this.onLoaded, this.onProgress, this.onError);
+      const wathProps = ["mapping", "wrapS", "wrapT", "magFilter", "minFilter", "repeat", "rotation", "center"];
+      wathProps.forEach((prop) => {
+        bindProp(this, prop, texture);
       });
+      return texture;
     },
     refreshTexture() {
-      this.createTexture();
-      // handle standard material
-      if (this.material && this.material.setTexture) { this.material.setTexture(this.texture, this.name); }
-      // handle shader material
-      else if (this.material && this.material.material.type === "ShaderMaterial") {
-        // require a `uniform` prop so we know what to call the uniform
-        if (!this.uniform) {
-          console.warn('"uniform" prop required to use texture in a shader.');
-          return
+      this.texture = this.createTexture();
+      if (this.texture && this.material) {
+        this.material.setTexture(this.texture, this.name);
+        if (this.material.material instanceof ShaderMaterial$1 && this.uniform) {
+          this.material.uniforms[this.uniform] = {value: this.texture};
         }
-        this.material.uniforms[this.uniform] = { value: this.texture };
       }
     },
-    onLoaded() {
-      if (this.onLoad) this.onLoad();
-      this.$emit('loaded');
-    },
-  },
-  render() { return []; },
-});
-
-var CubeTexture = defineComponent({
-  inject: ['material'],
-  emits: ['loaded'],
-  props: {
-    path: String,
-    urls: {
-      type: Array,
-      default: ['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg'],
-    },
-    onLoad: Function,
-    onProgress: Function,
-    onError: Function,
-    name: { type: String, default: 'envMap' },
-    refraction: Boolean,
-    // todo: remove ?
-    refractionRatio: { type: Number, default: 0.98 },
-  },
-  created() {
-    this.refreshTexture();
-    watch(() => this.path, this.refreshTexture);
-    watch(() => this.urls, this.refreshTexture);
-  },
-  unmounted() {
-    this.material.setTexture(null, this.name);
-    this.texture.dispose();
-  },
-  methods: {
-    createTexture() {
-      this.texture = new CubeTextureLoader()
-        .setPath(this.path)
-        .load(this.urls, this.onLoaded, this.onProgress, this.onError);
-    },
-    refreshTexture() {
-      this.createTexture();
-      this.material.setTexture(this.texture, this.name);
-      if (this.refraction) {
-        this.texture.mapping = CubeRefractionMapping;
-        this.material.setProp('refractionRatio', this.refractionRatio);
-      }
-    },
-    onLoaded() {
-      if (this.onLoad) this.onLoad();
-      this.$emit('loaded');
-    },
+    onLoaded(t) {
+      var _a;
+      (_a = this.onLoad) == null ? void 0 : _a.call(this, t);
+    }
   },
   render() {
     return [];
-  },
+  }
 });
 
-const pointerProps = {
-  onPointerEnter: Function,
-  onPointerOver: Function,
-  onPointerMove: Function,
-  onPointerLeave: Function,
-  onPointerDown: Function,
-  onPointerUp: Function,
-  onClick: Function,
-};
-
-const Mesh = defineComponent({
-  name: 'Mesh',
-  extends: Object3D,
+var CubeTexture = defineComponent({
+  extends: Texture,
   props: {
-    castShadow: Boolean,
-    receiveShadow: Boolean,
-    ...pointerProps,
-  },
-  // can't use setup because it will not be used in sub components
-  // setup() {},
-  provide() {
-    return {
-      mesh: this,
-    };
-  },
-  mounted() {
-    if (!this.mesh && !this.loading) this.initMesh();
-  },
-  methods: {
-    initMesh() {
-      this.mesh = new Mesh$1(this.geometry, this.material);
-      this.mesh.component = this;
-
-      bindProp(this, 'castShadow', this.mesh);
-      bindProp(this, 'receiveShadow', this.mesh);
-
-      if (this.onPointerEnter ||
-        this.onPointerOver ||
-        this.onPointerMove ||
-        this.onPointerLeave ||
-        this.onPointerDown ||
-        this.onPointerUp ||
-        this.onClick) {
-        this.three.addIntersectObject(this.mesh);
-      }
-
-      this.initObject3D(this.mesh);
+    path: {type: String, required: true},
+    urls: {
+      type: Array,
+      default: () => ["px.jpg", "nx.jpg", "py.jpg", "ny.jpg", "pz.jpg", "nz.jpg"]
     },
-    addGeometryWatchers(props) {
-      Object.keys(props).forEach(prop => {
-        watch(() => this[prop], () => {
-          this.refreshGeometry();
-        });
-      });
-    },
-    setGeometry(geometry) {
-      this.geometry = geometry;
-      if (this.mesh) this.mesh.geometry = geometry;
-    },
-    setMaterial(material) {
-      this.material = material;
-      if (this.mesh) this.mesh.material = material;
-    },
-    refreshGeometry() {
-      const oldGeo = this.geometry;
-      this.createGeometry();
-      this.mesh.geometry = this.geometry;
-      oldGeo.dispose();
-    },
-  },
-  unmounted() {
-    if (this.mesh) {
-      this.three.removeIntersectObject(this.mesh);
-    }
-    // for predefined mesh (geometry is not unmounted)
-    if (this.geometry) this.geometry.dispose();
-  },
-  __hmrId: 'Mesh',
-});
-
-function meshComponent(name, props, createGeometry) {
-  return defineComponent({
-    name,
-    extends: Mesh,
-    props,
-    created() {
-      this.createGeometry();
-      this.addGeometryWatchers(props);
-    },
-    methods: {
-      createGeometry() {
-        this.geometry = createGeometry(this);
-      },
-    },
-    __hmrId: name,
-  });
-}
-
-var Box = meshComponent('Box', props$h, createGeometry$f);
-
-var Circle = meshComponent('Circle', props$g, createGeometry$e);
-
-var Cone = meshComponent('Cone', props$f, createGeometry$d);
-
-var Cylinder = meshComponent('Cylinder', props$e, createGeometry$c);
-
-var Dodecahedron = meshComponent('Dodecahedron', props$d, createGeometry$b);
-
-var Icosahedron = meshComponent('Icosahedron', props$c, createGeometry$a);
-
-var Lathe = meshComponent('Lathe', props$b, createGeometry$9);
-
-var Octahedron = meshComponent('Octahedron', props$a, createGeometry$8);
-
-var Plane = meshComponent('Plane', props$9, createGeometry$7);
-
-var Polyhedron = meshComponent('Polyhedron', props$8, createGeometry$6);
-
-var Ring = meshComponent('Ring', props$7, createGeometry$5);
-
-var Sphere = meshComponent('Sphere', props$6, createGeometry$4);
-
-var Tetrahedron = meshComponent('Tetrahedron', props$5, createGeometry$3);
-
-const props = {
-  text: String,
-  fontSrc: String,
-  size: { type: Number, default: 80 },
-  height: { type: Number, default: 5 },
-  depth: { type: Number, default: 1 },
-  curveSegments: { type: Number, default: 12 },
-  bevelEnabled: { type: Boolean, default: false },
-  bevelThickness: { type: Number, default: 10 },
-  bevelSize: { type: Number, default: 8 },
-  bevelOffset: { type: Number, default: 0 },
-  bevelSegments: { type: Number, default: 5 },
-  align: { type: [Boolean, String], default: false },
-};
-
-var Text = defineComponent({
-  extends: Mesh,
-  props,
-  data() {
-    return {
-      loading: true,
-    };
+    mapping: {type: Number, default: CubeReflectionMapping}
   },
   created() {
-    // add watchers
+    watch(() => this.path, this.refreshTexture);
+    watch(() => this.urls, this.refreshTexture);
+  },
+  methods: {
+    createTexture() {
+      return new CubeTextureLoader().setPath(this.path).load(this.urls, this.onLoaded, this.onProgress, this.onError);
+    }
+  }
+});
+
+var Box = meshComponent("Box", props$n, createGeometry$f);
+
+var Circle = meshComponent("Circle", props$m, createGeometry$e);
+
+var Cone = meshComponent("Cone", props$l, createGeometry$d);
+
+var Cylinder = meshComponent("Cylinder", props$k, createGeometry$c);
+
+var Dodecahedron = meshComponent("Dodecahedron", props$j, createGeometry$b);
+
+var Icosahedron = meshComponent("Icosahedron", props$i, createGeometry$a);
+
+var Lathe = meshComponent("Lathe", props$h, createGeometry$9);
+
+var Octahedron = meshComponent("Octahedron", props$g, createGeometry$8);
+
+var Plane = meshComponent("Plane", props$f, createGeometry$7);
+
+var Polyhedron = meshComponent("Polyhedron", props$e, createGeometry$6);
+
+var Ring = meshComponent("Ring", props$d, createGeometry$5);
+
+var Sphere = meshComponent("Sphere", props$c, createGeometry$4);
+
+var Tetrahedron = meshComponent("Tetrahedron", props$b, createGeometry$3);
+
+const props$5 = {
+  text: {type: String, required: true, default: "Text"},
+  fontSrc: {type: String, required: true},
+  size: {type: Number, default: 80},
+  height: {type: Number, default: 5},
+  depth: {type: Number, default: 1},
+  curveSegments: {type: Number, default: 12},
+  bevelEnabled: {type: Boolean, default: false},
+  bevelThickness: {type: Number, default: 10},
+  bevelSize: {type: Number, default: 8},
+  bevelOffset: {type: Number, default: 0},
+  bevelSegments: {type: Number, default: 5},
+  align: {type: [Boolean, String], default: false}
+};
+var Text = defineComponent({
+  extends: Mesh,
+  props: props$5,
+  setup() {
+    return {};
+  },
+  created() {
+    if (!this.fontSrc) {
+      console.error('Missing required prop: "font-src"');
+      return;
+    }
     const watchProps = [
-      'text', 'size', 'height', 'curveSegments',
-      'bevelEnabled', 'bevelThickness', 'bevelSize', 'bevelOffset', 'bevelSegments',
-      'align',
+      "text",
+      "size",
+      "height",
+      "curveSegments",
+      "bevelEnabled",
+      "bevelThickness",
+      "bevelSize",
+      "bevelOffset",
+      "bevelSegments",
+      "align"
     ];
-    watchProps.forEach(p => {
+    watchProps.forEach((p) => {
       watch(() => this[p], () => {
-        if (this.font) this.refreshGeometry();
+        if (this.font)
+          this.refreshGeometry();
       });
     });
-
     const loader = new FontLoader();
+    this.loading = true;
     loader.load(this.fontSrc, (font) => {
       this.loading = false;
       this.font = font;
@@ -2029,88 +2020,93 @@ var Text = defineComponent({
         bevelThickness: this.bevelThickness,
         bevelSize: this.bevelSize,
         bevelOffset: this.bevelOffset,
-        bevelSegments: this.bevelSegments,
+        bevelSegments: this.bevelSegments
       });
-
-      if (this.align === 'center') {
+      if (this.align === "center") {
         this.geometry.center();
       }
-    },
-  },
+    }
+  }
 });
 
-var Torus = meshComponent('Torus', props$4, createGeometry$2);
+var Torus = meshComponent("Torus", props$a, createGeometry$2);
 
-var TorusKnot = meshComponent('TorusKnot', props$3, createGeometry$1);
+var TorusKnot = meshComponent("TorusKnot", props$9, createGeometry$1);
 
 var Tube = defineComponent({
   extends: Mesh,
-  props: props$2,
+  props: props$8,
   created() {
     this.createGeometry();
-    this.addGeometryWatchers(props$2);
+    this.addGeometryWatchers(props$8);
   },
   methods: {
     createGeometry() {
       this.geometry = createGeometry(this);
     },
-    // update curve points (without using prop, faster)
     updatePoints(points) {
       updateTubeGeometryPoints(this.geometry, points);
-    },
+    }
   },
-  __hmrId: 'Tube',
+  __hmrId: "Tube"
 });
 
 var Image = defineComponent({
-  emits: ['loaded'],
+  emits: ["loaded"],
   extends: Mesh,
   props: {
-    src: String,
+    src: {type: String, required: true},
     width: Number,
     height: Number,
-    keepSize: Boolean,
+    widthSegments: {type: Number, default: 1},
+    heightSegments: {type: Number, default: 1},
+    keepSize: Boolean
+  },
+  setup() {
+    return {};
   },
   created() {
-    this.createGeometry();
-    this.createMaterial();
-    this.initMesh();
-
+    if (!this.renderer)
+      return;
+    this.geometry = new PlaneGeometry$1(1, 1, this.widthSegments, this.heightSegments);
+    this.material = new MeshBasicMaterial({side: DoubleSide, map: this.loadTexture()});
     watch(() => this.src, this.refreshTexture);
-
-    ['width', 'height'].forEach(p => {
+    ["width", "height"].forEach((p) => {
       watch(() => this[p], this.resize);
     });
-
-    if (this.keepSize) this.three.onAfterResize(this.resize);
+    this.resize();
+    if (this.keepSize)
+      this.renderer.onResize(this.resize);
+  },
+  unmounted() {
+    var _a;
+    (_a = this.renderer) == null ? void 0 : _a.offResize(this.resize);
   },
   methods: {
-    createGeometry() {
-      this.geometry = new PlaneGeometry$1(1, 1, 1, 1);
-    },
-    createMaterial() {
-      this.material = new MeshBasicMaterial({ side: DoubleSide, map: this.loadTexture() });
-    },
     loadTexture() {
       return new TextureLoader().load(this.src, this.onLoaded);
     },
     refreshTexture() {
-      if (this.texture) this.texture.dispose();
-      this.material.map = this.loadTexture();
-      this.material.needsUpdate = true;
+      var _a;
+      (_a = this.texture) == null ? void 0 : _a.dispose();
+      if (this.material) {
+        this.material.map = this.loadTexture();
+        this.material.needsUpdate = true;
+      }
     },
     onLoaded(texture) {
       this.texture = texture;
       this.resize();
-      this.$emit('loaded');
+      this.$emit("loaded", texture);
     },
     resize() {
-      if (!this.texture) return;
-      const screen = this.three.size;
+      if (!this.renderer || !this.texture)
+        return;
+      const screen = this.renderer.size;
       const iW = this.texture.image.width;
       const iH = this.texture.image.height;
       const iRatio = iW / iH;
-      let w, h;
+      let w = 1, h = 1;
       if (this.width && this.height) {
         w = this.width * screen.wWidth / screen.width;
         h = this.height * screen.wHeight / screen.height;
@@ -2120,395 +2116,398 @@ var Image = defineComponent({
       } else if (this.height) {
         h = this.height * screen.wHeight / screen.height;
         w = h * iRatio;
+      } else {
+        if (iRatio > 1)
+          w = h * iRatio;
+        else
+          h = w / iRatio;
       }
-      this.mesh.scale.x = w;
-      this.mesh.scale.y = h;
-    },
+      if (this.mesh) {
+        this.mesh.scale.x = w;
+        this.mesh.scale.y = h;
+      }
+    }
   },
-  __hmrId: 'Image',
+  __hmrId: "Image"
 });
 
 var InstancedMesh = defineComponent({
-  extends: Object3D,
+  extends: Mesh,
   props: {
-    castShadow: Boolean,
-    receiveShadow: Boolean,
-    count: Number,
-    ...pointerProps,
-  },
-  provide() {
-    return {
-      mesh: this,
-    };
-  },
-  beforeMount() {
-    if (!this.$slots.default) {
-      console.error('Missing Geometry');
-    }
-  },
-  mounted() {
-    this.initMesh();
+    count: {type: Number, required: true}
   },
   methods: {
     initMesh() {
-      this.mesh = new InstancedMesh$1(this.geometry, this.material, this.count);
-      this.mesh.component = this;
-
-      bindProp(this, 'castShadow', this.mesh);
-      bindProp(this, 'receiveShadow', this.mesh);
-
-      if (this.onPointerEnter ||
-        this.onPointerOver ||
-        this.onPointerMove ||
-        this.onPointerLeave ||
-        this.onPointerDown ||
-        this.onPointerUp ||
-        this.onClick) {
-        this.three.addIntersectObject(this.mesh);
+      if (!this.renderer)
+        return;
+      if (!this.geometry || !this.material) {
+        console.error("Missing geometry and/or material");
+        return false;
       }
-
+      this.mesh = new InstancedMesh$1(this.geometry, this.material, this.count);
+      this.mesh.userData.component = this;
+      bindProp(this, "castShadow", this.mesh);
+      bindProp(this, "receiveShadow", this.mesh);
+      if (this.onPointerEnter || this.onPointerOver || this.onPointerMove || this.onPointerLeave || this.onPointerDown || this.onPointerUp || this.onClick) {
+        this.renderer.three.addIntersectObject(this.mesh);
+      }
       this.initObject3D(this.mesh);
-    },
-    setGeometry(geometry) {
-      this.geometry = geometry;
-      if (this.mesh) this.mesh.geometry = geometry;
-    },
-    setMaterial(material) {
-      this.material = material;
-      this.material.instancingColor = true;
-      if (this.mesh) this.mesh.material = material;
-    },
-  },
-  unmounted() {
-    if (this.mesh) {
-      this.three.removeIntersectObject(this.mesh);
     }
   },
-  __hmrId: 'InstancedMesh',
+  __hmrId: "InstancedMesh"
 });
 
 var Sprite = defineComponent({
   extends: Object3D,
-  emits: ['loaded'],
+  emits: ["loaded"],
   props: {
-    src: String,
+    src: {type: String, required: true}
   },
-  data() {
-    return {
-      loading: true,
-    };
+  setup() {
+    return {};
   },
   created() {
     this.texture = new TextureLoader().load(this.src, this.onLoaded);
-    this.material = new SpriteMaterial({ map: this.texture });
+    this.material = new SpriteMaterial({map: this.texture});
     this.sprite = new Sprite$1(this.material);
-    this.geometry = this.sprite.geometry;
     this.initObject3D(this.sprite);
   },
   unmounted() {
-    this.texture.dispose();
-    this.material.dispose();
+    var _a, _b;
+    (_a = this.texture) == null ? void 0 : _a.dispose();
+    (_b = this.material) == null ? void 0 : _b.dispose();
   },
   methods: {
     onLoaded() {
-      this.loading = false;
       this.updateUV();
-      this.$emit('loaded');
+      this.$emit("loaded");
     },
     updateUV() {
-      this.iWidth = this.texture.image.width;
-      this.iHeight = this.texture.image.height;
-      this.iRatio = this.iWidth / this.iHeight;
-
+      if (!this.texture || !this.sprite)
+        return;
+      const iWidth = this.texture.image.width;
+      const iHeight = this.texture.image.height;
+      const iRatio = iWidth / iHeight;
       let x = 0.5, y = 0.5;
-      if (this.iRatio > 1) {
-        y = 0.5 / this.iRatio;
+      if (iRatio > 1) {
+        x = 0.5 * iRatio;
       } else {
-        x = 0.5 / this.iRatio;
+        y = 0.5 / iRatio;
       }
-
-      const positions = this.geometry.attributes.position.array;
-      positions[0] = -x; positions[1] = -y;
-      positions[5] = x; positions[6] = -y;
-      positions[10] = x; positions[11] = y;
-      positions[15] = -x; positions[16] = y;
-      this.geometry.attributes.position.needsUpdate = true;
-    },
+      const positions = this.sprite.geometry.attributes.position.array;
+      positions[0] = -x;
+      positions[1] = -y;
+      positions[5] = x;
+      positions[6] = -y;
+      positions[10] = x;
+      positions[11] = y;
+      positions[15] = -x;
+      positions[16] = y;
+      this.sprite.geometry.attributes.position.needsUpdate = true;
+    }
   },
-  __hmrId: 'Sprite',
+  __hmrId: "Sprite"
 });
 
 var Model = defineComponent({
   extends: Object3D,
-  emits: ['load', 'progress', 'error'],
+  emits: ["load", "progress", "error"],
+  props: {
+    src: {type: String, required: true}
+  },
   data() {
     return {
-      progress: 0,
+      progress: 0
     };
   },
   methods: {
     onLoad(model) {
-      this.$emit('load', model);
+      this.$emit("load", model);
       this.initObject3D(model);
     },
     onProgress(progress) {
       this.progress = progress.loaded / progress.total;
-      this.$emit('progress', progress);
+      this.$emit("progress", progress);
     },
     onError(error) {
-      this.$emit('error', error);
-    },
-  },
+      this.$emit("error", error);
+    }
+  }
 });
 
 var GLTF = defineComponent({
   extends: Model,
-  props: {
-    src: String,
-  },
   created() {
     const loader = new GLTFLoader();
     loader.load(this.src, (gltf) => {
       this.onLoad(gltf.scene);
     }, this.onProgress, this.onError);
-  },
+  }
 });
 
 var FBX = defineComponent({
   extends: Model,
-  props: {
-    src: String,
-  },
   created() {
     const loader = new FBXLoader();
     loader.load(this.src, (fbx) => {
       this.onLoad(fbx);
     }, this.onProgress, this.onError);
-  },
+  }
 });
 
+const ComposerInjectionKey = Symbol("Composer");
 var EffectComposer = defineComponent({
   setup() {
-    return {
-      passes: [],
-    };
+    const renderer = inject(RendererInjectionKey);
+    return {renderer};
   },
-  inject: ['three'],
   provide() {
     return {
-      passes: this.passes,
+      [ComposerInjectionKey]: this
     };
   },
-  mounted() {
-    this.three.onAfterInit(() => {
-      this.composer = new EffectComposer$1(this.three.renderer);
-      this.three.renderer.autoClear = false;
-      this.passes.forEach(pass => {
-        this.composer.addPass(pass);
-      });
-      this.three.composer = this.composer;
-
+  created() {
+    if (!this.renderer) {
+      console.error("Renderer not found");
+      return;
+    }
+    const renderer = this.renderer;
+    const composer = new EffectComposer$1(this.renderer.renderer);
+    this.composer = composer;
+    this.renderer.composer = composer;
+    renderer.addListener("init", () => {
+      renderer.renderer.autoClear = false;
       this.resize();
-      this.three.onAfterResize(this.resize);
+      renderer.addListener("resize", this.resize);
     });
   },
   unmounted() {
-    this.three.offAfterResize(this.resize);
+    var _a;
+    (_a = this.renderer) == null ? void 0 : _a.removeListener("resize", this.resize);
   },
   methods: {
-    resize() {
-      this.composer.setSize(this.three.size.width, this.three.size.height);
+    addPass(pass) {
+      var _a;
+      (_a = this.composer) == null ? void 0 : _a.addPass(pass);
     },
+    removePass(pass) {
+      var _a;
+      (_a = this.composer) == null ? void 0 : _a.removePass(pass);
+    },
+    resize() {
+      if (this.composer && this.renderer) {
+        this.composer.setSize(this.renderer.size.width, this.renderer.size.height);
+      }
+    }
   },
   render() {
-    return this.$slots.default();
+    return this.$slots.default ? this.$slots.default() : [];
   },
-  __hmrId: 'EffectComposer',
+  __hmrId: "EffectComposer"
 });
 
 var EffectPass = defineComponent({
-  inject: ['three', 'passes'],
-  emits: ['ready'],
-  beforeMount() {
-    if (!this.passes) {
-      console.error('Missing parent EffectComposer');
+  inject: {
+    renderer: RendererInjectionKey,
+    composer: ComposerInjectionKey
+  },
+  emits: ["ready"],
+  setup() {
+    return {};
+  },
+  created() {
+    if (!this.composer) {
+      console.error("Missing parent EffectComposer");
+    }
+    if (!this.renderer) {
+      console.error("Missing parent Renderer");
     }
   },
   unmounted() {
-    if (this.pass.dispose) this.pass.dispose();
+    var _a, _b, _c;
+    if (this.pass) {
+      (_a = this.composer) == null ? void 0 : _a.removePass(this.pass);
+      (_c = (_b = this.pass).dispose) == null ? void 0 : _c.call(_b);
+    }
   },
   methods: {
-    completePass(pass) {
-      this.passes.push(pass);
+    initEffectPass(pass) {
+      var _a;
       this.pass = pass;
-      this.$emit('ready', pass);
-    },
+      (_a = this.composer) == null ? void 0 : _a.addPass(pass);
+      this.$emit("ready", pass);
+    }
   },
   render() {
     return [];
   },
-  __hmrId: 'EffectPass',
+  __hmrId: "EffectPass"
 });
 
 var RenderPass = defineComponent({
   extends: EffectPass,
-  mounted() {
-    if (!this.three.scene) {
-      console.error('Missing Scene');
+  created() {
+    if (!this.renderer)
+      return;
+    if (!this.renderer.scene) {
+      console.error("Missing Scene");
+      return;
     }
-    if (!this.three.camera) {
-      console.error('Missing Camera');
+    if (!this.renderer.camera) {
+      console.error("Missing Camera");
+      return;
     }
-    const pass = new RenderPass$1(this.three.scene, this.three.camera);
-    this.completePass(pass);
+    const pass = new RenderPass$1(this.renderer.scene, this.renderer.camera);
+    this.initEffectPass(pass);
   },
-  __hmrId: 'RenderPass',
+  __hmrId: "RenderPass"
 });
 
+const props$4 = {
+  focus: {type: Number, default: 1},
+  aperture: {type: Number, default: 0.025},
+  maxblur: {type: Number, default: 0.01}
+};
 var BokehPass = defineComponent({
   extends: EffectPass,
-  props: {
-    focus: {
-      type: Number,
-      default: 1,
-    },
-    aperture: {
-      type: Number,
-      default: 0.025,
-    },
-    maxblur: {
-      type: Number,
-      default: 0.01,
-    },
-  },
-  watch: {
-    focus() { this.pass.uniforms.focus.value = this.focus; },
-    aperture() { this.pass.uniforms.aperture.value = this.aperture; },
-    maxblur() { this.pass.uniforms.maxblur.value = this.maxblur; },
-  },
-  mounted() {
-    if (!this.three.scene) {
-      console.error('Missing Scene');
+  props: props$4,
+  created() {
+    if (!this.renderer)
+      return;
+    if (!this.renderer.scene) {
+      console.error("Missing Scene");
+      return;
     }
-    if (!this.three.camera) {
-      console.error('Missing Camera');
+    if (!this.renderer.camera) {
+      console.error("Missing Camera");
+      return;
     }
     const params = {
       focus: this.focus,
       aperture: this.aperture,
       maxblur: this.maxblur,
-      width: this.three.size.width,
-      height: this.three.size.height,
+      width: this.renderer.size.width,
+      height: this.renderer.size.height
     };
-    const pass = new BokehPass$1(this.three.scene, this.three.camera, params);
-    this.completePass(pass);
+    const pass = new BokehPass$1(this.renderer.scene, this.renderer.camera, params);
+    Object.keys(props$4).forEach((p) => {
+      watch(() => this[p], (value) => {
+        pass.uniforms[p].value = value;
+      });
+    });
+    this.initEffectPass(pass);
   },
-  __hmrId: 'BokehPass',
+  __hmrId: "BokehPass"
 });
 
+const props$3 = {
+  noiseIntensity: {type: Number, default: 0.5},
+  scanlinesIntensity: {type: Number, default: 0.05},
+  scanlinesCount: {type: Number, default: 4096},
+  grayscale: {type: Number, default: 0}
+};
 var FilmPass = defineComponent({
   extends: EffectPass,
-  props: {
-    noiseIntensity: { type: Number, default: 0.5 },
-    scanlinesIntensity: { type: Number, default: 0.05 },
-    scanlinesCount: { type: Number, default: 4096 },
-    grayscale: { type: Number, default: 0 },
-  },
-  watch: {
-    noiseIntensity() { this.pass.uniforms.nIntensity.value = this.noiseIntensity; },
-    scanlinesIntensity() { this.pass.uniforms.sIntensity.value = this.scanlinesIntensity; },
-    scanlinesCount() { this.pass.uniforms.sCount.value = this.scanlinesCount; },
-    grayscale() { this.pass.uniforms.grayscale.value = this.grayscale; },
-  },
-  mounted() {
+  props: props$3,
+  created() {
     const pass = new FilmPass$1(this.noiseIntensity, this.scanlinesIntensity, this.scanlinesCount, this.grayscale);
-    this.completePass(pass);
+    Object.keys(props$3).forEach((p) => {
+      watch(() => this[p], (value) => {
+        pass.uniforms[p].value = value;
+      });
+    });
+    this.initEffectPass(pass);
   },
-  __hmrId: 'FilmPass',
+  __hmrId: "FilmPass"
 });
 
 var FXAAPass = defineComponent({
   extends: EffectPass,
-  mounted() {
+  created() {
+    var _a;
     const pass = new ShaderPass(FXAAShader);
-    this.completePass(pass);
-
-    // resize will be called in three init
-    this.three.onAfterResize(this.resize);
+    (_a = this.renderer) == null ? void 0 : _a.addListener("resize", this.resize);
+    this.initEffectPass(pass);
   },
   unmounted() {
-    this.three.offAfterResize(this.resize);
+    var _a;
+    (_a = this.renderer) == null ? void 0 : _a.removeListener("resize", this.resize);
   },
   methods: {
-    resize() {
-      const { resolution } = this.pass.material.uniforms;
-      resolution.value.x = 1 / this.three.size.width;
-      resolution.value.y = 1 / this.three.size.height;
-    },
+    resize({size}) {
+      if (this.pass) {
+        const {resolution} = this.pass.material.uniforms;
+        resolution.value.x = 1 / size.width;
+        resolution.value.y = 1 / size.height;
+      }
+    }
   },
-  __hmrId: 'FXAAPass',
+  __hmrId: "FXAAPass"
 });
 
+const props$2 = {
+  shape: {type: Number, default: 1},
+  radius: {type: Number, default: 4},
+  rotateR: {type: Number, default: Math.PI / 12 * 1},
+  rotateG: {type: Number, default: Math.PI / 12 * 2},
+  rotateB: {type: Number, default: Math.PI / 12 * 3},
+  scatter: {type: Number, default: 0}
+};
 var HalftonePass = defineComponent({
   extends: EffectPass,
-  props: {
-    shape: { type: Number, default: 1 },
-    radius: { type: Number, default: 4 },
-    rotateR: { type: Number, default: Math.PI / 12 * 1 },
-    rotateG: { type: Number, default: Math.PI / 12 * 2 },
-    rotateB: { type: Number, default: Math.PI / 12 * 3 },
-    scatter: { type: Number, default: 0 },
-  },
-  mounted() {
-    const pass = new HalftonePass$1(this.three.size.width, this.three.size.height, {});
-
-    ['shape', 'radius', 'rotateR', 'rotateG', 'rotateB', 'scatter'].forEach(p => {
+  props: props$2,
+  created() {
+    if (!this.renderer)
+      return;
+    const pass = new HalftonePass$1(this.renderer.size.width, this.renderer.size.height, {});
+    Object.keys(props$2).forEach((p) => {
       pass.uniforms[p].value = this[p];
-      watch(() => this[p], () => {
-        pass.uniforms[p].value = this[p];
+      watch(() => this[p], (value) => {
+        pass.uniforms[p].value = value;
       });
     });
-
-    this.completePass(pass);
+    this.initEffectPass(pass);
   },
-  __hmrId: 'HalftonePass',
+  __hmrId: "HalftonePass"
 });
 
 var SMAAPass = defineComponent({
   extends: EffectPass,
-  mounted() {
-    // three size is not set yet, but this pass will be resized by effect composer
-    const pass = new SMAAPass$1(this.three.size.width, this.three.size.height);
-    this.completePass(pass);
+  created() {
+    if (!this.renderer)
+      return;
+    const pass = new SMAAPass$1(this.renderer.size.width, this.renderer.size.height);
+    this.initEffectPass(pass);
   },
-  __hmrId: 'SMAAPass',
+  __hmrId: "SMAAPass"
 });
 
 var SSAOPass = defineComponent({
   extends: EffectPass,
   props: {
-    scene: null,
-    camera: null,
     options: {
       type: Object,
-      default: () => ({}),
-    },
-  },
-  mounted() {
-    const pass = new SSAOPass$1(
-      this.scene || this.three.scene,
-      this.camera || this.three.camera,
-      this.three.size.width,
-      this.three.size.height
-    );
-
-    for (const key of Object.keys(this.options)) {
-      pass[key] = this.options[key];
+      default: () => ({})
     }
-
-    this.completePass(pass);
   },
-  __hmrId: 'SSAOPass',
+  created() {
+    if (!this.renderer)
+      return;
+    if (!this.renderer.scene) {
+      console.error("Missing Scene");
+      return;
+    }
+    if (!this.renderer.camera) {
+      console.error("Missing Camera");
+      return;
+    }
+    const pass = new SSAOPass$1(this.renderer.scene, this.renderer.camera, this.renderer.size.width, this.renderer.size.height);
+    Object.keys(this.options).forEach((key) => {
+      pass[key] = this.options[key];
+    });
+    this.initEffectPass(pass);
+  },
+  __hmrId: "SSAOPass"
 });
 
 var DefaultShader = {
@@ -2525,20 +2524,18 @@ var DefaultShader = {
     void main() {
       gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
     }
-  `,
+  `
 };
-
-// From https://github.com/evanw/glfx.js
 
 var TiltShift = {
   uniforms: {
-    tDiffuse: { value: null },
-    blurRadius: { value: 0 },
-    gradientRadius: { value: 0 },
-    start: { value: new Vector2() },
-    end: { value: new Vector2() },
-    delta: { value: new Vector2() },
-    texSize: { value: new Vector2() },
+    tDiffuse: {value: null},
+    blurRadius: {value: 0},
+    gradientRadius: {value: 0},
+    start: {value: new Vector2()},
+    end: {value: new Vector2()},
+    delta: {value: new Vector2()},
+    texSize: {value: new Vector2()}
   },
   vertexShader: DefaultShader.vertexShader,
   fragmentShader: `
@@ -2584,87 +2581,89 @@ var TiltShift = {
       /* switch back from pre-multiplied alpha */
       gl_FragColor.rgb /= gl_FragColor.a + 0.00001;
     }
-  `,
+  `
 };
 
+const props$1 = {
+  blurRadius: {type: Number, default: 10},
+  gradientRadius: {type: Number, default: 100},
+  start: {type: Object, default: () => ({x: 0, y: 100})},
+  end: {type: Object, default: () => ({x: 10, y: 100})}
+};
 var TiltShiftPass = defineComponent({
   extends: EffectPass,
-  props: {
-    blurRadius: { type: Number, default: 10 },
-    gradientRadius: { type: Number, default: 100 },
-    start: { type: Object, default: { x: 0, y: 100 } },
-    end: { type: Object, default: { x: 10, y: 100 } },
+  props: props$1,
+  setup() {
+    return {uniforms1: {}, uniforms2: {}};
   },
-  mounted() {
-    this.pass = new ShaderPass(TiltShift);
-    this.passes.push(this.pass);
-
+  created() {
+    if (!this.composer)
+      return;
     this.pass1 = new ShaderPass(TiltShift);
-    this.passes.push(this.pass1);
-
-    const uniforms = this.uniforms = this.pass.uniforms;
+    this.pass2 = new ShaderPass(TiltShift);
     const uniforms1 = this.uniforms1 = this.pass1.uniforms;
-    uniforms1.blurRadius = uniforms.blurRadius;
-    uniforms1.gradientRadius = uniforms.gradientRadius;
-    uniforms1.start = uniforms.start;
-    uniforms1.end = uniforms.end;
-    uniforms1.texSize = uniforms.texSize;
-
-    bindProp(this, 'blurRadius', uniforms.blurRadius, 'value');
-    bindProp(this, 'gradientRadius', uniforms.gradientRadius, 'value');
-
+    const uniforms2 = this.uniforms2 = this.pass2.uniforms;
+    uniforms2.blurRadius = uniforms1.blurRadius;
+    uniforms2.gradientRadius = uniforms1.gradientRadius;
+    uniforms2.start = uniforms1.start;
+    uniforms2.end = uniforms1.end;
+    uniforms2.texSize = uniforms1.texSize;
+    bindProp(this, "blurRadius", uniforms1.blurRadius, "value");
+    bindProp(this, "gradientRadius", uniforms1.gradientRadius, "value");
     this.updateFocusLine();
-    ['start', 'end'].forEach(p => {
-      watch(() => this[p], this.updateFocusLine, { deep: true });
+    ["start", "end"].forEach((p) => {
+      watch(() => this[p], this.updateFocusLine, {deep: true});
     });
-
-    this.pass.setSize = (width, height) => {
-      uniforms.texSize.value.set(width, height);
+    this.pass1.setSize = (width, height) => {
+      uniforms1.texSize.value.set(width, height);
     };
-
-    // emit ready event with two passes - do so manually in this file instead
-    // of calling `completePass` like in other effect types
-    this.$emit('ready', [this.pass, this.pass1]);
+    this.initEffectPass(this.pass1);
+    this.composer.addPass(this.pass2);
+  },
+  unmounted() {
+    if (this.composer && this.pass2)
+      this.composer.removePass(this.pass2);
   },
   methods: {
     updateFocusLine() {
-      this.uniforms.start.value.copy(this.start);
-      this.uniforms.end.value.copy(this.end);
+      this.uniforms1.start.value.copy(this.start);
+      this.uniforms1.end.value.copy(this.end);
       const dv = new Vector2().copy(this.end).sub(this.start).normalize();
-      this.uniforms.delta.value.copy(dv);
-      this.uniforms1.delta.value.set(-dv.y, dv.x);
-    },
+      this.uniforms1.delta.value.copy(dv);
+      this.uniforms2.delta.value.set(-dv.y, dv.x);
+    }
   },
-  __hmrId: 'TiltShiftPass',
+  __hmrId: "TiltShiftPass"
 });
 
+const props = {
+  strength: {type: Number, default: 1.5},
+  radius: {type: Number, default: 0},
+  threshold: {type: Number, default: 0}
+};
 var UnrealBloomPass = defineComponent({
   extends: EffectPass,
-  props: {
-    strength: { type: Number, default: 1.5 },
-    radius: { type: Number, default: 0 },
-    threshold: { type: Number, default: 0 },
-  },
-  watch: {
-    strength() { this.pass.strength = this.strength; },
-    radius() { this.pass.radius = this.radius; },
-    threshold() { this.pass.threshold = this.threshold; },
-  },
-  mounted() {
-    const size = new Vector2(this.three.size.width, this.three.size.height);
+  props,
+  created() {
+    if (!this.renderer)
+      return;
+    const size = new Vector2(this.renderer.size.width, this.renderer.size.height);
     const pass = new UnrealBloomPass$1(size, this.strength, this.radius, this.threshold);
-    this.completePass(pass);
+    Object.keys(props).forEach((p) => {
+      watch(() => this[p], (value) => {
+        pass.uniforms[p].value = value;
+      });
+    });
+    this.initEffectPass(pass);
   },
-  __hmrId: 'UnrealBloomPass',
+  __hmrId: "UnrealBloomPass"
 });
-
-// From https://github.com/evanw/glfx.js
 
 var ZoomBlur = {
   uniforms: {
-    tDiffuse: { value: null },
-    center: { value: new Vector2(0.5, 0.5) },
-    strength: { value: 0 },
+    tDiffuse: {value: null},
+    center: {value: new Vector2(0.5, 0.5)},
+    strength: {value: 0}
   },
   vertexShader: DefaultShader.vertexShader,
   fragmentShader: `
@@ -2703,37 +2702,37 @@ var ZoomBlur = {
       /* switch back from pre-multiplied alpha */
       gl_FragColor.rgb /= gl_FragColor.a + 0.00001;
     }
-  `,
+  `
 };
 
 var ZoomBlurPass = defineComponent({
   extends: EffectPass,
   props: {
-    center: { type: Object, default: { x: 0.5, y: 0.5 } },
-    strength: { type: Number, default: 0.5 },
+    center: {type: Object, default: () => ({x: 0.5, y: 0.5})},
+    strength: {type: Number, default: 0.5}
   },
-  mounted() {
+  created() {
     const pass = new ShaderPass(ZoomBlur);
-
-    const uniforms = this.uniforms = pass.uniforms;
-    bindProp(this, 'center', uniforms.center, 'value');
-    bindProp(this, 'strength', uniforms.strength, 'value');
-
-    this.completePass(pass);
+    bindProp(this, "center", pass.uniforms.center, "value");
+    bindProp(this, "strength", pass.uniforms.strength, "value");
+    this.initEffectPass(pass);
   },
-  __hmrId: 'ZoomBlurPass',
+  __hmrId: "ZoomBlurPass"
 });
 
 var TROIS = /*#__PURE__*/Object.freeze({
   __proto__: null,
   Renderer: Renderer,
+  RendererInjectionKey: RendererInjectionKey,
   OrthographicCamera: OrthographicCamera,
   PerspectiveCamera: PerspectiveCamera,
   Camera: PerspectiveCamera,
   Group: Group,
   Scene: Scene,
+  SceneInjectionKey: SceneInjectionKey,
   Object3D: Object3D,
   Raycaster: Raycaster,
+  CubeCamera: CubeCamera,
   BoxGeometry: BoxGeometry,
   CircleGeometry: CircleGeometry,
   ConeGeometry: ConeGeometry,
@@ -2756,6 +2755,8 @@ var TROIS = /*#__PURE__*/Object.freeze({
   PointLight: PointLight,
   RectAreaLight: RectAreaLight,
   SpotLight: SpotLight,
+  Material: Material,
+  MaterialInjectionKey: MaterialInjectionKey,
   BasicMaterial: BasicMaterial,
   LambertMaterial: LambertMaterial,
   MatcapMaterial: MatcapMaterial,
@@ -2768,6 +2769,7 @@ var TROIS = /*#__PURE__*/Object.freeze({
   Texture: Texture,
   CubeTexture: CubeTexture,
   Mesh: Mesh,
+  MeshInjectionKey: MeshInjectionKey,
   Box: Box,
   Circle: Circle,
   Cone: Cone,
@@ -2791,6 +2793,7 @@ var TROIS = /*#__PURE__*/Object.freeze({
   GLTFModel: GLTF,
   FBXModel: FBX,
   EffectComposer: EffectComposer,
+  ComposerInjectionKey: ComposerInjectionKey,
   RenderPass: RenderPass,
   BokehPass: BokehPass,
   FilmPass: FilmPass,
@@ -2806,95 +2809,128 @@ var TROIS = /*#__PURE__*/Object.freeze({
   bindProp: bindProp,
   propsValues: propsValues,
   lerp: lerp,
-  lerpv2: lerpv2,
-  lerpv3: lerpv3,
   limit: limit,
   getMatcapUrl: getMatcapUrl
 });
 
 const TroisJSVuePlugin = {
-  install: (app) => {
+  install(app) {
     const comps = [
-      'Camera',
-      'OrthographicCamera',
-      'PerspectiveCamera',
-      'Raycaster',
-      'Renderer',
-      'Scene',
-      'Group',
-
-      'AmbientLight',
-      'DirectionalLight',
-      'HemisphereLight',
-      'PointLight',
-      'RectAreaLight',
-      'SpotLight',
-
-      'BasicMaterial',
-      'LambertMaterial',
-      'MatcapMaterial',
-      'PhongMaterial',
-      'PhysicalMaterial',
-      'ShaderMaterial',
-      'StandardMaterial',
-      'SubSurfaceMaterial',
-      'ToonMaterial',
-
-      'Texture',
-      'CubeTexture',
-
-      'Mesh',
-
-      'Box', 'BoxGeometry',
-      'Circle', 'CircleGeometry',
-      'Cone', 'ConeGeometry',
-      'Cylinder', 'CylinderGeometry',
-      'Dodecahedron', 'DodecahedronGeometry',
-      'Icosahedron', 'IcosahedronGeometry',
-      'Lathe', 'LatheGeometry',
-      'Octahedron', 'OctahedronGeometry',
-      'Plane', 'PlaneGeometry',
-      'Polyhedron', 'PolyhedronGeometry',
-      'Ring', 'RingGeometry',
-      'Sphere', 'SphereGeometry',
-      'Tetrahedron', 'TetrahedronGeometry',
-      'Text',
-      'Torus', 'TorusGeometry',
-      'TorusKnot', 'TorusKnotGeometry',
-      'Tube', 'TubeGeometry',
-
-      'Image',
-      'InstancedMesh',
-      'Sprite',
-
-      'FBXModel',
-      'GLTFModel',
-
-      'BokehPass',
-      'EffectComposer',
-      'FilmPass',
-      'FXAAPass',
-      'HalftonePass',
-      'RenderPass',
-      'SAOPass',
-      'SMAAPass',
-      'SSAOPass',
-      'TiltShiftPass',
-      'UnrealBloomPass',
-      'ZoomBlurPass',
-
-      'GLTFViewer',
+      "Camera",
+      "OrthographicCamera",
+      "PerspectiveCamera",
+      "Raycaster",
+      "Renderer",
+      "Scene",
+      "Group",
+      "AmbientLight",
+      "DirectionalLight",
+      "HemisphereLight",
+      "PointLight",
+      "RectAreaLight",
+      "SpotLight",
+      "BasicMaterial",
+      "LambertMaterial",
+      "MatcapMaterial",
+      "PhongMaterial",
+      "PhysicalMaterial",
+      "ShaderMaterial",
+      "StandardMaterial",
+      "SubSurfaceMaterial",
+      "ToonMaterial",
+      "Texture",
+      "CubeTexture",
+      "Mesh",
+      "Box",
+      "BoxGeometry",
+      "Circle",
+      "CircleGeometry",
+      "Cone",
+      "ConeGeometry",
+      "Cylinder",
+      "CylinderGeometry",
+      "Dodecahedron",
+      "DodecahedronGeometry",
+      "Icosahedron",
+      "IcosahedronGeometry",
+      "Lathe",
+      "LatheGeometry",
+      "Octahedron",
+      "OctahedronGeometry",
+      "Plane",
+      "PlaneGeometry",
+      "Polyhedron",
+      "PolyhedronGeometry",
+      "Ring",
+      "RingGeometry",
+      "Sphere",
+      "SphereGeometry",
+      "Tetrahedron",
+      "TetrahedronGeometry",
+      "Text",
+      "Torus",
+      "TorusGeometry",
+      "TorusKnot",
+      "TorusKnotGeometry",
+      "Tube",
+      "TubeGeometry",
+      "Image",
+      "InstancedMesh",
+      "Sprite",
+      "FBXModel",
+      "GLTFModel",
+      "BokehPass",
+      "EffectComposer",
+      "FilmPass",
+      "FXAAPass",
+      "HalftonePass",
+      "RenderPass",
+      "SAOPass",
+      "SMAAPass",
+      "SSAOPass",
+      "TiltShiftPass",
+      "UnrealBloomPass",
+      "ZoomBlurPass",
+      "GLTFViewer"
     ];
-
-    comps.forEach(comp => {
+    comps.forEach((comp) => {
       app.component(comp, TROIS[comp]);
     });
-  },
+  }
 };
-
 function createApp(params) {
   return createApp$1(params).use(TroisJSVuePlugin);
 }
 
-export { AmbientLight, BasicMaterial, BokehPass, Box, BoxGeometry, PerspectiveCamera as Camera, Circle, CircleGeometry, Cone, ConeGeometry, CubeTexture, Cylinder, CylinderGeometry, DirectionalLight, Dodecahedron, DodecahedronGeometry, EffectComposer, FBX as FBXModel, FXAAPass, FilmPass, GLTF as GLTFModel, Group, HalftonePass, HemisphereLight, Icosahedron, IcosahedronGeometry, Image, InstancedMesh, LambertMaterial, Lathe, LatheGeometry, MatcapMaterial, Mesh, Object3D, Octahedron, OctahedronGeometry, OrthographicCamera, PerspectiveCamera, PhongMaterial, PhysicalMaterial, Plane, PlaneGeometry, PointLight, Polyhedron, PolyhedronGeometry, Raycaster, RectAreaLight, RenderPass, Renderer, Ring, RingGeometry, SMAAPass, SSAOPass, Scene, ShaderMaterial, Sphere, SphereGeometry, SpotLight, Sprite, StandardMaterial, SubSurfaceMaterial, Tetrahedron, TetrahedronGeometry, Text, Texture, TiltShiftPass, ToonMaterial, Torus, TorusGeometry, TorusKnot, TorusKnotGeometry, TroisJSVuePlugin, Tube, TubeGeometry, UnrealBloomPass, ZoomBlurPass, bindProp, bindProps, createApp, getMatcapUrl, lerp, lerpv2, lerpv3, limit, propsValues, setFromProp };
+function useTextures() {
+  const obj = {
+    loader: new TextureLoader(),
+    count: 0,
+    textures: [],
+    loadProgress: 0,
+    loadTextures,
+    dispose
+  };
+  return obj;
+  function loadTextures(images, cb) {
+    obj.count = images.length;
+    obj.textures.splice(0);
+    obj.loadProgress = 0;
+    Promise.all(images.map(loadTexture)).then(cb);
+  }
+  function loadTexture(img, index) {
+    return new Promise((resolve) => {
+      obj.loader.load(img.src, (texture) => {
+        obj.loadProgress += 1 / obj.count;
+        obj.textures[index] = texture;
+        resolve(texture);
+      });
+    });
+  }
+  function dispose() {
+    obj.textures.forEach((t) => t.dispose());
+  }
+}
+
+export { AmbientLight, BasicMaterial, BokehPass, Box, BoxGeometry, PerspectiveCamera as Camera, Circle, CircleGeometry, ComposerInjectionKey, Cone, ConeGeometry, CubeCamera, CubeTexture, Cylinder, CylinderGeometry, DirectionalLight, Dodecahedron, DodecahedronGeometry, EffectComposer, FBX as FBXModel, FXAAPass, FilmPass, GLTF as GLTFModel, Group, HalftonePass, HemisphereLight, Icosahedron, IcosahedronGeometry, Image, InstancedMesh, LambertMaterial, Lathe, LatheGeometry, MatcapMaterial, Material, MaterialInjectionKey, Mesh, MeshInjectionKey, Object3D, Octahedron, OctahedronGeometry, OrthographicCamera, PerspectiveCamera, PhongMaterial, PhysicalMaterial, Plane, PlaneGeometry, PointLight, Polyhedron, PolyhedronGeometry, Raycaster, RectAreaLight, RenderPass, Renderer, RendererInjectionKey, Ring, RingGeometry, SMAAPass, SSAOPass, Scene, SceneInjectionKey, ShaderMaterial, Sphere, SphereGeometry, SpotLight, Sprite, StandardMaterial, SubSurfaceMaterial, Tetrahedron, TetrahedronGeometry, Text, Texture, TiltShiftPass, ToonMaterial, Torus, TorusGeometry, TorusKnot, TorusKnotGeometry, TroisJSVuePlugin, Tube, TubeGeometry, UnrealBloomPass, ZoomBlurPass, bindProp, bindProps, createApp, getMatcapUrl, lerp, limit, propsValues, setFromProp, useTextures };
 //# sourceMappingURL=trois.module.js.map
