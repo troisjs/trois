@@ -11,3 +11,5 @@ export { default as ToonMaterial } from './ToonMaterial'
 
 export { default as Texture } from './Texture'
 export { default as CubeTexture } from './CubeTexture'
+
+export { default as PointsMaterial } from './PointsMaterial'
