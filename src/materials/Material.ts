@@ -22,6 +22,7 @@ export default defineComponent({
   },
   props: {
     color: { type: [String, Number], default: '#ffffff' },
+    alphaTest: { type: Number, default: 0 },
     depthTest: { type: Boolean, default: true },
     depthWrite: { type: Boolean, default: true },
     fog: { type: Boolean, default: true },
@@ -65,7 +66,7 @@ export default defineComponent({
       this.setProp(key, texture, true)
     },
     addWatchers() {
-      ['color', 'depthTest', 'depthWrite', 'fog', 'opacity', 'side', 'transparent'].forEach(p => {
+      ['color', 'alphaTest', 'depthTest', 'depthWrite', 'fog', 'opacity', 'side', 'transparent'].forEach(p => {
         // @ts-ignore
         watch(() => this[p], (value) => {
           if (p === 'color') {
