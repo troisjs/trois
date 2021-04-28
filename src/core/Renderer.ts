@@ -48,12 +48,17 @@ interface EventCallbackMap {
   'resize': ResizeCallbackType;
 }
 
+interface RenderFunctionEventInterface {
+  renderer: RendererInterface
+  time: number
+}
+
 interface RendererSetupInterface {
   canvas: HTMLCanvasElement
   three: ThreeInterface
   renderer: WebGLRenderer
   size: SizeInterface
-  renderFn(): void
+  renderFn(e: RenderFunctionEventInterface): void
   raf: boolean
 
   // pointerPosition?: Vector2
@@ -247,7 +252,7 @@ export default defineComponent({
     render(time: number) {
       this.beforeRenderCallbacks.forEach(e => e({ type: 'beforerender', renderer: this, time }))
       // this.onFrame?.(cbParams)
-      this.renderFn()
+      this.renderFn({ renderer: this, time })
       this.afterRenderCallbacks.forEach(e => e({ type: 'afterrender', renderer: this, time }))
     },
     renderLoop(time: number) {
