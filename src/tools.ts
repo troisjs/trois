@@ -1,4 +1,3 @@
-import { Vector2, Vector3 } from 'three'
 import { toRef, watch } from 'vue'
 
 export function setFromProp(o: Record<string, unknown>, prop: Record<string, unknown>): void {
