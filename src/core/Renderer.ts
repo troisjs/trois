@@ -1,7 +1,8 @@
 /* eslint-disable no-use-before-define */
-import { Camera, Scene, WebGLRenderer } from 'three'
+import { Camera, NoToneMapping, Scene, WebGLRenderer } from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
 import { defineComponent, InjectionKey, PropType } from 'vue'
+import { bindProp } from '../tools'
 import { PointerPublicConfigInterface } from './usePointer'
 import useThree, { SizeInterface, ThreeConfigInterface, ThreeInterface } from './useThree'
 
@@ -104,6 +105,7 @@ export default defineComponent({
     pointer: { type: [Boolean, Object] as PropType<boolean | PointerPublicConfigInterface>, default: false },
     resize: { type: [Boolean, String] as PropType<boolean | string>, default: false },
     shadow: Boolean,
+    toneMapping: { type: Number, default: NoToneMapping },
     width: String,
     height: String,
     xr: Boolean,
@@ -132,6 +134,7 @@ export default defineComponent({
     if (props.height) config.height = parseInt(props.height)
 
     const three = useThree(config)
+    bindProp(props, 'toneMapping', three.renderer)
 
     const renderFn: {(): void} = () => {}
 
