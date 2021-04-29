@@ -100,7 +100,8 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
 
   function updatePosition(event: TouchEvent | MouseEvent) {
     let x, y
-    if (event instanceof TouchEvent && event.touches && event.touches.length > 0) {
+    // @ts-ignore
+    if (event.touches && event.touches.length > 0) {
       x = (<TouchEvent>event).touches[0].clientX
       y = (<TouchEvent>event).touches[0].clientY
     } else {
