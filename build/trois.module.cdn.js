@@ -1,5 +1,5 @@
-import { defineComponent, toRef, watch, inject, provide, onUnmounted, createApp as createApp$1 } from 'https://unpkg.com/vue@3.0.11/dist/vue.esm-browser.prod.js';
-import { Vector3, Raycaster as Raycaster$1, Plane as Plane$1, Vector2, InstancedMesh as InstancedMesh$1, WebGLRenderer, OrthographicCamera as OrthographicCamera$1, PerspectiveCamera as PerspectiveCamera$1, Scene as Scene$1, Color, Texture as Texture$1, Group as Group$1, WebGLCubeRenderTarget, RGBFormat, LinearMipmapLinearFilter, CubeCamera as CubeCamera$1, Mesh as Mesh$1, BoxGeometry as BoxGeometry$1, CircleGeometry as CircleGeometry$1, ConeGeometry as ConeGeometry$1, CylinderGeometry as CylinderGeometry$1, DodecahedronGeometry as DodecahedronGeometry$1, IcosahedronGeometry as IcosahedronGeometry$1, LatheGeometry as LatheGeometry$1, OctahedronGeometry as OctahedronGeometry$1, PlaneGeometry as PlaneGeometry$1, PolyhedronGeometry as PolyhedronGeometry$1, RingGeometry as RingGeometry$1, SphereGeometry as SphereGeometry$1, TetrahedronGeometry as TetrahedronGeometry$1, TorusGeometry as TorusGeometry$1, TorusKnotGeometry as TorusKnotGeometry$1, TubeGeometry as TubeGeometry$1, Curve, CatmullRomCurve3, SpotLight as SpotLight$1, DirectionalLight as DirectionalLight$1, AmbientLight as AmbientLight$1, HemisphereLight as HemisphereLight$1, PointLight as PointLight$1, RectAreaLight as RectAreaLight$1, FrontSide, MeshBasicMaterial, MeshLambertMaterial, TextureLoader, MeshMatcapMaterial, MeshPhongMaterial, MeshStandardMaterial, MeshPhysicalMaterial, ShaderMaterial as ShaderMaterial$1, ShaderChunk, UniformsUtils, ShaderLib, MeshToonMaterial, UVMapping, ClampToEdgeWrapping, LinearFilter, CubeReflectionMapping, CubeTextureLoader, FontLoader, TextGeometry, DoubleSide, SpriteMaterial, Sprite as Sprite$1 } from 'https://unpkg.com/three@0.127.0/build/three.module.js';
+import { Vector3, Raycaster as Raycaster$1, Plane as Plane$1, Vector2, InstancedMesh as InstancedMesh$1, WebGLRenderer, PCFShadowMap, NoToneMapping, OrthographicCamera as OrthographicCamera$1, PerspectiveCamera as PerspectiveCamera$1, Scene as Scene$1, Color, Texture as Texture$1, Group as Group$1, WebGLCubeRenderTarget, RGBFormat, LinearMipmapLinearFilter, CubeCamera as CubeCamera$1, Mesh as Mesh$1, BufferGeometry, BufferAttribute, BoxGeometry as BoxGeometry$1, CircleGeometry as CircleGeometry$1, ConeGeometry as ConeGeometry$1, CylinderGeometry as CylinderGeometry$1, DodecahedronGeometry as DodecahedronGeometry$1, IcosahedronGeometry as IcosahedronGeometry$1, LatheGeometry as LatheGeometry$1, OctahedronGeometry as OctahedronGeometry$1, PlaneGeometry as PlaneGeometry$1, PolyhedronGeometry as PolyhedronGeometry$1, RingGeometry as RingGeometry$1, SphereGeometry as SphereGeometry$1, TetrahedronGeometry as TetrahedronGeometry$1, TorusGeometry as TorusGeometry$1, TorusKnotGeometry as TorusKnotGeometry$1, TubeGeometry as TubeGeometry$1, Curve, CatmullRomCurve3, SpotLight as SpotLight$1, DirectionalLight as DirectionalLight$1, AmbientLight as AmbientLight$1, HemisphereLight as HemisphereLight$1, PointLight as PointLight$1, RectAreaLight as RectAreaLight$1, NormalBlending, FrontSide, MeshBasicMaterial, MeshLambertMaterial, TextureLoader, MeshMatcapMaterial, MeshPhongMaterial, MeshStandardMaterial, MeshPhysicalMaterial, ShaderMaterial as ShaderMaterial$1, ShaderChunk, UniformsUtils, ShaderLib, MeshToonMaterial, LinearEncoding, UVMapping, ClampToEdgeWrapping, LinearFilter, CubeReflectionMapping, CubeTextureLoader, PointsMaterial as PointsMaterial$1, FontLoader, TextGeometry, DoubleSide, SpriteMaterial, Sprite as Sprite$1, Points as Points$1 } from 'https://unpkg.com/three@0.127.0/build/three.module.js';
+import { toRef, watch, defineComponent, inject, provide, onUnmounted, createApp as createApp$1 } from 'https://unpkg.com/vue@3.0.11/dist/vue.esm-browser.prod.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.127.0/examples/jsm/controls/OrbitControls.js';
 import { RectAreaLightUniformsLib } from 'https://unpkg.com/three@0.127.0/examples/jsm/lights/RectAreaLightUniformsLib.js';
 import { RectAreaLightHelper } from 'https://unpkg.com/three@0.127.0/examples/jsm/helpers/RectAreaLightHelper.js';
@@ -15,6 +15,72 @@ import { HalftonePass as HalftonePass$1 } from 'https://unpkg.com/three@0.127.0/
 import { SMAAPass as SMAAPass$1 } from 'https://unpkg.com/three@0.127.0/examples/jsm/postprocessing/SMAAPass.js';
 import { SSAOPass as SSAOPass$1 } from 'https://unpkg.com/three@0.127.0/examples/jsm/postprocessing/SSAOPass.js';
 import { UnrealBloomPass as UnrealBloomPass$1 } from 'https://unpkg.com/three@0.127.0/examples/jsm/postprocessing/UnrealBloomPass.js';
+
+function setFromProp(o, prop) {
+  if (prop instanceof Object) {
+    Object.entries(prop).forEach(([key, value]) => {
+      o[key] = value;
+    });
+  }
+}
+function bindProps(src, props, dst) {
+  props.forEach((prop) => {
+    bindProp(src, prop, dst, prop);
+  });
+}
+function bindProp(src, srcProp, dst, dstProp) {
+  const _dstProp = dstProp || srcProp;
+  const ref = toRef(src, srcProp);
+  if (ref.value instanceof Object) {
+    setFromProp(dst[_dstProp], ref.value);
+    watch(ref, (value) => {
+      setFromProp(dst[_dstProp], value);
+    }, {deep: true});
+  } else {
+    if (ref.value)
+      dst[_dstProp] = src[srcProp];
+    watch(ref, (value) => {
+      dst[_dstProp] = value;
+    });
+  }
+}
+function propsValues(props, exclude = []) {
+  const values = {};
+  Object.entries(props).forEach(([key, value]) => {
+    if (!exclude || exclude && !exclude.includes(key)) {
+      values[key] = value;
+    }
+  });
+  return values;
+}
+function lerp(value1, value2, amount) {
+  amount = amount < 0 ? 0 : amount;
+  amount = amount > 1 ? 1 : amount;
+  return value1 + (value2 - value1) * amount;
+}
+function limit(val, min, max) {
+  return val < min ? min : val > max ? max : val;
+}
+const MATCAP_ROOT = "https://rawcdn.githack.com/emmelleppi/matcaps/9b36ccaaf0a24881a39062d05566c9e92be4aa0d";
+const DEFAULT_MATCAP = "0404E8_0404B5_0404CB_3333FC";
+function getMatcapUrl(hash = DEFAULT_MATCAP, format = 1024) {
+  const fileName = `${hash}${getMatcapFormatString(format)}.png`;
+  return `${MATCAP_ROOT}/${format}/${fileName}`;
+}
+function getMatcapFormatString(format) {
+  switch (format) {
+    case 64:
+      return "-64px";
+    case 128:
+      return "-128px";
+    case 256:
+      return "-256px";
+    case 512:
+      return "-512px";
+    default:
+      return "";
+  }
+}
 
 function useRaycaster(options) {
   const {
@@ -89,7 +155,7 @@ function usePointer(options) {
   }
   function updatePosition(event) {
     let x, y;
-    if (event instanceof TouchEvent && event.touches && event.touches.length > 0) {
+    if (event.touches && event.touches.length > 0) {
       x = event.touches[0].clientX;
       y = event.touches[0].clientY;
     } else {
@@ -385,6 +451,8 @@ var Renderer = defineComponent({
     pointer: {type: [Boolean, Object], default: false},
     resize: {type: [Boolean, String], default: false},
     shadow: Boolean,
+    shadowType: {type: Number, default: PCFShadowMap},
+    toneMapping: {type: Number, default: NoToneMapping},
     width: String,
     height: String,
     xr: Boolean,
@@ -412,6 +480,7 @@ var Renderer = defineComponent({
     if (props.height)
       config.height = parseInt(props.height);
     const three = useThree(config);
+    bindProp(props, "toneMapping", three.renderer);
     const renderFn = () => {
     };
     if (props.onClick) {
@@ -469,7 +538,10 @@ var Renderer = defineComponent({
       this.three.config.onResize = (size) => {
         this.resizeCallbacks.forEach((e) => e({type: "resize", renderer: this, size}));
       };
-      this.renderer.shadowMap.enabled = this.shadow;
+      if (this.shadow) {
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = this.shadowType;
+      }
       this.renderFn = this.three.composer ? this.three.renderC : this.three.render;
       this.initCallbacks.forEach((e) => e({type: "init", renderer: this}));
       (_a = this.onReady) == null ? void 0 : _a.call(this, this);
@@ -539,7 +611,7 @@ var Renderer = defineComponent({
     },
     render(time) {
       this.beforeRenderCallbacks.forEach((e) => e({type: "beforerender", renderer: this, time}));
-      this.renderFn();
+      this.renderFn({renderer: this, time});
       this.afterRenderCallbacks.forEach((e) => e({type: "afterrender", renderer: this, time}));
     },
     renderLoop(time) {
@@ -553,72 +625,6 @@ var Renderer = defineComponent({
   },
   __hmrId: "Renderer"
 });
-
-function setFromProp(o, prop) {
-  if (prop instanceof Object) {
-    Object.entries(prop).forEach(([key, value]) => {
-      o[key] = value;
-    });
-  }
-}
-function bindProps(src, props, dst) {
-  props.forEach((prop) => {
-    bindProp(src, prop, dst, prop);
-  });
-}
-function bindProp(src, srcProp, dst, dstProp) {
-  const _dstProp = dstProp || srcProp;
-  const ref = toRef(src, srcProp);
-  if (ref.value instanceof Object) {
-    setFromProp(dst[_dstProp], ref.value);
-    watch(ref, (value) => {
-      setFromProp(dst[_dstProp], value);
-    }, {deep: true});
-  } else {
-    if (ref.value)
-      dst[_dstProp] = src[srcProp];
-    watch(ref, (value) => {
-      dst[_dstProp] = value;
-    });
-  }
-}
-function propsValues(props, exclude = []) {
-  const values = {};
-  Object.entries(props).forEach(([key, value]) => {
-    if (!exclude || exclude && !exclude.includes(key)) {
-      values[key] = value;
-    }
-  });
-  return values;
-}
-function lerp(value1, value2, amount) {
-  amount = amount < 0 ? 0 : amount;
-  amount = amount > 1 ? 1 : amount;
-  return value1 + (value2 - value1) * amount;
-}
-function limit(val, min, max) {
-  return val < min ? min : val > max ? max : val;
-}
-const MATCAP_ROOT = "https://rawcdn.githack.com/emmelleppi/matcaps/9b36ccaaf0a24881a39062d05566c9e92be4aa0d";
-const DEFAULT_MATCAP = "0404E8_0404B5_0404CB_3333FC";
-function getMatcapUrl(hash = DEFAULT_MATCAP, format = 1024) {
-  const fileName = `${hash}${getMatcapFormatString(format)}.png`;
-  return `${MATCAP_ROOT}/${format}/${fileName}`;
-}
-function getMatcapFormatString(format) {
-  switch (format) {
-    case 64:
-      return "-64px";
-    case 128:
-      return "-128px";
-    case 256:
-      return "-256px";
-    case 512:
-      return "-512px";
-    default:
-      return "";
-  }
-}
 
 var Camera = defineComponent({
   render() {
@@ -1049,7 +1055,8 @@ const Geometry = defineComponent({
   props: {
     rotateX: Number,
     rotateY: Number,
-    rotateZ: Number
+    rotateZ: Number,
+    attributes: {type: Array, default: () => []}
   },
   inject: {
     mesh: MeshInjectionKey
@@ -1076,6 +1083,16 @@ const Geometry = defineComponent({
   },
   methods: {
     createGeometry() {
+      const bufferAttributes = {};
+      const geometry = new BufferGeometry();
+      this.attributes.forEach((attribute) => {
+        if (attribute.name && attribute.itemSize && attribute.array) {
+          const bufferAttribute = bufferAttributes[attribute.name] = new BufferAttribute(attribute.array, attribute.itemSize, attribute.normalized);
+          geometry.setAttribute(attribute.name, bufferAttribute);
+        }
+      });
+      geometry.computeBoundingBox();
+      this.geometry = geometry;
     },
     rotateGeometry() {
       if (!this.geometry)
@@ -1501,6 +1518,8 @@ var Material = defineComponent({
   },
   props: {
     color: {type: [String, Number], default: "#ffffff"},
+    blending: {type: Number, default: NormalBlending},
+    alphaTest: {type: Number, default: 0},
     depthTest: {type: Boolean, default: true},
     depthWrite: {type: Boolean, default: true},
     fog: {type: Boolean, default: true},
@@ -1543,7 +1562,7 @@ var Material = defineComponent({
       this.setProp(key, texture, true);
     },
     addWatchers() {
-      ["color", "depthTest", "depthWrite", "fog", "opacity", "side", "transparent"].forEach((p) => {
+      ["color", "alphaTest", "blending", "depthTest", "depthWrite", "fog", "opacity", "side", "transparent"].forEach((p) => {
         watch(() => this[p], (value) => {
           if (p === "color") {
             this.material.color.set(value);
@@ -1721,20 +1740,14 @@ var ShaderMaterial = defineComponent({
   },
   methods: {
     createMaterial() {
-      const material = new ShaderMaterial$1({
-        uniforms: this.uniforms,
-        vertexShader: this.vertexShader,
-        fragmentShader: this.fragmentShader
-      });
-      const watchProps = ["vertexShader", "fragmentShader"];
-      watchProps.forEach((p) => {
+      const material = new ShaderMaterial$1(propsValues(this.$props, ["color"]));
+      ["vertexShader", "fragmentShader"].forEach((p) => {
         watch(() => this[p], (value) => {
-          this.setProp(p, value, true);
+          material[p] = value;
+          material.needsUpdate = true;
         });
       });
       return material;
-    },
-    addWatchers() {
     }
   },
   __hmrId: "ShaderMaterial"
@@ -1858,6 +1871,7 @@ var Texture = defineComponent({
     onLoad: Function,
     onProgress: Function,
     onError: Function,
+    encoding: {type: Number, default: LinearEncoding},
     mapping: {type: Number, default: UVMapping},
     wrapS: {type: Number, default: ClampToEdgeWrapping},
     wrapT: {type: Number, default: ClampToEdgeWrapping},
@@ -1884,7 +1898,7 @@ var Texture = defineComponent({
       if (!this.src)
         return void 0;
       const texture = new TextureLoader().load(this.src, this.onLoaded, this.onProgress, this.onError);
-      const wathProps = ["mapping", "wrapS", "wrapT", "magFilter", "minFilter", "repeat", "rotation", "center"];
+      const wathProps = ["encoding", "mapping", "wrapS", "wrapT", "magFilter", "minFilter", "repeat", "rotation", "center"];
       wathProps.forEach((prop) => {
         bindProp(this, prop, texture);
       });
@@ -1928,6 +1942,21 @@ var CubeTexture = defineComponent({
       return new CubeTextureLoader().setPath(this.path).load(this.urls, this.onLoaded, this.onProgress, this.onError);
     }
   }
+});
+
+var PointsMaterial = defineComponent({
+  extends: Material,
+  props: {
+    size: {type: Number, default: 10},
+    sizeAttenuation: {type: Boolean, default: true}
+  },
+  methods: {
+    createMaterial() {
+      const material = new PointsMaterial$1(propsValues(this.$props));
+      return material;
+    }
+  },
+  __hmrId: "PointsMaterial"
 });
 
 var Box = meshComponent("Box", props$n, createGeometry$f);
@@ -2207,6 +2236,34 @@ var Sprite = defineComponent({
     }
   },
   __hmrId: "Sprite"
+});
+
+var Points = defineComponent({
+  extends: Object3D,
+  setup() {
+    return {};
+  },
+  provide() {
+    return {
+      [MeshInjectionKey]: this
+    };
+  },
+  mounted() {
+    this.mesh = this.points = new Points$1(this.geometry, this.material);
+    this.initObject3D(this.mesh);
+  },
+  methods: {
+    setGeometry(geometry) {
+      this.geometry = geometry;
+      if (this.mesh)
+        this.mesh.geometry = geometry;
+    },
+    setMaterial(material) {
+      this.material = material;
+      if (this.mesh)
+        this.mesh.material = material;
+    }
+  }
 });
 
 var Model = defineComponent({
@@ -2733,6 +2790,7 @@ var TROIS = /*#__PURE__*/Object.freeze({
   Object3D: Object3D,
   Raycaster: Raycaster,
   CubeCamera: CubeCamera,
+  BufferGeometry: Geometry,
   BoxGeometry: BoxGeometry,
   CircleGeometry: CircleGeometry,
   ConeGeometry: ConeGeometry,
@@ -2768,6 +2826,7 @@ var TROIS = /*#__PURE__*/Object.freeze({
   ToonMaterial: ToonMaterial,
   Texture: Texture,
   CubeTexture: CubeTexture,
+  PointsMaterial: PointsMaterial,
   Mesh: Mesh,
   MeshInjectionKey: MeshInjectionKey,
   Box: Box,
@@ -2790,6 +2849,7 @@ var TROIS = /*#__PURE__*/Object.freeze({
   Image: Image,
   InstancedMesh: InstancedMesh,
   Sprite: Sprite,
+  Points: Points,
   GLTFModel: GLTF,
   FBXModel: FBX,
   EffectComposer: EffectComposer,
@@ -2932,5 +2992,5 @@ function useTextures() {
   }
 }
 
-export { AmbientLight, BasicMaterial, BokehPass, Box, BoxGeometry, PerspectiveCamera as Camera, Circle, CircleGeometry, ComposerInjectionKey, Cone, ConeGeometry, CubeCamera, CubeTexture, Cylinder, CylinderGeometry, DirectionalLight, Dodecahedron, DodecahedronGeometry, EffectComposer, FBX as FBXModel, FXAAPass, FilmPass, GLTF as GLTFModel, Group, HalftonePass, HemisphereLight, Icosahedron, IcosahedronGeometry, Image, InstancedMesh, LambertMaterial, Lathe, LatheGeometry, MatcapMaterial, Material, MaterialInjectionKey, Mesh, MeshInjectionKey, Object3D, Octahedron, OctahedronGeometry, OrthographicCamera, PerspectiveCamera, PhongMaterial, PhysicalMaterial, Plane, PlaneGeometry, PointLight, Polyhedron, PolyhedronGeometry, Raycaster, RectAreaLight, RenderPass, Renderer, RendererInjectionKey, Ring, RingGeometry, SMAAPass, SSAOPass, Scene, SceneInjectionKey, ShaderMaterial, Sphere, SphereGeometry, SpotLight, Sprite, StandardMaterial, SubSurfaceMaterial, Tetrahedron, TetrahedronGeometry, Text, Texture, TiltShiftPass, ToonMaterial, Torus, TorusGeometry, TorusKnot, TorusKnotGeometry, TroisJSVuePlugin, Tube, TubeGeometry, UnrealBloomPass, ZoomBlurPass, bindProp, bindProps, createApp, getMatcapUrl, lerp, limit, propsValues, setFromProp, useTextures };
+export { AmbientLight, BasicMaterial, BokehPass, Box, BoxGeometry, Geometry as BufferGeometry, PerspectiveCamera as Camera, Circle, CircleGeometry, ComposerInjectionKey, Cone, ConeGeometry, CubeCamera, CubeTexture, Cylinder, CylinderGeometry, DirectionalLight, Dodecahedron, DodecahedronGeometry, EffectComposer, FBX as FBXModel, FXAAPass, FilmPass, GLTF as GLTFModel, Group, HalftonePass, HemisphereLight, Icosahedron, IcosahedronGeometry, Image, InstancedMesh, LambertMaterial, Lathe, LatheGeometry, MatcapMaterial, Material, MaterialInjectionKey, Mesh, MeshInjectionKey, Object3D, Octahedron, OctahedronGeometry, OrthographicCamera, PerspectiveCamera, PhongMaterial, PhysicalMaterial, Plane, PlaneGeometry, PointLight, Points, PointsMaterial, Polyhedron, PolyhedronGeometry, Raycaster, RectAreaLight, RenderPass, Renderer, RendererInjectionKey, Ring, RingGeometry, SMAAPass, SSAOPass, Scene, SceneInjectionKey, ShaderMaterial, Sphere, SphereGeometry, SpotLight, Sprite, StandardMaterial, SubSurfaceMaterial, Tetrahedron, TetrahedronGeometry, Text, Texture, TiltShiftPass, ToonMaterial, Torus, TorusGeometry, TorusKnot, TorusKnotGeometry, TroisJSVuePlugin, Tube, TubeGeometry, UnrealBloomPass, ZoomBlurPass, bindProp, bindProps, createApp, getMatcapUrl, lerp, limit, propsValues, setFromProp, useTextures };
 //# sourceMappingURL=trois.module.cdn.js.map

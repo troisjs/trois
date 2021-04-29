@@ -2,8 +2,8 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var vue = require('vue');
 var three = require('three');
+var vue = require('vue');
 var OrbitControls_js = require('three/examples/jsm/controls/OrbitControls.js');
 var RectAreaLightUniformsLib_js = require('three/examples/jsm/lights/RectAreaLightUniformsLib.js');
 var RectAreaLightHelper_js = require('three/examples/jsm/helpers/RectAreaLightHelper.js');
@@ -19,6 +19,72 @@ var HalftonePass_js = require('three/examples/jsm/postprocessing/HalftonePass.js
 var SMAAPass_js = require('three/examples/jsm/postprocessing/SMAAPass.js');
 var SSAOPass_js = require('three/examples/jsm/postprocessing/SSAOPass.js');
 var UnrealBloomPass_js = require('three/examples/jsm/postprocessing/UnrealBloomPass.js');
+
+function setFromProp(o, prop) {
+  if (prop instanceof Object) {
+    Object.entries(prop).forEach(([key, value]) => {
+      o[key] = value;
+    });
+  }
+}
+function bindProps(src, props, dst) {
+  props.forEach((prop) => {
+    bindProp(src, prop, dst, prop);
+  });
+}
+function bindProp(src, srcProp, dst, dstProp) {
+  const _dstProp = dstProp || srcProp;
+  const ref = vue.toRef(src, srcProp);
+  if (ref.value instanceof Object) {
+    setFromProp(dst[_dstProp], ref.value);
+    vue.watch(ref, (value) => {
+      setFromProp(dst[_dstProp], value);
+    }, {deep: true});
+  } else {
+    if (ref.value)
+      dst[_dstProp] = src[srcProp];
+    vue.watch(ref, (value) => {
+      dst[_dstProp] = value;
+    });
+  }
+}
+function propsValues(props, exclude = []) {
+  const values = {};
+  Object.entries(props).forEach(([key, value]) => {
+    if (!exclude || exclude && !exclude.includes(key)) {
+      values[key] = value;
+    }
+  });
+  return values;
+}
+function lerp(value1, value2, amount) {
+  amount = amount < 0 ? 0 : amount;
+  amount = amount > 1 ? 1 : amount;
+  return value1 + (value2 - value1) * amount;
+}
+function limit(val, min, max) {
+  return val < min ? min : val > max ? max : val;
+}
+const MATCAP_ROOT = "https://rawcdn.githack.com/emmelleppi/matcaps/9b36ccaaf0a24881a39062d05566c9e92be4aa0d";
+const DEFAULT_MATCAP = "0404E8_0404B5_0404CB_3333FC";
+function getMatcapUrl(hash = DEFAULT_MATCAP, format = 1024) {
+  const fileName = `${hash}${getMatcapFormatString(format)}.png`;
+  return `${MATCAP_ROOT}/${format}/${fileName}`;
+}
+function getMatcapFormatString(format) {
+  switch (format) {
+    case 64:
+      return "-64px";
+    case 128:
+      return "-128px";
+    case 256:
+      return "-256px";
+    case 512:
+      return "-512px";
+    default:
+      return "";
+  }
+}
 
 function useRaycaster(options) {
   const {
@@ -93,7 +159,7 @@ function usePointer(options) {
   }
   function updatePosition(event) {
     let x, y;
-    if (event instanceof TouchEvent && event.touches && event.touches.length > 0) {
+    if (event.touches && event.touches.length > 0) {
       x = event.touches[0].clientX;
       y = event.touches[0].clientY;
     } else {
@@ -389,6 +455,8 @@ var Renderer = vue.defineComponent({
     pointer: {type: [Boolean, Object], default: false},
     resize: {type: [Boolean, String], default: false},
     shadow: Boolean,
+    shadowType: {type: Number, default: three.PCFShadowMap},
+    toneMapping: {type: Number, default: three.NoToneMapping},
     width: String,
     height: String,
     xr: Boolean,
@@ -416,6 +484,7 @@ var Renderer = vue.defineComponent({
     if (props.height)
       config.height = parseInt(props.height);
     const three = useThree(config);
+    bindProp(props, "toneMapping", three.renderer);
     const renderFn = () => {
     };
     if (props.onClick) {
@@ -473,7 +542,10 @@ var Renderer = vue.defineComponent({
       this.three.config.onResize = (size) => {
         this.resizeCallbacks.forEach((e) => e({type: "resize", renderer: this, size}));
       };
-      this.renderer.shadowMap.enabled = this.shadow;
+      if (this.shadow) {
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = this.shadowType;
+      }
       this.renderFn = this.three.composer ? this.three.renderC : this.three.render;
       this.initCallbacks.forEach((e) => e({type: "init", renderer: this}));
       (_a = this.onReady) == null ? void 0 : _a.call(this, this);
@@ -543,7 +615,7 @@ var Renderer = vue.defineComponent({
     },
     render(time) {
       this.beforeRenderCallbacks.forEach((e) => e({type: "beforerender", renderer: this, time}));
-      this.renderFn();
+      this.renderFn({renderer: this, time});
       this.afterRenderCallbacks.forEach((e) => e({type: "afterrender", renderer: this, time}));
     },
     renderLoop(time) {
@@ -557,72 +629,6 @@ var Renderer = vue.defineComponent({
   },
   __hmrId: "Renderer"
 });
-
-function setFromProp(o, prop) {
-  if (prop instanceof Object) {
-    Object.entries(prop).forEach(([key, value]) => {
-      o[key] = value;
-    });
-  }
-}
-function bindProps(src, props, dst) {
-  props.forEach((prop) => {
-    bindProp(src, prop, dst, prop);
-  });
-}
-function bindProp(src, srcProp, dst, dstProp) {
-  const _dstProp = dstProp || srcProp;
-  const ref = vue.toRef(src, srcProp);
-  if (ref.value instanceof Object) {
-    setFromProp(dst[_dstProp], ref.value);
-    vue.watch(ref, (value) => {
-      setFromProp(dst[_dstProp], value);
-    }, {deep: true});
-  } else {
-    if (ref.value)
-      dst[_dstProp] = src[srcProp];
-    vue.watch(ref, (value) => {
-      dst[_dstProp] = value;
-    });
-  }
-}
-function propsValues(props, exclude = []) {
-  const values = {};
-  Object.entries(props).forEach(([key, value]) => {
-    if (!exclude || exclude && !exclude.includes(key)) {
-      values[key] = value;
-    }
-  });
-  return values;
-}
-function lerp(value1, value2, amount) {
-  amount = amount < 0 ? 0 : amount;
-  amount = amount > 1 ? 1 : amount;
-  return value1 + (value2 - value1) * amount;
-}
-function limit(val, min, max) {
-  return val < min ? min : val > max ? max : val;
-}
-const MATCAP_ROOT = "https://rawcdn.githack.com/emmelleppi/matcaps/9b36ccaaf0a24881a39062d05566c9e92be4aa0d";
-const DEFAULT_MATCAP = "0404E8_0404B5_0404CB_3333FC";
-function getMatcapUrl(hash = DEFAULT_MATCAP, format = 1024) {
-  const fileName = `${hash}${getMatcapFormatString(format)}.png`;
-  return `${MATCAP_ROOT}/${format}/${fileName}`;
-}
-function getMatcapFormatString(format) {
-  switch (format) {
-    case 64:
-      return "-64px";
-    case 128:
-      return "-128px";
-    case 256:
-      return "-256px";
-    case 512:
-      return "-512px";
-    default:
-      return "";
-  }
-}
 
 var Camera = vue.defineComponent({
   render() {
@@ -1053,7 +1059,8 @@ const Geometry = vue.defineComponent({
   props: {
     rotateX: Number,
     rotateY: Number,
-    rotateZ: Number
+    rotateZ: Number,
+    attributes: {type: Array, default: () => []}
   },
   inject: {
     mesh: MeshInjectionKey
@@ -1080,6 +1087,16 @@ const Geometry = vue.defineComponent({
   },
   methods: {
     createGeometry() {
+      const bufferAttributes = {};
+      const geometry = new three.BufferGeometry();
+      this.attributes.forEach((attribute) => {
+        if (attribute.name && attribute.itemSize && attribute.array) {
+          const bufferAttribute = bufferAttributes[attribute.name] = new three.BufferAttribute(attribute.array, attribute.itemSize, attribute.normalized);
+          geometry.setAttribute(attribute.name, bufferAttribute);
+        }
+      });
+      geometry.computeBoundingBox();
+      this.geometry = geometry;
     },
     rotateGeometry() {
       if (!this.geometry)
@@ -1505,6 +1522,8 @@ var Material = vue.defineComponent({
   },
   props: {
     color: {type: [String, Number], default: "#ffffff"},
+    blending: {type: Number, default: three.NormalBlending},
+    alphaTest: {type: Number, default: 0},
     depthTest: {type: Boolean, default: true},
     depthWrite: {type: Boolean, default: true},
     fog: {type: Boolean, default: true},
@@ -1547,7 +1566,7 @@ var Material = vue.defineComponent({
       this.setProp(key, texture, true);
     },
     addWatchers() {
-      ["color", "depthTest", "depthWrite", "fog", "opacity", "side", "transparent"].forEach((p) => {
+      ["color", "alphaTest", "blending", "depthTest", "depthWrite", "fog", "opacity", "side", "transparent"].forEach((p) => {
         vue.watch(() => this[p], (value) => {
           if (p === "color") {
             this.material.color.set(value);
@@ -1725,20 +1744,14 @@ var ShaderMaterial = vue.defineComponent({
   },
   methods: {
     createMaterial() {
-      const material = new three.ShaderMaterial({
-        uniforms: this.uniforms,
-        vertexShader: this.vertexShader,
-        fragmentShader: this.fragmentShader
-      });
-      const watchProps = ["vertexShader", "fragmentShader"];
-      watchProps.forEach((p) => {
+      const material = new three.ShaderMaterial(propsValues(this.$props, ["color"]));
+      ["vertexShader", "fragmentShader"].forEach((p) => {
         vue.watch(() => this[p], (value) => {
-          this.setProp(p, value, true);
+          material[p] = value;
+          material.needsUpdate = true;
         });
       });
       return material;
-    },
-    addWatchers() {
     }
   },
   __hmrId: "ShaderMaterial"
@@ -1862,6 +1875,7 @@ var Texture = vue.defineComponent({
     onLoad: Function,
     onProgress: Function,
     onError: Function,
+    encoding: {type: Number, default: three.LinearEncoding},
     mapping: {type: Number, default: three.UVMapping},
     wrapS: {type: Number, default: three.ClampToEdgeWrapping},
     wrapT: {type: Number, default: three.ClampToEdgeWrapping},
@@ -1888,7 +1902,7 @@ var Texture = vue.defineComponent({
       if (!this.src)
         return void 0;
       const texture = new three.TextureLoader().load(this.src, this.onLoaded, this.onProgress, this.onError);
-      const wathProps = ["mapping", "wrapS", "wrapT", "magFilter", "minFilter", "repeat", "rotation", "center"];
+      const wathProps = ["encoding", "mapping", "wrapS", "wrapT", "magFilter", "minFilter", "repeat", "rotation", "center"];
       wathProps.forEach((prop) => {
         bindProp(this, prop, texture);
       });
@@ -1932,6 +1946,21 @@ var CubeTexture = vue.defineComponent({
       return new three.CubeTextureLoader().setPath(this.path).load(this.urls, this.onLoaded, this.onProgress, this.onError);
     }
   }
+});
+
+var PointsMaterial = vue.defineComponent({
+  extends: Material,
+  props: {
+    size: {type: Number, default: 10},
+    sizeAttenuation: {type: Boolean, default: true}
+  },
+  methods: {
+    createMaterial() {
+      const material = new three.PointsMaterial(propsValues(this.$props));
+      return material;
+    }
+  },
+  __hmrId: "PointsMaterial"
 });
 
 var Box = meshComponent("Box", props$n, createGeometry$f);
@@ -2211,6 +2240,34 @@ var Sprite = vue.defineComponent({
     }
   },
   __hmrId: "Sprite"
+});
+
+var Points = vue.defineComponent({
+  extends: Object3D,
+  setup() {
+    return {};
+  },
+  provide() {
+    return {
+      [MeshInjectionKey]: this
+    };
+  },
+  mounted() {
+    this.mesh = this.points = new three.Points(this.geometry, this.material);
+    this.initObject3D(this.mesh);
+  },
+  methods: {
+    setGeometry(geometry) {
+      this.geometry = geometry;
+      if (this.mesh)
+        this.mesh.geometry = geometry;
+    },
+    setMaterial(material) {
+      this.material = material;
+      if (this.mesh)
+        this.mesh.material = material;
+    }
+  }
 });
 
 var Model = vue.defineComponent({
@@ -2737,6 +2794,7 @@ var TROIS = /*#__PURE__*/Object.freeze({
   Object3D: Object3D,
   Raycaster: Raycaster,
   CubeCamera: CubeCamera,
+  BufferGeometry: Geometry,
   BoxGeometry: BoxGeometry,
   CircleGeometry: CircleGeometry,
   ConeGeometry: ConeGeometry,
@@ -2772,6 +2830,7 @@ var TROIS = /*#__PURE__*/Object.freeze({
   ToonMaterial: ToonMaterial,
   Texture: Texture,
   CubeTexture: CubeTexture,
+  PointsMaterial: PointsMaterial,
   Mesh: Mesh,
   MeshInjectionKey: MeshInjectionKey,
   Box: Box,
@@ -2794,6 +2853,7 @@ var TROIS = /*#__PURE__*/Object.freeze({
   Image: Image,
   InstancedMesh: InstancedMesh,
   Sprite: Sprite,
+  Points: Points,
   GLTFModel: GLTF,
   FBXModel: FBX,
   EffectComposer: EffectComposer,
@@ -2941,6 +3001,7 @@ exports.BasicMaterial = BasicMaterial;
 exports.BokehPass = BokehPass;
 exports.Box = Box;
 exports.BoxGeometry = BoxGeometry;
+exports.BufferGeometry = Geometry;
 exports.Camera = PerspectiveCamera;
 exports.Circle = Circle;
 exports.CircleGeometry = CircleGeometry;
@@ -2984,6 +3045,8 @@ exports.PhysicalMaterial = PhysicalMaterial;
 exports.Plane = Plane;
 exports.PlaneGeometry = PlaneGeometry;
 exports.PointLight = PointLight;
+exports.Points = Points;
+exports.PointsMaterial = PointsMaterial;
 exports.Polyhedron = Polyhedron;
 exports.PolyhedronGeometry = PolyhedronGeometry;
 exports.Raycaster = Raycaster;

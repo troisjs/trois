@@ -1,7 +1,7 @@
 import * as vue from 'vue';
 import { InjectionKey, PropType, ComponentPublicInstance, ComponentPropsOptions, App } from 'vue';
 import * as three from 'three';
-import { Mesh as Mesh$1, InstancedMesh, Vector2, Vector3, Intersection, WebGLRenderer, Camera, Scene, Object3D, OrthographicCamera, PerspectiveCamera, Group, WebGLCubeRenderTarget, CubeCamera, BufferGeometry, Material, Curve, Light, Texture, MeshBasicMaterial, MeshLambertMaterial, MeshMatcapMaterial, MeshPhongMaterial, MeshPhysicalMaterial, ShaderMaterial, MeshStandardMaterial, MeshToonMaterial, TextGeometry, Font, SpriteMaterial, Sprite, TextureLoader } from 'three';
+import { Mesh as Mesh$1, InstancedMesh, Vector2, Vector3, Intersection, WebGLRenderer, Camera, Scene, Object3D, OrthographicCamera, PerspectiveCamera, Group, WebGLCubeRenderTarget, CubeCamera, BufferGeometry, Material, Curve, Light, Texture, MeshBasicMaterial, MeshLambertMaterial, MeshMatcapMaterial, MeshPhongMaterial, MeshPhysicalMaterial, ShaderMaterial, MeshStandardMaterial, MeshToonMaterial, PointsMaterial, TextGeometry, Font, SpriteMaterial, Sprite, Points, TextureLoader } from 'three';
 import { EffectComposer as EffectComposer$1 } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
@@ -115,12 +115,16 @@ interface EventCallbackMap {
     'afterrender': RenderCallbackType;
     'resize': ResizeCallbackType;
 }
+interface RenderFunctionEventInterface {
+    renderer: RendererInterface;
+    time: number;
+}
 interface RendererSetupInterface {
     canvas: HTMLCanvasElement;
     three: ThreeInterface;
     renderer: WebGLRenderer;
     size: SizeInterface;
-    renderFn(): void;
+    renderFn(e: RenderFunctionEventInterface): void;
     raf: boolean;
     initCallbacks: InitCallbackType[];
     mountedCallbacks: MountedCallbackType[];
@@ -144,7 +148,7 @@ interface RendererInterface extends RendererSetupInterface {
     removeListener<T extends keyof EventCallbackMap>(t: T, cb: EventCallbackMap[T]): void;
 }
 declare const RendererInjectionKey: InjectionKey<RendererInterface>;
-declare const _default$1a: vue.DefineComponent<{
+declare const _default$1c: vue.DefineComponent<{
     antialias: BooleanConstructor;
     alpha: BooleanConstructor;
     autoClear: {
@@ -164,6 +168,14 @@ declare const _default$1a: vue.DefineComponent<{
         default: boolean;
     };
     shadow: BooleanConstructor;
+    shadowType: {
+        type: NumberConstructor;
+        default: three.ShadowMapType;
+    };
+    toneMapping: {
+        type: NumberConstructor;
+        default: three.ToneMapping;
+    };
     width: StringConstructor;
     height: StringConstructor;
     xr: BooleanConstructor;
@@ -204,6 +216,8 @@ declare const _default$1a: vue.DefineComponent<{
     autoClear: boolean;
     orbitCtrl: boolean | Record<string, unknown>;
     shadow: boolean;
+    shadowType: number;
+    toneMapping: number;
     xr: boolean;
 } & {
     onClick?: ((this: HTMLCanvasElement, ev: MouseEvent) => any) | undefined;
@@ -218,6 +232,8 @@ declare const _default$1a: vue.DefineComponent<{
     autoClear: boolean;
     orbitCtrl: boolean | Record<string, unknown>;
     shadow: boolean;
+    shadowType: number;
+    toneMapping: number;
     xr: boolean;
 }>;
 
@@ -237,7 +253,7 @@ interface Vector3PropInterface extends Vector2PropInterface {
 interface EulerPropInterface extends Vector3PropInterface {
     order?: 'XYZ' | 'YZX' | 'ZXY' | 'XZY' | 'YXZ' | 'ZYX';
 }
-declare const _default$19: vue.DefineComponent<{
+declare const _default$1b: vue.DefineComponent<{
     position: {
         type: PropType<Vector3PropInterface>;
         default: () => {
@@ -298,7 +314,7 @@ declare const _default$19: vue.DefineComponent<{
     userData: Record<string, any>;
 }>;
 
-declare const _default$18: vue.DefineComponent<{
+declare const _default$1a: vue.DefineComponent<{
     left: {
         type: NumberConstructor;
         default: number;
@@ -358,7 +374,7 @@ declare const _default$18: vue.DefineComponent<{
     far: number;
 }>;
 
-declare const _default$17: vue.DefineComponent<{
+declare const _default$19: vue.DefineComponent<{
     aspect: {
         type: NumberConstructor;
         default: number;
@@ -406,7 +422,7 @@ declare const _default$17: vue.DefineComponent<{
     fov: number;
 }>;
 
-declare const _default$16: vue.DefineComponent<{}, {
+declare const _default$18: vue.DefineComponent<{}, {
     group: Group;
 }, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
     position: {
@@ -470,7 +486,7 @@ declare const _default$16: vue.DefineComponent<{}, {
 }>, vue.EmitsOptions, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {}>, {}>;
 
 declare const SceneInjectionKey: InjectionKey<Scene>;
-declare const _default$15: vue.DefineComponent<{
+declare const _default$17: vue.DefineComponent<{
     background: (ObjectConstructor | StringConstructor | NumberConstructor)[];
 }, {
     scene: Scene;
@@ -484,7 +500,7 @@ interface RaycasterSetupInterface {
     renderer?: RendererInterface;
     pointer?: PointerInterface;
 }
-declare const _default$14: vue.DefineComponent<{
+declare const _default$16: vue.DefineComponent<{
     onPointerEnter: {
         type: PropType<PointerIntersectCallbackType>;
         default: PointerIntersectCallbackType;
@@ -527,7 +543,7 @@ declare const _default$14: vue.DefineComponent<{
     intersectMode: string;
 }>;
 
-declare const _default$13: vue.DefineComponent<{
+declare const _default$15: vue.DefineComponent<{
     cubeRTSize: {
         type: NumberConstructor;
         default: number;
@@ -723,8 +739,35 @@ interface GeometrySetupInterface {
     geometry?: BufferGeometry;
     watchProps?: string[];
 }
+interface GeometryAttributeInterface {
+    name: string;
+    array: ArrayLike<number>;
+    itemSize: number;
+    normalized?: boolean;
+}
+declare const Geometry: vue.DefineComponent<{
+    rotateX: NumberConstructor;
+    rotateY: NumberConstructor;
+    rotateZ: NumberConstructor;
+    attributes: {
+        type: PropType<GeometryAttributeInterface[]>;
+        default: () => never[];
+    };
+}, GeometrySetupInterface, unknown, {}, {
+    createGeometry(): void;
+    rotateGeometry(): void;
+    refreshGeometry(): void;
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    attributes: GeometryAttributeInterface[];
+} & {
+    rotateX?: number | undefined;
+    rotateY?: number | undefined;
+    rotateZ?: number | undefined;
+}>, {
+    attributes: GeometryAttributeInterface[];
+}>;
 
-declare const _default$12: vue.DefineComponent<{
+declare const _default$14: vue.DefineComponent<{
     readonly size: NumberConstructor;
     readonly width: {
         readonly type: NumberConstructor;
@@ -756,15 +799,23 @@ declare const _default$12: vue.DefineComponent<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
+    attributes: {
+        type: vue.PropType<GeometryAttributeInterface[]>;
+        default: () => never[];
+    };
 }, GeometrySetupInterface, unknown, {}, {
     createGeometry(): void;
     rotateGeometry(): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    attributes: GeometryAttributeInterface[];
+} & {
     rotateX?: number | undefined;
     rotateY?: number | undefined;
     rotateZ?: number | undefined;
-}>, {}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+}>, {
+    attributes: GeometryAttributeInterface[];
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     width: number;
     height: number;
     depth: number;
@@ -782,7 +833,7 @@ declare const _default$12: vue.DefineComponent<{
     depthSegments: number;
 }>;
 
-declare const _default$11: vue.DefineComponent<{
+declare const _default$13: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -805,15 +856,23 @@ declare const _default$11: vue.DefineComponent<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
+    attributes: {
+        type: vue.PropType<GeometryAttributeInterface[]>;
+        default: () => never[];
+    };
 }, GeometrySetupInterface, unknown, {}, {
     createGeometry(): void;
     rotateGeometry(): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    attributes: GeometryAttributeInterface[];
+} & {
     rotateX?: number | undefined;
     rotateY?: number | undefined;
     rotateZ?: number | undefined;
-}>, {}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+}>, {
+    attributes: GeometryAttributeInterface[];
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     segments: number;
     radius: number;
     thetaStart: number;
@@ -825,7 +884,7 @@ declare const _default$11: vue.DefineComponent<{
     thetaLength: number;
 }>;
 
-declare const _default$10: vue.DefineComponent<{
+declare const _default$12: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -860,15 +919,23 @@ declare const _default$10: vue.DefineComponent<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
+    attributes: {
+        type: vue.PropType<GeometryAttributeInterface[]>;
+        default: () => never[];
+    };
 }, GeometrySetupInterface, unknown, {}, {
     createGeometry(): void;
     rotateGeometry(): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    attributes: GeometryAttributeInterface[];
+} & {
     rotateX?: number | undefined;
     rotateY?: number | undefined;
     rotateZ?: number | undefined;
-}>, {}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+}>, {
+    attributes: GeometryAttributeInterface[];
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     height: number;
     heightSegments: number;
     radius: number;
@@ -886,7 +953,7 @@ declare const _default$10: vue.DefineComponent<{
     openEnded: boolean;
 }>;
 
-declare const _default$$: vue.DefineComponent<{
+declare const _default$11: vue.DefineComponent<{
     readonly radiusTop: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -925,15 +992,23 @@ declare const _default$$: vue.DefineComponent<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
+    attributes: {
+        type: vue.PropType<GeometryAttributeInterface[]>;
+        default: () => never[];
+    };
 }, GeometrySetupInterface, unknown, {}, {
     createGeometry(): void;
     rotateGeometry(): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    attributes: GeometryAttributeInterface[];
+} & {
     rotateX?: number | undefined;
     rotateY?: number | undefined;
     rotateZ?: number | undefined;
-}>, {}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+}>, {
+    attributes: GeometryAttributeInterface[];
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     height: number;
     heightSegments: number;
     thetaStart: number;
@@ -951,71 +1026,87 @@ declare const _default$$: vue.DefineComponent<{
     openEnded: boolean;
     radiusTop: number;
     radiusBottom: number;
+}>;
+
+declare const _default$10: vue.DefineComponent<{
+    readonly radius: {
+        readonly type: NumberConstructor;
+        readonly default: 1;
+    };
+    readonly detail: {
+        readonly type: NumberConstructor;
+        readonly default: 0;
+    };
+}, unknown, unknown, {}, {
+    createGeometry(): void;
+}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+    rotateX: NumberConstructor;
+    rotateY: NumberConstructor;
+    rotateZ: NumberConstructor;
+    attributes: {
+        type: vue.PropType<GeometryAttributeInterface[]>;
+        default: () => never[];
+    };
+}, GeometrySetupInterface, unknown, {}, {
+    createGeometry(): void;
+    rotateGeometry(): void;
+    refreshGeometry(): void;
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    attributes: GeometryAttributeInterface[];
+} & {
+    rotateX?: number | undefined;
+    rotateY?: number | undefined;
+    rotateZ?: number | undefined;
+}>, {
+    attributes: GeometryAttributeInterface[];
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    radius: number;
+    detail: number;
+} & {}>, {
+    radius: number;
+    detail: number;
+}>;
+
+declare const _default$$: vue.DefineComponent<{
+    readonly radius: {
+        readonly type: NumberConstructor;
+        readonly default: 1;
+    };
+    readonly detail: {
+        readonly type: NumberConstructor;
+        readonly default: 0;
+    };
+}, unknown, unknown, {}, {
+    createGeometry(): void;
+}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+    rotateX: NumberConstructor;
+    rotateY: NumberConstructor;
+    rotateZ: NumberConstructor;
+    attributes: {
+        type: vue.PropType<GeometryAttributeInterface[]>;
+        default: () => never[];
+    };
+}, GeometrySetupInterface, unknown, {}, {
+    createGeometry(): void;
+    rotateGeometry(): void;
+    refreshGeometry(): void;
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    attributes: GeometryAttributeInterface[];
+} & {
+    rotateX?: number | undefined;
+    rotateY?: number | undefined;
+    rotateZ?: number | undefined;
+}>, {
+    attributes: GeometryAttributeInterface[];
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    radius: number;
+    detail: number;
+} & {}>, {
+    radius: number;
+    detail: number;
 }>;
 
 declare const _default$_: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {
-    rotateX?: number | undefined;
-    rotateY?: number | undefined;
-    rotateZ?: number | undefined;
-}>, {}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
-    radius: number;
-    detail: number;
-} & {}>, {
-    radius: number;
-    detail: number;
-}>;
-
-declare const _default$Z: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    rotateX: NumberConstructor;
-    rotateY: NumberConstructor;
-    rotateZ: NumberConstructor;
-}, GeometrySetupInterface, unknown, {}, {
-    createGeometry(): void;
-    rotateGeometry(): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {
-    rotateX?: number | undefined;
-    rotateY?: number | undefined;
-    rotateZ?: number | undefined;
-}>, {}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
-    radius: number;
-    detail: number;
-} & {}>, {
-    radius: number;
-    detail: number;
-}>;
-
-declare const _default$Y: vue.DefineComponent<{
     readonly points: ArrayConstructor;
     readonly segments: {
         readonly type: NumberConstructor;
@@ -1035,15 +1126,23 @@ declare const _default$Y: vue.DefineComponent<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
+    attributes: {
+        type: vue.PropType<GeometryAttributeInterface[]>;
+        default: () => never[];
+    };
 }, GeometrySetupInterface, unknown, {}, {
     createGeometry(): void;
     rotateGeometry(): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    attributes: GeometryAttributeInterface[];
+} & {
     rotateX?: number | undefined;
     rotateY?: number | undefined;
     rotateZ?: number | undefined;
-}>, {}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+}>, {
+    attributes: GeometryAttributeInterface[];
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     segments: number;
     phiStart: number;
     phiLength: number;
@@ -1055,7 +1154,7 @@ declare const _default$Y: vue.DefineComponent<{
     phiLength: number;
 }>;
 
-declare const _default$X: vue.DefineComponent<{
+declare const _default$Z: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -1070,15 +1169,23 @@ declare const _default$X: vue.DefineComponent<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
+    attributes: {
+        type: vue.PropType<GeometryAttributeInterface[]>;
+        default: () => never[];
+    };
 }, GeometrySetupInterface, unknown, {}, {
     createGeometry(): void;
     rotateGeometry(): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    attributes: GeometryAttributeInterface[];
+} & {
     rotateX?: number | undefined;
     rotateY?: number | undefined;
     rotateZ?: number | undefined;
-}>, {}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+}>, {
+    attributes: GeometryAttributeInterface[];
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     radius: number;
     detail: number;
 } & {}>, {
@@ -1086,7 +1193,7 @@ declare const _default$X: vue.DefineComponent<{
     detail: number;
 }>;
 
-declare const _default$W: vue.DefineComponent<{
+declare const _default$Y: vue.DefineComponent<{
     readonly width: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -1109,15 +1216,23 @@ declare const _default$W: vue.DefineComponent<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
+    attributes: {
+        type: vue.PropType<GeometryAttributeInterface[]>;
+        default: () => never[];
+    };
 }, GeometrySetupInterface, unknown, {}, {
     createGeometry(): void;
     rotateGeometry(): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    attributes: GeometryAttributeInterface[];
+} & {
     rotateX?: number | undefined;
     rotateY?: number | undefined;
     rotateZ?: number | undefined;
-}>, {}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+}>, {
+    attributes: GeometryAttributeInterface[];
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     width: number;
     height: number;
     widthSegments: number;
@@ -1129,7 +1244,7 @@ declare const _default$W: vue.DefineComponent<{
     heightSegments: number;
 }>;
 
-declare const _default$V: vue.DefineComponent<{
+declare const _default$X: vue.DefineComponent<{
     readonly vertices: ArrayConstructor;
     readonly indices: ArrayConstructor;
     readonly radius: {
@@ -1146,15 +1261,23 @@ declare const _default$V: vue.DefineComponent<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
+    attributes: {
+        type: vue.PropType<GeometryAttributeInterface[]>;
+        default: () => never[];
+    };
 }, GeometrySetupInterface, unknown, {}, {
     createGeometry(): void;
     rotateGeometry(): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    attributes: GeometryAttributeInterface[];
+} & {
     rotateX?: number | undefined;
     rotateY?: number | undefined;
     rotateZ?: number | undefined;
-}>, {}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+}>, {
+    attributes: GeometryAttributeInterface[];
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     radius: number;
     detail: number;
 } & {
@@ -1165,7 +1288,7 @@ declare const _default$V: vue.DefineComponent<{
     detail: number;
 }>;
 
-declare const _default$U: vue.DefineComponent<{
+declare const _default$W: vue.DefineComponent<{
     readonly innerRadius: {
         readonly type: NumberConstructor;
         readonly default: 0.5;
@@ -1196,15 +1319,23 @@ declare const _default$U: vue.DefineComponent<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
+    attributes: {
+        type: vue.PropType<GeometryAttributeInterface[]>;
+        default: () => never[];
+    };
 }, GeometrySetupInterface, unknown, {}, {
     createGeometry(): void;
     rotateGeometry(): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    attributes: GeometryAttributeInterface[];
+} & {
     rotateX?: number | undefined;
     rotateY?: number | undefined;
     rotateZ?: number | undefined;
-}>, {}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+}>, {
+    attributes: GeometryAttributeInterface[];
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     thetaStart: number;
     thetaLength: number;
     innerRadius: number;
@@ -1220,7 +1351,7 @@ declare const _default$U: vue.DefineComponent<{
     phiSegments: number;
 }>;
 
-declare const _default$T: vue.DefineComponent<{
+declare const _default$V: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -1239,15 +1370,23 @@ declare const _default$T: vue.DefineComponent<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
+    attributes: {
+        type: vue.PropType<GeometryAttributeInterface[]>;
+        default: () => never[];
+    };
 }, GeometrySetupInterface, unknown, {}, {
     createGeometry(): void;
     rotateGeometry(): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    attributes: GeometryAttributeInterface[];
+} & {
     rotateX?: number | undefined;
     rotateY?: number | undefined;
     rotateZ?: number | undefined;
-}>, {}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+}>, {
+    attributes: GeometryAttributeInterface[];
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     widthSegments: number;
     heightSegments: number;
     radius: number;
@@ -1257,7 +1396,7 @@ declare const _default$T: vue.DefineComponent<{
     radius: number;
 }>;
 
-declare const _default$S: vue.DefineComponent<{
+declare const _default$U: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -1272,15 +1411,23 @@ declare const _default$S: vue.DefineComponent<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
+    attributes: {
+        type: vue.PropType<GeometryAttributeInterface[]>;
+        default: () => never[];
+    };
 }, GeometrySetupInterface, unknown, {}, {
     createGeometry(): void;
     rotateGeometry(): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    attributes: GeometryAttributeInterface[];
+} & {
     rotateX?: number | undefined;
     rotateY?: number | undefined;
     rotateZ?: number | undefined;
-}>, {}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+}>, {
+    attributes: GeometryAttributeInterface[];
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     radius: number;
     detail: number;
 } & {}>, {
@@ -1288,7 +1435,7 @@ declare const _default$S: vue.DefineComponent<{
     detail: number;
 }>;
 
-declare const _default$R: vue.DefineComponent<{
+declare const _default$T: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -1315,15 +1462,23 @@ declare const _default$R: vue.DefineComponent<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
+    attributes: {
+        type: vue.PropType<GeometryAttributeInterface[]>;
+        default: () => never[];
+    };
 }, GeometrySetupInterface, unknown, {}, {
     createGeometry(): void;
     rotateGeometry(): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    attributes: GeometryAttributeInterface[];
+} & {
     rotateX?: number | undefined;
     rotateY?: number | undefined;
     rotateZ?: number | undefined;
-}>, {}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+}>, {
+    attributes: GeometryAttributeInterface[];
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     radius: number;
     radialSegments: number;
     tube: number;
@@ -1337,7 +1492,7 @@ declare const _default$R: vue.DefineComponent<{
     arc: number;
 }>;
 
-declare const _default$Q: vue.DefineComponent<{
+declare const _default$S: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -1368,15 +1523,23 @@ declare const _default$Q: vue.DefineComponent<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
+    attributes: {
+        type: vue.PropType<GeometryAttributeInterface[]>;
+        default: () => never[];
+    };
 }, GeometrySetupInterface, unknown, {}, {
     createGeometry(): void;
     rotateGeometry(): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    attributes: GeometryAttributeInterface[];
+} & {
     rotateX?: number | undefined;
     rotateY?: number | undefined;
     rotateZ?: number | undefined;
-}>, {}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+}>, {
+    attributes: GeometryAttributeInterface[];
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     p: number;
     q: number;
     radius: number;
@@ -1392,7 +1555,7 @@ declare const _default$Q: vue.DefineComponent<{
     tubularSegments: number;
 }>;
 
-declare const _default$P: vue.DefineComponent<{
+declare const _default$R: vue.DefineComponent<{
     readonly points: ArrayConstructor;
     readonly path: typeof Curve;
     readonly tubularSegments: {
@@ -1418,15 +1581,23 @@ declare const _default$P: vue.DefineComponent<{
     rotateX: NumberConstructor;
     rotateY: NumberConstructor;
     rotateZ: NumberConstructor;
+    attributes: {
+        type: vue.PropType<GeometryAttributeInterface[]>;
+        default: () => never[];
+    };
 }, GeometrySetupInterface, unknown, {}, {
     createGeometry(): void;
     rotateGeometry(): void;
     refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    attributes: GeometryAttributeInterface[];
+} & {
     rotateX?: number | undefined;
     rotateY?: number | undefined;
     rotateZ?: number | undefined;
-}>, {}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+}>, {
+    attributes: GeometryAttributeInterface[];
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     closed: boolean;
     radius: number;
     radialSegments: number;
@@ -1445,7 +1616,7 @@ interface LightSetupInterface {
     light?: Light;
 }
 
-declare const _default$O: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+declare const _default$Q: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
     color: {
         type: StringConstructor;
         default: string;
@@ -1544,7 +1715,7 @@ declare const _default$O: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
     shadowCamera: Record<string, any>;
 }>, vue.EmitsOptions, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {}>, {}>;
 
-declare const _default$N: vue.DefineComponent<{
+declare const _default$P: vue.DefineComponent<{
     target: {
         type: PropType<Vector2PropInterface>;
         default: () => {
@@ -1656,7 +1827,7 @@ declare const _default$N: vue.DefineComponent<{
     target: Vector2PropInterface;
 }>;
 
-declare const _default$M: vue.DefineComponent<{
+declare const _default$O: vue.DefineComponent<{
     groundColor: {
         type: StringConstructor;
         default: string;
@@ -1764,7 +1935,7 @@ declare const _default$M: vue.DefineComponent<{
     groundColor: string;
 }>;
 
-declare const _default$L: vue.DefineComponent<{
+declare const _default$N: vue.DefineComponent<{
     distance: {
         type: NumberConstructor;
         default: number;
@@ -1878,7 +2049,7 @@ declare const _default$L: vue.DefineComponent<{
     decay: number;
 }>;
 
-declare const _default$K: vue.DefineComponent<{
+declare const _default$M: vue.DefineComponent<{
     width: {
         type: NumberConstructor;
         default: number;
@@ -1995,7 +2166,7 @@ declare const _default$K: vue.DefineComponent<{
     helper: boolean;
 }>;
 
-declare const _default$J: vue.DefineComponent<{
+declare const _default$L: vue.DefineComponent<{
     angle: {
         type: NumberConstructor;
         default: number;
@@ -2134,10 +2305,18 @@ interface MaterialInterface extends MaterialSetupInterface {
     setTexture(texture: Texture | null, key: string): void;
 }
 declare const MaterialInjectionKey: InjectionKey<MaterialInterface>;
-declare const _default$I: vue.DefineComponent<{
+declare const _default$K: vue.DefineComponent<{
     color: {
-        type: (StringConstructor | NumberConstructor)[];
+        type: PropType<string | number>;
         default: string;
+    };
+    blending: {
+        type: NumberConstructor;
+        default: three.Blending;
+    };
+    alphaTest: {
+        type: NumberConstructor;
+        default: number;
     };
     depthTest: {
         type: BooleanConstructor;
@@ -2168,6 +2347,8 @@ declare const _default$I: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2177,6 +2358,8 @@ declare const _default$I: vue.DefineComponent<{
 } & {}>, {
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2185,7 +2368,7 @@ declare const _default$I: vue.DefineComponent<{
     vertexColors: boolean;
 }>;
 
-declare const _default$H: vue.DefineComponent<{
+declare const _default$J: vue.DefineComponent<{
     wireframe: {
         type: BooleanConstructor;
         default: boolean;
@@ -2198,8 +2381,16 @@ declare const _default$H: vue.DefineComponent<{
     createMaterial(): MeshBasicMaterial;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     color: {
-        type: (StringConstructor | NumberConstructor)[];
+        type: vue.PropType<string | number>;
         default: string;
+    };
+    blending: {
+        type: NumberConstructor;
+        default: three.Blending;
+    };
+    alphaTest: {
+        type: NumberConstructor;
+        default: number;
     };
     depthTest: {
         type: BooleanConstructor;
@@ -2230,6 +2421,8 @@ declare const _default$H: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2239,6 +2432,8 @@ declare const _default$H: vue.DefineComponent<{
 } & {}>, {
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2253,7 +2448,7 @@ declare const _default$H: vue.DefineComponent<{
     wireframeLinewidth: number;
 }>;
 
-declare const _default$G: vue.DefineComponent<{
+declare const _default$I: vue.DefineComponent<{
     wireframe: {
         type: BooleanConstructor;
         default: boolean;
@@ -2266,8 +2461,16 @@ declare const _default$G: vue.DefineComponent<{
     createMaterial(): MeshLambertMaterial;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     color: {
-        type: (StringConstructor | NumberConstructor)[];
+        type: vue.PropType<string | number>;
         default: string;
+    };
+    blending: {
+        type: NumberConstructor;
+        default: three.Blending;
+    };
+    alphaTest: {
+        type: NumberConstructor;
+        default: number;
     };
     depthTest: {
         type: BooleanConstructor;
@@ -2298,6 +2501,8 @@ declare const _default$G: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2307,6 +2512,8 @@ declare const _default$G: vue.DefineComponent<{
 } & {}>, {
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2321,7 +2528,7 @@ declare const _default$G: vue.DefineComponent<{
     wireframeLinewidth: number;
 }>;
 
-declare const _default$F: vue.DefineComponent<{
+declare const _default$H: vue.DefineComponent<{
     src: StringConstructor;
     name: {
         type: StringConstructor;
@@ -2332,8 +2539,16 @@ declare const _default$F: vue.DefineComponent<{
     createMaterial(): MeshMatcapMaterial;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     color: {
-        type: (StringConstructor | NumberConstructor)[];
+        type: vue.PropType<string | number>;
         default: string;
+    };
+    blending: {
+        type: NumberConstructor;
+        default: three.Blending;
+    };
+    alphaTest: {
+        type: NumberConstructor;
+        default: number;
     };
     depthTest: {
         type: BooleanConstructor;
@@ -2364,6 +2579,8 @@ declare const _default$F: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2373,6 +2590,8 @@ declare const _default$F: vue.DefineComponent<{
 } & {}>, {
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2389,7 +2608,7 @@ declare const _default$F: vue.DefineComponent<{
     flatShading: boolean;
 }>;
 
-declare const _default$E: vue.DefineComponent<{
+declare const _default$G: vue.DefineComponent<{
     wireframe: {
         type: BooleanConstructor;
         default: boolean;
@@ -2423,8 +2642,16 @@ declare const _default$E: vue.DefineComponent<{
     createMaterial(): MeshPhongMaterial;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     color: {
-        type: (StringConstructor | NumberConstructor)[];
+        type: vue.PropType<string | number>;
         default: string;
+    };
+    blending: {
+        type: NumberConstructor;
+        default: three.Blending;
+    };
+    alphaTest: {
+        type: NumberConstructor;
+        default: number;
     };
     depthTest: {
         type: BooleanConstructor;
@@ -2455,6 +2682,8 @@ declare const _default$E: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2464,6 +2693,8 @@ declare const _default$E: vue.DefineComponent<{
 } & {}>, {
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2490,7 +2721,7 @@ declare const _default$E: vue.DefineComponent<{
     specular: string | number;
 }>;
 
-declare const _default$D: vue.DefineComponent<{
+declare const _default$F: vue.DefineComponent<{
     flatShading: BooleanConstructor;
 }, unknown, unknown, {}, {
     createMaterial(): MeshPhysicalMaterial;
@@ -2559,8 +2790,16 @@ declare const _default$D: vue.DefineComponent<{
     createMaterial(): three.MeshStandardMaterial;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     color: {
-        type: (StringConstructor | NumberConstructor)[];
+        type: vue.PropType<string | number>;
         default: string;
+    };
+    blending: {
+        type: NumberConstructor;
+        default: three.Blending;
+    };
+    alphaTest: {
+        type: NumberConstructor;
+        default: number;
     };
     depthTest: {
         type: BooleanConstructor;
@@ -2591,6 +2830,8 @@ declare const _default$D: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2600,6 +2841,8 @@ declare const _default$D: vue.DefineComponent<{
 } & {}>, {
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2644,7 +2887,7 @@ declare const _default$D: vue.DefineComponent<{
     flatShading: boolean;
 }>;
 
-declare const _default$C: vue.DefineComponent<{
+declare const _default$E: vue.DefineComponent<{
     uniforms: {
         type: ObjectConstructor;
         default: () => {};
@@ -2659,11 +2902,18 @@ declare const _default$C: vue.DefineComponent<{
     };
 }, unknown, unknown, {}, {
     createMaterial(): ShaderMaterial;
-    addWatchers(): void;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     color: {
-        type: (StringConstructor | NumberConstructor)[];
+        type: vue.PropType<string | number>;
         default: string;
+    };
+    blending: {
+        type: NumberConstructor;
+        default: three.Blending;
+    };
+    alphaTest: {
+        type: NumberConstructor;
+        default: number;
     };
     depthTest: {
         type: BooleanConstructor;
@@ -2694,6 +2944,8 @@ declare const _default$C: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2703,6 +2955,8 @@ declare const _default$C: vue.DefineComponent<{
 } & {}>, {
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2719,7 +2973,7 @@ declare const _default$C: vue.DefineComponent<{
     fragmentShader: string;
 }>;
 
-declare const _default$B: vue.DefineComponent<{
+declare const _default$D: vue.DefineComponent<{
     wireframe: {
         type: BooleanConstructor;
         default: boolean;
@@ -2784,8 +3038,16 @@ declare const _default$B: vue.DefineComponent<{
     createMaterial(): MeshStandardMaterial;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     color: {
-        type: (StringConstructor | NumberConstructor)[];
+        type: PropType<string | number>;
         default: string;
+    };
+    blending: {
+        type: NumberConstructor;
+        default: three.Blending;
+    };
+    alphaTest: {
+        type: NumberConstructor;
+        default: number;
     };
     depthTest: {
         type: BooleanConstructor;
@@ -2816,6 +3078,8 @@ declare const _default$B: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2825,6 +3089,8 @@ declare const _default$B: vue.DefineComponent<{
 } & {}>, {
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2865,7 +3131,7 @@ declare const _default$B: vue.DefineComponent<{
     refractionRatio: number;
 }>;
 
-declare const _default$A: vue.DefineComponent<{
+declare const _default$C: vue.DefineComponent<{
     readonly color: {
         readonly type: PropType<string | number>;
         readonly default: "#ffffff";
@@ -2898,8 +3164,16 @@ declare const _default$A: vue.DefineComponent<{
     createMaterial(): ShaderMaterial;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     color: {
-        type: (StringConstructor | NumberConstructor)[];
+        type: PropType<string | number>;
         default: string;
+    };
+    blending: {
+        type: NumberConstructor;
+        default: three.Blending;
+    };
+    alphaTest: {
+        type: NumberConstructor;
+        default: number;
     };
     depthTest: {
         type: BooleanConstructor;
@@ -2930,6 +3204,8 @@ declare const _default$A: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2939,6 +3215,8 @@ declare const _default$A: vue.DefineComponent<{
 } & {}>, {
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -2963,7 +3241,7 @@ declare const _default$A: vue.DefineComponent<{
     thicknessScale: number;
 }>;
 
-declare const _default$z: vue.DefineComponent<{
+declare const _default$B: vue.DefineComponent<{
     wireframe: {
         type: BooleanConstructor;
         default: boolean;
@@ -2976,8 +3254,16 @@ declare const _default$z: vue.DefineComponent<{
     createMaterial(): MeshToonMaterial;
 }, vue.ComponentOptionsMixin, vue.DefineComponent<{
     color: {
-        type: (StringConstructor | NumberConstructor)[];
+        type: vue.PropType<string | number>;
         default: string;
+    };
+    blending: {
+        type: NumberConstructor;
+        default: three.Blending;
+    };
+    alphaTest: {
+        type: NumberConstructor;
+        default: number;
     };
     depthTest: {
         type: BooleanConstructor;
@@ -3008,6 +3294,8 @@ declare const _default$z: vue.DefineComponent<{
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -3017,6 +3305,8 @@ declare const _default$z: vue.DefineComponent<{
 } & {}>, {
     transparent: boolean;
     color: string | number;
+    blending: number;
+    alphaTest: number;
     depthTest: boolean;
     depthWrite: boolean;
     fog: boolean;
@@ -3035,7 +3325,7 @@ interface TexureInterface {
     material?: MaterialInterface;
     texture?: Texture;
 }
-declare const _default$y: vue.DefineComponent<{
+declare const _default$A: vue.DefineComponent<{
     name: {
         type: StringConstructor;
         default: string;
@@ -3045,6 +3335,10 @@ declare const _default$y: vue.DefineComponent<{
     onLoad: PropType<(t: Texture) => void>;
     onProgress: PropType<(e: ProgressEvent) => void>;
     onError: PropType<(e: ErrorEvent) => void>;
+    encoding: {
+        type: NumberConstructor;
+        default: three.TextureEncoding;
+    };
     mapping: {
         type: NumberConstructor;
         default: three.Mapping;
@@ -3092,6 +3386,7 @@ declare const _default$y: vue.DefineComponent<{
     center: Vector2PropInterface;
     name: string;
     rotation: number;
+    encoding: number;
     mapping: number;
     wrapS: number;
     wrapT: number;
@@ -3108,6 +3403,7 @@ declare const _default$y: vue.DefineComponent<{
     center: Vector2PropInterface;
     name: string;
     rotation: number;
+    encoding: number;
     mapping: number;
     wrapS: number;
     wrapT: number;
@@ -3115,7 +3411,7 @@ declare const _default$y: vue.DefineComponent<{
     minFilter: number;
 }>;
 
-declare const _default$x: vue.DefineComponent<{
+declare const _default$z: vue.DefineComponent<{
     path: {
         type: StringConstructor;
         required: true;
@@ -3140,6 +3436,10 @@ declare const _default$x: vue.DefineComponent<{
     onLoad: PropType<(t: three.Texture) => void>;
     onProgress: PropType<(e: ProgressEvent<EventTarget>) => void>;
     onError: PropType<(e: ErrorEvent) => void>;
+    encoding: {
+        type: NumberConstructor;
+        default: three.TextureEncoding;
+    };
     mapping: {
         type: NumberConstructor;
         default: three.Mapping;
@@ -3187,6 +3487,7 @@ declare const _default$x: vue.DefineComponent<{
     center: Vector2PropInterface;
     name: string;
     rotation: number;
+    encoding: number;
     mapping: number;
     wrapS: number;
     wrapT: number;
@@ -3203,6 +3504,7 @@ declare const _default$x: vue.DefineComponent<{
     center: Vector2PropInterface;
     name: string;
     rotation: number;
+    encoding: number;
     mapping: number;
     wrapS: number;
     wrapT: number;
@@ -3217,7 +3519,87 @@ declare const _default$x: vue.DefineComponent<{
     urls: string[];
 }>;
 
-declare const _default$w: vue.DefineComponent<{
+declare const _default$y: vue.DefineComponent<{
+    size: {
+        type: NumberConstructor;
+        default: number;
+    };
+    sizeAttenuation: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+}, unknown, unknown, {}, {
+    createMaterial(): PointsMaterial;
+}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+    color: {
+        type: vue.PropType<string | number>;
+        default: string;
+    };
+    blending: {
+        type: NumberConstructor;
+        default: three.Blending;
+    };
+    alphaTest: {
+        type: NumberConstructor;
+        default: number;
+    };
+    depthTest: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    depthWrite: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    fog: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    opacity: {
+        type: NumberConstructor;
+        default: number;
+    };
+    side: {
+        type: NumberConstructor;
+        default: three.Side;
+    };
+    transparent: BooleanConstructor;
+    vertexColors: BooleanConstructor;
+}, MaterialSetupInterface, unknown, {}, {
+    setProp(key: string, value: any, needsUpdate?: boolean): void;
+    setTexture(texture: three.Texture | null, key?: string): void;
+    addWatchers(): void;
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    transparent: boolean;
+    color: string | number;
+    blending: number;
+    alphaTest: number;
+    depthTest: boolean;
+    depthWrite: boolean;
+    fog: boolean;
+    opacity: number;
+    side: number;
+    vertexColors: boolean;
+} & {}>, {
+    transparent: boolean;
+    color: string | number;
+    blending: number;
+    alphaTest: number;
+    depthTest: boolean;
+    depthWrite: boolean;
+    fog: boolean;
+    opacity: number;
+    side: number;
+    vertexColors: boolean;
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    size: number;
+    sizeAttenuation: boolean;
+} & {}>, {
+    size: number;
+    sizeAttenuation: boolean;
+}>;
+
+declare const _default$x: vue.DefineComponent<{
     readonly size: NumberConstructor;
     readonly width: {
         readonly type: NumberConstructor;
@@ -3355,7 +3737,7 @@ declare const _default$w: vue.DefineComponent<{
     depthSegments: number;
 }>;
 
-declare const _default$v: vue.DefineComponent<{
+declare const _default$w: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -3478,7 +3860,7 @@ declare const _default$v: vue.DefineComponent<{
     thetaLength: number;
 }>;
 
-declare const _default$u: vue.DefineComponent<{
+declare const _default$v: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -3619,7 +4001,7 @@ declare const _default$u: vue.DefineComponent<{
     openEnded: boolean;
 }>;
 
-declare const _default$t: vue.DefineComponent<{
+declare const _default$u: vue.DefineComponent<{
     readonly radiusTop: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -3766,6 +4148,117 @@ declare const _default$t: vue.DefineComponent<{
     radiusBottom: number;
 }>;
 
+declare const _default$t: vue.DefineComponent<{
+    readonly radius: {
+        readonly type: NumberConstructor;
+        readonly default: 1;
+    };
+    readonly detail: {
+        readonly type: NumberConstructor;
+        readonly default: 0;
+    };
+}, unknown, unknown, {}, {
+    createGeometry(): void;
+}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+    onPointerEnter: FunctionConstructor;
+    onPointerOver: FunctionConstructor;
+    onPointerMove: FunctionConstructor;
+    onPointerLeave: FunctionConstructor;
+    onPointerDown: FunctionConstructor;
+    onPointerUp: FunctionConstructor;
+    onClick: FunctionConstructor;
+    castShadow: BooleanConstructor;
+    receiveShadow: BooleanConstructor;
+}, MeshSetupInterface, unknown, {}, {
+    initMesh(): void;
+    createGeometry(): void;
+    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
+        [x: string]: unknown;
+    }>>): void;
+    setGeometry(geometry: three.BufferGeometry): void;
+    setMaterial(material: three.Material): void;
+    refreshGeometry(): void;
+}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+    position: {
+        type: vue.PropType<Vector3PropInterface>;
+        default: () => {
+            x: number;
+            y: number;
+            z: number;
+        };
+    };
+    rotation: {
+        type: vue.PropType<EulerPropInterface>;
+        default: () => {
+            x: number;
+            y: number;
+            z: number;
+        };
+    };
+    scale: {
+        type: vue.PropType<Vector3PropInterface>;
+        default: () => {
+            x: number;
+            y: number;
+            z: number;
+            order: string;
+        };
+    };
+    lookAt: {
+        type: vue.PropType<Vector3PropInterface>;
+        default: null;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    userData: {
+        type: ObjectConstructor;
+        default: () => {};
+    };
+}, Object3DSetupInterface, unknown, {}, {
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}>> | undefined;
+    addToParent(o?: three.Object3D | undefined): boolean;
+    removeFromParent(o?: three.Object3D | undefined): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
+    lookAt: Vector3PropInterface;
+    autoRemove: boolean;
+    userData: Record<string, any>;
+} & {}>, {
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
+    lookAt: Vector3PropInterface;
+    autoRemove: boolean;
+    userData: Record<string, any>;
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    castShadow: boolean;
+    receiveShadow: boolean;
+} & {
+    onClick?: Function | undefined;
+    onPointerEnter?: Function | undefined;
+    onPointerOver?: Function | undefined;
+    onPointerMove?: Function | undefined;
+    onPointerLeave?: Function | undefined;
+    onPointerDown?: Function | undefined;
+    onPointerUp?: Function | undefined;
+}>, {
+    castShadow: boolean;
+    receiveShadow: boolean;
+}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    radius: number;
+    detail: number;
+} & {}>, {
+    radius: number;
+    detail: number;
+}>;
+
 declare const _default$s: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
@@ -3878,117 +4371,6 @@ declare const _default$s: vue.DefineComponent<{
 }>;
 
 declare const _default$r: vue.DefineComponent<{
-    readonly radius: {
-        readonly type: NumberConstructor;
-        readonly default: 1;
-    };
-    readonly detail: {
-        readonly type: NumberConstructor;
-        readonly default: 0;
-    };
-}, unknown, unknown, {}, {
-    createGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    onPointerEnter: FunctionConstructor;
-    onPointerOver: FunctionConstructor;
-    onPointerMove: FunctionConstructor;
-    onPointerLeave: FunctionConstructor;
-    onPointerDown: FunctionConstructor;
-    onPointerUp: FunctionConstructor;
-    onClick: FunctionConstructor;
-    castShadow: BooleanConstructor;
-    receiveShadow: BooleanConstructor;
-}, MeshSetupInterface, unknown, {}, {
-    initMesh(): void;
-    createGeometry(): void;
-    addGeometryWatchers(props: Readonly<vue.ComponentPropsOptions<{
-        [x: string]: unknown;
-    }>>): void;
-    setGeometry(geometry: three.BufferGeometry): void;
-    setMaterial(material: three.Material): void;
-    refreshGeometry(): void;
-}, vue.ComponentOptionsMixin, vue.DefineComponent<{
-    position: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    rotation: {
-        type: vue.PropType<EulerPropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-        };
-    };
-    scale: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: () => {
-            x: number;
-            y: number;
-            z: number;
-            order: string;
-        };
-    };
-    lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
-        default: null;
-    };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
-    userData: {
-        type: ObjectConstructor;
-        default: () => {};
-    };
-}, Object3DSetupInterface, unknown, {}, {
-    initObject3D(o3d: three.Object3D): void;
-    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}>> | undefined;
-    addToParent(o?: three.Object3D | undefined): boolean;
-    removeFromParent(o?: three.Object3D | undefined): boolean;
-    add(o: three.Object3D): void;
-    remove(o: three.Object3D): void;
-}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
-    position: Vector3PropInterface;
-    rotation: EulerPropInterface;
-    scale: Vector3PropInterface;
-    lookAt: Vector3PropInterface;
-    autoRemove: boolean;
-    userData: Record<string, any>;
-} & {}>, {
-    position: Vector3PropInterface;
-    rotation: EulerPropInterface;
-    scale: Vector3PropInterface;
-    lookAt: Vector3PropInterface;
-    autoRemove: boolean;
-    userData: Record<string, any>;
-}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
-    castShadow: boolean;
-    receiveShadow: boolean;
-} & {
-    onClick?: Function | undefined;
-    onPointerEnter?: Function | undefined;
-    onPointerOver?: Function | undefined;
-    onPointerMove?: Function | undefined;
-    onPointerLeave?: Function | undefined;
-    onPointerDown?: Function | undefined;
-    onPointerUp?: Function | undefined;
-}>, {
-    castShadow: boolean;
-    receiveShadow: boolean;
-}>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
-    radius: number;
-    detail: number;
-} & {}>, {
-    radius: number;
-    detail: number;
-}>;
-
-declare const _default$q: vue.DefineComponent<{
     readonly points: ArrayConstructor;
     readonly segments: {
         readonly type: NumberConstructor;
@@ -4108,7 +4490,7 @@ declare const _default$q: vue.DefineComponent<{
     phiLength: number;
 }>;
 
-declare const _default$p: vue.DefineComponent<{
+declare const _default$q: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -4219,7 +4601,7 @@ declare const _default$p: vue.DefineComponent<{
     detail: number;
 }>;
 
-declare const _default$o: vue.DefineComponent<{
+declare const _default$p: vue.DefineComponent<{
     readonly width: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -4342,7 +4724,7 @@ declare const _default$o: vue.DefineComponent<{
     heightSegments: number;
 }>;
 
-declare const _default$n: vue.DefineComponent<{
+declare const _default$o: vue.DefineComponent<{
     readonly vertices: ArrayConstructor;
     readonly indices: ArrayConstructor;
     readonly radius: {
@@ -4458,7 +4840,7 @@ declare const _default$n: vue.DefineComponent<{
     detail: number;
 }>;
 
-declare const _default$m: vue.DefineComponent<{
+declare const _default$n: vue.DefineComponent<{
     readonly innerRadius: {
         readonly type: NumberConstructor;
         readonly default: 0.5;
@@ -4593,7 +4975,7 @@ declare const _default$m: vue.DefineComponent<{
     phiSegments: number;
 }>;
 
-declare const _default$l: vue.DefineComponent<{
+declare const _default$m: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -4710,7 +5092,7 @@ declare const _default$l: vue.DefineComponent<{
     radius: number;
 }>;
 
-declare const _default$k: vue.DefineComponent<{
+declare const _default$l: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -4825,7 +5207,7 @@ interface TextSetupInterface extends MeshSetupInterface {
     geometry?: TextGeometry;
     font?: Font;
 }
-declare const _default$j: vue.DefineComponent<{
+declare const _default$k: vue.DefineComponent<{
     readonly text: {
         readonly type: StringConstructor;
         readonly required: true;
@@ -4996,7 +5378,7 @@ declare const _default$j: vue.DefineComponent<{
     align: string | boolean;
 }>;
 
-declare const _default$i: vue.DefineComponent<{
+declare const _default$j: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -5125,7 +5507,7 @@ declare const _default$i: vue.DefineComponent<{
     arc: number;
 }>;
 
-declare const _default$h: vue.DefineComponent<{
+declare const _default$i: vue.DefineComponent<{
     readonly radius: {
         readonly type: NumberConstructor;
         readonly default: 1;
@@ -5260,7 +5642,7 @@ declare const _default$h: vue.DefineComponent<{
     tubularSegments: number;
 }>;
 
-declare const _default$g: vue.DefineComponent<{
+declare const _default$h: vue.DefineComponent<{
     readonly points: ArrayConstructor;
     readonly path: typeof three.Curve;
     readonly tubularSegments: {
@@ -5393,7 +5775,7 @@ interface ImageSetupInterface extends MeshSetupInterface {
     material?: MeshBasicMaterial;
     texture?: Texture;
 }
-declare const _default$f: vue.DefineComponent<{
+declare const _default$g: vue.DefineComponent<{
     src: {
         type: StringConstructor;
         required: true;
@@ -5520,7 +5902,7 @@ declare const _default$f: vue.DefineComponent<{
     keepSize: boolean;
 }>;
 
-declare const _default$e: vue.DefineComponent<{
+declare const _default$f: vue.DefineComponent<{
     count: {
         type: NumberConstructor;
         required: true;
@@ -5628,7 +6010,7 @@ interface SpriteSetupInterface extends Object3DSetupInterface {
     material?: SpriteMaterial;
     sprite?: Sprite;
 }
-declare const _default$d: vue.DefineComponent<{
+declare const _default$e: vue.DefineComponent<{
     src: {
         type: StringConstructor;
         required: true;
@@ -5698,6 +6080,76 @@ declare const _default$d: vue.DefineComponent<{
 }>, "loaded"[], "loaded", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     src: string;
 } & {}>, {}>;
+
+interface PointsSetupInterface extends Object3DSetupInterface {
+    mesh?: Points;
+    points?: Points;
+    geometry?: BufferGeometry;
+    material?: Material;
+}
+declare const _default$d: vue.DefineComponent<{}, PointsSetupInterface, {}, {}, {
+    setGeometry(geometry: BufferGeometry): void;
+    setMaterial(material: Material): void;
+}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+    position: {
+        type: vue.PropType<Vector3PropInterface>;
+        default: () => {
+            x: number;
+            y: number;
+            z: number;
+        };
+    };
+    rotation: {
+        type: vue.PropType<EulerPropInterface>;
+        default: () => {
+            x: number;
+            y: number;
+            z: number;
+        };
+    };
+    scale: {
+        type: vue.PropType<Vector3PropInterface>;
+        default: () => {
+            x: number;
+            y: number;
+            z: number;
+            order: string;
+        };
+    };
+    lookAt: {
+        type: vue.PropType<Vector3PropInterface>;
+        default: null;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    userData: {
+        type: ObjectConstructor;
+        default: () => {};
+    };
+}, Object3DSetupInterface, unknown, {}, {
+    initObject3D(o3d: three.Object3D): void;
+    getParent(): vue.ComponentPublicInstance<{}, {}, {}, {}, {}, {}, {}, {}, false, vue.ComponentOptionsBase<any, any, any, any, any, any, any, any, any, {}>> | undefined;
+    addToParent(o?: three.Object3D | undefined): boolean;
+    removeFromParent(o?: three.Object3D | undefined): boolean;
+    add(o: three.Object3D): void;
+    remove(o: three.Object3D): void;
+}, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
+    lookAt: Vector3PropInterface;
+    autoRemove: boolean;
+    userData: Record<string, any>;
+} & {}>, {
+    position: Vector3PropInterface;
+    rotation: EulerPropInterface;
+    scale: Vector3PropInterface;
+    lookAt: Vector3PropInterface;
+    autoRemove: boolean;
+    userData: Record<string, any>;
+}>, vue.EmitsOptions, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {}>, {}>;
 
 declare const _default$c: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
     src: {
@@ -6124,4 +6576,4 @@ interface TexturesInterface {
 }
 declare function useTextures(): TexturesInterface;
 
-export { _default$O as AmbientLight, _default$H as BasicMaterial, _default$8 as BokehPass, _default$w as Box, _default$12 as BoxGeometry, _default$17 as Camera, _default$v as Circle, _default$11 as CircleGeometry, ComposerInjectionKey, _default$u as Cone, _default$10 as ConeGeometry, _default$13 as CubeCamera, _default$x as CubeTexture, _default$t as Cylinder, _default$$ as CylinderGeometry, _default$N as DirectionalLight, _default$s as Dodecahedron, _default$_ as DodecahedronGeometry, _default$a as EffectComposer, _default$b as FBXModel, _default$6 as FXAAPass, _default$7 as FilmPass, _default$c as GLTFModel, _default$16 as Group, _default$5 as HalftonePass, _default$M as HemisphereLight, _default$r as Icosahedron, _default$Z as IcosahedronGeometry, _default$f as Image, _default$e as InstancedMesh, _default$G as LambertMaterial, _default$q as Lathe, _default$Y as LatheGeometry, _default$F as MatcapMaterial, _default$I as Material, MaterialInjectionKey, Mesh, MeshInjectionKey, _default$19 as Object3D, _default$p as Octahedron, _default$X as OctahedronGeometry, _default$18 as OrthographicCamera, _default$17 as PerspectiveCamera, _default$E as PhongMaterial, _default$D as PhysicalMaterial, _default$o as Plane, _default$W as PlaneGeometry, _default$L as PointLight, _default$n as Polyhedron, _default$V as PolyhedronGeometry, _default$14 as Raycaster, _default$K as RectAreaLight, _default$9 as RenderPass, _default$1a as Renderer, RendererInjectionKey, _default$m as Ring, _default$U as RingGeometry, _default$4 as SMAAPass, _default$3 as SSAOPass, _default$15 as Scene, SceneInjectionKey, _default$C as ShaderMaterial, _default$l as Sphere, _default$T as SphereGeometry, _default$J as SpotLight, _default$d as Sprite, _default$B as StandardMaterial, _default$A as SubSurfaceMaterial, _default$k as Tetrahedron, _default$S as TetrahedronGeometry, _default$j as Text, _default$y as Texture, _default$2 as TiltShiftPass, _default$z as ToonMaterial, _default$i as Torus, _default$R as TorusGeometry, _default$h as TorusKnot, _default$Q as TorusKnotGeometry, TroisJSVuePlugin, _default$g as Tube, _default$P as TubeGeometry, _default$1 as UnrealBloomPass, _default as ZoomBlurPass, bindProp, bindProps, createApp, getMatcapUrl, lerp, limit, propsValues, setFromProp, useTextures };
+export { _default$Q as AmbientLight, _default$J as BasicMaterial, _default$8 as BokehPass, _default$x as Box, _default$14 as BoxGeometry, Geometry as BufferGeometry, _default$19 as Camera, _default$w as Circle, _default$13 as CircleGeometry, ComposerInjectionKey, _default$v as Cone, _default$12 as ConeGeometry, _default$15 as CubeCamera, _default$z as CubeTexture, _default$u as Cylinder, _default$11 as CylinderGeometry, _default$P as DirectionalLight, _default$t as Dodecahedron, _default$10 as DodecahedronGeometry, _default$a as EffectComposer, _default$b as FBXModel, _default$6 as FXAAPass, _default$7 as FilmPass, _default$c as GLTFModel, _default$18 as Group, _default$5 as HalftonePass, _default$O as HemisphereLight, _default$s as Icosahedron, _default$$ as IcosahedronGeometry, _default$g as Image, _default$f as InstancedMesh, _default$I as LambertMaterial, _default$r as Lathe, _default$_ as LatheGeometry, _default$H as MatcapMaterial, _default$K as Material, MaterialInjectionKey, Mesh, MeshInjectionKey, _default$1b as Object3D, _default$q as Octahedron, _default$Z as OctahedronGeometry, _default$1a as OrthographicCamera, _default$19 as PerspectiveCamera, _default$G as PhongMaterial, _default$F as PhysicalMaterial, _default$p as Plane, _default$Y as PlaneGeometry, _default$N as PointLight, _default$d as Points, _default$y as PointsMaterial, _default$o as Polyhedron, _default$X as PolyhedronGeometry, _default$16 as Raycaster, _default$M as RectAreaLight, _default$9 as RenderPass, _default$1c as Renderer, RendererInjectionKey, _default$n as Ring, _default$W as RingGeometry, _default$4 as SMAAPass, _default$3 as SSAOPass, _default$17 as Scene, SceneInjectionKey, _default$E as ShaderMaterial, _default$m as Sphere, _default$V as SphereGeometry, _default$L as SpotLight, _default$e as Sprite, _default$D as StandardMaterial, _default$C as SubSurfaceMaterial, _default$l as Tetrahedron, _default$U as TetrahedronGeometry, _default$k as Text, _default$A as Texture, _default$2 as TiltShiftPass, _default$B as ToonMaterial, _default$j as Torus, _default$T as TorusGeometry, _default$i as TorusKnot, _default$S as TorusKnotGeometry, TroisJSVuePlugin, _default$h as Tube, _default$R as TubeGeometry, _default$1 as UnrealBloomPass, _default as ZoomBlurPass, bindProp, bindProps, createApp, getMatcapUrl, lerp, limit, propsValues, setFromProp, useTextures };
