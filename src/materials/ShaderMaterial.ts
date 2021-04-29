@@ -1,6 +1,7 @@
 import { defineComponent, watch } from 'vue'
 import { ShaderMaterial } from 'three'
 import Material from './Material'
+import { propsValues } from '../tools'
 
 const defaultVertexShader = `
   varying vec2 vUv;
@@ -26,23 +27,15 @@ export default defineComponent({
   },
   methods: {
     createMaterial() {
-      const material = new ShaderMaterial({
-        uniforms: this.uniforms,
-        vertexShader: this.vertexShader,
-        fragmentShader: this.fragmentShader,
-      })
+      const material = new ShaderMaterial(propsValues(this.$props, ['color']));
 
-      const watchProps = ['vertexShader', 'fragmentShader']
-      watchProps.forEach(p => {
+      ['vertexShader', 'fragmentShader'].forEach(p => {
         // @ts-ignore
-        watch(() => this[p], (value) => {
-          this.setProp(p, value, true)
-        })
+        watch(() => this[p], (value) => { material[p] = value; material.needsUpdate = true })
       })
 
       return material
     },
-    addWatchers() {},
   },
   __hmrId: 'ShaderMaterial',
 })

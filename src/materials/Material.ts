@@ -67,7 +67,7 @@ export default defineComponent({
       this.setProp(key, texture, true)
     },
     addWatchers() {
-      ['color', 'alphaTest', 'depthTest', 'depthWrite', 'fog', 'opacity', 'side', 'transparent'].forEach(p => {
+      ['color', 'alphaTest', 'blending', 'depthTest', 'depthWrite', 'fog', 'opacity', 'side', 'transparent'].forEach(p => {
         // @ts-ignore
         watch(() => this[p], (value) => {
           if (p === 'color') {
