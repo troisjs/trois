@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import { Camera, NoToneMapping, Scene, WebGLRenderer } from 'three'
+import { Camera, NoToneMapping, PCFShadowMap, Scene, WebGLRenderer } from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
 import { defineComponent, InjectionKey, PropType } from 'vue'
 import { bindProp } from '../tools'
@@ -105,6 +105,7 @@ export default defineComponent({
     pointer: { type: [Boolean, Object] as PropType<boolean | PointerPublicConfigInterface>, default: false },
     resize: { type: [Boolean, String] as PropType<boolean | string>, default: false },
     shadow: Boolean,
+    shadowType: { type: Number, default: PCFShadowMap },
     toneMapping: { type: Number, default: NoToneMapping },
     width: String,
     height: String,
@@ -192,8 +193,10 @@ export default defineComponent({
         this.resizeCallbacks.forEach(e => e({ type: 'resize', renderer: this, size }))
       }
 
-      // TODO : improve shadow params
-      this.renderer.shadowMap.enabled = this.shadow
+      if (this.shadow) {
+        this.renderer.shadowMap.enabled = true
+        this.renderer.shadowMap.type = this.shadowType
+      }
 
       this.renderFn = this.three.composer ? this.three.renderC : this.three.render
 
