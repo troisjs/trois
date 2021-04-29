@@ -53,9 +53,9 @@ function createConfig(format, output, plugins = [], minify = false) {
       sourcemap: true,
     },
     plugins: [
+      ...plugins,
       // vue(),
       tsPlugin,
-      ...plugins,
     ],
   }
 }
