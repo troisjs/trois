@@ -1,5 +1,5 @@
-import { defineComponent, InjectionKey, watch } from 'vue'
-import { FrontSide, Material, Texture } from 'three'
+import { defineComponent, InjectionKey, PropType, watch } from 'vue'
+import { FrontSide, Material, NormalBlending, Texture } from 'three'
 import { MeshInjectionKey, MeshInterface } from '../meshes/Mesh'
 
 export interface MaterialSetupInterface {
@@ -21,7 +21,8 @@ export default defineComponent({
     mesh: MeshInjectionKey as symbol,
   },
   props: {
-    color: { type: [String, Number], default: '#ffffff' },
+    color: { type: [String, Number] as PropType<string | number>, default: '#ffffff' },
+    blending: { type: Number, default: NormalBlending },
     alphaTest: { type: Number, default: 0 },
     depthTest: { type: Boolean, default: true },
     depthWrite: { type: Boolean, default: true },
