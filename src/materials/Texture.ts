@@ -1,5 +1,5 @@
 import { defineComponent, PropType, watch } from 'vue'
-import { ClampToEdgeWrapping, LinearFilter, LinearMipmapLinearFilter, ShaderMaterial, Texture, TextureLoader, UVMapping } from 'three'
+import { ClampToEdgeWrapping, LinearEncoding, LinearFilter, LinearMipmapLinearFilter, ShaderMaterial, Texture, TextureLoader, UVMapping } from 'three'
 import { bindProp } from '../tools'
 import { MaterialInjectionKey, MaterialInterface } from './Material'
 import { Vector2PropInterface } from '../core/Object3D'
@@ -20,6 +20,7 @@ export default defineComponent({
     onLoad: Function as PropType<(t: Texture) => void>,
     onProgress: Function as PropType<(e: ProgressEvent) => void>,
     onError: Function as PropType<(e: ErrorEvent) => void>,
+    encoding: { type: Number, default: LinearEncoding },
     // format: { type: Number, default: RGBAFormat },
     mapping: { type: Number, default: UVMapping },
     wrapS: { type: Number, default: ClampToEdgeWrapping },
@@ -46,7 +47,7 @@ export default defineComponent({
       if (!this.src) return undefined
       const texture = new TextureLoader().load(this.src, this.onLoaded, this.onProgress, this.onError)
       // use format ? TextureLoader will automatically set format to THREE.RGBFormat for JPG images.
-      const wathProps = ['mapping', 'wrapS', 'wrapT', 'magFilter', 'minFilter', 'repeat', 'rotation', 'center']
+      const wathProps = ['encoding', 'mapping', 'wrapS', 'wrapT', 'magFilter', 'minFilter', 'repeat', 'rotation', 'center']
       wathProps.forEach(prop => { bindProp(this, prop, texture) })
       return texture
     },
