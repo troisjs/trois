@@ -50,8 +50,9 @@ export default defineComponent({
     rotation: { type: Object as PropType<EulerPropInterface>, default: () => ({ x: 0, y: 0, z: 0 }) },
     scale: { type: Object as PropType<Vector3PropInterface>, default: () => ({ x: 1, y: 1, z: 1, order: 'XYZ' }) },
     lookAt: { type: Object as PropType<Vector3PropInterface>, default: null },
-    autoRemove: { type: Boolean, default: true },
     userData: { type: Object, default: () => ({}) },
+    visible: { type: Boolean, default: true },
+    autoRemove: { type: Boolean, default: true },
   },
   setup(): Object3DSetupInterface {
     // return object3DSetup()
@@ -78,6 +79,7 @@ export default defineComponent({
       bindProp(this, 'rotation', o3d)
       bindProp(this, 'scale', o3d)
       bindProp(this, 'userData', o3d.userData)
+      bindProp(this, 'visible', o3d)
 
       if (this.lookAt) o3d.lookAt(this.lookAt.x ?? 0, this.lookAt.y, this.lookAt.z)
       watch(() => this.lookAt, (v) => { o3d.lookAt(v.x ?? 0, v.y, v.z) }, { deep: true })
