@@ -21,7 +21,7 @@ export function bindProp(src: any, srcProp: string, dst: any, dstProp?: string):
     setFromProp(dst[_dstProp], ref.value)
     watch(ref, (value) => { setFromProp(dst[_dstProp], value) }, { deep: true })
   } else {
-    if (typeof ref.value === 'boolean' || ref.value) dst[_dstProp] = src[srcProp]
+    if (ref.value !== undefined) dst[_dstProp] = src[srcProp]
     watch(ref, (value) => { dst[_dstProp] = value })
   }
 }
