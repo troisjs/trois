@@ -283,13 +283,17 @@ declare const _default$1b: vue.DefineComponent<{
         type: PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: Object3D): void;
@@ -299,19 +303,21 @@ declare const _default$1b: vue.DefineComponent<{
     add(o: Object3D): void;
     remove(o: Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>;
 
 declare const _default$1a: vue.DefineComponent<{
@@ -454,13 +460,17 @@ declare const _default$18: vue.DefineComponent<{}, {
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -470,19 +480,21 @@ declare const _default$18: vue.DefineComponent<{}, {
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, vue.EmitsOptions, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {}>, {}>;
 
 declare const SceneInjectionKey: InjectionKey<Scene>;
@@ -543,6 +555,13 @@ declare const _default$16: vue.DefineComponent<{
     intersectMode: string;
 }>;
 
+interface CubeCameraSetupInterface {
+    cubeRT?: WebGLCubeRenderTarget;
+    cubeCamera?: CubeCamera;
+    updateRT?: {
+        (): void;
+    };
+}
 declare const _default$15: vue.DefineComponent<{
     cubeRTSize: {
         type: NumberConstructor;
@@ -557,12 +576,13 @@ declare const _default$15: vue.DefineComponent<{
         default: number;
     };
     autoUpdate: BooleanConstructor;
-}, {
-    cubeRT: WebGLCubeRenderTarget;
-    cubeCamera: CubeCamera;
-} | undefined, unknown, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
+    hideMeshes: {
+        type: PropType<Mesh$1<three.BufferGeometry, three.Material | three.Material[]>[]>;
+        default: () => never[];
+    };
+}, CubeCameraSetupInterface, unknown, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
     position: {
-        type: vue.PropType<Vector3PropInterface>;
+        type: PropType<Vector3PropInterface>;
         default: () => {
             x: number;
             y: number;
@@ -570,7 +590,7 @@ declare const _default$15: vue.DefineComponent<{
         };
     };
     rotation: {
-        type: vue.PropType<EulerPropInterface>;
+        type: PropType<EulerPropInterface>;
         default: () => {
             x: number;
             y: number;
@@ -578,7 +598,7 @@ declare const _default$15: vue.DefineComponent<{
         };
     };
     scale: {
-        type: vue.PropType<Vector3PropInterface>;
+        type: PropType<Vector3PropInterface>;
         default: () => {
             x: number;
             y: number;
@@ -587,16 +607,20 @@ declare const _default$15: vue.DefineComponent<{
         };
     };
     lookAt: {
-        type: vue.PropType<Vector3PropInterface>;
+        type: PropType<Vector3PropInterface>;
         default: null;
-    };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
     };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -606,29 +630,33 @@ declare const _default$15: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     cubeRTSize: number;
     cubeCameraNear: number;
     cubeCameraFar: number;
     autoUpdate: boolean;
+    hideMeshes: Mesh$1<three.BufferGeometry, three.Material | three.Material[]>[];
 } & {}>, {
     cubeRTSize: number;
     cubeCameraNear: number;
     cubeCameraFar: number;
     autoUpdate: boolean;
+    hideMeshes: Mesh$1<three.BufferGeometry, three.Material | three.Material[]>[];
 }>;
 
 interface MeshSetupInterface extends Object3DSetupInterface {
@@ -689,13 +717,17 @@ declare const Mesh: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -705,19 +737,21 @@ declare const Mesh: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -1672,13 +1706,17 @@ declare const _default$Q: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -1688,19 +1726,21 @@ declare const _default$Q: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     color: string;
     castShadow: boolean;
@@ -1780,13 +1820,17 @@ declare const _default$P: vue.DefineComponent<{
         type: PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -1796,19 +1840,21 @@ declare const _default$P: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     color: string;
     castShadow: boolean;
@@ -1888,13 +1934,17 @@ declare const _default$O: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -1904,19 +1954,21 @@ declare const _default$O: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     color: string;
     castShadow: boolean;
@@ -2000,13 +2052,17 @@ declare const _default$N: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -2016,19 +2072,21 @@ declare const _default$N: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     color: string;
     castShadow: boolean;
@@ -2115,13 +2173,17 @@ declare const _default$M: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -2131,19 +2193,21 @@ declare const _default$M: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     color: string;
     castShadow: boolean;
@@ -2240,13 +2304,17 @@ declare const _default$L: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -2256,19 +2324,21 @@ declare const _default$L: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     color: string;
     castShadow: boolean;
@@ -3676,13 +3746,17 @@ declare const _default$x: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -3692,19 +3766,21 @@ declare const _default$x: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -3805,13 +3881,17 @@ declare const _default$w: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -3821,19 +3901,21 @@ declare const _default$w: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -3940,13 +4022,17 @@ declare const _default$v: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -3956,19 +4042,21 @@ declare const _default$v: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -4085,13 +4173,17 @@ declare const _default$u: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -4101,19 +4193,21 @@ declare const _default$u: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -4208,13 +4302,17 @@ declare const _default$t: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -4224,19 +4322,21 @@ declare const _default$t: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -4319,13 +4419,17 @@ declare const _default$s: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -4335,19 +4439,21 @@ declare const _default$s: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -4435,13 +4541,17 @@ declare const _default$r: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -4451,19 +4561,21 @@ declare const _default$r: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -4550,13 +4662,17 @@ declare const _default$q: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -4566,19 +4682,21 @@ declare const _default$q: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -4669,13 +4787,17 @@ declare const _default$p: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -4685,19 +4807,21 @@ declare const _default$p: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -4786,13 +4910,17 @@ declare const _default$o: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -4802,19 +4930,21 @@ declare const _default$o: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -4916,13 +5046,17 @@ declare const _default$n: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -4932,19 +5066,21 @@ declare const _default$n: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -5039,13 +5175,17 @@ declare const _default$m: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -5055,19 +5195,21 @@ declare const _default$m: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -5152,13 +5294,17 @@ declare const _default$l: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -5168,19 +5314,21 @@ declare const _default$l: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -5308,13 +5456,17 @@ declare const _default$k: vue.DefineComponent<{
         type: PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -5324,19 +5476,21 @@ declare const _default$k: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -5450,13 +5604,17 @@ declare const _default$j: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -5466,19 +5624,21 @@ declare const _default$j: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -5583,13 +5743,17 @@ declare const _default$i: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -5599,19 +5763,21 @@ declare const _default$i: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -5713,13 +5879,17 @@ declare const _default$h: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -5729,19 +5899,21 @@ declare const _default$h: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -5845,13 +6017,17 @@ declare const _default$g: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -5861,19 +6037,21 @@ declare const _default$g: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -5958,13 +6136,17 @@ declare const _default$f: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -5974,19 +6156,21 @@ declare const _default$f: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, Record<string, any>, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     castShadow: boolean;
     receiveShadow: boolean;
@@ -6048,13 +6232,17 @@ declare const _default$e: vue.DefineComponent<{
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -6064,19 +6252,21 @@ declare const _default$e: vue.DefineComponent<{
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, "loaded"[], "loaded", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     src: string;
 } & {}>, {}>;
@@ -6120,13 +6310,17 @@ declare const _default$d: vue.DefineComponent<{}, PointsSetupInterface, {}, {}, 
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -6136,19 +6330,21 @@ declare const _default$d: vue.DefineComponent<{}, PointsSetupInterface, {}, {}, 
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, vue.EmitsOptions, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {}>, {}>;
 
 declare const _default$c: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentOptionsMixin, vue.DefineComponent<{
@@ -6192,13 +6388,17 @@ declare const _default$c: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -6208,19 +6408,21 @@ declare const _default$c: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, ("error" | "progress" | "load")[], "error" | "progress" | "load", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     src: string;
 } & {}>, {}>, vue.EmitsOptions, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {}>, {}>;
@@ -6266,13 +6468,17 @@ declare const _default$b: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
         type: vue.PropType<Vector3PropInterface>;
         default: null;
     };
-    autoRemove: {
-        type: BooleanConstructor;
-        default: boolean;
-    };
     userData: {
         type: ObjectConstructor;
         default: () => {};
+    };
+    visible: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+    autoRemove: {
+        type: BooleanConstructor;
+        default: boolean;
     };
 }, Object3DSetupInterface, unknown, {}, {
     initObject3D(o3d: three.Object3D): void;
@@ -6282,19 +6488,21 @@ declare const _default$b: vue.DefineComponent<{}, {}, {}, {}, {}, vue.ComponentO
     add(o: three.Object3D): void;
     remove(o: three.Object3D): void;
 }, vue.ComponentOptionsMixin, vue.ComponentOptionsMixin, ("created" | "ready")[], "created" | "ready", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 } & {}>, {
+    visible: boolean;
     position: Vector3PropInterface;
     rotation: EulerPropInterface;
     scale: Vector3PropInterface;
     lookAt: Vector3PropInterface;
-    autoRemove: boolean;
     userData: Record<string, any>;
+    autoRemove: boolean;
 }>, ("error" | "progress" | "load")[], "error" | "progress" | "load", vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{
     src: string;
 } & {}>, {}>, vue.EmitsOptions, string, vue.VNodeProps & vue.AllowedComponentProps & vue.ComponentCustomProps, Readonly<{} & {}>, {}>;

@@ -41,7 +41,7 @@ function bindProp(src, srcProp, dst, dstProp) {
       setFromProp(dst[_dstProp], value);
     }, {deep: true});
   } else {
-    if (ref.value)
+    if (ref.value !== void 0)
       dst[_dstProp] = src[srcProp];
     vue.watch(ref, (value) => {
       dst[_dstProp] = value;
@@ -764,8 +764,9 @@ var Object3D = vue.defineComponent({
     rotation: {type: Object, default: () => ({x: 0, y: 0, z: 0})},
     scale: {type: Object, default: () => ({x: 1, y: 1, z: 1, order: "XYZ"})},
     lookAt: {type: Object, default: null},
-    autoRemove: {type: Boolean, default: true},
-    userData: {type: Object, default: () => ({})}
+    userData: {type: Object, default: () => ({})},
+    visible: {type: Boolean, default: true},
+    autoRemove: {type: Boolean, default: true}
   },
   setup() {
     return {};
@@ -791,6 +792,7 @@ var Object3D = vue.defineComponent({
       bindProp(this, "rotation", o3d);
       bindProp(this, "scale", o3d);
       bindProp(this, "userData", o3d.userData);
+      bindProp(this, "visible", o3d);
       if (this.lookAt)
         o3d.lookAt((_a = this.lookAt.x) != null ? _a : 0, this.lookAt.y, this.lookAt.z);
       vue.watch(() => this.lookAt, (v) => {
@@ -926,19 +928,26 @@ var CubeCamera = vue.defineComponent({
     cubeRTSize: {type: Number, default: 256},
     cubeCameraNear: {type: Number, default: 0.1},
     cubeCameraFar: {type: Number, default: 2e3},
-    autoUpdate: Boolean
+    autoUpdate: Boolean,
+    hideMeshes: {type: Array, default: () => []}
   },
   setup(props) {
     const rendererC = vue.inject(RendererInjectionKey);
     if (!rendererC || !rendererC.scene) {
       console.error("Missing Renderer / Scene");
-      return;
+      return {};
     }
     const renderer = rendererC.renderer, scene = rendererC.scene;
     const cubeRT = new three.WebGLCubeRenderTarget(props.cubeRTSize, {format: three.RGBFormat, generateMipmaps: true, minFilter: three.LinearMipmapLinearFilter});
     const cubeCamera = new three.CubeCamera(props.cubeCameraNear, props.cubeCameraFar, cubeRT);
     const updateRT = () => {
+      props.hideMeshes.forEach((m) => {
+        m.visible = false;
+      });
       cubeCamera.update(renderer, scene);
+      props.hideMeshes.forEach((m) => {
+        m.visible = true;
+      });
     };
     if (props.autoUpdate) {
       rendererC.onBeforeRender(updateRT);
@@ -948,7 +957,11 @@ var CubeCamera = vue.defineComponent({
     } else {
       rendererC.onMounted(updateRT);
     }
-    return {cubeRT, cubeCamera};
+    return {cubeRT, cubeCamera, updateRT};
+  },
+  created() {
+    if (this.cubeCamera)
+      this.initObject3D(this.cubeCamera);
   },
   render() {
     return [];
@@ -2887,6 +2900,7 @@ const TroisJSVuePlugin = {
       "Renderer",
       "Scene",
       "Group",
+      "CubeCamera",
       "AmbientLight",
       "DirectionalLight",
       "HemisphereLight",
@@ -2898,12 +2912,14 @@ const TroisJSVuePlugin = {
       "MatcapMaterial",
       "PhongMaterial",
       "PhysicalMaterial",
+      "PointsMaterial",
       "ShaderMaterial",
       "StandardMaterial",
       "SubSurfaceMaterial",
       "ToonMaterial",
       "Texture",
       "CubeTexture",
+      "BufferGeometry",
       "Mesh",
       "Box",
       "BoxGeometry",
@@ -2940,6 +2956,7 @@ const TroisJSVuePlugin = {
       "TubeGeometry",
       "Image",
       "InstancedMesh",
+      "Points",
       "Sprite",
       "FBXModel",
       "GLTFModel",
