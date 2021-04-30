@@ -24,6 +24,7 @@ export const TroisJSVuePlugin = {
       'MatcapMaterial',
       'PhongMaterial',
       'PhysicalMaterial',
+      'PointsMaterial',
       'ShaderMaterial',
       'StandardMaterial',
       'SubSurfaceMaterial',
@@ -31,6 +32,8 @@ export const TroisJSVuePlugin = {
 
       'Texture',
       'CubeTexture',
+
+      'BufferGeometry',
 
       'Mesh',
 
@@ -54,6 +57,7 @@ export const TroisJSVuePlugin = {
 
       'Image',
       'InstancedMesh',
+      'Points',
       'Sprite',
 
       'FBXModel',
