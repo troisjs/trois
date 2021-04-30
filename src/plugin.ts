@@ -12,6 +12,8 @@ export const TroisJSVuePlugin = {
       'Scene',
       'Group',
 
+      'CubeCamera',
+
       'AmbientLight',
       'DirectionalLight',
       'HemisphereLight',
