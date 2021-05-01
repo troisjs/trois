@@ -64,7 +64,7 @@ function createEffect(
       effect = new PP.BloomEffect(options)
       break
     case 'dof' :
-      effect = new PP.DepthEffect(renderer, options)
+      effect = new PP.DepthOfFieldEffect(renderer, options)
       break
     case 'smaa' :
       effect = createSmaaEffect(options, assets)
