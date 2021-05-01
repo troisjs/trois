@@ -8,3 +8,6 @@ export { default as Object3D } from './Object3D'
 export { default as Raycaster } from './Raycaster'
 
 export { default as CubeCamera } from './CubeCamera'
+
+export type { RendererInterface } from './Renderer'
+export type { Object3DInterface } from './Object3D'

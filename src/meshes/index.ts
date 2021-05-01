@@ -23,3 +23,5 @@ export { default as InstancedMesh } from './InstancedMesh'
 export { default as Sprite } from './Sprite'
 
 export { default as Points } from './Points'
+
+export type { MeshInterface } from './Mesh'
