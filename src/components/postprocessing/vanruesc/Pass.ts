@@ -13,6 +13,7 @@ export default defineComponent({
     options: { type: Object, default: () => ({}) },
     // needsSwap: { type: Boolean, default: false },
     renderToScreen: { type: Boolean, default: false },
+    onReady: Function,
   },
   setup(props) {
     const composer = inject(ComposerInjectionKey)
@@ -31,6 +32,7 @@ export default defineComponent({
         return
       }
       pass.renderToScreen = props.renderToScreen
+      props.onReady?.(pass)
       composer.composer.addPass(pass, passIndex)
     }
 

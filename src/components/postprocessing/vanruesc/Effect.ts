@@ -10,6 +10,7 @@ export default defineComponent({
   props: {
     type: { type: String as PropType<EffectTypes>, required: true },
     options: { type: Object, default: () => ({}) },
+    onReady: Function,
   },
   setup(props) {
     const effectPass = inject(EffectPassInjectionKey)
@@ -27,6 +28,7 @@ export default defineComponent({
         console.error('Invalid effect type')
         return
       }
+      props.onReady?.(effect)
       effectPass.addEffect(effect, effectIndex)
     }
 
@@ -78,7 +80,9 @@ function createEffect(
 function createSmaaEffect(options: Record<string, any>, assets: any): PP.Pass {
   const { smaaSearch, smaaArea } = assets
   // TODO : options
-  return new PP.SMAAEffect(smaaSearch, smaaArea)
+  const params = [options.preset ?? PP.SMAAPreset.HIGH, options.edgeDetectionMode ?? PP.EdgeDetectionMode.COLOR]
+  console.log(params)
+  return new PP.SMAAEffect(smaaSearch, smaaArea, ...params)
 }
 
 function createGodraysEffect(effectPass: EffectPassInterface, options: Record<string, any>): PP.Pass {
