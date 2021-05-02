@@ -12,13 +12,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { Box, Camera, LambertMaterial, MeshInterface, PointLight, Renderer, RendererInterface, Scene } from './export'
+import { Box, Camera, LambertMaterial, MeshPublicInterface, PointLight, Renderer, RendererPublicInterface, Scene } from './export'
 
 export default defineComponent({
   components: { Box, Camera, LambertMaterial, PointLight, Renderer, Scene },
   mounted() {
-    const renderer = this.$refs.renderer as RendererInterface
-    const mesh = (this.$refs.box as MeshInterface).mesh
+    const renderer = this.$refs.renderer as RendererPublicInterface
+    const mesh = (this.$refs.box as MeshPublicInterface).mesh
     if (renderer && mesh) {
       renderer.onBeforeRender(() => {
         mesh.rotation.x += 0.01
