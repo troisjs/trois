@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 import { Camera, NoToneMapping, PCFShadowMap, Scene, WebGLRenderer } from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
-import { defineComponent, InjectionKey, PropType } from 'vue'
+import { ComponentPublicInstance, defineComponent, InjectionKey, PropType } from 'vue'
 import { bindProp } from '../tools'
 import { PointerPublicConfigInterface } from './usePointer'
 import useThree, { SizeInterface, ThreeConfigInterface, ThreeInterface } from './useThree'
@@ -93,7 +93,9 @@ export interface RendererInterface extends RendererSetupInterface {
   removeListener<T extends keyof EventCallbackMap>(t: T, cb: EventCallbackMap[T]): void
 }
 
-export const RendererInjectionKey: InjectionKey<RendererInterface> = Symbol('Renderer')
+export interface RendererPublicInterface extends ComponentPublicInstance, RendererInterface {}
+
+export const RendererInjectionKey: InjectionKey<RendererPublicInterface> = Symbol('Renderer')
 
 export default defineComponent({
   name: 'Renderer',

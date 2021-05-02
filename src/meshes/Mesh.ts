@@ -1,4 +1,4 @@
-import { ComponentPropsOptions, defineComponent, InjectionKey, watch } from 'vue'
+import { ComponentPropsOptions, ComponentPublicInstance, defineComponent, InjectionKey, watch } from 'vue'
 import { BufferGeometry, Material, Mesh as TMesh } from 'three'
 import Object3D, { Object3DSetupInterface } from '../core/Object3D'
 import { bindProp } from '../tools'
@@ -25,7 +25,9 @@ export interface MeshInterface extends MeshSetupInterface {
   setMaterial(m: Material): void
 }
 
-export const MeshInjectionKey: InjectionKey<MeshInterface> = Symbol('Mesh')
+export interface MeshPublicInterface extends ComponentPublicInstance, MeshInterface {}
+
+export const MeshInjectionKey: InjectionKey<MeshPublicInterface> = Symbol('Mesh')
 
 const Mesh = defineComponent({
   name: 'Mesh',

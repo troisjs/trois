@@ -1,4 +1,4 @@
-import { defineComponent, InjectionKey, PropType, watch } from 'vue'
+import { ComponentPublicInstance, defineComponent, InjectionKey, PropType, watch } from 'vue'
 import { FrontSide, Material, NormalBlending, Texture } from 'three'
 import { MeshInjectionKey, MeshInterface } from '../meshes/Mesh'
 
@@ -13,7 +13,9 @@ export interface MaterialInterface extends MaterialSetupInterface {
   setTexture(texture: Texture | null, key: string): void
 }
 
-export const MaterialInjectionKey: InjectionKey<MaterialInterface> = Symbol('Material')
+export interface MaterialPublicInterface extends ComponentPublicInstance, MaterialInterface {}
+
+export const MaterialInjectionKey: InjectionKey<MaterialPublicInterface> = Symbol('Material')
 
 export default defineComponent({
   // inject for sub components
