@@ -2,8 +2,8 @@ import { defineComponent, inject, onUnmounted, PropType } from 'vue'
 // @ts-ignore
 import * as PP from 'postprocessing'
 import { ComposerInjectionKey } from './EffectComposer'
-// import { RendererInterface } from '../../../build/trois'
-import { RendererInterface } from '../../../export'
+// import { RendererPublicInterface } from '../../../build/trois'
+import { RendererPublicInterface } from '../../../export'
 
 type PassTypes = 'render'
 
@@ -47,7 +47,7 @@ export default defineComponent({
 })
 
 function createPass(
-  renderer: RendererInterface,
+  renderer: RendererPublicInterface,
   type: string,
   options: Record<string, any>
 ): PP.Pass {

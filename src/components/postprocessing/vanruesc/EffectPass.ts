@@ -2,9 +2,11 @@ import { defineComponent, inject, InjectionKey, onUnmounted, provide } from 'vue
 // @ts-ignore
 import * as PP from 'postprocessing'
 import { ComposerInjectionKey, EffectComposerInterface } from './EffectComposer'
+import { RendererPublicInterface } from '../../../export'
 
 export interface EffectPassInterface {
   composer: EffectComposerInterface
+  renderer: RendererPublicInterface
   effectPass: PP.EffectPass
   effects: Array<PP.Effect>
   getEffectIndex: {(): number}
@@ -65,6 +67,7 @@ export default defineComponent({
 
     provide(EffectPassInjectionKey, {
       composer,
+      renderer: composer.renderer,
       effectPass,
       effects,
       getEffectIndex,

@@ -84,18 +84,17 @@ function createSmaaEffect(options: Record<string, any>, assets: any): PP.Pass {
 function createGodraysEffect(effectPass: EffectPassInterface, options: Record<string, any>): PP.Pass {
   const opts = { ...options }
   const { lightSource } = options
-  if (!lightSource) {
+  if (typeof lightSource !== 'string') {
     console.error('Invalid lightSource')
     return
   }
   delete opts.lightSource
 
-  // @ts-ignore
-  const lightSourceMesh = effectPass.composer.renderer.$root.$refs[lightSource]?.mesh
-  if (!lightSourceMesh) {
+  const lightSourceComp = effectPass.renderer.$root?.$refs[lightSource] as any
+  if (!lightSourceComp) {
     console.error('Invalid lightSource ref')
     return
   }
 
-  return new PP.GodRaysEffect(effectPass.composer.renderer.camera, lightSourceMesh, opts)
+  return new PP.GodRaysEffect(effectPass.composer.renderer.camera, lightSourceComp.mesh, opts)
 }

@@ -2,11 +2,11 @@ import { defineComponent, inject, InjectionKey, onUnmounted, provide } from 'vue
 import { Clock } from 'three'
 // @ts-ignore
 import * as PP from 'postprocessing'
-// import { RendererInjectionKey, RendererInterface } from '../../../build/trois'
-import { RendererInjectionKey, RendererInterface } from '../../../export'
+// import { RendererInjectionKey, RendererPublicInterface } from '../../../build/trois'
+import { RendererInjectionKey, RendererPublicInterface } from '../../../export'
 
 export interface EffectComposerInterface {
-  renderer: RendererInterface
+  renderer: RendererPublicInterface
   composer: PP.EffectComposer
   getPassIndex: {(): number}
 }
