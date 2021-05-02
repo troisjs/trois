@@ -5,7 +5,7 @@ import { ComposerInjectionKey } from './EffectComposer'
 // import { RendererPublicInterface } from '../../../build/trois'
 import { RendererPublicInterface } from '../../../export'
 
-type PassTypes = 'render'
+type PassTypes = 'render' | 'blur'
 
 export default defineComponent({
   props: {
@@ -55,6 +55,9 @@ function createPass(
   switch (type) {
     case 'render' :
       pass = new PP.RenderPass(renderer.scene, renderer.camera)
+      break
+    case 'blur' :
+      pass = new PP.BlurPass(options)
       break
   }
   return pass
