@@ -14,4 +14,4 @@ export { default as CubeTexture } from './CubeTexture'
 
 export { default as PointsMaterial } from './PointsMaterial'
 
-export type { MaterialInterface } from './Material'
+export type { MaterialPublicInterface } from './Material'

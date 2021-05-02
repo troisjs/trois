@@ -18,6 +18,8 @@ export interface Object3DInterface extends Object3DSetupInterface {
   remove(o: Object3D): void
 }
 
+export interface Object3DPublicInterface extends ComponentPublicInstance, Object3DInterface {}
+
 // export function object3DSetup(): Object3DSetupInterface {
 //   const renderer = inject(RendererInjectionKey)
 //   const scene = inject(SceneInjectionKey)

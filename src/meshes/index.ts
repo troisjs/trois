@@ -24,4 +24,4 @@ export { default as Sprite } from './Sprite'
 
 export { default as Points } from './Points'
 
-export type { MeshInterface } from './Mesh'
+export type { MeshPublicInterface } from './Mesh'
