@@ -1,5 +1,18 @@
 import { toRef, watch } from 'vue'
 
+export function applyOptions(dst: any, options: Record<string, unknown>): void {
+  if (options instanceof Object) {
+    Object.entries(options).forEach(([key, value]) => {
+      dst[key] = value
+    })
+  }
+}
+
+export function bindOptions(dst: any, options: Record<string, unknown>): void {
+  applyOptions(dst, options)
+  watch(() => options, (value) => { applyOptions(dst, value) }, { deep: true })
+}
+
 export function setFromProp(o: Record<string, unknown>, prop: Record<string, unknown>): void {
   if (prop instanceof Object) {
     Object.entries(prop).forEach(([key, value]) => {
