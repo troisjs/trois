@@ -1,6 +1,7 @@
 import { ComponentPublicInstance, defineComponent, InjectionKey, PropType, watch } from 'vue'
 import { FrontSide, Material, NormalBlending, Texture } from 'three'
 import { MeshInjectionKey, MeshInterface } from '../meshes/Mesh'
+import { bindOptions } from '../tools'
 
 export interface MaterialSetupInterface {
   mesh?: MeshInterface
@@ -33,6 +34,7 @@ export default defineComponent({
     side: { type: Number, default: FrontSide },
     transparent: Boolean,
     vertexColors: Boolean,
+    props: { type: Object, default: () => ({}) },
   },
   setup(): MaterialSetupInterface {
     return {}
@@ -50,6 +52,7 @@ export default defineComponent({
 
     if (this.createMaterial) {
       this.material = this.createMaterial()
+      bindOptions(this.material, this.props)
       this.mesh.setMaterial(this.material)
       this.addWatchers()
     }

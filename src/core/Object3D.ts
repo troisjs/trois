@@ -1,6 +1,6 @@
 import { Object3D, Scene } from 'three'
 import { ComponentPublicInstance, defineComponent, PropType, watch } from 'vue'
-import { bindProp } from '../tools'
+import { bindOptions, bindProp } from '../tools'
 import { RendererInjectionKey, RendererInterface } from './Renderer'
 import { SceneInjectionKey } from './Scene'
 
@@ -54,7 +54,9 @@ export default defineComponent({
     lookAt: { type: Object as PropType<Vector3PropInterface>, default: null },
     userData: { type: Object, default: () => ({}) },
     visible: { type: Boolean, default: true },
-    autoRemove: { type: Boolean, default: true },
+    props: { type: Object, default: () => ({}) },
+    disableAdd: { type: Boolean, default: false },
+    disableRemove: { type: Boolean, default: false },
   },
   setup(): Object3DSetupInterface {
     // return object3DSetup()
@@ -69,13 +71,11 @@ export default defineComponent({
     }
   },
   unmounted() {
-    if (this.autoRemove) this.removeFromParent()
+    if (!this.disableRemove) this.removeFromParent()
   },
   methods: {
     initObject3D(o3d: Object3D) {
       this.o3d = o3d
-
-      this.$emit('created', o3d)
 
       bindProp(this, 'position', o3d)
       bindProp(this, 'rotation', o3d)
@@ -83,12 +83,18 @@ export default defineComponent({
       bindProp(this, 'userData', o3d.userData)
       bindProp(this, 'visible', o3d)
 
+      bindOptions(o3d, this.props)
+
+      this.$emit('created', o3d)
+
       if (this.lookAt) o3d.lookAt(this.lookAt.x ?? 0, this.lookAt.y, this.lookAt.z)
       watch(() => this.lookAt, (v) => { o3d.lookAt(v.x ?? 0, v.y, v.z) }, { deep: true })
 
       this.parent = this.getParent()
-      if (this.addToParent()) this.$emit('ready', this)
-      else console.error('Missing parent (Scene, Group...)')
+      if (!this.disableAdd) {
+        if (this.addToParent()) this.$emit('ready', this)
+        else console.error('Missing parent (Scene, Group...)')
+      }
     },
     getParent(): undefined | ComponentPublicInstance {
       let parent = this.$parent
