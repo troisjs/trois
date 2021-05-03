@@ -1,8 +1,8 @@
 /* eslint-disable no-use-before-define */
-import { Camera, NoToneMapping, PCFShadowMap, Scene, WebGLRenderer } from 'three'
+import { Camera, Scene, WebGLRenderer } from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
 import { ComponentPublicInstance, defineComponent, InjectionKey, PropType } from 'vue'
-import { bindOptions } from '../tools'
+import { bindObjectProp } from '../tools'
 import { PointerPublicConfigInterface } from './usePointer'
 import useThree, { SizeInterface, ThreeConfigInterface, ThreeInterface } from './useThree'
 
@@ -136,7 +136,7 @@ export default defineComponent({
     if (props.height) config.height = parseInt(props.height)
 
     const three = useThree(config)
-    bindOptions(three.renderer, props.props)
+    bindObjectProp(props, 'props', three.renderer)
 
     const renderFn: {(): void} = () => {}
 

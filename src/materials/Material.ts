@@ -1,7 +1,7 @@
-import { ComponentPublicInstance, defineComponent, InjectionKey, PropType, watch } from 'vue'
-import { FrontSide, Material, NormalBlending, Texture } from 'three'
+import { ComponentPublicInstance, defineComponent, InjectionKey } from 'vue'
+import { Material, Texture } from 'three'
 import { MeshInjectionKey, MeshInterface } from '../meshes/Mesh'
-import { bindOptions } from '../tools'
+import { bindObjectProp } from '../tools'
 
 export interface MaterialSetupInterface {
   mesh?: MeshInterface
@@ -10,7 +10,6 @@ export interface MaterialSetupInterface {
 }
 
 export interface MaterialInterface extends MaterialSetupInterface {
-  setProp(key: string, value: unknown, needsUpdate: boolean): void
   setTexture(texture: Texture | null, key: string): void
 }
 
@@ -24,16 +23,7 @@ export default defineComponent({
     mesh: MeshInjectionKey as symbol,
   },
   props: {
-    color: { type: [String, Number] as PropType<string | number>, default: '#ffffff' },
-    blending: { type: Number, default: NormalBlending },
-    alphaTest: { type: Number, default: 0 },
-    depthTest: { type: Boolean, default: true },
-    depthWrite: { type: Boolean, default: true },
-    fog: { type: Boolean, default: true },
-    opacity: { type: Number, default: 1 },
-    side: { type: Number, default: FrontSide },
-    transparent: Boolean,
-    vertexColors: Boolean,
+    color: { type: String, default: '#ffffff' },
     props: { type: Object, default: () => ({}) },
   },
   setup(): MaterialSetupInterface {
@@ -52,38 +42,24 @@ export default defineComponent({
 
     if (this.createMaterial) {
       this.material = this.createMaterial()
-      bindOptions(this.material, this.props)
+      bindObjectProp(this, 'props', this.material, this.setProp)
       this.mesh.setMaterial(this.material)
-      this.addWatchers()
     }
   },
   unmounted() {
     this.material?.dispose()
   },
   methods: {
-    setProp(key: string, value: any, needsUpdate = false) {
-      if (this.material) {
-        // @ts-ignore
-        this.material[key] = value
-        this.material.needsUpdate = needsUpdate
-      }
+    getProps() {
+      return { color: this.color, ...this.props }
+    },
+    setProp(dst: any, key: string, value: any, needsUpdate = false) {
+      if (key === 'color') dst[key].set(value)
+      else dst[key] = value
+      dst.needsUpdate = needsUpdate
     },
     setTexture(texture: Texture | null, key = 'map') {
-      this.setProp(key, texture, true)
-    },
-    addWatchers() {
-      ['color', 'alphaTest', 'blending', 'depthTest', 'depthWrite', 'fog', 'opacity', 'side', 'transparent'].forEach(p => {
-        // @ts-ignore
-        watch(() => this[p], (value) => {
-          if (p === 'color') {
-            // @ts-ignore
-            this.material.color.set(value)
-          } else {
-            // @ts-ignore
-            this.material[p] = value
-          }
-        })
-      })
+      this.setProp(this, key, texture, true)
     },
   },
   render() {
