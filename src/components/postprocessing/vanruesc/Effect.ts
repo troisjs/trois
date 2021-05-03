@@ -81,7 +81,6 @@ function createSmaaEffect(options: Record<string, any>, assets: any): PP.Pass {
   const { smaaSearch, smaaArea } = assets
   // TODO : options
   const params = [options.preset ?? PP.SMAAPreset.HIGH, options.edgeDetectionMode ?? PP.EdgeDetectionMode.COLOR]
-  console.log(params)
   return new PP.SMAAEffect(smaaSearch, smaaArea, ...params)
 }
 
