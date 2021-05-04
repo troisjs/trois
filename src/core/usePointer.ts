@@ -22,6 +22,7 @@ export type IntersectObject = Mesh | InstancedMesh
 
 export interface PointerPublicConfigInterface {
   intersectMode?: 'frame'
+  intersectRecursive?: boolean
   touch?: boolean
   resetOnEnd?: boolean
   resetPosition?: Vector2
@@ -59,6 +60,7 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
     camera,
     domElement,
     intersectObjects,
+    intersectRecursive = false,
     touch = true,
     resetOnEnd = false,
     resetPosition = new Vector2(0, 0),
@@ -119,7 +121,7 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
 
   function intersect() {
     if (intersectObjects.length) {
-      const intersects = raycaster.intersect(positionN, intersectObjects)
+      const intersects = raycaster.intersect(positionN, intersectObjects, intersectRecursive)
       const offObjects: IntersectObject[] = [...intersectObjects]
       const iMeshes: InstancedMesh[] = []
 

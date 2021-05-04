@@ -4,7 +4,7 @@ import { IntersectObject } from './usePointer'
 export interface RaycasterInterface {
   position: Vector3
   updatePosition(coords: Vector2): void
-  intersect(coords: Vector2, objects: IntersectObject[]): Intersection[],
+  intersect(coords: Vector2, objects: IntersectObject[], recursive: boolean): Intersection[],
 }
 
 export interface RaycasterConfigInterface {
@@ -28,9 +28,9 @@ export default function useRaycaster(options: RaycasterConfigInterface): Raycast
     raycaster.ray.intersectPlane(plane, position)
   }
 
-  const intersect = (coords: Vector2, objects: IntersectObject[]) => {
+  const intersect = (coords: Vector2, objects: IntersectObject[], recursive = false) => {
     raycaster.setFromCamera(coords, camera)
-    return raycaster.intersectObjects(objects)
+    return raycaster.intersectObjects(objects, recursive)
   }
 
   return {

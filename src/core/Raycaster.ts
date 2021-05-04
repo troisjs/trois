@@ -20,6 +20,7 @@ export default defineComponent({
     onPointerLeave: { type: Function as PropType<PointerIntersectCallbackType>, default: emptyCallBack },
     onClick: { type: Function as PropType<PointerIntersectCallbackType>, default: emptyCallBack },
     intersectMode: { type: String, default: 'move' },
+    intersectRecursive: { type: Boolean, default: false },
   },
   setup(): RaycasterSetupInterface {
     const renderer = inject(RendererInjectionKey)
@@ -39,6 +40,7 @@ export default defineComponent({
         camera: renderer.camera,
         domElement: renderer.canvas,
         intersectObjects: this.getIntersectObjects(),
+        intersectRecursive: this.intersectRecursive,
         onIntersectEnter: this.onPointerEnter,
         onIntersectOver: this.onPointerOver,
         onIntersectMove: this.onPointerMove,
