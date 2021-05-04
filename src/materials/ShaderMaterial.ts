@@ -31,25 +31,3 @@ export default materialComponent(
     return material
   }
 )
-
-// export default defineComponent({
-//   extends: Material,
-//   props: {
-//     uniforms: { type: Object, default: () => ({}) },
-//     vertexShader: { type: String, default: defaultVertexShader },
-//     fragmentShader: { type: String, default: defaultFragmentShader },
-//   },
-//   methods: {
-//     createMaterial() {
-//       const material = new ShaderMaterial(propsValues(this.$props, ['color']));
-
-//       ['vertexShader', 'fragmentShader'].forEach(p => {
-//         // @ts-ignore
-//         watch(() => this[p], (value) => { material[p] = value; material.needsUpdate = true })
-//       })
-
-//       return material
-//     },
-//   },
-//   __hmrId: 'ShaderMaterial',
-// })
