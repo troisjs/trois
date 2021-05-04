@@ -26,8 +26,5 @@ export default materialComponent(
       fragmentShader: defaultFragmentShader,
     }) },
   },
-  (opts) => {
-    const material = new ShaderMaterial(propsValues(opts, ['color']));
-    return material
-  }
+  (opts) => new ShaderMaterial(propsValues(opts, ['color']))
 )
