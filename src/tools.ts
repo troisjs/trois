@@ -1,16 +1,30 @@
-import { toRef, watch } from 'vue'
+import { toRef, watch, WatchStopHandle } from 'vue'
 
-export function applyOptions(dst: any, options: Record<string, unknown>): void {
+type OptionSetter = (dst: any, key: string, value: any) => void
+
+export function applyObjectProps(
+  dst: any,
+  options: Record<string, unknown>,
+  setter?: OptionSetter
+): void {
   if (options instanceof Object) {
     Object.entries(options).forEach(([key, value]) => {
-      dst[key] = value
+      if (setter) setter(dst, key, value)
+      else dst[key] = value
     })
   }
 }
 
-export function bindOptions(dst: any, options: Record<string, unknown>): void {
-  applyOptions(dst, options)
-  watch(() => options, (value) => { applyOptions(dst, value) }, { deep: true })
+export function bindObjectProp(
+  src: any,
+  prop: string,
+  dst: any,
+  apply = true,
+  setter?: OptionSetter
+): WatchStopHandle {
+  if (apply) applyObjectProps(dst, src[prop], setter)
+  const r = toRef(src, prop)
+  return watch(r, (value) => { applyObjectProps(dst, value, setter) })
 }
 
 export function setFromProp(o: Record<string, unknown>, prop: Record<string, unknown>): void {

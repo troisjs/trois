@@ -1,6 +1,6 @@
 import { defineComponent, PropType, watch } from 'vue'
 import { ShaderMaterial, Texture, TextureLoader } from 'three'
-import { bindOptions } from '../tools'
+import { bindObjectProp } from '../tools'
 import { MaterialInjectionKey, MaterialInterface } from './Material'
 
 export interface TexureInterface {
@@ -40,7 +40,7 @@ export default defineComponent({
     initTexture() {
       if (!this.texture) return
 
-      bindOptions(this.texture, this.props)
+      bindObjectProp(this, 'props', this.texture)
       if (!this.material) return
 
       this.material.setTexture(this.texture, this.name)

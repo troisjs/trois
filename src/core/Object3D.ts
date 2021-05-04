@@ -1,6 +1,6 @@
 import { Object3D, Scene } from 'three'
 import { ComponentPublicInstance, defineComponent, PropType, watch } from 'vue'
-import { bindOptions, bindProp } from '../tools'
+import { bindObjectProp, bindProp } from '../tools'
 import { RendererInjectionKey, RendererInterface } from './Renderer'
 import { SceneInjectionKey } from './Scene'
 
@@ -83,7 +83,7 @@ export default defineComponent({
       bindProp(this, 'userData', o3d.userData)
       bindProp(this, 'visible', o3d)
 
-      bindOptions(o3d, this.props)
+      bindObjectProp(this, 'props', o3d)
 
       this.$emit('created', o3d)
 
