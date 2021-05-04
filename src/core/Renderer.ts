@@ -196,7 +196,6 @@ export default defineComponent({
 
       if (this.shadow) {
         this.renderer.shadowMap.enabled = true
-        this.renderer.shadowMap.type = this.shadowType
       }
 
       this.renderFn = this.three.composer ? this.three.renderC : this.three.render
