@@ -1,5 +1,5 @@
-import { ComponentPublicInstance, defineComponent, InjectionKey } from 'vue'
-import { Material, Texture } from 'three'
+import { ComponentPropsOptions, ComponentPublicInstance, defineComponent, InjectionKey, watch } from 'vue'
+import { Color, Material, MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial, MeshPhysicalMaterial, MeshStandardMaterial, MeshToonMaterial, PointsMaterial as TPointsMaterial, Texture } from 'three'
 import { MeshInjectionKey, MeshInterface } from '../meshes/Mesh'
 import { bindObjectProp } from '../tools'
 
@@ -17,14 +17,13 @@ export interface MaterialPublicInterface extends ComponentPublicInstance, Materi
 
 export const MaterialInjectionKey: InjectionKey<MaterialPublicInterface> = Symbol('Material')
 
-export default defineComponent({
-  // inject for sub components
-  inject: {
-    mesh: MeshInjectionKey as symbol,
-  },
+const BaseMaterial = defineComponent({
   props: {
     color: { type: String, default: '#ffffff' },
     props: { type: Object, default: () => ({}) },
+  },
+  inject: {
+    mesh: MeshInjectionKey as symbol,
   },
   setup(): MaterialSetupInterface {
     return {}
@@ -41,22 +40,25 @@ export default defineComponent({
     }
 
     if (this.createMaterial) {
-      this.material = this.createMaterial()
-      bindObjectProp(this, 'props', this.material, this.setProp)
-      this.mesh.setMaterial(this.material)
+      const material = this.material = this.createMaterial()
+      // @ts-ignore
+      watch(() => this.color, (value) => { material.color.set(value) })
+      bindObjectProp(this, 'props', material, false, this.setProp)
+      this.mesh.setMaterial(material)
     }
   },
   unmounted() {
     this.material?.dispose()
   },
   methods: {
-    getProps() {
+    getMaterialParams() {
       return { color: this.color, ...this.props }
     },
-    setProp(dst: any, key: string, value: any, needsUpdate = false) {
-      if (key === 'color') dst[key].set(value)
-      else dst[key] = value
-      dst.needsUpdate = needsUpdate
+    setProp(material: any, key: string, value: any, needsUpdate = false) {
+      const dstVal = material[key]
+      if (dstVal instanceof Color) dstVal.set(value)
+      else material[key] = value
+      material.needsUpdate = needsUpdate
     },
     setTexture(texture: Texture | null, key = 'map') {
       this.setProp(this, key, texture, true)
@@ -68,10 +70,30 @@ export default defineComponent({
   __hmrId: 'Material',
 })
 
-export const wireframeProps = {
-  wireframe: { type: Boolean, default: false },
-  // not needed for WebGL
-  // wireframeLinecap: { type: String, default: 'round' },
-  // wireframeLinejoin: { type: String, default: 'round' },
-  wireframeLinewidth: { type: Number, default: 1 }, // not really useful
+export default BaseMaterial
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function materialComponent<P extends Readonly<ComponentPropsOptions>>(
+  name: string,
+  props: P,
+  createMaterial: {(opts: any): Material}
+) {
+  return defineComponent({
+    name,
+    extends: BaseMaterial,
+    props,
+    methods: {
+      createMaterial() {
+        return createMaterial(this.getMaterialParams())
+      },
+    },
+  })
 }
+
+export const BasicMaterial = materialComponent('BasicMaterial', {}, (opts) => new MeshBasicMaterial(opts))
+export const LambertMaterial = materialComponent('LambertMaterial', {}, (opts) => new MeshLambertMaterial(opts))
+export const PhongMaterial = materialComponent('PhongMaterial', {}, (opts) => new MeshPhongMaterial(opts))
+export const PhysicalMaterial = materialComponent('PhysicalMaterial', {}, (opts) => new MeshPhysicalMaterial(opts))
+export const PointsMaterial = materialComponent('PointsMaterial', {}, (opts) => new TPointsMaterial(opts))
+export const StandardMaterial = materialComponent('StandardMaterial', {}, (opts) => new MeshStandardMaterial(opts))
+export const ToonMaterial = materialComponent('ToonMaterial', {}, (opts) => new MeshToonMaterial(opts))

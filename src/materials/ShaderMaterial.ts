@@ -1,6 +1,5 @@
-import { defineComponent, watch } from 'vue'
 import { ShaderMaterial } from 'three'
-import Material from './Material'
+import { materialComponent } from './Material'
 import { propsValues } from '../tools'
 
 const defaultVertexShader = `
@@ -18,24 +17,39 @@ const defaultFragmentShader = `
   }
 `
 
-export default defineComponent({
-  extends: Material,
-  props: {
-    uniforms: { type: Object, default: () => ({}) },
-    vertexShader: { type: String, default: defaultVertexShader },
-    fragmentShader: { type: String, default: defaultFragmentShader },
+export default materialComponent(
+  'ShaderMaterial',
+  {
+    props: { type: Object, default: () => ({
+      uniforms: {},
+      vertexShader: defaultVertexShader,
+      fragmentShader: defaultFragmentShader,
+    }) },
   },
-  methods: {
-    createMaterial() {
-      const material = new ShaderMaterial(propsValues(this.$props, ['color']));
+  (opts) => {
+    const material = new ShaderMaterial(propsValues(opts, ['color']));
+    return material
+  }
+)
 
-      ['vertexShader', 'fragmentShader'].forEach(p => {
-        // @ts-ignore
-        watch(() => this[p], (value) => { material[p] = value; material.needsUpdate = true })
-      })
+// export default defineComponent({
+//   extends: Material,
+//   props: {
+//     uniforms: { type: Object, default: () => ({}) },
+//     vertexShader: { type: String, default: defaultVertexShader },
+//     fragmentShader: { type: String, default: defaultFragmentShader },
+//   },
+//   methods: {
+//     createMaterial() {
+//       const material = new ShaderMaterial(propsValues(this.$props, ['color']));
 
-      return material
-    },
-  },
-  __hmrId: 'ShaderMaterial',
-})
+//       ['vertexShader', 'fragmentShader'].forEach(p => {
+//         // @ts-ignore
+//         watch(() => this[p], (value) => { material[p] = value; material.needsUpdate = true })
+//       })
+
+//       return material
+//     },
+//   },
+//   __hmrId: 'ShaderMaterial',
+// })

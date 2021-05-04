@@ -2,47 +2,50 @@ import { defineComponent, PropType } from 'vue'
 import { Color, ShaderMaterial, UniformsUtils } from 'three'
 import SubsurfaceScatteringShader from './SubsurfaceScatteringShader'
 import Material from './Material'
-// import { bindProps, propsValues } from '../tools'
+import { bindObjectProp } from '../tools'
 
-const props = {
-  color: { type: [String, Number] as PropType<string | number>, default: '#ffffff' },
-  thicknessColor: { type: [String, Number] as PropType<string | number>, default: '#ffffff' },
-  thicknessDistortion: { type: Number, default: 0.4 },
-  thicknessAmbient: { type: Number, default: 0.01 },
-  thicknessAttenuation: { type: Number, default: 0.7 },
-  thicknessPower: { type: Number, default: 2 },
-  thicknessScale: { type: Number, default: 4 },
-} as const
+export interface SubSurfaceMaterialUniformsInterface {
+  diffuse?: string | number
+  thicknessColor?: string | number
+  thicknessDistortion?: number
+  thicknessAmbient?: number
+  thicknessAttenuation?: number
+  thicknessPower?: number
+  thicknessScale?: number
+}
 
 export default defineComponent({
   extends: Material,
-  props,
+  props: {
+    uniforms: { type: Object as PropType<SubSurfaceMaterialUniformsInterface>, default: () => ({
+      diffuse: '#ffffff',
+      thicknessColor: '#ffffff',
+      thicknessDistortion: 0.4,
+      thicknessAmbient: 0.01,
+      thicknessAttenuation: 0.7,
+      thicknessPower: 2,
+      thicknessScale: 4,
+    }) },
+  },
   methods: {
     createMaterial() {
       const params = SubsurfaceScatteringShader
       const uniforms = UniformsUtils.clone(params.uniforms)
 
-      Object.keys(props).forEach((key) => {
-        // @ts-ignore
-        const value = this[key]
-        let _key = key, _value = value
-        if (['color', 'thicknessColor'].includes(key)) {
-          if (key === 'color') _key = 'diffuse'
-          _value = new Color(value)
-        }
-        uniforms[_key].value = _value
+      bindObjectProp(this, 'uniforms', uniforms, true, (dst: any, key: string, value: any) => {
+        const dstVal = dst[key].value
+        if (dstVal instanceof Color) dstVal.set(value)
+        else dst[key].value = value
       })
 
       const material = new ShaderMaterial({
         ...params,
-        uniforms,
         lights: true,
-        transparent: this.transparent,
-        vertexColors: this.vertexColors,
+        ...this.props,
+        uniforms,
       })
 
       return material
     },
   },
-  __hmrId: 'SubSurfaceMaterial',
 })

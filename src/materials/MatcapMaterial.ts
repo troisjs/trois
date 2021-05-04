@@ -1,22 +1,17 @@
-import { defineComponent } from 'vue'
 import { MeshMatcapMaterial, TextureLoader } from 'three'
 import { propsValues, getMatcapUrl } from '../tools'
-import Material from './Material'
+import { materialComponent } from './Material'
 
-export default defineComponent({
-  extends: Material,
-  props: {
+export default materialComponent(
+  'MatcapMaterial',
+  {
     src: String,
     name: { type: String, default: '0404E8_0404B5_0404CB_3333FC' },
-    flatShading: Boolean,
   },
-  methods: {
-    createMaterial() {
-      const src = this.src ? this.src : getMatcapUrl(this.name)
-      const opts = propsValues(this.$props, ['src', 'name'])
-      opts.matcap = new TextureLoader().load(src)
-      return new MeshMatcapMaterial(opts)
-    },
-  },
-  __hmrId: 'MatcapMaterial',
-})
+  (opts) => {
+    const src = opts.src ? opts.src : getMatcapUrl(opts.name)
+    const props = propsValues(opts, ['src', 'name'])
+    props.matcap = new TextureLoader().load(src)
+    return new MeshMatcapMaterial(props)
+  }
+)

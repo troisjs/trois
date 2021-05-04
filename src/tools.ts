@@ -19,9 +19,10 @@ export function bindObjectProp(
   src: any,
   prop: string,
   dst: any,
+  apply = true,
   setter?: OptionSetter
 ): WatchStopHandle {
-  applyObjectProps(dst, src[prop], setter)
+  if (apply) applyObjectProps(dst, src[prop], setter)
   const r = toRef(src, prop)
   return watch(r, (value) => { applyObjectProps(dst, value, setter) })
 }
