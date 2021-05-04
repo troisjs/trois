@@ -39,6 +39,8 @@ I wanted to code something similar to *react-three-fiber* but for VueJS.
 
 I started from scratch, I will rewrite some of my [WebGL demos](https://codepen.io/collection/AGZywR) to see if this little toy can do the job.
 
+Next version (*v0.3*, rewrited with Typescript) will be soon released !
+
 *Trois* is a french word, it means *Three*.
 
 ## Usage (CDN)
@@ -80,6 +82,8 @@ Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects
 
 ## Features
 
+Take a look at examples : https://troisjs.github.io/
+
 - [ ] Lights
   - [x] AmbientLight
   - [x] DirectionalLight
@@ -93,6 +97,7 @@ Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects
   - [x] Mapcap
   - [x] Phong
   - [x] Physical
+  - [x] Shader
   - [x] Standard
   - [x] SubSurface
   - [x] Toon
