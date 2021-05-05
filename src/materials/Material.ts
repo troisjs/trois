@@ -61,7 +61,7 @@ const BaseMaterial = defineComponent({
       material.needsUpdate = needsUpdate
     },
     setTexture(texture: Texture | null, key = 'map') {
-      this.setProp(this, key, texture, true)
+      this.setProp(this.material, key, texture, true)
     },
   },
   render() {
