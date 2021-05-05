@@ -10,8 +10,8 @@ export default materialComponent(
   },
   (opts) => {
     const src = opts.src ? opts.src : getMatcapUrl(opts.name)
-    const props = propsValues(opts, ['src', 'name'])
-    props.matcap = new TextureLoader().load(src)
-    return new MeshMatcapMaterial(props)
+    const params = propsValues(opts, ['src', 'name'])
+    params.matcap = new TextureLoader().load(src)
+    return new MeshMatcapMaterial(params)
   }
 )

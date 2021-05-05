@@ -1,7 +1,7 @@
 import { ComponentPropsOptions, ComponentPublicInstance, defineComponent, InjectionKey, watch } from 'vue'
 import { Color, Material, MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial, MeshPhysicalMaterial, MeshStandardMaterial, MeshToonMaterial, PointsMaterial as TPointsMaterial, Texture } from 'three'
 import { MeshInjectionKey, MeshInterface } from '../meshes/Mesh'
-import { bindObjectProp } from '../tools'
+import { bindObjectProp, propsValues } from '../tools'
 
 export interface MaterialSetupInterface {
   mesh?: MeshInterface
@@ -52,7 +52,7 @@ const BaseMaterial = defineComponent({
   },
   methods: {
     getMaterialParams() {
-      return { color: this.color, ...this.props }
+      return { ...propsValues(this.$props, ['props']), ...this.props }
     },
     setProp(material: any, key: string, value: any, needsUpdate = false) {
       const dstVal = material[key]
