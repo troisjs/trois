@@ -12,6 +12,10 @@ export default defineComponent({
   // TODO: eventually extend Object3D
   // extends: Object3D,
 
+  props: {
+    props: { type: Object, default: () => ({}) },
+  },
+
   // inject: { renderer: RendererInjectionKey as symbol },
 
   // setup(): CameraSetupInterface {
@@ -22,3 +26,8 @@ export default defineComponent({
     return this.$slots.default ? this.$slots.default() : []
   },
 })
+
+export function cameraSetProp(camera: any, key: string, value: any, updateProjectionMatrix = true) {
+  camera[key] = value
+  if (updateProjectionMatrix) camera.updateProjectionMatrix()
+}

@@ -1,7 +1,7 @@
 import { defineComponent, inject, PropType, watch } from 'vue'
 import { OrthographicCamera } from 'three'
-import { bindProp } from '../tools'
-import Camera from './Camera'
+import { bindObjectProp, bindProp } from '../tools'
+import Camera, { cameraSetProp } from './Camera'
 import { Vector3PropInterface } from './Object3D'
 import { RendererInjectionKey } from './Renderer'
 
@@ -29,14 +29,12 @@ export default defineComponent({
     renderer.camera = camera
 
     bindProp(props, 'position', camera)
+    bindObjectProp(props, 'props', camera, true, cameraSetProp);
 
-    const watchProps = ['left', 'right', 'top', 'bottom', 'near', 'far', 'zoom']
-    watchProps.forEach(p => {
+    ['left', 'right', 'top', 'bottom', 'near', 'far', 'zoom'].forEach(p => {
       // @ts-ignore
       watch(() => props[p], (value) => {
-        // @ts-ignore
-        camera[p] = value
-        camera.updateProjectionMatrix()
+        cameraSetProp(camera, p, value)
       })
     })
 
