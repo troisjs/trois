@@ -1,7 +1,7 @@
 import { defineComponent, inject, PropType, watch } from 'vue'
 import { PerspectiveCamera } from 'three'
-import { bindProp } from '../tools'
-import Camera from './Camera'
+import { bindObjectProp, bindProp } from '../tools'
+import Camera, { cameraSetProp } from './Camera'
 import { Vector3PropInterface } from './Object3D'
 import { RendererInjectionKey } from './Renderer'
 
@@ -31,13 +31,12 @@ export default defineComponent({
     if (props.lookAt) camera.lookAt(props.lookAt.x ?? 0, props.lookAt.y, props.lookAt.z)
     watch(() => props.lookAt, (v) => { camera.lookAt(v.x ?? 0, v.y, v.z) }, { deep: true })
 
-    const watchProps = ['aspect', 'far', 'fov', 'near']
-    watchProps.forEach(p => {
+    bindObjectProp(props, 'props', camera, true, cameraSetProp);
+
+    ['aspect', 'far', 'fov', 'near'].forEach(p => {
       // @ts-ignore
       watch(() => props[p], (value) => {
-        // @ts-ignore
-        camera[p] = value
-        camera.updateProjectionMatrix()
+        cameraSetProp(camera, p, value)
       })
     })
 
