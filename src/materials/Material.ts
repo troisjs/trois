@@ -1,7 +1,8 @@
-import { ComponentPropsOptions, ComponentPublicInstance, defineComponent, InjectionKey, watch } from 'vue'
+import { ComponentPropsOptions, ComponentPublicInstance, defineComponent, InjectionKey, PropType, watch } from 'vue'
 import { Color, Material, MeshBasicMaterial, MeshLambertMaterial, MeshPhongMaterial, MeshPhysicalMaterial, MeshStandardMaterial, MeshToonMaterial, PointsMaterial as TPointsMaterial, Texture } from 'three'
 import { MeshInjectionKey, MeshInterface } from '../meshes/Mesh'
 import { bindObjectProp, propsValues } from '../tools'
+import { BasicMaterialPropsInterface, LambertMaterialPropsInterface, MaterialPropsInterface, PhongMaterialPropsInterface, PhysicalMaterialPropsInterface, PointsMaterialPropsInterface, StandardMaterialPropsInterface, ToonMaterialPropsInterface } from './types'
 
 export interface MaterialSetupInterface {
   mesh?: MeshInterface
@@ -20,7 +21,7 @@ export const MaterialInjectionKey: InjectionKey<MaterialPublicInterface> = Symbo
 const BaseMaterial = defineComponent({
   props: {
     color: { type: String, default: '#ffffff' },
-    props: { type: Object, default: () => ({}) },
+    props: { type: Object as PropType<MaterialPropsInterface>, default: () => ({}) },
   },
   inject: {
     mesh: MeshInjectionKey as symbol,
@@ -90,10 +91,10 @@ export function materialComponent<P extends Readonly<ComponentPropsOptions>>(
   })
 }
 
-export const BasicMaterial = materialComponent('BasicMaterial', {}, (opts) => new MeshBasicMaterial(opts))
-export const LambertMaterial = materialComponent('LambertMaterial', {}, (opts) => new MeshLambertMaterial(opts))
-export const PhongMaterial = materialComponent('PhongMaterial', {}, (opts) => new MeshPhongMaterial(opts))
-export const PhysicalMaterial = materialComponent('PhysicalMaterial', {}, (opts) => new MeshPhysicalMaterial(opts))
-export const PointsMaterial = materialComponent('PointsMaterial', {}, (opts) => new TPointsMaterial(opts))
-export const StandardMaterial = materialComponent('StandardMaterial', {}, (opts) => new MeshStandardMaterial(opts))
-export const ToonMaterial = materialComponent('ToonMaterial', {}, (opts) => new MeshToonMaterial(opts))
+export const BasicMaterial = materialComponent('BasicMaterial', { props: { type: Object as PropType<BasicMaterialPropsInterface>, default: () => ({}) } }, (opts) => new MeshBasicMaterial(opts))
+export const LambertMaterial = materialComponent('LambertMaterial', { props: { type: Object as PropType<LambertMaterialPropsInterface>, default: () => ({}) } }, (opts) => new MeshLambertMaterial(opts))
+export const PhongMaterial = materialComponent('PhongMaterial', { props: Object as PropType<PhongMaterialPropsInterface> }, (opts) => new MeshPhongMaterial(opts))
+export const PhysicalMaterial = materialComponent('PhysicalMaterial', { props: Object as PropType<PhysicalMaterialPropsInterface> }, (opts) => new MeshPhysicalMaterial(opts))
+export const PointsMaterial = materialComponent('PointsMaterial', { props: Object as PropType<PointsMaterialPropsInterface> }, (opts) => new TPointsMaterial(opts))
+export const StandardMaterial = materialComponent('StandardMaterial', { props: Object as PropType<StandardMaterialPropsInterface> }, (opts) => new MeshStandardMaterial(opts))
+export const ToonMaterial = materialComponent('ToonMaterial', { props: Object as PropType<ToonMaterialPropsInterface> }, (opts) => new MeshToonMaterial(opts))
