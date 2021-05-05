@@ -4,7 +4,7 @@ import { IntersectObject } from './usePointer'
 export interface RaycasterInterface {
   position: Vector3
   updatePosition(coords: Vector2): void
-  intersect(coords: Vector2, objects: IntersectObject[], recursive: boolean): Intersection[],
+  intersect(coords: Vector2, objects: IntersectObject[], recursive?: boolean): Intersection[],
 }
 
 export interface RaycasterConfigInterface {

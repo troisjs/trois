@@ -181,7 +181,7 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
   function pointerClick(event: TouchEvent | MouseEvent) {
     updatePosition(event)
     if (intersectObjects.length) {
-      const intersects = raycaster.intersect(positionN, intersectObjects)
+      const intersects = raycaster.intersect(positionN, intersectObjects, intersectRecursive)
       const iMeshes: InstancedMesh[] = []
       intersects.forEach(intersect => {
         const { object } = intersect
