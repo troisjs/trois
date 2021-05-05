@@ -56,7 +56,7 @@ export function bindProp(src: any, srcProp: string, dst: any, dstProp?: string):
 export function propsValues(props: Record<string, unknown>, exclude: string[] = []): Record<string, unknown> {
   const values: Record<string, unknown> = {}
   Object.entries(props).forEach(([key, value]) => {
-    if (!exclude || (exclude && !exclude.includes(key))) {
+    if (!exclude || !exclude.includes(key)) {
       values[key] = value
     }
   })
