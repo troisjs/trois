@@ -2,7 +2,8 @@ import { defineComponent, inject, InjectionKey, onUnmounted, provide } from 'vue
 // @ts-ignore
 import * as PP from 'postprocessing'
 import { ComposerInjectionKey, EffectComposerInterface } from './EffectComposer'
-import { RendererPublicInterface } from '../../../export'
+import { RendererPublicInterface } from '../../../../build/trois'
+// import { RendererPublicInterface } from '../../../export'
 
 export interface EffectPassInterface {
   composer: EffectComposerInterface

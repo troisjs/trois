@@ -2,8 +2,9 @@ import { defineComponent, inject, InjectionKey, onUnmounted, provide } from 'vue
 import { Clock } from 'three'
 // @ts-ignore
 import * as PP from 'postprocessing'
-// import { RendererInjectionKey, RendererPublicInterface } from '../../../build/trois'
-import { RendererInjectionKey, RendererPublicInterface } from '../../../export'
+import { RendererInjectionKey } from '../../../../build/trois.module.js'
+import { RendererPublicInterface } from '../../../../build/trois'
+// import { RendererInjectionKey, RendererPublicInterface } from '../../../export'
 
 export interface EffectComposerInterface {
   renderer: RendererPublicInterface

@@ -2,8 +2,8 @@ import { defineComponent, inject, onUnmounted, PropType } from 'vue'
 // @ts-ignore
 import * as PP from 'postprocessing'
 import { ComposerInjectionKey } from './EffectComposer'
-// import { RendererPublicInterface } from '../../../build/trois'
-import { RendererPublicInterface } from '../../../export'
+import { RendererPublicInterface } from '../../../../build/trois'
+// import { RendererPublicInterface } from '../../../export'
 
 type PassTypes = 'render' | 'blur'
 
