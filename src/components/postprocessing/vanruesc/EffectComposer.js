@@ -1,20 +1,11 @@
-import { defineComponent, inject, InjectionKey, onUnmounted, provide } from 'vue'
+import { inject, onUnmounted, provide } from 'vue'
 import { Clock } from 'three'
-// @ts-ignore
-import * as PP from 'postprocessing'
+import { EffectComposer } from 'postprocessing'
 import { RendererInjectionKey } from '../../../../build/trois.module.js'
-import { RendererPublicInterface } from '../../../../build/trois'
-// import { RendererInjectionKey, RendererPublicInterface } from '../../../export'
 
-export interface EffectComposerInterface {
-  renderer: RendererPublicInterface
-  composer: PP.EffectComposer
-  getPassIndex: {(): number}
-}
+export const ComposerInjectionKey = Symbol('Composer')
 
-export const ComposerInjectionKey: InjectionKey<EffectComposerInterface> = Symbol('Composer')
-
-export default defineComponent({
+export default {
   setup() {
     const renderer = inject(RendererInjectionKey)
     if (!renderer) {
@@ -22,7 +13,7 @@ export default defineComponent({
       return
     }
 
-    const composer = new PP.EffectComposer(renderer.renderer)
+    const composer = new EffectComposer(renderer.renderer)
     const clock = new Clock()
     const render = () => { composer.render(clock.getDelta()) }
     const setSize = () => { composer.setSize(renderer.size.width, renderer.size.height) }
@@ -47,4 +38,4 @@ export default defineComponent({
   render() {
     return this.$slots.default ? this.$slots.default() : []
   },
-})
+}

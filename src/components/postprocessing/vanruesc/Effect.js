@@ -1,14 +1,13 @@
-import { defineComponent, inject, onMounted, onUnmounted, PropType } from 'vue'
+import { defineComponent, inject, onMounted, onUnmounted } from 'vue'
 import { LoadingManager } from 'three'
-// @ts-ignore
 import * as PP from 'postprocessing'
-import { EffectPassInjectionKey, EffectPassInterface } from './EffectPass'
+import { EffectPassInjectionKey } from './EffectPass'
 
-type EffectTypes = 'bloom' | 'dof' | 'godrays' | 'smaa'
+// type EffectTypes = 'bloom' | 'dof' | 'godrays' | 'smaa'
 
 export default defineComponent({
   props: {
-    type: { type: String as PropType<EffectTypes>, required: true },
+    type: { type: String, required: true },
     options: { type: Object, default: () => ({}) },
     onReady: Function,
   },
@@ -19,23 +18,23 @@ export default defineComponent({
       return
     }
 
-    let effect: undefined | PP.Effect // not useful
+    let effect
     const effectIndex = effectPass.getEffectIndex()
 
-    const initEffect = (params: any = undefined) => {
+    const initEffect = (params) => {
       effect = createEffect(effectPass, props.type, props.options, params)
       if (!effect) {
         console.error('Invalid effect type')
         return
       }
-      props.onReady?.(effect)
+      if (props.onReady) props.onReady(effect)
       effectPass.addEffect(effect, effectIndex)
     }
 
     onMounted(() => {
       if (props.type === 'smaa') {
         const smaaImageLoader = new PP.SMAAImageLoader(new LoadingManager())
-        smaaImageLoader.load(([search, area]: [HTMLImageElement, HTMLImageElement]) => {
+        smaaImageLoader.load(([search, area]) => {
           initEffect({ smaaSearch: search, smaaArea: area })
         })
       } else {
@@ -53,12 +52,7 @@ export default defineComponent({
   render() { return [] },
 })
 
-function createEffect(
-  effectPass: EffectPassInterface,
-  type: string,
-  options: Record<string, any>,
-  assets: any = undefined
-): PP.Effect {
+function createEffect(effectPass, type, options, assets) {
   let effect
   switch (type) {
     case 'bloom' :
@@ -77,14 +71,13 @@ function createEffect(
   return effect
 }
 
-function createSmaaEffect(options: Record<string, any>, assets: any): PP.Pass {
+function createSmaaEffect(options, assets) {
   const { smaaSearch, smaaArea } = assets
-  // TODO : options
   const params = [options.preset ?? PP.SMAAPreset.HIGH, options.edgeDetectionMode ?? PP.EdgeDetectionMode.COLOR]
   return new PP.SMAAEffect(smaaSearch, smaaArea, ...params)
 }
 
-function createGodraysEffect(effectPass: EffectPassInterface, options: Record<string, any>): PP.Pass {
+function createGodraysEffect(effectPass, options) {
   const opts = { ...options }
   const { lightSource } = options
   if (typeof lightSource !== 'string') {
@@ -93,7 +86,7 @@ function createGodraysEffect(effectPass: EffectPassInterface, options: Record<st
   }
   delete opts.lightSource
 
-  const lightSourceComp = effectPass.renderer.$root?.$refs[lightSource] as any
+  const lightSourceComp = effectPass.renderer.$root.$refs[lightSource]
   if (!lightSourceComp) {
     console.error('Invalid lightSource ref')
     return

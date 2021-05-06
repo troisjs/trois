@@ -1,23 +1,10 @@
-import { defineComponent, inject, InjectionKey, onUnmounted, provide } from 'vue'
-// @ts-ignore
-import * as PP from 'postprocessing'
-import { ComposerInjectionKey, EffectComposerInterface } from './EffectComposer'
-import { RendererPublicInterface } from '../../../../build/trois'
-// import { RendererPublicInterface } from '../../../export'
+import { inject, onUnmounted, provide } from 'vue'
+import { EffectPass } from 'postprocessing'
+import { ComposerInjectionKey } from './EffectComposer.js'
 
-export interface EffectPassInterface {
-  composer: EffectComposerInterface
-  renderer: RendererPublicInterface
-  effectPass: PP.EffectPass
-  effects: Array<PP.Effect>
-  getEffectIndex: {(): number}
-  addEffect: {(effect: PP.Effect, index: number): number}
-  removeEffect: {(effect: PP.Effect): number}
-}
+export const EffectPassInjectionKey = Symbol('EffectPass')
 
-export const EffectPassInjectionKey: InjectionKey<EffectPassInterface> = Symbol('Composer')
-
-export default defineComponent({
+export default {
   props: {
     // needsSwap: { type: Boolean, default: false },
     renderToScreen: { type: Boolean, default: false },
@@ -30,9 +17,9 @@ export default defineComponent({
     }
 
     const passIndex = composer.getPassIndex()
-    let effectPass: PP.EffectPass
+    let effectPass
 
-    const effects: Array<PP.Effect> = []
+    const effects = []
     let effectIndex = 0
     const getEffectIndex = () => { return effectIndex++ }
 
@@ -42,16 +29,16 @@ export default defineComponent({
         composer.composer.removePass(effectPass)
         effectPass.dispose()
       }
-      effectPass = new PP.EffectPass(composer.renderer.camera, ...effects)
+      effectPass = new EffectPass(composer.renderer.camera, ...effects)
       composer.composer.addPass(effectPass, passIndex)
     }
 
-    const addEffect = (effect: PP.Effect, index: number) => {
+    const addEffect = (effect, index) => {
       effects.splice(index, 1, effect)
       refreshEffectPass()
     }
 
-    const removeEffect = (effect: PP.Effect) => {
+    const removeEffect = (effect) => {
       const index = effects.indexOf(effect)
       if (index >= 0) {
         effects.splice(index, 1)
@@ -76,4 +63,4 @@ export default defineComponent({
     })
   },
   render() { return this.$slots.default ? this.$slots.default() : [] },
-})
+}

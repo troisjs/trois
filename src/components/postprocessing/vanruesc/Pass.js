@@ -1,15 +1,12 @@
-import { defineComponent, inject, onUnmounted, PropType } from 'vue'
-// @ts-ignore
-import * as PP from 'postprocessing'
+import { inject, onUnmounted } from 'vue'
+import { BlurPass, RenderPass } from 'postprocessing'
 import { ComposerInjectionKey } from './EffectComposer'
-import { RendererPublicInterface } from '../../../../build/trois'
-// import { RendererPublicInterface } from '../../../export'
 
-type PassTypes = 'render' | 'blur'
+// type PassTypes = 'render' | 'blur'
 
-export default defineComponent({
+export default {
   props: {
-    type: { type: String as PropType<PassTypes>, required: true },
+    type: { type: String, required: true },
     options: { type: Object, default: () => ({}) },
     // needsSwap: { type: Boolean, default: false },
     renderToScreen: { type: Boolean, default: false },
@@ -22,17 +19,17 @@ export default defineComponent({
       return {}
     }
 
-    let pass: undefined | PP.Pass
+    let pass
     const passIndex = composer.getPassIndex()
 
-    const initPass = (params: any = undefined) => {
+    const initPass = () => {
       pass = createPass(composer.renderer, props.type, props.options)
       if (!pass) {
         console.error('Invalid pass type')
         return
       }
       pass.renderToScreen = props.renderToScreen
-      props.onReady?.(pass)
+      if (props.onReady) props.onReady(pass)
       composer.composer.addPass(pass, passIndex)
     }
 
@@ -46,20 +43,16 @@ export default defineComponent({
     initPass()
   },
   render() { return [] },
-})
+}
 
-function createPass(
-  renderer: RendererPublicInterface,
-  type: string,
-  options: Record<string, any>
-): PP.Pass {
+function createPass(renderer, type, options) {
   let pass
   switch (type) {
     case 'render' :
-      pass = new PP.RenderPass(renderer.scene, renderer.camera)
+      pass = new RenderPass(renderer.scene, renderer.camera)
       break
     case 'blur' :
-      pass = new PP.BlurPass(options)
+      pass = new BlurPass(options)
       break
   }
   return pass
