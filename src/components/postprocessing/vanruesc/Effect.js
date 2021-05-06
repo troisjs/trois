@@ -1,6 +1,6 @@
 import { defineComponent, inject, onMounted, onUnmounted } from 'vue'
 import { LoadingManager } from 'three'
-import * as PP from 'postprocessing'
+import { BloomEffect, DepthOfFieldEffect, EdgeDetectionMode, GodRaysEffect, SMAAEffect, SMAAImageLoader, SMAAPreset } from 'postprocessing'
 import { EffectPassInjectionKey } from './EffectPass'
 
 // type EffectTypes = 'bloom' | 'dof' | 'godrays' | 'smaa'
@@ -33,7 +33,7 @@ export default defineComponent({
 
     onMounted(() => {
       if (props.type === 'smaa') {
-        const smaaImageLoader = new PP.SMAAImageLoader(new LoadingManager())
+        const smaaImageLoader = new SMAAImageLoader(new LoadingManager())
         smaaImageLoader.load(([search, area]) => {
           initEffect({ smaaSearch: search, smaaArea: area })
         })
@@ -56,10 +56,10 @@ function createEffect(effectPass, type, options, assets) {
   let effect
   switch (type) {
     case 'bloom' :
-      effect = new PP.BloomEffect(options)
+      effect = new BloomEffect(options)
       break
     case 'dof' :
-      effect = new PP.DepthOfFieldEffect(effectPass.composer.renderer, options)
+      effect = new DepthOfFieldEffect(effectPass.composer.renderer, options)
       break
     case 'godrays' :
       effect = createGodraysEffect(effectPass, options)
@@ -73,8 +73,8 @@ function createEffect(effectPass, type, options, assets) {
 
 function createSmaaEffect(options, assets) {
   const { smaaSearch, smaaArea } = assets
-  const params = [options.preset ?? PP.SMAAPreset.HIGH, options.edgeDetectionMode ?? PP.EdgeDetectionMode.COLOR]
-  return new PP.SMAAEffect(smaaSearch, smaaArea, ...params)
+  const params = [options.preset ?? SMAAPreset.HIGH, options.edgeDetectionMode ?? EdgeDetectionMode.COLOR]
+  return new SMAAEffect(smaaSearch, smaaArea, ...params)
 }
 
 function createGodraysEffect(effectPass, options) {
@@ -92,5 +92,5 @@ function createGodraysEffect(effectPass, options) {
     return
   }
 
-  return new PP.GodRaysEffect(effectPass.composer.renderer.camera, lightSourceComp.mesh, opts)
+  return new GodRaysEffect(effectPass.composer.renderer.camera, lightSourceComp.mesh, opts)
 }
