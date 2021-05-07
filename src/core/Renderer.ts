@@ -113,6 +113,9 @@ export default defineComponent({
     props: { type: Object, default: () => ({}) },
     onReady: Function as PropType<(r: RendererInterface) => void>,
     onClick: Function as PropType<(this: HTMLCanvasElement, ev: MouseEvent) => any>,
+    canvasProps: { type: Object, default: () => ({}) },
+    class: { type: String, default: '' },
+    id: { type: String, default: '' }
   },
   setup(props): RendererSetupInterface {
     const initCallbacks: InitCallbackType[] = []
@@ -121,7 +124,13 @@ export default defineComponent({
     const afterRenderCallbacks: RenderCallbackType[] = []
     const resizeCallbacks: ResizeCallbackType[] = []
 
+    // create and configure canvas
     const canvas = document.createElement('canvas')
+    const canvasProps = { ...props.canvasProps }
+    if (props.class) { canvasProps.class = props.class }
+    if (props.id) { canvasProps.id = props.id }
+    Object.keys(canvasProps).forEach(key => canvas.setAttribute(key, canvasProps[key]));
+    
     const config: ThreeConfigInterface = {
       canvas,
       antialias: props.antialias,
