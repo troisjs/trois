@@ -25,8 +25,6 @@ export interface PointerPublicConfigInterface {
   intersectRecursive?: boolean
   touch?: boolean
   resetOnEnd?: boolean
-  resetPosition?: Vector2
-  resetPositionV3?: Vector3
   onEnter?: PointerCallbackType
   onMove?: PointerCallbackType
   onLeave?: PointerCallbackType
@@ -63,8 +61,6 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
     intersectRecursive = false,
     touch = true,
     resetOnEnd = false,
-    resetPosition = new Vector2(0, 0),
-    resetPositionV3 = new Vector3(0, 0, 0),
     onEnter = () => {},
     onMove = () => {},
     onLeave = () => {},
@@ -76,7 +72,7 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
     onIntersectClick = () => {},
   } = options
 
-  const position = resetPosition.clone()
+  const position = new Vector2(0, 0)
   const positionN = new Vector2(0, 0)
 
   const raycaster = useRaycaster({ camera })
@@ -96,8 +92,9 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
   return obj
 
   function reset() {
-    position.copy(resetPosition)
-    positionV3.copy(resetPositionV3)
+    position.set(0, 0)
+    positionN.set(0, 0)
+    positionV3.set(0, 0, 0)
   }
 
   function updatePosition(event: TouchEvent | MouseEvent) {
