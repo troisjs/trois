@@ -62,8 +62,8 @@ export const TroisJSVuePlugin = {
       'Points',
       'Sprite',
 
-      'FBXModel',
-      'GLTFModel',
+      'FbxModel',
+      'GltfModel',
 
       'BokehPass',
       'EffectComposer',
@@ -77,8 +77,6 @@ export const TroisJSVuePlugin = {
       'TiltShiftPass',
       'UnrealBloomPass',
       'ZoomBlurPass',
-
-      'GLTFViewer',
     ]
 
     comps.forEach(comp => {
