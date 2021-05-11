@@ -112,7 +112,6 @@ export default defineComponent({
     xr: Boolean,
     props: { type: Object, default: () => ({}) },
     onReady: Function as PropType<(r: RendererInterface) => void>,
-    onClick: Function as PropType<(this: HTMLCanvasElement, ev: MouseEvent) => any>,
   },
   inheritAttrs: false,
   setup(props, { attrs }): RendererSetupInterface {
@@ -149,11 +148,6 @@ export default defineComponent({
     bindObjectProp(props, 'props', three.renderer)
 
     const renderFn: {(): void} = () => {}
-
-    // we have to handle canvas events ourself (it is not rendered by vue)
-    if (props.onClick) {
-      canvas.addEventListener('click', props.onClick)
-    }
 
     return {
       canvas,
