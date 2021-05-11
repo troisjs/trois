@@ -2,6 +2,7 @@ import { inject, onUnmounted, provide } from 'vue'
 import { Clock } from 'three'
 import { EffectComposer } from 'postprocessing'
 import { RendererInjectionKey } from '../../../../build/trois.module.js'
+// import { RendererInjectionKey } from '../../../core'
 
 export const ComposerInjectionKey = Symbol('Composer')
 
