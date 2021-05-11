@@ -16,7 +16,5 @@
     "outDir": "types",
   },
   "include": ["src/**/*.ts", "src/**/*.vue"],
-  "exclude": ["src/components/**/*.ts"],
   // "include": ["src/export.ts"],
-  // "exclude": ["src/App.vue", "src/main.ts"],
 }

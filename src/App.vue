@@ -1,5 +1,5 @@
 <template>
-  <Renderer ref="renderer" antialias :pointer="{ resetOnEnd: true }" :orbit-ctrl="{ enableDamping: true }" resize="window">
+  <Renderer ref="renderer" antialias :orbit-ctrl="{ enableDamping: true }" resize="window">
     <Camera :position="{ z: 10 }" />
     <Scene>
       <PointLight :position="{ y: 50, z: 50 }" />
@@ -18,10 +18,10 @@ export default defineComponent({
   components: { Box, Camera, LambertMaterial, PointLight, Renderer, Scene },
   mounted() {
     const renderer = this.$refs.renderer as RendererPublicInterface
-    const mesh = (this.$refs.box as MeshPublicInterface).mesh
-    if (renderer && mesh) {
+    const box = this.$refs.box as MeshPublicInterface
+    if (renderer && box) {
       renderer.onBeforeRender(() => {
-        mesh.rotation.x += 0.01
+        box.mesh.rotation.x += 0.01
       })
     }
   },

@@ -2,13 +2,13 @@
 [![NPM Package][npm]][npm-url]
 [![Build Size][build-size]][build-size-url]
 [![NPM Downloads][npm-downloads]][npmtrends-url]
-[![Support][support]][support-url]
-<!-- [![Discord][discord]][discord-url] -->
+<!-- [![Support][support]][support-url] -->
+[![Discord][discord]][discord-url]
 
 [npm]: https://img.shields.io/npm/v/troisjs
 [npm-url]: https://www.npmjs.com/package/troisjs
-[build-size]: https://badgen.net/bundlephobia/minzip/troisjs@0.1.19
-[build-size-url]: https://bundlephobia.com/result?p=troisjs@0.1.19
+[build-size]: https://badgen.net/bundlephobia/minzip/troisjs
+[build-size-url]: https://bundlephobia.com/result?p=troisjs
 [npm-downloads]: https://img.shields.io/npm/dw/troisjs
 [npmtrends-url]: https://www.npmtrends.com/troisjs
 [discord]: https://img.shields.io/discord/828384755778846772
@@ -38,8 +38,6 @@
 I wanted to code something similar to *react-three-fiber* but for VueJS.
 
 I started from scratch, I will rewrite some of my [WebGL demos](https://codepen.io/collection/AGZywR) to see if this little toy can do the job.
-
-Next version (*v0.3*, rewrited with Typescript) will be soon released !
 
 *Trois* is a french word, it means *Three*.
 
