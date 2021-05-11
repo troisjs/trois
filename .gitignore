@@ -1,6 +1,5 @@
-node_modules
-.DS_Store
+build
 dist
+node_modules
 temp
 types
-*.local
