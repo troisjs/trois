@@ -3,7 +3,7 @@ import { Camera, Scene, WebGLRenderer } from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
 import { ComponentPublicInstance, defineComponent, InjectionKey, PropType } from 'vue'
 import { bindObjectProp } from '../tools'
-import { PointerPublicConfigInterface } from './usePointer'
+import { PointerInterface, PointerPublicConfigInterface } from './usePointer'
 import useThree, { SizeInterface, ThreeConfigInterface, ThreeInterface } from './useThree'
 
 type CallbackType<T> = (event: T) => void
@@ -62,9 +62,7 @@ interface RendererSetupInterface {
   renderFn(e: RenderFunctionEventInterface): void
   raf: boolean
 
-  // pointerPosition?: Vector2
-  // pointerPositionN?: Vector2
-  // pointerPositionV3?: Vector3
+  $pointer?: PointerInterface
 
   initCallbacks: InitCallbackType[]
   mountedCallbacks: MountedCallbackType[]
@@ -187,11 +185,9 @@ export default defineComponent({
     this.$el.parentNode.insertBefore(this.canvas, this.$el)
 
     if (this.three.init()) {
-      // if (this.three.pointer) {
-      //   this.pointerPosition = this.three.pointer.position
-      //   this.pointerPositionN = this.three.pointer.positionN
-      //   this.pointerPositionV3 = this.three.pointer.positionV3
-      // }
+      if (this.three.pointer) {
+        this.$pointer = this.three.pointer
+      }
 
       // TODO : don't use config
       this.three.config.onResize = (size) => {
