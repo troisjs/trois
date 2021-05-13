@@ -45,7 +45,7 @@ export default defineComponent({
 
       this.material.setTexture(this.texture, this.name)
       if (this.material.material instanceof ShaderMaterial && this.uniform) {
-        (this.material as any).uniforms[this.uniform] = { value: this.texture }
+        (this.material.material).uniforms[this.uniform] = { value: this.texture }
       }
     },
     refreshTexture() {
