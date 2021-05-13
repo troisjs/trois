@@ -1,5 +1,6 @@
 export { default as EffectComposer, ComposerInjectionKey } from './EffectComposer'
 export { default as RenderPass } from './RenderPass'
+export { default as EffectPass } from './EffectPass'
 
 export { default as BokehPass } from './BokehPass'
 export { default as FilmPass } from './FilmPass'
