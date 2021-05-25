@@ -139,7 +139,7 @@ export default defineComponent({
         obj = this.o3d
       }
 
-      this.o3d.children.forEach((child) => {
+      obj.children.forEach((child) => {
         callback(child)
         this.allChildren(callback, child)
       })
