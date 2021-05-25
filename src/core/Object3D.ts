@@ -16,6 +16,7 @@ export interface Object3DInterface extends Object3DSetupInterface {
   removeFromParent(o?: Object3D): boolean
   add(o: Object3D): void
   remove(o: Object3D): void
+  allChildren(callback: Function, obj?: Object3D): void
 }
 
 export interface Object3DPublicInterface extends ComponentPublicInstance, Object3DInterface {}
@@ -124,6 +125,25 @@ export default defineComponent({
     },
     add(o: Object3D) { this.o3d?.add(o) },
     remove(o: Object3D) { this.o3d?.remove(o) },
+
+    /**
+     * Run a callback on all children in this object's hierarchy.
+     * @param callback Callback to run on all children.
+     * @param obj Optional initial object. Defaults to this object3D if left empty
+     * @returns 
+     */
+    allChildren(callback: Function, obj: Object3D | null = null) {
+      if (!this.o3d) return
+
+      if (obj === null) {
+        obj = this.o3d
+      }
+
+      this.o3d.children.forEach((child) => {
+        callback(child)
+        this.allChildren(callback, child)
+      })
+    }
   },
   render() {
     return this.$slots.default ? this.$slots.default() : []
