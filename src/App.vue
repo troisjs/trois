@@ -18,12 +18,10 @@ export default defineComponent({
   components: { Box, Camera, LambertMaterial, PointLight, Renderer, Scene },
   mounted() {
     const renderer = this.$refs.renderer as RendererPublicInterface
-    const box = this.$refs.box as MeshPublicInterface
-    if (renderer && box) {
+    const mesh = (this.$refs.box as MeshPublicInterface).mesh
+    if (renderer && mesh) {
       renderer.onBeforeRender(() => {
-        if (box.mesh){
-          box.mesh.rotation.x += 0.01
-        }
+        mesh.rotation.x += 0.01
       })
     }
   },
