@@ -16,6 +16,15 @@ export default defineComponent({
   methods: {
     onLoad(model: TObject3D) {
       this.$emit('load', model)
+      if (this.onPointerEnter ||
+        this.onPointerOver ||
+        this.onPointerMove ||
+        this.onPointerLeave ||
+        this.onPointerDown ||
+        this.onPointerUp ||
+        this.onClick) {
+        if (this.renderer) this.renderer.three.addIntersectObject(model)
+      }
       this.initObject3D(model)
     },
     onProgress(progress: ProgressEvent) {
