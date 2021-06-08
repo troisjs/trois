@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Camera, InstancedMesh, Intersection, Mesh, Vector2, Vector3 } from 'three'
+import { Camera, InstancedMesh, Intersection, Object3D, Vector2, Vector3 } from 'three'
 import useRaycaster from './useRaycaster'
 
 export interface PointerEventInterface {
@@ -18,7 +18,6 @@ export interface PointerIntersectEventInterface {
 
 export type PointerCallbackType = (e: PointerEventInterface) => void
 export type PointerIntersectCallbackType = (e: PointerIntersectEventInterface) => void
-export type IntersectObject = Mesh | InstancedMesh
 
 export interface PointerPublicConfigInterface {
   intersectMode?: 'frame'
@@ -39,14 +38,14 @@ export interface PointerPublicConfigInterface {
 export interface PointerConfigInterface extends PointerPublicConfigInterface {
   camera: Camera
   domElement: HTMLCanvasElement
-  intersectObjects: IntersectObject[]
+  intersectObjects: Object3D[] | (() => Object3D[])
 }
 
 export interface PointerInterface {
   position: Vector2
   positionN: Vector2
   positionV3: Vector3
-  intersectObjects: IntersectObject[]
+  intersectObjects: Object3D[] | (() => Object3D[])
   listeners: boolean
   addListeners(cb: void): void
   removeListeners(cb: void): void
@@ -117,14 +116,15 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
   }
 
   function intersect() {
-    if (intersectObjects.length) {
-      const intersects = raycaster.intersect(positionN, intersectObjects, intersectRecursive)
-      const offObjects: IntersectObject[] = [...intersectObjects]
+    const _intersectObjects = getIntersectObjects()
+    if (_intersectObjects.length) {
+      const intersects = raycaster.intersect(positionN, _intersectObjects, intersectRecursive)
+      const offObjects: Object3D[] = [..._intersectObjects]
       const iMeshes: InstancedMesh[] = []
 
       intersects.forEach(intersect => {
         const { object } = intersect
-        const { component } = object.userData
+        const component = getComponent(object)
 
         // only once for InstancedMesh
         if (object instanceof InstancedMesh) {
@@ -138,27 +138,27 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
           const enterEvent: PointerIntersectEventInterface = { ...overEvent, type: 'pointerenter' }
           onIntersectOver(overEvent)
           onIntersectEnter(enterEvent)
-          component.onPointerOver?.(overEvent)
-          component.onPointerEnter?.(enterEvent)
+          component?.onPointerOver?.(overEvent)
+          component?.onPointerEnter?.(enterEvent)
         }
 
         const moveEvent: PointerIntersectEventInterface = { type: 'pointermove', component, intersect }
         onIntersectMove(moveEvent)
-        component.onPointerMove?.(moveEvent)
+        component?.onPointerMove?.(moveEvent)
 
-        offObjects.splice(offObjects.indexOf((<IntersectObject>object)), 1)
+        offObjects.splice(offObjects.indexOf((<Object3D>object)), 1)
       })
 
       offObjects.forEach(object => {
-        const { component } = object.userData
+        const component = getComponent(object)
         if (object.userData.over) {
           object.userData.over = false
           const overEvent: PointerIntersectEventInterface = { type: 'pointerover', over: false, component }
           const leaveEvent: PointerIntersectEventInterface = { ...overEvent, type: 'pointerleave' }
           onIntersectOver(overEvent)
           onIntersectLeave(leaveEvent)
-          component.onPointerOver?.(overEvent)
-          component.onPointerLeave?.(leaveEvent)
+          component?.onPointerOver?.(overEvent)
+          component?.onPointerLeave?.(leaveEvent)
         }
       })
     }
@@ -177,12 +177,13 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
 
   function pointerClick(event: TouchEvent | MouseEvent) {
     updatePosition(event)
-    if (intersectObjects.length) {
-      const intersects = raycaster.intersect(positionN, intersectObjects, intersectRecursive)
+    const _intersectObjects = getIntersectObjects()
+    if (_intersectObjects.length) {
+      const intersects = raycaster.intersect(positionN, _intersectObjects, intersectRecursive)
       const iMeshes: InstancedMesh[] = []
       intersects.forEach(intersect => {
         const { object } = intersect
-        const { component } = object.userData
+        const component = getComponent(object)
 
         // only once for InstancedMesh
         if (object instanceof InstancedMesh) {
@@ -192,7 +193,7 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
 
         const event: PointerIntersectEventInterface = { type: 'click', component, intersect }
         onIntersectClick(event)
-        component.onClick?.(event)
+        component?.onClick?.(event)
       })
     }
     onClick({ type: 'click', position, positionN, positionV3 })
@@ -201,6 +202,26 @@ export default function usePointer(options: PointerConfigInterface): PointerInte
   function pointerLeave() {
     if (resetOnEnd) reset()
     onLeave({ type: 'pointerleave' })
+  }
+
+  function getComponent(object: Object3D) {
+    if (object.userData.component) return object.userData.component
+
+    let parent = object.parent
+    while (parent) {
+      if (parent.userData.component) {
+        return parent.userData.component
+      }
+      parent = parent.parent
+    }
+
+    return undefined
+  }
+
+  function getIntersectObjects() {
+    if (typeof intersectObjects === 'function') {
+      return intersectObjects()
+    } else return intersectObjects
   }
 
   function addListeners() {

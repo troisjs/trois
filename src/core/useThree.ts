@@ -1,7 +1,7 @@
-import { Camera, OrthographicCamera, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
+import { Camera, Object3D, OrthographicCamera, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
-import usePointer, { IntersectObject, PointerConfigInterface, PointerPublicConfigInterface, PointerInterface } from './usePointer'
+import usePointer, { PointerConfigInterface, PointerPublicConfigInterface, PointerInterface } from './usePointer'
 
 export interface SizeInterface {
   width: number
@@ -39,8 +39,8 @@ export interface ThreeInterface {
   render(): void
   renderC(): void
   setSize(width: number, height: number): void
-  addIntersectObject(o: IntersectObject): void
-  removeIntersectObject(o: IntersectObject): void
+  addIntersectObject(o: Object3D): void
+  removeIntersectObject(o: Object3D): void
 }
 
 /**
@@ -74,7 +74,7 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
 
   const beforeRenderCallbacks: {(): void}[] = []
 
-  const intersectObjects: IntersectObject[] = []
+  const intersectObjects: Object3D[] = []
 
   const renderer = createRenderer()
 
@@ -191,7 +191,7 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
   /**
    * add intersect object
    */
-  function addIntersectObject(o: IntersectObject) {
+  function addIntersectObject(o: Object3D) {
     if (intersectObjects.indexOf(o) === -1) {
       intersectObjects.push(o)
     }
@@ -204,7 +204,7 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
   /**
    * remove intersect object
    */
-  function removeIntersectObject(o: IntersectObject) {
+  function removeIntersectObject(o: Object3D) {
     const i = intersectObjects.indexOf(o)
     if (i !== -1) {
       intersectObjects.splice(i, 1)

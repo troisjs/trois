@@ -3,16 +3,6 @@ import { BufferGeometry, Material, Mesh as TMesh } from 'three'
 import Object3D, { Object3DSetupInterface } from '../core/Object3D'
 import { bindProp } from '../tools'
 
-export const pointerProps = {
-  onPointerEnter: Function,
-  onPointerOver: Function,
-  onPointerMove: Function,
-  onPointerLeave: Function,
-  onPointerDown: Function,
-  onPointerUp: Function,
-  onClick: Function,
-}
-
 export interface MeshSetupInterface extends Object3DSetupInterface {
   mesh?: TMesh
   geometry?: BufferGeometry
@@ -35,7 +25,6 @@ const Mesh = defineComponent({
   props: {
     castShadow: Boolean,
     receiveShadow: Boolean,
-    ...pointerProps,
   },
   setup(): MeshSetupInterface {
     return {}
@@ -52,20 +41,9 @@ const Mesh = defineComponent({
   methods: {
     initMesh() {
       const mesh = new TMesh(this.geometry, this.material)
-      mesh.userData.component = this
 
       bindProp(this, 'castShadow', mesh)
       bindProp(this, 'receiveShadow', mesh)
-
-      if (this.onPointerEnter ||
-        this.onPointerOver ||
-        this.onPointerMove ||
-        this.onPointerLeave ||
-        this.onPointerDown ||
-        this.onPointerUp ||
-        this.onClick) {
-        if (this.renderer) this.renderer.three.addIntersectObject(mesh)
-      }
 
       this.mesh = mesh
       this.initObject3D(mesh)
@@ -95,9 +73,6 @@ const Mesh = defineComponent({
     },
   },
   unmounted() {
-    if (this.mesh) {
-      if (this.renderer) this.renderer.three.removeIntersectObject(this.mesh)
-    }
     // for predefined mesh (geometry/material are not unmounted)
     if (this.geometry) this.geometry.dispose()
     if (this.material) this.material.dispose()

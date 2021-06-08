@@ -26,6 +26,16 @@ export interface Object3DPublicInterface extends ComponentPublicInstance, Object
 //   return { scene, renderer }
 // }
 
+export const pointerProps = {
+  onPointerEnter: Function,
+  onPointerOver: Function,
+  onPointerMove: Function,
+  onPointerLeave: Function,
+  onPointerDown: Function,
+  onPointerUp: Function,
+  onClick: Function,
+}
+
 export interface Vector2PropInterface {
   x?: number
   y?: number
@@ -59,6 +69,7 @@ export default defineComponent({
     props: { type: Object, default: () => ({}) },
     disableAdd: { type: Boolean, default: false },
     disableRemove: { type: Boolean, default: false },
+    ...pointerProps,
   },
   setup(): Object3DSetupInterface {
     // return object3DSetup()
@@ -74,10 +85,24 @@ export default defineComponent({
   },
   unmounted() {
     if (!this.disableRemove) this.removeFromParent()
+    if (this.o3d) {
+      if (this.renderer) this.renderer.three.removeIntersectObject(this.o3d)
+    }
   },
   methods: {
     initObject3D(o3d: Object3D) {
       this.o3d = o3d
+      o3d.userData.component = this
+
+      if (this.onPointerEnter ||
+        this.onPointerOver ||
+        this.onPointerMove ||
+        this.onPointerLeave ||
+        this.onPointerDown ||
+        this.onPointerUp ||
+        this.onClick) {
+        if (this.renderer) this.renderer.three.addIntersectObject(o3d)
+      }
 
       bindProp(this, 'position', o3d)
       bindProp(this, 'rotation', o3d)

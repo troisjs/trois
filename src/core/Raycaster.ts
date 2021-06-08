@@ -1,6 +1,5 @@
-import { Object3D } from 'three'
 import { defineComponent, inject, PropType } from 'vue'
-import usePointer, { IntersectObject, PointerInterface, PointerIntersectCallbackType } from './usePointer'
+import usePointer, { PointerInterface, PointerIntersectCallbackType } from './usePointer'
 import { RendererInjectionKey, RendererInterface } from './Renderer'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -39,7 +38,7 @@ export default defineComponent({
       this.pointer = usePointer({
         camera: renderer.camera,
         domElement: renderer.canvas,
-        intersectObjects: this.getIntersectObjects(),
+        intersectObjects: () => renderer.scene ? renderer.scene.children : [],
         intersectRecursive: this.intersectRecursive,
         onIntersectEnter: this.onPointerEnter,
         onIntersectOver: this.onPointerOver,
@@ -59,15 +58,6 @@ export default defineComponent({
       this.pointer.removeListeners()
       this.renderer?.offBeforeRender(this.pointer.intersect)
     }
-  },
-  methods: {
-    getIntersectObjects() {
-      if (this.renderer && this.renderer.scene) {
-        const children = this.renderer.scene.children.filter((c: Object3D) => ['Mesh', 'InstancedMesh'].includes(c.type))
-        return children as IntersectObject[]
-      }
-      return []
-    },
   },
   render() {
     return []
