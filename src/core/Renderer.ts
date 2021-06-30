@@ -238,7 +238,7 @@ export default defineComponent({
     removeListener(type: string, cb: {(e?: any): void}) {
       const callbacks = this.getCallbacks(type)
       const index = callbacks.indexOf(cb)
-      if (index) callbacks.splice(index, 1)
+      if (index != -1) callbacks.splice(index, 1)
     },
 
     getCallbacks(type: string) {
