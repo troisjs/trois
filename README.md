@@ -3,6 +3,7 @@
 [![Build Size][build-size]][build-size-url]
 [![NPM Downloads][npm-downloads]][npmtrends-url]
 [![Discord][discord]][discord-url]
+[![Twitter][twitter]][twitter-url]
 <!-- [![Support][support]][support-url] -->
 
 [npm]: https://img.shields.io/npm/v/troisjs
@@ -15,7 +16,9 @@
 [discord-url]: https://discord.gg/5G3msGwyqQ
 [support]: https://img.shields.io/badge/support-hicetnunc-lightgrey
 [support-url]: https://www.hicetnunc.xyz/tz/tz1XWVAgiiLBPstq5saWXKZqPHbsvq4Qdb4C
- 
+[twitter]: https://img.shields.io/twitter/follow/soju22?label=&style=social
+[twitter-url]: https://twitter.com/soju22
+
 <p style="text-align:center;">
   <a href="https://troisjs.github.io/little-planet/"><img src="/screenshots/little-planet.jpg" width="30%" /></a>
   <a href="https://troisjs.github.io/examples/physics/1.html"><img src="/screenshots/troisjs_10.jpg" width="30%" /></a>
@@ -40,6 +43,12 @@ I wanted to code something similar to *react-three-fiber* but for VueJS.
 I started from scratch, I will rewrite some of my [WebGL demos](https://codepen.io/collection/AGZywR) to see if this little toy can do the job.
 
 *Trois* is a french word, it means *Three*.
+
+## Sponsors (Thanks !!!)
+
+<a href="https://github.com/avaer">
+  <img src="https://github.com/avaer.png" width="50px" />
+</a>
 
 ## Usage (CDN)
 
