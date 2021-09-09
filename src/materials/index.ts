@@ -5,5 +5,6 @@ export { default as SubSurfaceMaterial } from './SubSurfaceMaterial'
 
 export { default as Texture } from './Texture'
 export { default as CubeTexture } from './CubeTexture'
+export { default as VideoTexture } from './VideoTexture'
 
 export type { MaterialPublicInterface } from './Material'
