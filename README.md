@@ -44,10 +44,28 @@ I started from scratch, I will rewrite some of my [WebGL demos](https://codepen.
 
 *Trois* is a french word, it means *Three*.
 
-## Sponsors (Thanks !!!)
+## Sponsors (Thanks 💙 !!!)
 
 <a href="https://github.com/avaer">
   <img src="https://github.com/avaer.png" width="50px" />
+</a>
+<a href="https://github.com/okydk">
+  <img src="https://github.com/okydk.png" width="50px" />
+</a>
+
+## Contributors (Thanks 💙 !!!)
+
+<a href="https://github.com/klevron">
+  <img src="https://github.com/klevron.png" width="50px" />
+</a>
+<a href="https://github.com/SaFrMo">
+  <img src="https://github.com/SaFrMo.png" width="50px" />
+</a>
+<a href="https://github.com/yoanngueny">
+  <img src="https://github.com/yoanngueny.png" width="50px" />
+</a>
+<a href="https://github.com/xcchcaptain">
+  <img src="https://github.com/xcchcaptain.png" width="50px" />
 </a>
 
 ## Usage (CDN)
@@ -68,7 +86,7 @@ TroisJS is really simple and easy to use :
 </div>
 
 <script type="module">
-  import { createApp } from 'https://unpkg.com/troisjs@0.2.3/build/trois.module.cdn.min.js';
+  import { createApp } from 'https://unpkg.com/troisjs@0.3.2/build/trois.module.cdn.min.js';
   createApp({
     mounted() {
       const renderer = this.$refs.renderer;
@@ -82,57 +100,3 @@ TroisJS is really simple and easy to use :
 ```
 
 Read more on https://troisjs.github.io/guide/
-
-## HMR
-
-Thanks to VueJS/ViteJS, **TroisJS use watchers and HMR to update ThreeJS objects when you update a template or a prop**. This means the result in your browser will be automatically updated without reloading all the stuff. **This is really helpful when you are creating a TroisJS Scene**.
-
-## Features
-
-Take a look at examples : https://troisjs.github.io/
-
-- [ ] Lights
-  - [x] AmbientLight
-  - [x] DirectionalLight
-  - [x] HemisphereLight
-  - [x] PointLight
-  - [x] RectAreaLight
-  - [x] SpotLight
-- [ ] Materials
-  - [x] Basic
-  - [x] Lambert
-  - [x] Mapcap
-  - [x] Phong
-  - [x] Physical
-  - [x] Shader
-  - [x] Standard
-  - [x] SubSurface
-  - [x] Toon
-- [ ] Geometries
-  - [x] Box
-  - [x] Circle
-  - [x] Cone
-  - [x] Cylinder
-  - [x] Dodecahedron
-  - [x] Icosahedron
-  - [x] Lathe
-  - [x] Octahedron
-  - [x] Polyhedron
-  - [x] Ring
-  - [x] Sphere
-  - [x] Tetrahedron
-  - [x] Torus
-  - [x] TorusKnot
-  - [x] Tube
-- [ ] Post Processing
-  - [x] EffectComposer
-    - [x] BokehPass
-    - [x] FilmPass
-    - [x] FXAAPass
-    - [x] HalftonePass
-    - [x] Renderpass
-    - [x] SMAAPass
-    - [x] SSAOPass
-    - [x] UnrealBloomPass
-    - [x] TiltShiftPass
-    - [x] ZoomBlurPass
