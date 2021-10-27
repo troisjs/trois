@@ -19,6 +19,7 @@ export interface MaterialPublicInterface extends ComponentPublicInstance, Materi
 export const MaterialInjectionKey: InjectionKey<MaterialPublicInterface> = Symbol('Material')
 
 const BaseMaterial = defineComponent({
+  emits: ['created'],
   props: {
     color: { type: String, default: '#ffffff' },
     props: { type: Object as PropType<MaterialPropsInterface>, default: () => ({}) },
@@ -45,6 +46,7 @@ const BaseMaterial = defineComponent({
       // @ts-ignore
       watch(() => this.color, (value) => { material.color.set(value) })
       bindObjectProp(this, 'props', material, false, this.setProp)
+      this.$emit('created', material)
       this.mesh.setMaterial(material)
     }
   },
