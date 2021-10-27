@@ -22,7 +22,7 @@
 <p style="text-align:center;">
   <a href="https://troisjs.github.io/little-planet/"><img src="/screenshots/little-planet.jpg" width="30%" /></a>
   <a href="https://troisjs.github.io/examples/physics/1.html"><img src="/screenshots/troisjs_10.jpg" width="30%" /></a>
-  <a href="https://troisjs.github.io/examples/physics/2.html"><img src="/screenshots/troisjs_11.jpg" width="30%" /></a>
+  <a href="https://troisjs-trails.pages.dev"><img src="/screenshots/troisjs_12.jpg" width="30%" /></a>
   <a href="https://troisjs.github.io/examples/demos/3.html"><img src="/screenshots/troisjs_1.jpg" width="30%" /></a>
   <a href="https://troisjs.github.io/examples/demos/4.html"><img src="/screenshots/troisjs_3.jpg" width="30%" /></a>
   <a href="https://troisjs.github.io/examples/demos/1.html"><img src="/screenshots/troisjs_4.jpg" width="30%" /></a>
