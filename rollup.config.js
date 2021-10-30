@@ -1,7 +1,7 @@
 // import vue from 'rollup-plugin-vue'
 import esbuild from 'rollup-plugin-esbuild'
 import replace from '@rollup/plugin-replace'
-import dts from "rollup-plugin-dts"
+import dts from 'rollup-plugin-dts'
 
 const input = 'src/export.ts'
 
@@ -9,10 +9,12 @@ const external = [
   'three',
   'three/examples/jsm/controls/OrbitControls.js',
   'three/examples/jsm/deprecated/Geometry.js',
-  'three/examples/jsm/lights/RectAreaLightUniformsLib.js',
+  'three/examples/jsm/geometries/TextGeometry.js',
   'three/examples/jsm/helpers/RectAreaLightHelper.js',
-  'three/examples/jsm/loaders/GLTFLoader.js',
+  'three/examples/jsm/lights/RectAreaLightUniformsLib.js',
+  'three/examples/jsm/loaders/FontLoader.js',
   'three/examples/jsm/loaders/FBXLoader.js',
+  'three/examples/jsm/loaders/GLTFLoader.js',
   'three/examples/jsm/postprocessing/BokehPass.js',
   'three/examples/jsm/postprocessing/EffectComposer.js',
   'three/examples/jsm/postprocessing/FilmPass.js',
@@ -30,9 +32,9 @@ const external = [
 ]
 
 const cdnReplaces = {
-  'from \'vue\'': 'from \'https://unpkg.com/vue@3.0.11/dist/vue.esm-browser.prod.js\'',
-  'from \'three\'': 'from \'https://unpkg.com/three@0.127.0/build/three.module.js\'',
-  'from \'three/examples': 'from \'https://unpkg.com/three@0.127.0/examples',
+  'from \'vue\'': 'from \'https://unpkg.com/vue@3.2.20/dist/vue.esm-browser.prod.js\'',
+  'from \'three\'': 'from \'https://cdn.skypack.dev/three@0.134.0/build/three.module.js\'',
+  'from \'three/examples': 'from \'https://cdn.skypack.dev/three@0.134.0/examples',
   delimiters: ['', ''],
 }
 

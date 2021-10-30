@@ -1,5 +1,6 @@
 import { defineComponent, PropType, watch } from 'vue'
-import { Font, FontLoader, TextGeometry } from 'three'
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'
+import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'
 import Mesh, { MeshSetupInterface } from './Mesh'
 
 interface TextSetupInterface extends MeshSetupInterface {
