@@ -1,4 +1,4 @@
-import { toRef, watch, WatchStopHandle } from 'vue'
+import { ref, toRef, watch, WatchStopHandle } from 'vue'
 
 type OptionSetter = (dst: any, key: string, value: any) => void
 
@@ -25,6 +25,17 @@ export function bindObjectProp(
   if (apply) applyObjectProps(dst, src[prop], setter)
   const r = toRef(src, prop)
   return watch(r, (value) => { applyObjectProps(dst, value, setter) })
+}
+
+export function bindObjectProps(
+  src: any,
+  dst: any,
+  apply = true,
+  setter?: OptionSetter
+): WatchStopHandle {
+  if (apply) applyObjectProps(dst, src, setter)
+  const r = ref(src)
+  return watch(r, (value) => { applyObjectProps(dst, value, setter) }, { deep: true })
 }
 
 export function setFromProp(o: Record<string, unknown>, prop: Record<string, unknown>): void {
