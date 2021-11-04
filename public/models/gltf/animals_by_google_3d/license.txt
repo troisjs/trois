@@ -1,0 +1,11 @@
+Model Information:
+* title:	Animals By Google 3D
+* source:	https://sketchfab.com/3d-models/animals-by-google-3d-8e2cca2a774b4c76a692ee6102e0b04e
+* author:	Nyilonelycompany (https://sketchfab.com/Nyilonelycompany)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Animals By Google 3D" (https://sketchfab.com/3d-models/animals-by-google-3d-8e2cca2a774b4c76a692ee6102e0b04e) by Nyilonelycompany (https://sketchfab.com/Nyilonelycompany) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
