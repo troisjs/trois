@@ -1,4 +1,4 @@
-export { default as Material, BasicMaterial, LambertMaterial, PhongMaterial, PhysicalMaterial, PointsMaterial, StandardMaterial, ToonMaterial, MaterialInjectionKey } from './Material'
+export { default as Material, BasicMaterial, LambertMaterial, PhongMaterial, PhysicalMaterial, PointsMaterial, ShadowMaterial, StandardMaterial, ToonMaterial, MaterialInjectionKey } from './Material'
 export { default as MatcapMaterial } from './MatcapMaterial'
 export { default as ShaderMaterial } from './ShaderMaterial'
 export { default as SubSurfaceMaterial } from './SubSurfaceMaterial'
