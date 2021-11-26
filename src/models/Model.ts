@@ -4,7 +4,7 @@ import Object3D from '../core/Object3D'
 
 export default defineComponent({
   extends: Object3D,
-  emits: ['load', 'progress', 'error', 'before-load'],
+  emits: ['before-load', 'load', 'progress', 'error'],
   props: {
     src: { type: String, required: true },
   },
