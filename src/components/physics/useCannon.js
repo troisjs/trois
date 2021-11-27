@@ -116,7 +116,7 @@ export default function useCannon(options) {
       mesh.userData.velocity.y,
       mesh.userData.velocity.z) : new Vec3(0, 0, 0)
 
-    const body = new Body({ shape, position, quaternion, velocity, mass, linearDamping: damping, angularDamping: damping })
+    const body = new Body({ shape, position, velocity, quaternion, mass, linearDamping: damping, angularDamping: damping })
     world.addBody(body)
 
     mesh.userData.body = body
