@@ -2,7 +2,6 @@
 [![NPM Package][npm]][npm-url]
 [![Build Size][build-size]][build-size-url]
 [![NPM Downloads][npm-downloads]][npmtrends-url]
-[![Discord][discord]][discord-url]
 [![Twitter][twitter]][twitter-url]
 <!-- [![Support][support]][support-url] -->
 
@@ -12,8 +11,6 @@
 [build-size-url]: https://bundlephobia.com/result?p=troisjs
 [npm-downloads]: https://img.shields.io/npm/dw/troisjs
 [npmtrends-url]: https://www.npmtrends.com/troisjs
-[discord]: https://img.shields.io/discord/828384755778846772
-[discord-url]: https://discord.gg/5G3msGwyqQ
 [support]: https://img.shields.io/badge/support-hicetnunc-lightgrey
 [support-url]: https://www.hicetnunc.xyz/tz/tz1XWVAgiiLBPstq5saWXKZqPHbsvq4Qdb4C
 [twitter]: https://img.shields.io/twitter/follow/soju22?label=&style=social
