@@ -159,7 +159,17 @@ export default function useCannon(options) {
       if (mesh.userData.dampings?.[i]) damping = mesh.userData.dampings?.[i]
       else if (mesh.userData.damping) damping = mesh.userData.damping
 
-      const body = new Body({ shape, position, mass, linearDamping: damping, angularDamping: damping })
+      let velocity = new Vec3(0, 0, 0)
+      if (mesh.userData.velocities?.[i]) velocity = new Vec3(
+        mesh.userData.velocities?.[i].x,
+        mesh.userData.velocities?.[i].y,
+        mesh.userData.velocities?.[i].z)
+      else if (mesh.userData.velocities) velocity = new Vec3(
+        mesh.userData.velocities.x,
+        mesh.userData.velocities.y,
+        mesh.userData.velocities.z)
+
+      const body = new Body({ shape, position, velocity, mass, linearDamping: damping, angularDamping: damping })
       world.addBody(body)
       bodies.push(body)
     }
