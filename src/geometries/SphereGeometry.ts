@@ -12,7 +12,7 @@ export const props = {
 } as const
 
 export function createGeometry(comp: any): SphereGeometry {
-  return new SphereGeometry(comp.radius, comp.widthSegments, comp.heightSegments)
+  return new SphereGeometry(comp.radius, comp.widthSegments, comp.heightSegments, comp.phiStart, comp.phiLength, comp.thetaStart, comp.thetaLength)
 }
 
 export default geometryComponent('SphereGeometry', props, createGeometry)
