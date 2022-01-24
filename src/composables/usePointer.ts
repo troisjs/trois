@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Camera, InstancedMesh, Intersection, Object3D, Vector2, Vector3 } from 'three'
-import useRaycaster from './useRaycaster'
+import useRaycaster from '/@/composables/useRaycaster'
 
 export interface PointerEventInterface {
   type: 'pointerenter' | 'pointermove' | 'pointerleave' | 'click'

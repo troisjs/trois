@@ -2,9 +2,9 @@
 import { Camera, Scene, WebGLRenderer } from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
 import { ComponentPublicInstance, defineComponent, InjectionKey, PropType } from 'vue'
+import { PointerInterface, PointerPublicConfigInterface } from '/@/composables/usePointer'
+import useThree, { SizeInterface, ThreeConfigInterface, ThreeInterface } from '/@/composables/useThree'
 import { bindObjectProp } from '../tools'
-import { PointerInterface, PointerPublicConfigInterface } from './usePointer'
-import useThree, { SizeInterface, ThreeConfigInterface, ThreeInterface } from './useThree'
 
 type CallbackType<T> = (event: T) => void
 

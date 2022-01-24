@@ -1,5 +1,5 @@
 import { defineComponent, inject, PropType } from 'vue'
-import usePointer, { PointerInterface, PointerIntersectCallbackType } from './usePointer'
+import usePointer, { PointerInterface, PointerIntersectCallbackType } from '/@/composables/usePointer'
 import { RendererInjectionKey, RendererInterface } from './Renderer'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
