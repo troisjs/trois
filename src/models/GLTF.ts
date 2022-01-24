@@ -8,7 +8,8 @@ export default defineComponent({
     const loader = new GLTFLoader()
     this.$emit('before-load', loader)
     loader.load(this.src, (gltf) => {
-      this.onLoad(gltf.scene)
+      this.onLoad(gltf)
+      this.initObject3D(gltf.scene)
     }, this.onProgress, this.onError)
   },
 })

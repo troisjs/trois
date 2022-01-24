@@ -16,7 +16,6 @@ export default defineComponent({
   methods: {
     onLoad(model: TObject3D) {
       this.$emit('load', model)
-      this.initObject3D(model)
     },
     onProgress(progress: ProgressEvent) {
       this.progress = progress.loaded / progress.total
