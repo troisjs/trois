@@ -5,6 +5,7 @@ module.exports = {
     es2020: true,
     node: true,
   },
+  plugins: ['import'],
   extends: [
     'plugin:vue/essential',
     '@vue/standard',
@@ -42,7 +43,6 @@ module.exports = {
     'object-property-newline': 'off',
     'eqeqeq': 'warn',
     'no-multiple-empty-lines': 'off',
-
     '@typescript-eslint/ban-ts-comment': 'warn',
     // '@typescript-eslint/ban-ts-comment': ['warn', {
     //   'ts-ignore': 'allow-with-description',
@@ -52,5 +52,21 @@ module.exports = {
 
     'no-empty-function': 'off',
     '@typescript-eslint/no-empty-function': ['off'],
+    'import/no-absolute-path': 'off',
+  },
+  settings: {
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts'],
+    },
+    'import/resolver': {
+      alias: {
+        map: [
+          ['/@', './src'],
+        ],
+      },
+      typescript: {
+        'project': '.',
+      },
+    },
   },
 }
