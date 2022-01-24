@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import { Camera, Scene, WebGLRenderer } from 'three'
+import { Camera, Scene, WebGLRenderer, WebGLRendererParameters } from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
 import { ComponentPublicInstance, defineComponent, InjectionKey, PropType } from 'vue'
 import { bindObjectProp } from '../tools'
@@ -98,6 +98,7 @@ export const RendererInjectionKey: InjectionKey<RendererPublicInterface> = Symbo
 export default defineComponent({
   name: 'Renderer',
   props: {
+    params: { type: Object as PropType<WebGLRendererParameters>, default: () => ({}) },
     antialias: Boolean,
     alpha: Boolean,
     autoClear: { type: Boolean, default: true },
@@ -131,6 +132,7 @@ export default defineComponent({
 
     const config: ThreeConfigInterface = {
       canvas,
+      params: props.params,
       antialias: props.antialias,
       alpha: props.alpha,
       autoClear: props.autoClear,

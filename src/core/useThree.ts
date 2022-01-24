@@ -1,4 +1,4 @@
-import { Camera, Object3D, OrthographicCamera, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
+import { Camera, Object3D, OrthographicCamera, PerspectiveCamera, Scene, WebGLRenderer, WebGLRendererParameters } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import usePointer, { PointerConfigInterface, PointerPublicConfigInterface, PointerInterface } from './usePointer'
@@ -12,6 +12,7 @@ export interface SizeInterface {
 }
 
 export interface ThreeConfigInterface {
+  params?: WebGLRendererParameters
   canvas?: HTMLCanvasElement
   antialias: boolean
   alpha: boolean
@@ -97,7 +98,7 @@ export default function useThree(params: ThreeConfigInterface): ThreeInterface {
    * create WebGLRenderer
    */
   function createRenderer(): WebGLRenderer {
-    const renderer = new WebGLRenderer({ canvas: config.canvas, antialias: config.antialias, alpha: config.alpha })
+    const renderer = new WebGLRenderer({ canvas: config.canvas, antialias: config.antialias, alpha: config.alpha, ...config.params })
     renderer.autoClear = config.autoClear
     return renderer
   }
