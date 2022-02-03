@@ -3,7 +3,6 @@
 [![Build Size][build-size]][build-size-url]
 [![NPM Downloads][npm-downloads]][npmtrends-url]
 [![Twitter][twitter]][twitter-url]
-<!-- [![Support][support]][support-url] -->
 
 [npm]: https://img.shields.io/npm/v/troisjs
 [npm-url]: https://www.npmjs.com/package/troisjs
@@ -11,21 +10,22 @@
 [build-size-url]: https://bundlephobia.com/result?p=troisjs
 [npm-downloads]: https://img.shields.io/npm/dw/troisjs
 [npmtrends-url]: https://www.npmtrends.com/troisjs
-[support]: https://img.shields.io/badge/support-hicetnunc-lightgrey
-[support-url]: https://www.hicetnunc.xyz/tz/tz1XWVAgiiLBPstq5saWXKZqPHbsvq4Qdb4C
 [twitter]: https://img.shields.io/twitter/follow/soju22?label=&style=social
 [twitter-url]: https://twitter.com/soju22
 
 <p style="text-align:center;">
-  <a href="https://troisjs.github.io/little-planet/"><img src="/screenshots/little-planet.jpg" width="30%" /></a>
-  <a href="https://troisjs.github.io/examples/physics/1.html"><img src="/screenshots/troisjs_10.jpg" width="30%" /></a>
-  <a href="https://troisjs-trails.pages.dev"><img src="/screenshots/troisjs_12.jpg" width="30%" /></a>
-  <a href="https://troisjs.github.io/examples/demos/2.html"><img src="/screenshots/troisjs_5.jpg" width="30%" /></a>
-  <a href="https://troisjs.github.io/examples/materials/2.html"><img src="/screenshots/troisjs_2.jpg" width="30%" /></a>
-  <a href="https://troisjs.github.io/examples/loop.html"><img src="/screenshots/troisjs_6.jpg" width="30%" /></a>
-  <a href="https://troisjs.github.io/examples/shadows.html"><img src="/screenshots/troisjs_7.jpg" width="30%" /></a>
-  <a href="https://troisjs.github.io/examples/demos/5.html"><img src="/screenshots/troisjs_8.jpg" width="30%" /></a>
-  <a href="https://troisjs.github.io/examples/lights.html"><img src="/screenshots/troisjs_9.jpg" width="30%" /></a>
+  <a href="https://troisjs-flower.pages.dev"><img src="/screenshots/troisjs_15.jpg" width="24%" /></a>
+  <a href="https://troisjs-water.pages.dev"><img src="/screenshots/troisjs_14.jpg" width="24%" /></a>
+  <a href="https://troisjs-dof-test.pages.dev"><img src="/screenshots/troisjs_13.jpg" width="24%" /></a>
+  <a href="https://troisjs.github.io/little-planet/"><img src="/screenshots/little-planet.jpg" width="24%" /></a>
+  <a href="https://troisjs.github.io/examples/physics/1.html"><img src="/screenshots/troisjs_10.jpg" width="24%" /></a>
+  <a href="https://troisjs-trails.pages.dev"><img src="/screenshots/troisjs_12.jpg" width="24%" /></a>
+  <a href="https://troisjs.github.io/examples/demos/2.html"><img src="/screenshots/troisjs_5.jpg" width="24%" /></a>
+  <a href="https://troisjs.github.io/examples/materials/2.html"><img src="/screenshots/troisjs_2.jpg" width="24%" /></a>
+  <a href="https://troisjs.github.io/examples/loop.html"><img src="/screenshots/troisjs_6.jpg" width="24%" /></a>
+  <a href="https://troisjs.github.io/examples/shadows.html"><img src="/screenshots/troisjs_7.jpg" width="24%" /></a>
+  <a href="https://troisjs.github.io/examples/demos/5.html"><img src="/screenshots/troisjs_8.jpg" width="24%" /></a>
+  <a href="https://troisjs.github.io/examples/lights.html"><img src="/screenshots/troisjs_9.jpg" width="24%" /></a>
 </p>
 
 - 💻 Examples (wip) : https://troisjs.github.io/ ([sources](https://github.com/troisjs/troisjs.github.io/tree/master/src/components))
