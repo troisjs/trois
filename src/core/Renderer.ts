@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 import { Camera, Scene, WebGLRenderer, WebGLRendererParameters } from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
-import { ComponentPublicInstance, defineComponent, InjectionKey, PropType } from 'vue'
+import { ComponentPublicInstance, defineComponent, InjectionKey, PropType, watchEffect } from 'vue'
 import { bindObjectProp } from '../tools'
 import { PointerInterface, PointerPublicConfigInterface } from './usePointer'
 import useThree, { SizeInterface, ThreeConfigInterface, ThreeInterface } from './useThree'
@@ -108,6 +108,7 @@ export default defineComponent({
     shadow: Boolean,
     width: String,
     height: String,
+    pixelRatio: Number,
     xr: Boolean,
     props: { type: Object, default: () => ({}) },
     onReady: Function as PropType<(r: RendererInterface) => void>,
@@ -146,6 +147,10 @@ export default defineComponent({
 
     const three = useThree(config)
     bindObjectProp(props, 'props', three.renderer)
+
+    watchEffect(() => {
+      if (props.pixelRatio) three.renderer.setPixelRatio(props.pixelRatio)
+    })
 
     const renderFn: {(): void} = () => {}
 
