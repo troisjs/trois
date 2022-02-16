@@ -1,5 +1,5 @@
 import { defineComponent, inject, onUnmounted, PropType } from 'vue'
-import { CubeCamera, LinearMipmapLinearFilter, Mesh, RGBFormat, WebGLCubeRenderTarget } from 'three'
+import { CubeCamera, LinearMipmapLinearFilter, Mesh, RGBAFormat, WebGLCubeRenderTarget } from 'three'
 import Object3D from './Object3D'
 import { RendererInjectionKey } from './Renderer'
 
@@ -26,7 +26,7 @@ export default defineComponent({
     }
 
     const renderer = rendererC.renderer, scene = rendererC.scene
-    const cubeRT = new WebGLCubeRenderTarget(props.cubeRTSize, { format: RGBFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter })
+    const cubeRT = new WebGLCubeRenderTarget(props.cubeRTSize, { format: RGBAFormat, generateMipmaps: true, minFilter: LinearMipmapLinearFilter })
     const cubeCamera = new CubeCamera(props.cubeCameraNear, props.cubeCameraFar, cubeRT)
     const updateRT = () => {
       props.hideMeshes.forEach(m => { m.visible = false })
