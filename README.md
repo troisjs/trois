@@ -43,6 +43,9 @@ I started from scratch, I will rewrite some of my [WebGL demos](https://codepen.
 <a href="https://github.com/avaer">
   <img src="https://github.com/avaer.png" width="50px" />
 </a>
+<a href="https://github.com/designori-llc">
+  <img src="https://github.com/designori-llc.png" width="50px" />
+</a>
 <a href="https://github.com/okydk">
   <img src="https://github.com/okydk.png" width="50px" />
 </a>
