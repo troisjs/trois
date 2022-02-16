@@ -22,6 +22,7 @@ export interface GeometryAttributeInterface {
 // }
 
 const Geometry = defineComponent({
+  emits: ['created'],
   props: {
     rotateX: Number,
     rotateY: Number,
@@ -64,7 +65,9 @@ const Geometry = defineComponent({
         }
       })
       geometry.computeBoundingBox()
+      geometry.userData.component = this
       this.geometry = geometry
+      this.$emit('created', geometry)
     },
     rotateGeometry() {
       if (!this.geometry) return
@@ -98,6 +101,8 @@ export function geometryComponent<P extends Readonly<ComponentPropsOptions>>(
     methods: {
       createGeometry() {
         this.geometry = createGeometry(this)
+        this.geometry.userData.component = this
+        this.$emit('created', this.geometry)
       },
     },
   })
