@@ -1,0 +1,9 @@
+{
+  "image": "node:17",
+  "features": {
+    "git": "latest"
+  },"extensions": [
+    "johnsoncodehk.volar",
+  ],
+  "forwardPorts": [3000]
+}
