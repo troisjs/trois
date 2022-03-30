@@ -1,5 +1,5 @@
 {
-  "name": "troisjs",
+  "name": "troisjs-yang",
   "version": "0.3.4",
   "scripts": {
     "dev": "vite",

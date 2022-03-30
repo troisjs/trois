@@ -1,9 +1,15 @@
-import { defineComponent, inject, PropType, watch } from 'vue'
+import { defineComponent, inject, InjectionKey, PropType, watch } from 'vue'
 import { PerspectiveCamera } from 'three'
 import { bindObjectProp, bindProp } from '../tools'
 import Camera, { cameraSetProp } from './Camera'
 import { Vector3PropInterface } from './Object3D'
 import { RendererInjectionKey } from './Renderer'
+
+export interface PerspectiveCameraInterface {
+  perspectiveCamera : PerspectiveCamera
+}
+
+export const PerspectiveCameraInjectionKey : InjectionKey<PerspectiveCameraInterface> = Symbol('PerspectiveCamera');
 
 export default defineComponent({
   extends: Camera,
@@ -15,6 +21,11 @@ export default defineComponent({
     near: { type: Number, default: 0.1 },
     position: { type: Object as PropType<Vector3PropInterface>, default: () => ({ x: 0, y: 0, z: 0 }) },
     lookAt: { type: Object as PropType<Vector3PropInterface>, default: null },
+  },
+  provide() {
+    return {
+      [PerspectiveCameraInjectionKey as symbol] : this,
+    }
   },
   setup(props) {
     const renderer = inject(RendererInjectionKey)

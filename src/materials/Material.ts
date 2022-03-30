@@ -92,13 +92,3 @@ export function materialComponent<P extends Readonly<ComponentPropsOptions>>(
     },
   })
 }
-
-// TODO : proper
-export const BasicMaterial = materialComponent('BasicMaterial', { props: { type: Object as PropType<BasicMaterialPropsInterface>, default: () => ({}) } }, (opts) => new MeshBasicMaterial(opts))
-export const LambertMaterial = materialComponent('LambertMaterial', { props: { type: Object as PropType<LambertMaterialPropsInterface>, default: () => ({}) } }, (opts) => new MeshLambertMaterial(opts))
-export const PhongMaterial = materialComponent('PhongMaterial', { props: { type: Object as PropType<PhongMaterialPropsInterface>, default: () => ({}) } }, (opts) => new MeshPhongMaterial(opts))
-export const PhysicalMaterial = materialComponent('PhysicalMaterial', { props: { type: Object as PropType<PhysicalMaterialPropsInterface>, default: () => ({}) } }, (opts) => new MeshPhysicalMaterial(opts))
-export const PointsMaterial = materialComponent('PointsMaterial', { props: { type: Object as PropType<PointsMaterialPropsInterface>, default: () => ({}) } }, (opts) => new TPointsMaterial(opts))
-export const ShadowMaterial = materialComponent('ShadowMaterial', { color: { type: String, default: '#000000' }, props: { type: Object as PropType<MaterialPropsInterface>, default: () => ({}) } }, (opts) => new TShadowMaterial(opts))
-export const StandardMaterial = materialComponent('StandardMaterial', { props: { type: Object as PropType<StandardMaterialPropsInterface>, default: () => ({}) } }, (opts) => new MeshStandardMaterial(opts))
-export const ToonMaterial = materialComponent('ToonMaterial', { props: { type: Object as PropType<ToonMaterialPropsInterface>, default: () => ({}) } }, (opts) => new MeshToonMaterial(opts))

@@ -77,10 +77,12 @@ export const TroisJSVuePlugin = {
       'TiltShiftPass',
       'UnrealBloomPass',
       'ZoomBlurPass',
+
+      'YangArchvizComponent',
     ]
 
     comps.forEach(comp => {
-      // @ts-ignore
+      // @ts-ignore 
       app.component(comp, TROIS[comp])
     })
   },
