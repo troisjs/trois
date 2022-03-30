@@ -1,7 +1,7 @@
 import { defineComponent, h } from "vue";
 import { PerspectiveCamera, Renderer, Scene } from "../../core";
 import { AmbientLight } from "../../lights";
-import { GltfModel } from "../../models";
+import { YangGLTF } from "../../models";
 
 export default defineComponent({
     name: "YangArchvizComponent",
@@ -17,18 +17,23 @@ export default defineComponent({
         }
 
         //@ts-ignore
-        const gltfVNode = h( GltfModel, gltfProps );
+        const gltfVNode = h( YangGLTF, gltfProps );
 
         return () =>h( Renderer, {  
                         resize : "window" ,  
                         alpha : true
                     }, () => 
-                    [ 
-                        h( Scene , {}, () =>
+                    [
+                        h( PerspectiveCamera, {
+                            position: { z: 10 }
+                        }, () => 
                         [ 
-                            h( AmbientLight ),
-                            gltfVNode
-                        ])
+                            h( Scene , {}, () =>
+                            [ 
+                                h( AmbientLight ),
+                                gltfVNode
+                            ])
+                        ]), 
                     ]);
     }, 
 });
