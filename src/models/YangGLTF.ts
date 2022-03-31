@@ -19,6 +19,11 @@ export default defineComponent({
         this.onLoad(gltf);
 
         const gltfCamera : PerspectiveCamera = gltf.cameras[0] as PerspectiveCamera;
+        if(!this.renderer){
+          console.error("Please wrap renderer around YangGLTF");
+          return;
+        }
+        
         this.renderer!.camera = gltfCamera;
 
         this.initObject3D(gltf.scene);
