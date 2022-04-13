@@ -2,6 +2,7 @@
 [![NPM Package][npm]][npm-url]
 [![Build Size][build-size]][build-size-url]
 [![NPM Downloads][npm-downloads]][npmtrends-url]
+[![Twitter][email]][email-url]
 [![Twitter][twitter]][twitter-url]
 
 [npm]: https://img.shields.io/npm/v/troisjs
@@ -12,6 +13,8 @@
 [npmtrends-url]: https://www.npmtrends.com/troisjs
 [twitter]: https://img.shields.io/twitter/follow/soju22?label=&style=social
 [twitter-url]: https://twitter.com/soju22
+[email]: https://img.shields.io/badge/hire-%20ThreeJS%20Expert-brightgreen
+[email-url]: mailto:kevin.levron@gmail.com
 
 <p style="text-align:center;">
   <a href="https://troisjs-flower.pages.dev"><img src="/screenshots/troisjs_15.jpg" width="24%" /></a>
@@ -35,6 +38,8 @@
 I wanted to code something similar to *react-three-fiber* but for VueJS.
 
 I started from scratch, I will rewrite some of my [WebGL demos](https://codepen.io/collection/AGZywR) to see if this little toy can do the job.
+
+**Feel free to contact me if you need a ThreeJS developer ^^**
 
 *Trois* is a french word, it means *Three*.
 
