@@ -51,6 +51,9 @@ I started from scratch, I will rewrite some of my [WebGL demos](https://codepen.
 <a href="https://github.com/designori-llc">
   <img src="https://github.com/designori-llc.png" width="50px" />
 </a>
+<a href="https://github.com/michelwaechter">
+  <img src="https://github.com/michelwaechter.png" width="50px" />
+</a>
 <a href="https://github.com/okydk">
   <img src="https://github.com/okydk.png" width="50px" />
 </a>
