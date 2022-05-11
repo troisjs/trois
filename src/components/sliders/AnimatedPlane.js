@@ -7,9 +7,8 @@ import {
   Object3D,
   Vector2,
   Vector3,
+  BufferGeometry
 } from 'three'
-
-import { Geometry, Face3 } from 'three/examples/jsm/deprecated/Geometry.js'
 
 export default class AnimatedPlane {
   constructor(params) {
@@ -115,34 +114,34 @@ export default class AnimatedPlane {
 
   initGeometry() {
     // square
-    const geometry = new Geometry()
-    geometry.vertices.push(new Vector3(0, 0, 0))
-    geometry.vertices.push(new Vector3(this.wSize, 0, 0))
-    geometry.vertices.push(new Vector3(0, this.wSize, 0))
-    geometry.vertices.push(new Vector3(this.wSize, this.wSize, 0))
-    geometry.faces.push(new Face3(0, 2, 1))
-    geometry.faces.push(new Face3(2, 3, 1))
+    const geometry = new BufferGeometry()
+    const points = [
+      new Vector3(0, this.wSize, 0),
+      new Vector3(this.wSize, 0, 0),
+      new Vector3(0, 0, 0),
 
-    geometry.faceVertexUvs[0].push([
-      new Vector2(0, 0),
-      new Vector2(0, 1),
-      new Vector2(1, 0),
-    ])
-    geometry.faceVertexUvs[0].push([
-      new Vector2(0, 1),
-      new Vector2(1, 1),
-      new Vector2(1, 0),
-    ])
+      new Vector3(0, 0, 0),
+      new Vector3(this.wSize, this.wSize, 0),
+      new Vector3(0, this.wSize, 0),
 
-    // geometry.computeFaceNormals();
-    // geometry.computeVertexNormals();
+      new Vector3(this.wSize, 0, 0),
+      new Vector3(this.wSize, this.wSize, 0),
+      new Vector3(0, 0, 0),
+
+      new Vector3(0, this.wSize, 0),
+      new Vector3(this.wSize, this.wSize, 0),
+      new Vector3(this.wSize, 0, 0),
+    ]
+
+    geometry.setFromPoints(points)
+    geometry.computeVertexNormals()
 
     // center
     this.dx = this.wSize / 2
     this.dy = this.wSize / 2
     geometry.translate(-this.dx, -this.dy, 0)
 
-    this.bGeometry = geometry.toBufferGeometry()
+    this.bGeometry = geometry
   }
 
   initAnimAttributes() {
