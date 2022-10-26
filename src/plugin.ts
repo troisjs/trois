@@ -64,6 +64,7 @@ export const TroisJSVuePlugin = {
 
       'FbxModel',
       'GltfModel',
+      'ThreemfModel',
 
       'BokehPass',
       'EffectComposer',
