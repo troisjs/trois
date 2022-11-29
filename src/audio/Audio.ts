@@ -3,11 +3,12 @@ import { defineComponent } from 'vue'
 import Object3D from '../core/Object3D'
 import { bindProp } from '../tools'
 
-export interface AudioSetupInterface {
-  streamMediaElement?: HTMLAudioElement
-}
-
 type ConcreteAudio = StaticAudio | PositionalAudio
+
+export interface AudioSetupInterface {
+  audio?: ConcreteAudio
+  streamedAudio?: HTMLAudioElement
+}
 
 export default defineComponent({
   extends: Object3D,
@@ -18,64 +19,65 @@ export default defineComponent({
     isStreamed: { type: Boolean, default: true }
   },
   setup (): AudioSetupInterface {
-    let streamMediaElement = new Audio();
-    return { streamMediaElement }
+    let streamedAudio = new Audio();
+    return { streamedAudio }
   },
   methods: {
     initAudio(audio: ConcreteAudio) {
-      this.initObject3D(audio)
-      this.bindProps(audio)
-      this.loadAudioAndPlay(audio)
+      this.audio = audio
+      this.initObject3D(this.audio)
+      this.bindProps()
+      this.loadAudioAndPlay()
     },
-    bindProps(audio: ConcreteAudio) {
+    bindProps() {
       ['volume', 'isStreamed'].forEach(p => {
-        bindProp(this.$props, p, audio)
+        bindProp(this, p, this.audio)
       })
     },
-    loadAudioAndPlay(audio: ConcreteAudio) {
+    loadAudioAndPlay() {
       if (!this.src) return undefined
 
       if (this.isStreamed) {
-        this.loadAudioFromStream(audio, this.src)
+        this.loadAudioFromStream()
       } else {
-        this.loadAudioFromMemory(audio, this.src)
+        this.loadAudioFromMemory()
       }
     },
-    loadAudioFromMemory(audio:ConcreteAudio, src:string) {
+    loadAudioFromMemory() {
         const audioLoader = new AudioLoader();
         const instance = this
-        audioLoader.load( src, function( buffer ) {
-          audio.setBuffer( buffer );
-          instance.play(audio)
+        audioLoader.load(this.src!, function( buffer ) {
+            console.log('loaded audio from memory')
+            instance.audio?.setBuffer( buffer );
+            instance.play()
         });
     },
-    loadAudioFromStream(audio:ConcreteAudio, src:string) {
-        this.streamMediaElement = new Audio(src);
-        this.streamMediaElement.loop = true;
-        this.streamMediaElement.preload = 'metadata';
-        this.streamMediaElement.crossOrigin = 'anonymous';
+    loadAudioFromStream() {
+        this.streamedAudio = new Audio(this.src);
+        this.streamedAudio.loop = true;
+        this.streamedAudio.preload = 'metadata';
+        this.streamedAudio.crossOrigin = 'anonymous';
         const instance = this
-        this.streamMediaElement.addEventListener("loadedmetadata", function(_event) {
-            console.log('loaded the stream')
-            instance.play(audio)
+        this.streamedAudio.addEventListener("loadedmetadata", function(_event) {
+            console.log('loaded audio from stream')
+            instance.play()
         });
-        audio.setMediaElementSource(this.streamMediaElement)
+        this.audio?.setMediaElementSource(this.streamedAudio)
     },
-    play(audio:ConcreteAudio) {
+    play() {
         if (this.isStreamed) {
-            if (!this.streamMediaElement) { return }
-            this.streamMediaElement.play()
+            this.streamedAudio?.play()
         } else {
-            audio.play()
+            this.audio?.play()
         }
     },
-    stop(audio:ConcreteAudio) {
+    stop() {
         if (this.isStreamed) {
-            if (!this.streamMediaElement) { return }
-            this.streamMediaElement.pause()
-            this.streamMediaElement.currentTime = 0;
+            if (!this.streamedAudio) { return }
+            this.streamedAudio.pause()
+            this.streamedAudio.currentTime = 0;
         } else {
-            audio.stop()
+            this.audio?.stop()
         }
     }
   },
