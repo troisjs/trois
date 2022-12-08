@@ -1,7 +1,6 @@
 import { Audio as StaticAudio, PositionalAudio, AudioLoader } from 'three'
-import { defineComponent } from 'vue'
+import { defineComponent, watch } from 'vue'
 import Object3D from '../core/Object3D'
-import { bindProp } from '../tools'
 
 type ConcreteAudio = StaticAudio | PositionalAudio
 
@@ -14,7 +13,7 @@ export default defineComponent({
   extends: Object3D,
   name: 'Audio',
   props: {
-    src: String,
+    src:  { type: String, required: false },
     volume: { type: Number, default: 1.0 },
     isStreamed: { type: Boolean, default: true }
   },
@@ -22,17 +21,20 @@ export default defineComponent({
     let streamedAudio = new Audio();
     return { streamedAudio }
   },
+  watch: {
+    volume: function(value) {
+        this.audio?.setVolume(value)
+    },
+    src: function(value) {
+        this.stop()
+        this.loadAudioAndPlay()
+    }
+  },
   methods: {
     initAudio(audio: ConcreteAudio) {
       this.audio = audio
       this.initObject3D(this.audio)
-      this.bindProps()
       this.loadAudioAndPlay()
-    },
-    bindProps() {
-      ['volume', 'isStreamed'].forEach(p => {
-        bindProp(this, p, this.audio)
-      })
     },
     loadAudioAndPlay() {
       if (!this.src) return undefined
