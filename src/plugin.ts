@@ -77,6 +77,10 @@ export const TroisJSVuePlugin = {
       'TiltShiftPass',
       'UnrealBloomPass',
       'ZoomBlurPass',
+
+      'AudioListener',
+      'PositionalAudio',
+      'StaticAudio'
     ]
 
     comps.forEach(comp => {

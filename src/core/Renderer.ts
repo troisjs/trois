@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import { Camera, Scene, WebGLRenderer, WebGLRendererParameters } from 'three'
+import { Camera, Scene, WebGLRenderer, WebGLRendererParameters, AudioListener } from 'three'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
 import { ComponentPublicInstance, defineComponent, InjectionKey, PropType, watchEffect } from 'vue'
 import { bindObjectProp } from '../tools'
@@ -75,6 +75,7 @@ export interface RendererInterface extends RendererSetupInterface {
   scene?: Scene
   camera?: Camera
   composer?: EffectComposer
+  audioListener?: AudioListener
 
   onInit(cb: InitCallbackType): void
   onMounted(cb: MountedCallbackType): void
@@ -181,6 +182,10 @@ export default defineComponent({
       get: function(): EffectComposer | undefined { return this.three.composer },
       set: function(composer: EffectComposer): void { this.three.composer = composer },
     },
+    audioListener: {
+      get: function(): AudioListener | undefined { return this.three.audioListener },
+      set: function(audioListener: AudioListener): void { this.three.audioListener = audioListener },
+    }
   },
   provide() {
     return {

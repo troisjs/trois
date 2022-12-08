@@ -1,4 +1,4 @@
-import { Camera, Object3D, OrthographicCamera, PerspectiveCamera, Scene, WebGLRenderer, WebGLRendererParameters } from 'three'
+import { Camera, Object3D, OrthographicCamera, PerspectiveCamera, Scene, WebGLRenderer, WebGLRendererParameters, AudioListener } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 import usePointer, { PointerConfigInterface, PointerPublicConfigInterface, PointerInterface } from './usePointer'
@@ -32,6 +32,7 @@ export interface ThreeInterface {
   composer?: EffectComposer
   camera?: Camera
   cameraCtrl?: OrbitControls
+  audioListener?: AudioListener
   scene?: Scene
   pointer?: PointerInterface
   size: SizeInterface
