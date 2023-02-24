@@ -103,7 +103,7 @@ TroisJS is really simple and easy to use :
         box.rotation.x += 0.01;
       });
     }
-  }).mount('#app');;
+  }).mount('#app');
 </script>
 ```
 
