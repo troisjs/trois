@@ -6,7 +6,7 @@ import { bindProp } from '../tools'
 export interface MeshSetupInterface extends Object3DSetupInterface {
   mesh?: TMesh
   geometry?: BufferGeometry
-  material?: Material
+  material?: Material | Material[]
   loading?: boolean
 }
 
@@ -61,9 +61,20 @@ const Mesh = defineComponent({
       this.geometry = geometry
       if (this.mesh) this.mesh.geometry = geometry
     },
-    setMaterial(material: Material) {
-      this.material = material
-      if (this.mesh) this.mesh.material = material
+    setMaterial(material: Material | Material[]) {
+      if (Array.isArray(material) || !this.material) {
+        this.material = material
+        if (this.mesh) this.mesh.material = material
+      } else {
+        let prev = this.material
+        if (Array.isArray(prev)) {
+          prev.push(material)
+        } else {
+          prev = [prev, material]
+        }
+        this.material = prev
+        if (this.mesh) this.mesh.material = prev
+      }
     },
     refreshGeometry() {
       const oldGeo = this.geometry
@@ -75,7 +86,13 @@ const Mesh = defineComponent({
   unmounted() {
     // for predefined mesh (geometry/material are not unmounted)
     if (this.geometry) this.geometry.dispose()
-    if (this.material) this.material.dispose()
+    if (this.material) {
+      if (Array.isArray(this.material)) {
+        for (const m of this.material) m.dispose()
+      } else {
+        this.material.dispose()
+      }
+    }
   },
   __hmrId: 'Mesh',
 })
