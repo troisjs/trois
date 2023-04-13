@@ -20,7 +20,7 @@ export default defineComponent({
 
     Object.keys(props).forEach(p => {
       // @ts-ignore
-      watch(() => this[p], (value) => { pass.uniforms[p].value = value })
+      watch(() => this[p], (value) => { pass[p].value = value })
     })
 
     this.initEffectPass(pass)
