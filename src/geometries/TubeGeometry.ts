@@ -20,7 +20,7 @@ export function createGeometry(comp: any): TubeGeometry {
   } else {
     console.error('Missing path curve or points.')
   }
-  return new TubeGeometry(curve, comp.tubularSegments, comp.radius, comp.radiusSegments, comp.closed)
+  return new TubeGeometry(curve, comp.tubularSegments, comp.radius, comp.radialSegments, comp.closed)
 }
 
 export default defineComponent({
