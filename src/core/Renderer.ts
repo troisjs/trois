@@ -106,8 +106,8 @@ export default defineComponent({
     pointer: { type: [Boolean, Object] as PropType<boolean | PointerPublicConfigInterface>, default: false },
     resize: { type: [Boolean, String] as PropType<boolean | string>, default: false },
     shadow: Boolean,
-    width: String,
-    height: String,
+    width: Number,
+    height: Number,
     pixelRatio: Number,
     xr: Boolean,
     props: { type: Object, default: () => ({}) },
@@ -142,8 +142,8 @@ export default defineComponent({
       resize: props.resize,
     }
 
-    if (props.width) config.width = parseInt(props.width)
-    if (props.height) config.height = parseInt(props.height)
+    if (props.width) config.width = props.width
+    if (props.height) config.height = props.height
 
     const three = useThree(config)
     bindObjectProp(props, 'props', three.renderer)
