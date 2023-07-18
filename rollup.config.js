@@ -15,6 +15,8 @@ const external = [
   'three/examples/jsm/loaders/FontLoader.js',
   'three/examples/jsm/loaders/FBXLoader.js',
   'three/examples/jsm/loaders/GLTFLoader.js',
+  'three/examples/jsm/loaders/3MFLoader.js',
+  'three/examples/jsm/loaders/STLLoader.js',
   'three/examples/jsm/postprocessing/BokehPass.js',
   'three/examples/jsm/postprocessing/EffectComposer.js',
   'three/examples/jsm/postprocessing/FilmPass.js',
